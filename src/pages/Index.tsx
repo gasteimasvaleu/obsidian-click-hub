@@ -1,9 +1,22 @@
+import { useState, useEffect } from "react";
 import { FuturisticNavbar } from "@/components/FuturisticNavbar";
 import { GlassCard } from "@/components/GlassCard";
 import { NeonButton } from "@/components/NeonButton";
+import { RedirectModal } from "@/components/RedirectModal";
 // Cache refresh fix
 
 const Index = () => {
+  const [showRedirectModal, setShowRedirectModal] = useState(false);
+
+  // Check if user returned from external login
+  useEffect(() => {
+    const returnUrl = localStorage.getItem('returnUrl');
+    if (returnUrl) {
+      // Clear the stored data
+      localStorage.removeItem('returnUrl');
+      localStorage.removeItem('appState');
+    }
+  }, []);
   return (
     <div className="min-h-screen bg-black relative pb-24">
       <FuturisticNavbar />
@@ -16,11 +29,18 @@ const Index = () => {
             className="w-full h-48 object-cover rounded-xl mb-6"
           />
           
-          <NeonButton href="/external-login">
+          <NeonButton onClick={() => setShowRedirectModal(true)}>
             Começar Agora
           </NeonButton>
         </GlassCard>
       </div>
+      
+      <RedirectModal
+        isOpen={showRedirectModal}
+        onClose={() => setShowRedirectModal(false)}
+        targetUrl="https://bibliatoonkids.themembers.com.br/login"
+        title="Biblia Toon Kids"
+      />
     </div>
   );
 };
