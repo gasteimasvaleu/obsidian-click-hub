@@ -3,6 +3,7 @@ import { FuturisticNavbar } from "@/components/FuturisticNavbar";
 import { GlassCard } from "@/components/GlassCard";
 import { NeonButton } from "@/components/NeonButton";
 import { RedirectModal } from "@/components/RedirectModal";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 // Cache refresh fix
 
 const Index = () => {
@@ -23,11 +24,13 @@ const Index = () => {
       
       <div className="flex items-center justify-center min-h-screen pt-16">
         <GlassCard className="max-w-md mx-auto text-center">
-          <img 
-            src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/image.png"
-            alt="Imagem de destaque" 
-            className="w-full h-48 object-cover rounded-xl mb-6"
-          />
+          <AspectRatio ratio={1} className="w-48 mx-auto mb-6">
+            <img 
+              src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/image.png"
+              alt="Imagem de destaque" 
+              className="object-cover rounded-xl w-full h-full"
+            />
+          </AspectRatio>
           
           <NeonButton onClick={() => setShowRedirectModal(true)}>
             Começar Agora
