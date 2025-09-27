@@ -11,6 +11,7 @@ import Ebooks from "./pages/Ebooks";
 import AmigoDivino from "./pages/AmigoDivino";
 import Sobre from "./pages/Sobre";
 import NotFound from "./pages/NotFound";
+import { ExternalFrame } from "./components/ExternalFrame";
 
 const queryClient = new QueryClient();
 
@@ -34,6 +35,7 @@ const App = () => (
           <Route path="/ebooks" element={<Ebooks />} />
           <Route path="/amigodivino" element={<AmigoDivino />} />
           <Route path="/sobre" element={<Sobre />} />
+          <Route path="/external-login" element={<ExternalFrame url="https://bibliatoonkids.themembers.com.br/login" title="Login - Biblia Toon Kids" />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

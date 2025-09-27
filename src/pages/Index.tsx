@@ -16,7 +16,7 @@ const Index = () => {
             className="w-full h-48 object-cover rounded-xl mb-6"
           />
           
-          <NeonButton href="https://bibliatoonkids.themembers.com.br/login">
+          <NeonButton href="/external-login">
             Começar Agora
           </NeonButton>
         </GlassCard>
