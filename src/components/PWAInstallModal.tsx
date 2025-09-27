@@ -63,7 +63,7 @@ export const PWAInstallModal = ({ isOpen, onClose, onInstall, isInstallable }: P
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="glass max-w-lg sm:max-w-xl mx-4 border-white/10 shadow-[0_0_40px_rgba(0,255,0,0.3)]">
+      <DialogContent className="glass max-w-[calc(100vw-2rem)] sm:max-w-xl border-white/10 shadow-[0_0_40px_rgba(0,255,0,0.3)]">
         <DialogHeader className="text-center">
           <div className="flex justify-center mb-4">
             <div className="relative">

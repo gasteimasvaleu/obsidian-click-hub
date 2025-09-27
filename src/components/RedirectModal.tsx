@@ -51,7 +51,7 @@ export const RedirectModal = ({ isOpen, onClose, targetUrl, title }: RedirectMod
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-black/90 border border-primary/20 backdrop-blur-lg max-w-lg sm:max-w-xl mx-4">
+      <DialogContent className="bg-black/90 border border-primary/20 backdrop-blur-lg max-w-[calc(100vw-2rem)] sm:max-w-xl">
         <DialogHeader className="text-center">
           <DialogTitle className="text-primary text-xl font-semibold mb-2">
             Janela de Login
