@@ -29,8 +29,11 @@ const App = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const handleSplashComplete = () => {
+    console.log("Splash completed, setting isLoading to false");
     setIsLoading(false);
   };
+
+  console.log("App rendering, isLoading:", isLoading);
 
   // Show splash screen first
   if (isLoading) {

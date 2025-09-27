@@ -10,8 +10,11 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
   const [fadeOut, setFadeOut] = useState(false);
 
   useEffect(() => {
+    console.log("SplashScreen mounted");
+    
     // Fallback timer in case video doesn't load or end event fails
     const fallbackTimer = setTimeout(() => {
+      console.log("Fallback timer triggered");
       handleComplete();
     }, 6000); // 6 seconds fallback
 
@@ -19,26 +22,33 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
   }, []);
 
   const handleComplete = () => {
+    console.log("handleComplete called");
     setFadeOut(true);
     setTimeout(() => {
+      console.log("Calling onComplete");
       onComplete();
     }, 500); // Wait for fade out animation
   };
 
   const handleVideoEnd = () => {
+    console.log("Video ended");
     handleComplete();
   };
 
   const handleVideoLoad = () => {
+    console.log("Video loaded");
     setIsVideoLoaded(true);
   };
+
+  console.log("SplashScreen rendering, fadeOut:", fadeOut, "isVideoLoaded:", isVideoLoaded);
 
   return (
     <div
       className={cn(
-        "fixed inset-0 z-50 bg-black flex items-center justify-center overflow-hidden transition-opacity duration-500",
+        "fixed inset-0 z-[9999] bg-black flex items-center justify-center overflow-hidden transition-opacity duration-500",
         fadeOut ? "opacity-0" : "opacity-100"
       )}
+      style={{ display: 'block' }}
     >
       {/* Loading indicator while video loads */}
       {!isVideoLoaded && (
