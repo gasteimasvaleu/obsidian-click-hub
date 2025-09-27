@@ -16,7 +16,7 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
     const fallbackTimer = setTimeout(() => {
       console.log("Fallback timer triggered");
       handleComplete();
-    }, 6000); // 6 seconds fallback
+    }, 8000); // 8 seconds fallback to ensure full 4-second animation is displayed
 
     return () => clearTimeout(fallbackTimer);
   }, []);
