@@ -3,11 +3,6 @@ import { GlassCard } from "@/components/GlassCard";
 import { NeonButton } from "@/components/NeonButton";
 
 const Index = () => {
-  const handleStartClick = () => {
-    // Add your conversion logic here
-    console.log("Starting conversion flow...");
-  };
-
   return (
     <div className="min-h-screen bg-black relative pb-24">
       <FuturisticNavbar />
@@ -20,7 +15,7 @@ const Index = () => {
             className="w-full h-48 object-cover rounded-xl mb-6"
           />
           
-          <NeonButton onClick={handleStartClick}>
+          <NeonButton href="https://bibliatoonkids.themembers.com.br/login">
             Começar Agora
           </NeonButton>
         </GlassCard>
