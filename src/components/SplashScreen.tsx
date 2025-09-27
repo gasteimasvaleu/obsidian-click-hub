@@ -8,26 +8,43 @@ interface SplashScreenProps {
 export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
   const [fadeOut, setFadeOut] = useState(false);
+  const [showSplash, setShowSplash] = useState(true);
+  const [minTimeElapsed, setMinTimeElapsed] = useState(false);
 
   useEffect(() => {
-    console.log("SplashScreen mounted");
+    console.log("SplashScreen mounted, showSplash:", showSplash);
+    
+    // Minimum time before allowing any transition
+    const minTimer = setTimeout(() => {
+      console.log("Minimum time elapsed (2s)");
+      setMinTimeElapsed(true);
+    }, 2000);
     
     // Fallback timer in case video doesn't load or end event fails
     const fallbackTimer = setTimeout(() => {
-      console.log("Fallback timer triggered");
+      console.log("Fallback timer triggered (8s)");
       handleComplete();
-    }, 8000); // 8 seconds fallback to ensure full 4-second animation is displayed
+    }, 8000);
 
-    return () => clearTimeout(fallbackTimer);
+    return () => {
+      clearTimeout(minTimer);
+      clearTimeout(fallbackTimer);
+    };
   }, []);
 
   const handleComplete = () => {
-    console.log("handleComplete called");
+    console.log("handleComplete called, minTimeElapsed:", minTimeElapsed);
+    if (!minTimeElapsed) {
+      console.log("Minimum time not elapsed, ignoring complete request");
+      return;
+    }
+    
+    console.log("Starting fade out");
     setFadeOut(true);
     setTimeout(() => {
       console.log("Calling onComplete");
       onComplete();
-    }, 500); // Wait for fade out animation
+    }, 500);
   };
 
   const handleVideoEnd = () => {
@@ -75,8 +92,8 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
         onLoadedData={handleVideoLoad}
         onEnded={handleVideoEnd}
         onError={() => {
-          console.error("Video failed to load, completing splash screen");
-          handleComplete();
+          console.error("Video failed to load, will use fallback timer");
+          setIsVideoLoaded(true); // Show the fallback content
         }}
       >
         <source
