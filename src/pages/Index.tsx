@@ -22,7 +22,7 @@ const Index = () => {
     <div className="min-h-screen bg-black relative pb-24">
       <FuturisticNavbar />
       
-      <div className="flex items-center justify-center min-h-screen pt-16 px-4">
+      <div className="flex items-center justify-center min-h-screen pt-8 px-4">
         <GlassCard className="w-full max-w-lg sm:max-w-xl mx-auto text-center">
           <AspectRatio ratio={1} className="w-full mx-auto mb-6">
             <img 
