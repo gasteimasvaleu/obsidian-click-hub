@@ -60,9 +60,9 @@ export function NavBar({ items, className }: NavBarProps) {
                 isActive && "bg-primary/10 text-primary",
               )}
             >
-              <span className="hidden md:inline">{item.name}</span>
-              <span className="md:hidden">
-                <Icon size={18} strokeWidth={2.5} />
+              <span className="flex items-center gap-2">
+                <Icon size={24} strokeWidth={2.5} />
+                <span className="hidden md:inline">{item.name}</span>
               </span>
               {isActive && (
                 <motion.div
