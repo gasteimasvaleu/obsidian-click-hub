@@ -23,7 +23,7 @@ const Index = () => {
       <FuturisticNavbar />
       
       <div className="flex items-center justify-center min-h-screen pt-16 px-4">
-        <GlassCard className="w-full max-w-sm sm:max-w-md mx-auto text-center">
+        <GlassCard className="w-full max-w-md sm:max-w-lg mx-auto text-center">
           <AspectRatio ratio={1} className="w-48 mx-auto mb-6">
             <img 
               src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/image.png"
