@@ -12,50 +12,12 @@ interface RedirectModalProps {
 
 export const RedirectModal = ({ isOpen, onClose, targetUrl, title }: RedirectModalProps) => {
   const [isRedirecting, setIsRedirecting] = useState(false);
-  const [testingConnection, setTestingConnection] = useState(false);
-  const [connectionError, setConnectionError] = useState<string | null>(null);
+  const [redirectFailed, setRedirectFailed] = useState(false);
 
-  const testConnection = async () => {
-    setTestingConnection(true);
-    setConnectionError(null);
-    
-    try {
-      console.log('Testing connection to:', targetUrl);
-      
-      // Test if the site is reachable
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 5000);
-      
-      const response = await fetch(targetUrl, {
-        method: 'HEAD',
-        mode: 'no-cors',
-        signal: controller.signal
-      });
-      
-      clearTimeout(timeoutId);
-      console.log('Connection test completed');
-      return true;
-    } catch (error) {
-      console.error('Connection test failed:', error);
-      setConnectionError('Site pode estar indisponível ou bloqueando acesso');
-      return false;
-    } finally {
-      setTestingConnection(false);
-    }
-  };
-
-  const handleRedirect = async () => {
-    console.log('Starting redirect process to:', targetUrl);
+  const handleRedirect = () => {
+    console.log('Starting redirect to:', targetUrl);
     setIsRedirecting(true);
-    setConnectionError(null);
-    
-    // Test connection first
-    const isConnectable = await testConnection();
-    
-    if (!isConnectable) {
-      setIsRedirecting(false);
-      return;
-    }
+    setRedirectFailed(false);
     
     try {
       // Save app state in localStorage for when user returns
@@ -64,21 +26,20 @@ export const RedirectModal = ({ isOpen, onClose, targetUrl, title }: RedirectMod
       
       console.log('Redirecting to external site...');
       
-      // Try direct redirect first
+      // Direct redirect
       window.location.href = targetUrl;
       
-      // Fallback: If redirect doesn't work in 3 seconds, try opening in new tab
+      // Fallback: If still on page after 3 seconds, show new tab option
       setTimeout(() => {
-        console.log('Direct redirect may have failed, trying new tab...');
-        window.open(targetUrl, '_blank');
+        console.log('Redirect may have failed, showing new tab option...');
         setIsRedirecting(false);
-        onClose();
+        setRedirectFailed(true);
       }, 3000);
       
     } catch (error) {
       console.error('Redirect failed:', error);
-      setConnectionError('Erro ao redirecionar. Tente abrir em nova aba.');
       setIsRedirecting(false);
+      setRedirectFailed(true);
     }
   };
 
@@ -101,22 +62,12 @@ export const RedirectModal = ({ isOpen, onClose, targetUrl, title }: RedirectMod
         </DialogHeader>
         
         <div className="space-y-4 mt-4">
-          {/* Connection testing indicator */}
-          {testingConnection && (
-            <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-4">
-              <p className="text-yellow-400 text-sm flex items-center gap-2">
-                <div className="w-4 h-4 border-2 border-yellow-400/30 border-t-yellow-400 rounded-full animate-spin" />
-                Testando conexão com o site...
-              </p>
-            </div>
-          )}
-
-          {/* Error message */}
-          {connectionError && (
+          {/* Redirect failed message */}
+          {redirectFailed && (
             <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4">
               <p className="text-red-400 text-sm flex items-center gap-2">
                 <AlertCircle size={16} />
-                {connectionError}
+                Redirecionamento falhou. Tente abrir em nova aba.
               </p>
             </div>
           )}
@@ -135,14 +86,14 @@ export const RedirectModal = ({ isOpen, onClose, targetUrl, title }: RedirectMod
               variant="outline"
               onClick={onClose}
               className="border-white/20 text-white hover:bg-white/10"
-              disabled={isRedirecting || testingConnection}
+              disabled={isRedirecting}
             >
               Cancelar
             </Button>
             
             <Button
               onClick={handleRedirect}
-              disabled={isRedirecting || testingConnection}
+              disabled={isRedirecting}
               className="bg-primary text-black hover:bg-primary/90 font-semibold"
             >
               {isRedirecting ? (
@@ -158,8 +109,8 @@ export const RedirectModal = ({ isOpen, onClose, targetUrl, title }: RedirectMod
               )}
             </Button>
 
-            {/* Fallback button for errors */}
-            {connectionError && (
+            {/* Fallback button for failed redirects */}
+            {redirectFailed && (
               <Button
                 onClick={handleOpenInNewTab}
                 variant="outline"
