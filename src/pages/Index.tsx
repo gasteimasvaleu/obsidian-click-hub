@@ -1,11 +1,30 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { FuturisticNavbar } from "@/components/FuturisticNavbar";
+import { GlassCard } from "@/components/GlassCard";
+import { NeonButton } from "@/components/NeonButton";
+import heroImage from "@/assets/hero-image.jpg";
 
 const Index = () => {
+  const handleStartClick = () => {
+    // Add your conversion logic here
+    console.log("Starting conversion flow...");
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
+    <div className="min-h-screen bg-black relative">
+      <FuturisticNavbar />
+      
+      <div className="flex items-center justify-center min-h-screen pt-16">
+        <GlassCard className="max-w-md mx-auto text-center">
+          <img 
+            src={heroImage}
+            alt="Imagem de destaque" 
+            className="w-full h-48 object-cover rounded-xl mb-6"
+          />
+          
+          <NeonButton onClick={handleStartClick}>
+            Começar Agora
+          </NeonButton>
+        </GlassCard>
       </div>
     </div>
   );
