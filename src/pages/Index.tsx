@@ -22,8 +22,8 @@ const Index = () => {
     <div className="min-h-screen bg-black relative pb-24">
       <FuturisticNavbar />
       
-      <div className="flex items-center justify-center min-h-screen pt-16">
-        <GlassCard className="max-w-md mx-auto text-center">
+      <div className="flex items-center justify-center min-h-screen pt-16 px-4">
+        <GlassCard className="w-full max-w-sm sm:max-w-md mx-auto text-center">
           <AspectRatio ratio={1} className="w-48 mx-auto mb-6">
             <img 
               src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/image.png"
