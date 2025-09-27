@@ -10,7 +10,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black relative">
+    <div className="min-h-screen bg-black relative pb-24">
       <FuturisticNavbar />
       
       <div className="flex items-center justify-center min-h-screen pt-16">
