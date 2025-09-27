@@ -1,6 +1,7 @@
 import { FuturisticNavbar } from "@/components/FuturisticNavbar";
 import { GlassCard } from "@/components/GlassCard";
 import { NeonButton } from "@/components/NeonButton";
+// Cache refresh fix
 
 const Index = () => {
   return (
