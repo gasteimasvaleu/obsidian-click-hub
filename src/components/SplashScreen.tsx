@@ -111,13 +111,6 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
         </div>
       </video>
 
-      {/* Optional skip button */}
-      <button
-        onClick={handleComplete}
-        className="absolute top-4 right-4 text-white/70 hover:text-white text-sm font-medium transition-colors duration-200 z-10"
-      >
-        Pular
-      </button>
     </div>
   );
 };
