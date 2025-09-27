@@ -11,42 +11,42 @@ interface RedirectModalProps {
 }
 
 export const RedirectModal = ({ isOpen, onClose, targetUrl, title }: RedirectModalProps) => {
-  const [isRedirecting, setIsRedirecting] = useState(false);
-  const [redirectFailed, setRedirectFailed] = useState(false);
+  const [isOpening, setIsOpening] = useState(false);
 
-  const handleRedirect = () => {
-    console.log('Starting redirect to:', targetUrl);
-    setIsRedirecting(true);
-    setRedirectFailed(false);
+  const handleOpenPopup = () => {
+    console.log('Opening login popup for:', targetUrl);
+    setIsOpening(true);
     
     try {
       // Save app state in localStorage for when user returns
       localStorage.setItem('returnUrl', window.location.pathname);
       localStorage.setItem('appState', JSON.stringify({ timestamp: Date.now() }));
       
-      console.log('Redirecting to external site...');
+      // Calculate center position for popup
+      const width = 500;
+      const height = 700;
+      const left = (window.screen.width - width) / 2;
+      const top = (window.screen.height - height) / 2;
       
-      // Direct redirect
-      window.location.href = targetUrl;
+      console.log('Opening centered popup window...');
       
-      // Fallback: If still on page after 3 seconds, show new tab option
+      // Open popup window
+      window.open(
+        targetUrl,
+        'loginWindow',
+        `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes,status=yes,location=yes`
+      );
+      
+      // Close modal after opening popup
       setTimeout(() => {
-        console.log('Redirect may have failed, showing new tab option...');
-        setIsRedirecting(false);
-        setRedirectFailed(true);
-      }, 3000);
+        setIsOpening(false);
+        onClose();
+      }, 500);
       
     } catch (error) {
-      console.error('Redirect failed:', error);
-      setIsRedirecting(false);
-      setRedirectFailed(true);
+      console.error('Failed to open popup:', error);
+      setIsOpening(false);
     }
-  };
-
-  const handleOpenInNewTab = () => {
-    console.log('Opening in new tab:', targetUrl);
-    window.open(targetUrl, '_blank');
-    onClose();
   };
 
   return (
@@ -54,29 +54,19 @@ export const RedirectModal = ({ isOpen, onClose, targetUrl, title }: RedirectMod
       <DialogContent className="bg-black/90 border border-primary/20 backdrop-blur-lg max-w-md">
         <DialogHeader className="text-center">
           <DialogTitle className="text-primary text-xl font-semibold mb-2">
-            Redirecionamento para Login
+            Janela de Login
           </DialogTitle>
           <DialogDescription className="text-white/80 text-base leading-relaxed">
-            Você será redirecionado para a página de login externa do <strong>{title}</strong>.
+            Uma janela popup será aberta para o login no <strong>{title}</strong>.
           </DialogDescription>
         </DialogHeader>
         
         <div className="space-y-4 mt-4">
-          {/* Redirect failed message */}
-          {redirectFailed && (
-            <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4">
-              <p className="text-red-400 text-sm flex items-center gap-2">
-                <AlertCircle size={16} />
-                Redirecionamento falhou. Tente abrir em nova aba.
-              </p>
-            </div>
-          )}
-
           {/* Instructions */}
           <div className="bg-primary/10 border border-primary/20 rounded-lg p-4">
             <p className="text-white/90 text-sm flex items-center gap-2">
               <ArrowLeft size={16} className="text-primary" />
-              <strong>Para voltar ao app:</strong> Use o botão "Voltar" do seu navegador
+              <strong>Para voltar:</strong> Feche a janela popup e retorne a este app
             </p>
           </div>
           
@@ -86,42 +76,28 @@ export const RedirectModal = ({ isOpen, onClose, targetUrl, title }: RedirectMod
               variant="outline"
               onClick={onClose}
               className="border-white/20 text-white hover:bg-white/10"
-              disabled={isRedirecting}
+              disabled={isOpening}
             >
               Cancelar
             </Button>
             
             <Button
-              onClick={handleRedirect}
-              disabled={isRedirecting}
+              onClick={handleOpenPopup}
+              disabled={isOpening}
               className="bg-primary text-black hover:bg-primary/90 font-semibold"
             >
-              {isRedirecting ? (
+              {isOpening ? (
                 <div className="flex items-center gap-2">
                   <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
-                  Redirecionando...
+                  Abrindo...
                 </div>
               ) : (
                 <div className="flex items-center gap-2">
                   <ExternalLink size={16} />
-                  Continuar
+                  Abrir Janela
                 </div>
               )}
             </Button>
-
-            {/* Fallback button for failed redirects */}
-            {redirectFailed && (
-              <Button
-                onClick={handleOpenInNewTab}
-                variant="outline"
-                className="border-primary/20 text-primary hover:bg-primary/10"
-              >
-                <div className="flex items-center gap-2">
-                  <ExternalLink size={16} />
-                  Abrir Nova Aba
-                </div>
-              </Button>
-            )}
           </div>
         </div>
       </DialogContent>
