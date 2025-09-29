@@ -13,6 +13,21 @@ const AmigoDivino = () => {
       
       <div className="flex items-center justify-center min-h-screen pt-16">
         <GlassCard className="max-w-2xl mx-auto text-center">
+          {/* Animação */}
+          <div className="flex justify-center mb-8">
+            <video
+              src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/amigodivino.mp4"
+              className="max-w-full h-auto rounded-xl"
+              style={{ maxWidth: '500px', maxHeight: '500px' }}
+              autoPlay
+              muted
+              playsInline
+              onEnded={(e) => {
+                e.currentTarget.currentTime = 0;
+              }}
+            />
+          </div>
+          
           <h1 className="text-3xl font-bold text-primary mb-6">Amigo Divino</h1>
           <p className="text-primary/80 mb-8 text-lg">
             Conexão espiritual e orientação para sua jornada
