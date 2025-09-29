@@ -1,10 +1,13 @@
+import { useNavigate } from "react-router-dom";
 import { FuturisticNavbar } from "@/components/FuturisticNavbar";
 import { GlassCard } from "@/components/GlassCard";
 import { NeonButton } from "@/components/NeonButton";
 
 const AmigoDivino = () => {
+  const navigate = useNavigate();
+  
   const handleConnectClick = () => {
-    console.log("Conectando com Amigo Divino...");
+    navigate('/amigodivino/chat');
   };
 
   return (
