@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Info } from "lucide-react";
 
 export const FuturisticNavbar = () => {
@@ -7,10 +8,12 @@ export const FuturisticNavbar = () => {
         <h1 className="text-primary font-bold text-lg hover:animate-glow transition-all duration-300">
           BíbliaToonKIDS
         </h1>
-        <Info 
-          size={24} 
-          className="text-primary hover:animate-glow cursor-pointer transition-all duration-300" 
-        />
+        <Link to="/sobre">
+          <Info 
+            size={24} 
+            className="text-primary hover:animate-glow cursor-pointer transition-all duration-300" 
+          />
+        </Link>
       </div>
     </nav>
   );
