@@ -11,20 +11,22 @@ serve(async (req) => {
   }
 
   try {
-    const { type, theme, difficulty } = await req.json();
+    const { type, theme, difficulty, title } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
 
     if (!LOVABLE_API_KEY) {
       throw new Error('LOVABLE_API_KEY not configured');
     }
 
-    console.log('Generating game content:', { type, theme, difficulty });
+    console.log('Generating game content:', { type, title, theme, difficulty });
 
     let prompt = '';
     
     switch (type) {
       case 'quiz':
-        prompt = `Você é um especialista em educação bíblica. Gere 10 perguntas de múltipla escolha sobre "${theme}" com nível de dificuldade "${difficulty}".
+        prompt = `Você é um especialista em educação bíblica. Gere 10 perguntas de múltipla escolha sobre "${title}" focando especificamente em "${theme}" com nível de dificuldade "${difficulty}".
+
+Certifique-se de que todas as perguntas estejam diretamente relacionadas ao tema "${title}".
 
 Para cada pergunta, forneça:
 - question: a pergunta em português
@@ -48,7 +50,9 @@ Retorne APENAS um JSON válido neste formato exato:
         break;
 
       case 'memory':
-        prompt = `Gere 12 pares de cards para um jogo da memória sobre "${theme}" com nível "${difficulty}".
+        prompt = `Gere 12 pares de cards para um jogo da memória sobre "${title}" focando em "${theme}" com nível "${difficulty}".
+
+Os cards devem ser específicos sobre "${title}".
 
 Para cada par, forneça:
 - card1: texto do primeiro card (nome/conceito)
@@ -68,7 +72,9 @@ Retorne APENAS um JSON válido neste formato exato:
         break;
 
       case 'wordsearch':
-        prompt = `Gere 15 palavras relacionadas a "${theme}" para um caça-palavras de dificuldade "${difficulty}".
+        prompt = `Gere 15 palavras relacionadas a "${title}" (tema: "${theme}") para um caça-palavras de dificuldade "${difficulty}".
+
+As palavras devem estar diretamente relacionadas a "${title}".
 
 Retorne APENAS um JSON válido neste formato exato:
 {
@@ -81,7 +87,9 @@ Retorne APENAS um JSON válido neste formato exato:
         break;
 
       case 'puzzle':
-        prompt = `Gere 6 cenas bíblicas sobre "${theme}" para um quebra-cabeça de dificuldade "${difficulty}".
+        prompt = `Gere 6 cenas bíblicas sobre "${title}" (tema: "${theme}") para um quebra-cabeça de dificuldade "${difficulty}".
+
+As cenas devem ser específicas de "${title}".
 
 Para cada cena:
 - title: título da cena

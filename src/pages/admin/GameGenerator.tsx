@@ -35,6 +35,7 @@ const GameGenerator = () => {
       const { data, error } = await supabase.functions.invoke('generate-game-content', {
         body: {
           type: gameData.type,
+          title: gameData.title,
           theme: gameData.theme,
           difficulty: gameData.difficulty,
         },
@@ -153,15 +154,15 @@ const GameGenerator = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="theme">Tema Bíblico</Label>
+                <Label htmlFor="theme">Tema Bíblico (Contexto)</Label>
                 <Input
                   id="theme"
-                  placeholder="Ex: Milagres de Jesus, Apóstolos, Criação..."
+                  placeholder="Ex: Êxodo, Novo Testamento, Milagres..."
                   value={gameData.theme}
                   onChange={(e) => setGameData({ ...gameData, theme: e.target.value })}
                 />
                 <p className="text-xs text-muted-foreground">
-                  A IA usará este tema para gerar o conteúdo do jogo
+                  💡 O título é o foco principal. O tema ajuda a contextualizar (ex: livro bíblico ou categoria)
                 </p>
               </div>
 
