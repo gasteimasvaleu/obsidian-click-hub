@@ -4,7 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Home, Package, BookOpen, Heart, User } from "lucide-react";
+import { Home, Package, BookOpen, Heart, User, Palette } from "lucide-react";
 import { NavBar } from "@/components/ui/tubelight-navbar";
 import { SplashScreen } from "./components/SplashScreen";
 import { PWAInstallModal } from "./components/PWAInstallModal";
@@ -22,7 +22,7 @@ const queryClient = new QueryClient();
 
 const navItems = [
   { name: 'Início', url: '/', icon: Home },
-  { name: 'BoobieGoods', url: '/boobiegoods', icon: Package },
+  { name: 'Colorir', url: '/boobiegoods', icon: Palette },
   { name: 'Ebooks', url: '/ebooks', icon: BookOpen },
   { name: 'Amigo Divino', url: '/amigodivino', icon: Heart },
   { name: 'Sobre', url: '/sobre', icon: User }

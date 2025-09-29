@@ -130,7 +130,7 @@ const BoobieGoods = () => {
       
       const a = document.createElement('a');
       a.href = url;
-      a.download = `bobbie-goods-coloring-${Date.now()}.webp`;
+      a.download = `foto-para-colorir-${Date.now()}.webp`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -179,11 +179,11 @@ const BoobieGoods = () => {
           
           <div className="flex items-center justify-center gap-3 mb-4">
             <Wand2 className="text-primary animate-glow" size={32} />
-            <h1 className="text-4xl font-bold text-primary">BoobieGoods AI</h1>
+            <h1 className="text-4xl font-bold text-primary">Foto para Colorir AI</h1>
             <Sparkles className="text-primary animate-glow" size={32} />
           </div>
           <p className="text-primary/80 text-lg max-w-2xl mx-auto">
-            Transforme suas fotos em desenhos estilo "Bobbie Goods" para colorir usando IA avançada
+            Transforme suas fotos em desenhos para colorir usando IA avançada
           </p>
         </div>
 
