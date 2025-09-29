@@ -159,7 +159,7 @@ const BoobieGoods = () => {
     <div className="min-h-screen bg-black relative">
       <FuturisticNavbar />
       
-      <div className="container mx-auto px-4 pt-24 pb-12">
+      <div className="container mx-auto px-4 pt-24 pb-32">
         {/* Header */}
         <div className="text-center mb-12">
           {/* Animação */}
