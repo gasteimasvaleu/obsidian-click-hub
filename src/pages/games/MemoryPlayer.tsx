@@ -137,10 +137,10 @@ export default function MemoryPlayer() {
       }, 600);
     } else {
       // No match
-      setTimeout(() => {
-        setFlippedCards([]);
-        setCanFlip(true);
-      }, 1200);
+        setTimeout(() => {
+          setFlippedCards([]);
+          setCanFlip(true);
+        }, 3000);
     }
   };
 
