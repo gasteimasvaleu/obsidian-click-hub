@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { FuturisticNavbar } from "@/components/FuturisticNavbar";
 import { GlassCard } from "@/components/GlassCard";
@@ -19,6 +20,7 @@ interface Game {
 }
 
 const Games = () => {
+  const navigate = useNavigate();
   const [games, setGames] = useState<Game[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -108,7 +110,10 @@ const Games = () => {
                     </div>
 
                     {/* Action Button */}
-                    <Button className="w-full">
+                    <Button 
+                      className="w-full"
+                      onClick={() => navigate(`/games/${game.id}/play`)}
+                    >
                       Jogar Agora
                     </Button>
                   </div>

@@ -16,6 +16,7 @@ import Ebooks from "./pages/Ebooks";
 import AmigoDivino from "./pages/AmigoDivino";
 import Sobre from "./pages/Sobre";
 import Games from "./pages/Games";
+import QuizPlayer from "./pages/games/QuizPlayer";
 import Login from "./pages/Login";
 import Dashboard from "./pages/admin/Dashboard";
 import EbooksManager from "./pages/admin/EbooksManager";
@@ -92,6 +93,7 @@ const App = () => {
               <Route path="/amigodivino/chat" element={<ChatInterface />} />
               <Route path="/sobre" element={<Sobre />} />
               <Route path="/games" element={<Games />} />
+              <Route path="/games/:id/play" element={<QuizPlayer />} />
               <Route path="/login" element={<Login />} />
               <Route path="/admin" element={<Dashboard />} />
               <Route path="/admin/ebooks" element={<EbooksManager />} />
