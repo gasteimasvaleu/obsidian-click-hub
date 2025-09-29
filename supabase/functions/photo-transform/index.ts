@@ -32,9 +32,9 @@ const runwareService = {
         height: 1024,
         numberResults: 1,
         outputFormat: "WEBP",
-        CFGScale: 1,
+        CFGScale: 6,
         scheduler: "FlowMatchEulerDiscreteScheduler",
-        strength: 0.8
+        strength: 0.45
       }
     ];
 
@@ -95,7 +95,7 @@ Deno.serve(async (req) => {
     console.log('Processing image transformation for:', fileName);
 
     // Define the prompt for Bobbie Goods coloring book style
-    const prompt = "Convert this photo into a Bobbie Goods coloring book style drawing with clear black outlines, simple shapes, white background, perfect for children to color, cartoon style, line art, black and white coloring page";
+    const prompt = "Transform this image into a Bobbie Goods coloring book style while preserving the original composition, poses, and main elements. Convert to black and white line art with clear outlines, simple shapes, cartoon style, perfect for children to color. Keep the same subjects, poses, and overall layout as the original image. White background, clean line art style.";
 
     // Call Runware API to transform the image
     const transformedImageUrl = await runwareService.generateImage(imageUrl, prompt);
