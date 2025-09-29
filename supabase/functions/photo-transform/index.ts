@@ -95,7 +95,7 @@ Deno.serve(async (req) => {
     console.log('Processing image transformation for:', fileName);
 
     // Define the prompt for Bobbie Goods coloring book style
-    const prompt = "Transform this image into a Bobbie Goods coloring book style while preserving the original composition, poses, and main elements. Convert to black and white line art with clear outlines, simple shapes, cartoon style, perfect for children to color. Keep the same subjects, poses, and overall layout as the original image. White background, clean line art style.";
+    const prompt = "Transform this image into a Bobbie Goods coloring book style while preserving the original composition, poses, and main elements. IMPORTANT: Maintain the exact gender characteristics of any people in the image - if the person is male, keep masculine features; if female, keep feminine features. Convert to black and white line art with clear outlines, simple shapes, cartoon style, perfect for children to color. Keep the same subjects, poses, overall layout, and gender identity as the original image. White background, clean line art style.";
 
     // Call Runware API to transform the image
     const transformedImageUrl = await runwareService.generateImage(imageUrl, prompt);
