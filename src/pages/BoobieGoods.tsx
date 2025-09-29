@@ -141,6 +141,21 @@ const BoobieGoods = () => {
       <div className="container mx-auto px-4 pt-24 pb-12">
         {/* Header */}
         <div className="text-center mb-12">
+          {/* Animação */}
+          <div className="flex justify-center mb-8">
+            <video
+              src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/animacaoebooks.mp4"
+              className="max-w-full h-auto rounded-xl"
+              style={{ maxWidth: '500px', maxHeight: '500px' }}
+              autoPlay
+              muted
+              playsInline
+              onEnded={(e) => {
+                e.currentTarget.currentTime = 0;
+              }}
+            />
+          </div>
+          
           <div className="flex items-center justify-center gap-3 mb-4">
             <Wand2 className="text-primary animate-glow" size={32} />
             <h1 className="text-4xl font-bold text-primary">BoobieGoods AI</h1>
