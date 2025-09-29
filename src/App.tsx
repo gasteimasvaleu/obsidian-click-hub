@@ -16,6 +16,7 @@ import AmigoDivino from "./pages/AmigoDivino";
 import Sobre from "./pages/Sobre";
 import NotFound from "./pages/NotFound";
 import { ExternalFrame } from "./components/ExternalFrame";
+import { ChatInterface } from "./components/ChatInterface";
 
 const queryClient = new QueryClient();
 
@@ -80,7 +81,7 @@ const App = () => {
             <Route path="/boobiegoods" element={<BoobieGoods />} />
             <Route path="/ebooks" element={<Ebooks />} />
             <Route path="/amigodivino" element={<AmigoDivino />} />
-            <Route path="/amigodivino/chat" element={<ExternalFrame url="https://hook.us2.make.com/f2v3uj2teps5wg8xirjjlcicqbqpcvy6" title="Amigo Divino - Orientador Espiritual" />} />
+            <Route path="/amigodivino/chat" element={<ChatInterface />} />
             <Route path="/sobre" element={<Sobre />} />
             <Route path="/external-login" element={<ExternalFrame url="https://bibliatoonkids.themembers.com.br/login" title="Login - Biblia Toon Kids" />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
