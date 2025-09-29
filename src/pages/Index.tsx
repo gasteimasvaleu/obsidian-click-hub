@@ -22,6 +22,16 @@ const Index = () => {
     <div className="h-screen bg-black relative flex flex-col">
       <FuturisticNavbar />
       
+      {/* Logo image section */}
+      <div className="flex justify-center px-4 pt-8 pb-4">
+        <img 
+          src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/logoapp2.png"
+          alt="Logo BibliaToonKids" 
+          className="max-w-full h-auto"
+          style={{ maxWidth: '500px', maxHeight: '300px' }}
+        />
+      </div>
+      
       <div className="flex items-center justify-center flex-1 px-4">
         <GlassCard className="w-full max-w-lg sm:max-w-xl mx-auto text-center">
           <AspectRatio ratio={1} className="w-full mx-auto mb-6">
