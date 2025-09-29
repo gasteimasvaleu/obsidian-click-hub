@@ -54,11 +54,11 @@ const Games = () => {
     <div className="min-h-screen bg-black pb-24">
       <FuturisticNavbar />
       
-      <main className="container mx-auto px-4 pt-8">
+      <main className="container mx-auto px-4 pt-4">
         {/* Hero Section */}
         <div className="text-center mb-12 animate-fade-in">
           {/* Video Animation */}
-          <div className="flex justify-center mb-2">
+          <div className="flex justify-center">
             <video
               className="w-[500px] h-[500px] max-w-full"
               autoPlay
@@ -77,7 +77,7 @@ const Games = () => {
             </video>
           </div>
 
-          <h1 className="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-primary via-primary-glow to-primary bg-clip-text text-transparent">
+          <h1 className="text-3xl font-bold mb-4 bg-gradient-to-r from-primary via-primary-glow to-primary bg-clip-text text-transparent">
             Jogos & Quizzes
           </h1>
           <p className="text-xl text-foreground/80">
