@@ -118,7 +118,7 @@ export const ChatInterface = () => {
               <div
                 className={`max-w-[80%] p-4 rounded-lg ${
                   message.role === "user"
-                    ? "bg-primary/20 border border-primary/40 text-primary-foreground ml-auto"
+                    ? "bg-primary/20 border border-primary/40 text-white ml-auto"
                     : "backdrop-blur-lg bg-white/5 border border-white/10 text-foreground"
                 }`}
               >
