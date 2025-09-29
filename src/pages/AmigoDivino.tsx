@@ -12,7 +12,7 @@ const AmigoDivino = () => {
       <FuturisticNavbar />
       
       <div className="flex items-center justify-center min-h-screen pt-16">
-        <GlassCard className="max-w-2xl mx-auto text-center">
+        <div className="flex flex-col items-center">
           {/* Animação */}
           <div className="flex justify-center mb-8">
             <video
@@ -28,7 +28,8 @@ const AmigoDivino = () => {
             />
           </div>
           
-          <h1 className="text-3xl font-bold text-primary mb-6">Amigo Divino</h1>
+          <GlassCard className="max-w-2xl mx-auto text-center">
+            <h1 className="text-3xl font-bold text-primary mb-6">Amigo Divino</h1>
           <p className="text-primary/80 mb-8 text-lg">
             Conexão espiritual e orientação para sua jornada
           </p>
@@ -60,6 +61,7 @@ const AmigoDivino = () => {
             Começar Jornada
           </NeonButton>
         </GlassCard>
+        </div>
       </div>
     </div>
   );
