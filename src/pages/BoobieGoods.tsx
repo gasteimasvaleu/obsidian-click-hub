@@ -179,10 +179,10 @@ const BoobieGoods = () => {
           
           <div className="flex items-center justify-center gap-3 mb-4">
             <Wand2 className="text-primary animate-glow" size={32} />
-            <h1 className="text-4xl font-bold text-primary">Foto para Colorir AI</h1>
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-primary via-primary to-primary/60 bg-clip-text text-transparent">Foto para Colorir AI</h1>
             <Sparkles className="text-primary animate-glow" size={32} />
           </div>
-          <p className="text-primary/80 text-lg max-w-2xl mx-auto">
+          <p className="text-foreground/80 text-lg max-w-2xl mx-auto">
             Transforme suas fotos em desenhos para colorir usando IA avançada
           </p>
         </div>
@@ -208,13 +208,13 @@ const BoobieGoods = () => {
               >
                 <input {...getInputProps()} />
                 <ImageIcon className="mx-auto mb-4 text-primary/60" size={48} />
-                <p className="text-primary/80 mb-2">
+                <p className="text-muted-foreground mb-2">
                   {isDragActive 
                     ? "Solte a imagem aqui..." 
                     : "Arraste e solte ou clique para selecionar"
                   }
                 </p>
-                <p className="text-primary/60 text-sm">
+                <p className="text-muted-foreground/60 text-sm">
                   PNG, JPG, JPEG, WEBP até 10MB
                 </p>
               </div>
@@ -266,7 +266,7 @@ const BoobieGoods = () => {
               <div className="border-2 border-dashed border-primary/30 rounded-xl p-8 text-center h-64 flex items-center justify-center">
                 <div>
                   <ImageIcon className="mx-auto mb-4 text-primary/40" size={48} />
-                  <p className="text-primary/60">
+                  <p className="text-muted-foreground">
                     {isTransforming 
                       ? "Transformando com IA..." 
                       : "O resultado aparecerá aqui"
@@ -300,21 +300,21 @@ const BoobieGoods = () => {
           <div className="glass rounded-xl p-4 text-center">
             <Wand2 className="mx-auto mb-3 text-primary" size={24} />
             <h3 className="text-primary font-semibold mb-2">IA Avançada</h3>
-            <p className="text-primary/60 text-sm">
+            <p className="text-muted-foreground text-sm">
               Processamento inteligente com Runware AI
             </p>
           </div>
           <div className="glass rounded-xl p-4 text-center">
             <ImageIcon className="mx-auto mb-3 text-primary" size={24} />
             <h3 className="text-primary font-semibold mb-2">Alta Qualidade</h3>
-            <p className="text-primary/60 text-sm">
+            <p className="text-muted-foreground text-sm">
               Desenhos em 1024x1024px otimizados
             </p>
           </div>
           <div className="glass rounded-xl p-4 text-center">
             <Download className="mx-auto mb-3 text-primary" size={24} />
             <h3 className="text-primary font-semibold mb-2">Download Instantâneo</h3>
-            <p className="text-primary/60 text-sm">
+            <p className="text-muted-foreground text-sm">
               Baixe seus desenhos em segundos
             </p>
           </div>
