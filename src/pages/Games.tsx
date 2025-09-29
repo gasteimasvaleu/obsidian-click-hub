@@ -58,7 +58,7 @@ const Games = () => {
         {/* Hero Section */}
         <div className="text-center mb-12 animate-fade-in">
           {/* Video Animation */}
-          <div className="flex justify-center mb-6">
+          <div className="flex justify-center mb-8">
             <video
               className="w-[500px] h-[500px] max-w-full"
               autoPlay
