@@ -12,7 +12,7 @@ import { CheckCircle2, XCircle, ArrowLeft, RotateCcw } from "lucide-react";
 interface QuizQuestion {
   question: string;
   options: string[];
-  correct: number;
+  correctAnswer: number;
   explanation: string;
   verse: string;
 }
@@ -77,7 +77,7 @@ const QuizPlayer = () => {
     setSelectedAnswer(answerIndex);
     setShowFeedback(true);
     
-    const isCorrect = answerIndex === game!.content_json.questions[currentQuestion].correct;
+    const isCorrect = answerIndex === game!.content_json.questions[currentQuestion].correctAnswer;
     setAnswers([...answers, isCorrect]);
     
     if (isCorrect) {
@@ -119,7 +119,7 @@ const QuizPlayer = () => {
   const questions = game.content_json.questions;
   const currentQ = questions[currentQuestion];
   const progress = ((currentQuestion + 1) / questions.length) * 100;
-  const isCorrect = selectedAnswer === currentQ.correct;
+  const isCorrect = selectedAnswer === currentQ.correctAnswer;
 
   if (gameFinished) {
     const percentage = Math.round((score / questions.length) * 100);
@@ -218,7 +218,7 @@ const QuizPlayer = () => {
             <div className="space-y-3 mb-6">
               {currentQ.options.map((option, index) => {
                 const isSelected = selectedAnswer === index;
-                const isCorrectAnswer = index === currentQ.correct;
+                const isCorrectAnswer = index === currentQ.correctAnswer;
                 
                 let buttonClass = "";
                 if (showFeedback) {
