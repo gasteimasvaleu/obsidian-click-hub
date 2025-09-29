@@ -45,10 +45,21 @@ export const ChatInterface = () => {
         throw new Error("Falha ao comunicar com o servidor");
       }
 
-      const data = await response.json();
+      const responseText = await response.text();
+
+      let assistantContent: string;
+      try {
+        // Tentar fazer parse como JSON
+        const data = JSON.parse(responseText);
+        assistantContent = data.response || responseText;
+      } catch {
+        // Se não for JSON válido, usar o texto direto
+        assistantContent = responseText;
+      }
+
       const assistantMessage: Message = {
         role: "assistant",
-        content: data.response || "Desculpe, não consegui processar sua mensagem.",
+        content: assistantContent || "Desculpe, não consegui processar sua mensagem.",
       };
 
       setMessages((prev) => [...prev, assistantMessage]);
