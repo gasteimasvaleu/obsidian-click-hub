@@ -54,7 +54,7 @@ const Games = () => {
     <div className="min-h-screen bg-black pb-24">
       <FuturisticNavbar />
       
-      <main className="container mx-auto px-4 pt-24">
+      <main className="container mx-auto px-4 pt-16">
         {/* Hero Section */}
         <div className="text-center mb-12 animate-fade-in">
           {/* Video Animation */}
