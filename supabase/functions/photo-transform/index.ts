@@ -28,6 +28,8 @@ const runwareService = {
         positivePrompt: prompt,
         inputImageURL: imageUrl,
         model: "runware:100@1",
+        width: 1024,
+        height: 1024,
         numberResults: 1,
         outputFormat: "WEBP",
         CFGScale: 1.5,
