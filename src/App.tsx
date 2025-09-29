@@ -9,12 +9,18 @@ import { NavBar } from "@/components/ui/tubelight-navbar";
 import { SplashScreen } from "./components/SplashScreen";
 import { PWAInstallModal } from "./components/PWAInstallModal";
 import { usePWAInstall } from "./hooks/usePWAInstall";
+import { AuthProvider } from "./contexts/AuthContext";
 import Index from "./pages/Index";
 import BoobieGoods from "./pages/BoobieGoods";
 import Ebooks from "./pages/Ebooks";
 import AmigoDivino from "./pages/AmigoDivino";
 import Sobre from "./pages/Sobre";
 import Games from "./pages/Games";
+import Login from "./pages/Login";
+import Dashboard from "./pages/admin/Dashboard";
+import EbooksManager from "./pages/admin/EbooksManager";
+import GamesManager from "./pages/admin/GamesManager";
+import GameGenerator from "./pages/admin/GameGenerator";
 import NotFound from "./pages/NotFound";
 import { ExternalFrame } from "./components/ExternalFrame";
 import { ChatInterface } from "./components/ChatInterface";
@@ -73,33 +79,40 @@ const App = () => {
   // Show main app after splash
   return (
     <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/boobiegoods" element={<BoobieGoods />} />
-            <Route path="/ebooks" element={<Ebooks />} />
-            <Route path="/amigodivino" element={<AmigoDivino />} />
-            <Route path="/amigodivino/chat" element={<ChatInterface />} />
-            <Route path="/sobre" element={<Sobre />} />
-            <Route path="/games" element={<Games />} />
-            <Route path="/external-login" element={<ExternalFrame url="https://bibliatoonkids.themembers.com.br/login" title="Login - Biblia Toon Kids" />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-          <NavBar items={navItems} />
-        </BrowserRouter>
-        
-        {/* PWA Install Modal */}
-        <PWAInstallModal 
-          isOpen={showPWAModal}
-          onClose={handlePWAClose}
-          onInstall={handlePWAInstall}
-          isInstallable={isInstallable}
-        />
-      </TooltipProvider>
+      <AuthProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/boobiegoods" element={<BoobieGoods />} />
+              <Route path="/ebooks" element={<Ebooks />} />
+              <Route path="/amigodivino" element={<AmigoDivino />} />
+              <Route path="/amigodivino/chat" element={<ChatInterface />} />
+              <Route path="/sobre" element={<Sobre />} />
+              <Route path="/games" element={<Games />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/admin" element={<Dashboard />} />
+              <Route path="/admin/ebooks" element={<EbooksManager />} />
+              <Route path="/admin/games" element={<GamesManager />} />
+              <Route path="/admin/games/generate" element={<GameGenerator />} />
+              <Route path="/external-login" element={<ExternalFrame url="https://bibliatoonkids.themembers.com.br/login" title="Login - Biblia Toon Kids" />} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+            <NavBar items={navItems} />
+          </BrowserRouter>
+          
+          {/* PWA Install Modal */}
+          <PWAInstallModal 
+            isOpen={showPWAModal}
+            onClose={handlePWAClose}
+            onInstall={handlePWAInstall}
+            isInstallable={isInstallable}
+          />
+        </TooltipProvider>
+      </AuthProvider>
     </QueryClientProvider>
   );
 };

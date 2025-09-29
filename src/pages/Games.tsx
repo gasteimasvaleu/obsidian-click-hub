@@ -1,48 +1,46 @@
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { FuturisticNavbar } from "@/components/FuturisticNavbar";
 import { GlassCard } from "@/components/GlassCard";
-import { Brain, Puzzle, Search, Grid3x3 } from "lucide-react";
+import * as Icons from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+
+interface Game {
+  id: string;
+  title: string;
+  description: string;
+  type: string;
+  difficulty: string;
+  available: boolean;
+  icon_name: string;
+  color: string;
+}
 
 const Games = () => {
-  const games = [
-    {
-      id: 1,
-      title: "Quiz Bíblico",
-      description: "Teste seus conhecimentos sobre histórias e personagens da Bíblia",
-      icon: Brain,
-      difficulty: "Fácil",
-      available: true,
-      color: "text-primary",
-    },
-    {
-      id: 2,
-      title: "Jogo da Memória",
-      description: "Encontre os pares de personagens e histórias bíblicas",
-      icon: Grid3x3,
-      difficulty: "Médio",
-      available: false,
-      color: "text-blue-400",
-    },
-    {
-      id: 3,
-      title: "Caça-Palavras",
-      description: "Descubra palavras-chave escondidas nas histórias bíblicas",
-      icon: Search,
-      difficulty: "Fácil",
-      available: false,
-      color: "text-purple-400",
-    },
-    {
-      id: 4,
-      title: "Quebra-Cabeça",
-      description: "Monte cenas bíblicas e aprenda enquanto se diverte",
-      icon: Puzzle,
-      difficulty: "Médio",
-      available: false,
-      color: "text-orange-400",
-    },
-  ];
+  const [games, setGames] = useState<Game[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadGames();
+  }, []);
+
+  const loadGames = async () => {
+    const { data, error } = await supabase
+      .from('games')
+      .select('*')
+      .eq('available', true)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      toast.error('Erro ao carregar jogos');
+      console.error(error);
+    } else {
+      setGames(data || []);
+    }
+    setLoading(false);
+  };
 
   const difficultyColors = {
     Fácil: "bg-primary/20 text-primary border-primary/40",
@@ -67,57 +65,67 @@ const Games = () => {
 
         {/* Games Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl mx-auto">
-          {games.map((game, index) => {
-            const Icon = game.icon;
-            return (
-              <GlassCard
-                key={game.id}
-                className="hover:scale-105 transition-transform duration-300"
-              >
-                <div className="flex flex-col h-full">
-                  {/* Icon and Badge */}
-                  <div className="flex items-start justify-between mb-4">
-                    <div className={`p-3 rounded-lg bg-background/50 ${game.color}`}>
-                      <Icon size={32} />
+          {loading ? (
+            <div className="col-span-2 text-center py-12">
+              <p className="text-muted-foreground">Carregando jogos...</p>
+            </div>
+          ) : games.length === 0 ? (
+            <div className="col-span-2 text-center py-12">
+              <p className="text-muted-foreground">
+                Nenhum jogo disponível no momento. Volte em breve! 🎮
+              </p>
+            </div>
+          ) : (
+            games.map((game) => {
+              const IconComponent = (Icons as any)[game.icon_name] || Icons.Gamepad2;
+              return (
+                <GlassCard
+                  key={game.id}
+                  className="hover:scale-105 transition-transform duration-300"
+                >
+                  <div className="flex flex-col h-full">
+                    {/* Icon and Badge */}
+                    <div className="flex items-start justify-between mb-4">
+                      <div className={`p-3 rounded-lg bg-background/50 ${game.color}`}>
+                        <IconComponent size={32} />
+                      </div>
+                      <Badge 
+                        variant="outline" 
+                        className={`${difficultyColors[game.difficulty as keyof typeof difficultyColors]} border`}
+                      >
+                        {game.difficulty}
+                      </Badge>
                     </div>
-                    <Badge 
-                      variant="outline" 
-                      className={`${difficultyColors[game.difficulty as keyof typeof difficultyColors]} border`}
-                    >
-                      {game.difficulty}
-                    </Badge>
-                  </div>
 
-                  {/* Content */}
-                  <div className="flex-grow">
-                    <h3 className="text-2xl font-bold mb-2 text-foreground">
-                      {game.title}
-                    </h3>
-                    <p className="text-muted-foreground mb-6">
-                      {game.description}
-                    </p>
-                  </div>
+                    {/* Content */}
+                    <div className="flex-grow">
+                      <h3 className="text-2xl font-bold mb-2 text-foreground">
+                        {game.title}
+                      </h3>
+                      <p className="text-muted-foreground mb-6">
+                        {game.description}
+                      </p>
+                    </div>
 
-                  {/* Action Button */}
-                  <Button
-                    className="w-full"
-                    variant={game.available ? "default" : "secondary"}
-                    disabled={!game.available}
-                  >
-                    {game.available ? "Jogar Agora" : "Em Breve"}
-                  </Button>
-                </div>
-              </GlassCard>
-            );
-          })}
+                    {/* Action Button */}
+                    <Button className="w-full">
+                      Jogar Agora
+                    </Button>
+                  </div>
+                </GlassCard>
+              );
+            })
+          )}
         </div>
 
         {/* Coming Soon Message */}
-        <div className="text-center mt-12 animate-fade-in">
-          <p className="text-muted-foreground">
-            Mais jogos em breve! 🚀
-          </p>
-        </div>
+        {!loading && games.length > 0 && (
+          <div className="text-center mt-12 animate-fade-in">
+            <p className="text-muted-foreground">
+              Mais jogos em breve! 🚀
+            </p>
+          </div>
+        )}
       </main>
     </div>
   );
