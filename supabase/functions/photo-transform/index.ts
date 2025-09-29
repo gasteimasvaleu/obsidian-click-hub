@@ -30,10 +30,10 @@ const runwareService = {
         model: "runware:100@1",
         numberResults: 1,
         outputFormat: "WEBP",
-        CFGScale: 4,
+        CFGScale: 1.5,
         scheduler: "FlowMatchEulerDiscreteScheduler",
-        strength: 0.3,
-        steps: 10
+        strength: 0.6,
+        steps: 20
       }
     ];
 
@@ -46,7 +46,9 @@ const runwareService = {
     });
 
     if (!response.ok) {
-      throw new Error(`Runware API error: ${response.statusText}`);
+      const errorBody = await response.text();
+      console.error('Runware API error details:', errorBody);
+      throw new Error(`Runware API error: ${response.statusText} - ${errorBody}`);
     }
 
     const result = await response.json();
@@ -94,7 +96,7 @@ Deno.serve(async (req) => {
     console.log('Processing image transformation for:', fileName);
 
     // Define the prompt for Bobbie Goods coloring book style with better preservation
-    const prompt = "Convert this EXACT image into a black and white coloring book style. Keep the SAME person, SAME pose, SAME facial expression, SAME composition, and SAME background elements. IMPORTANT: Maintain the exact gender characteristics - if the person is male, keep masculine features; if female, keep feminine features. Only change the style to simple line art with clear outlines suitable for children to color. Do not add or remove any elements, people, or change the scene. Preserve all details of the original image including facial features, hair, clothing, and poses. White background, clean black lines only.";
+    const prompt = "Transform into black and white coloring book style with simple line art, clear outlines, white background, clean black lines only. Maintain all original features and composition.";
 
     // Call Runware API to transform the image
     const transformedImageUrl = await runwareService.generateImage(imageUrl, prompt);
