@@ -11,8 +11,8 @@ const AmigoDivino = () => {
     <div className="min-h-screen bg-black relative pb-24">
       <FuturisticNavbar />
       
-      <div className="flex items-center justify-center min-h-screen pt-16">
-        <div className="flex flex-col items-center">
+      <div className="flex items-center justify-center min-h-screen pt-16 px-4">
+        <div className="flex flex-col items-center w-full">
           {/* Animação */}
           <div className="flex justify-center mb-8">
             <video
@@ -28,7 +28,7 @@ const AmigoDivino = () => {
             />
           </div>
           
-          <GlassCard className="max-w-2xl mx-auto text-center">
+          <GlassCard className="w-full max-w-lg mx-auto text-center">
             <h1 className="text-3xl font-bold text-primary mb-6">Amigo Divino</h1>
           <p className="text-primary/80 mb-8 text-lg">
             Conexão espiritual e orientação para sua jornada
