@@ -54,11 +54,11 @@ const Games = () => {
     <div className="min-h-screen bg-black pb-24">
       <FuturisticNavbar />
       
-      <main className="container mx-auto px-4 pt-12">
+      <main className="container mx-auto px-4 pt-8">
         {/* Hero Section */}
         <div className="text-center mb-12 animate-fade-in">
           {/* Video Animation */}
-          <div className="flex justify-center mb-4">
+          <div className="flex justify-center mb-2">
             <video
               className="w-[500px] h-[500px] max-w-full"
               autoPlay
