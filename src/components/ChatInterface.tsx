@@ -95,7 +95,7 @@ export const ChatInterface = () => {
           >
             <ArrowLeft className="h-5 w-5" />
           </Button>
-          <h1 className="text-xl font-bold bg-gradient-to-r from-primary to-purple-400 bg-clip-text text-transparent">
+          <h1 className="text-xl font-bold text-primary">
             Amigo Divino - Orientador Espiritual
           </h1>
         </div>
