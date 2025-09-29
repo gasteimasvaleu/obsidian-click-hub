@@ -51,9 +51,30 @@ const BoobieGoods = () => {
     toast.info("Iniciando transformação...");
 
     try {
+      // Função para sanitizar nome do arquivo
+      const sanitizeFileName = (fileName: string): string => {
+        // Remove extensão
+        const nameWithoutExt = fileName.substring(0, fileName.lastIndexOf('.')) || fileName;
+        const extension = fileName.substring(fileName.lastIndexOf('.'));
+        
+        // Sanitiza o nome:
+        // - Remove acentos e caracteres especiais
+        // - Substitui espaços por underscores
+        // - Mantém apenas letras, números, hífens e underscores
+        const sanitized = nameWithoutExt
+          .normalize('NFD') // Decompõe caracteres acentuados
+          .replace(/[\u0300-\u036f]/g, '') // Remove acentos
+          .replace(/[^a-zA-Z0-9-_]/g, '_') // Substitui caracteres especiais por underscore
+          .replace(/_+/g, '_') // Remove underscores duplicados
+          .toLowerCase();
+        
+        return sanitized + extension.toLowerCase();
+      };
+
       // Generate unique filename
       const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-      const fileName = `original_${timestamp}_${originalFile.name}`;
+      const sanitizedOriginalName = sanitizeFileName(originalFile.name);
+      const fileName = `original_${timestamp}_${sanitizedOriginalName}`;
 
       // Upload original file to Supabase Storage
       const { data: uploadData, error: uploadError } = await supabase.storage
