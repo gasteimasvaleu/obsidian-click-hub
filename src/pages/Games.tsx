@@ -57,6 +57,26 @@ const Games = () => {
       <main className="container mx-auto px-4 pt-24">
         {/* Hero Section */}
         <div className="text-center mb-12 animate-fade-in">
+          {/* Video Animation */}
+          <div className="flex justify-center mb-6">
+            <video
+              className="w-[500px] h-[500px] max-w-full"
+              autoPlay
+              muted
+              playsInline
+              onEnded={(e) => {
+                const video = e.currentTarget;
+                video.currentTime = 0;
+                video.pause();
+              }}
+            >
+              <source 
+                src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/jesusgame.mp4" 
+                type="video/mp4" 
+              />
+            </video>
+          </div>
+
           <h1 className="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-primary via-primary-glow to-primary bg-clip-text text-transparent">
             Jogos & Quizzes
           </h1>
