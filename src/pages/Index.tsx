@@ -19,7 +19,7 @@ const Index = () => {
     }
   }, []);
   return (
-    <div className="h-screen bg-black relative flex flex-col">
+    <div className="min-h-screen bg-black relative flex flex-col pb-24">
       <FuturisticNavbar />
       
       {/* Logo image section */}
@@ -32,7 +32,7 @@ const Index = () => {
         />
       </div>
       
-      <div className="flex items-center justify-center flex-1 px-4">
+      <div className="flex items-center justify-center flex-1 px-4 pb-8">
         <GlassCard className="w-full max-w-lg sm:max-w-xl mx-auto text-center">
           <AspectRatio ratio={1} className="w-full mx-auto mb-6">
             <img 
