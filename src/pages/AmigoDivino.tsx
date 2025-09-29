@@ -32,29 +32,29 @@ const AmigoDivino = () => {
           </div>
           
           <GlassCard className="w-full max-w-lg mx-auto text-center">
-            <h1 className="text-3xl font-bold text-primary mb-6">Amigo Divino</h1>
-          <p className="text-primary/80 mb-8 text-lg">
+            <h1 className="text-3xl font-bold mb-6 bg-gradient-to-r from-primary via-primary to-primary/60 bg-clip-text text-transparent">Amigo Divino</h1>
+          <p className="text-foreground/80 mb-8 text-lg">
             Conexão espiritual e orientação para sua jornada
           </p>
           
           <div className="space-y-6 mb-8">
             <div className="glass rounded-xl p-6">
               <h3 className="text-primary font-semibold mb-4">Orientação Espiritual</h3>
-              <p className="text-primary/60 text-sm">
+              <p className="text-muted-foreground text-sm">
                 Encontre paz, propósito e direcionamento em sua caminhada
               </p>
             </div>
             
             <div className="glass rounded-xl p-6">
               <h3 className="text-primary font-semibold mb-4">Comunidade</h3>
-              <p className="text-primary/60 text-sm">
+              <p className="text-muted-foreground text-sm">
                 Conecte-se com outras pessoas em busca de crescimento espiritual
               </p>
             </div>
             
             <div className="glass rounded-xl p-6">
               <h3 className="text-primary font-semibold mb-4">Recursos</h3>
-              <p className="text-primary/60 text-sm">
+              <p className="text-muted-foreground text-sm">
                 Meditações, orações e conteúdo inspiracional diário
               </p>
             </div>
