@@ -31,7 +31,7 @@ const queryClient = new QueryClient();
 const navItems = [
   { name: 'Início', url: '/', icon: Home },
   { name: 'Colorir', url: '/boobiegoods', icon: Palette },
-  { name: 'Ebooks', url: '/ebooks', icon: BookOpen },
+  { name: 'Ebooks & Áudio', url: '/ebooks', icon: BookOpen },
   { name: 'Amigo Divino', url: '/amigodivino', icon: Heart },
   { name: 'Games', url: '/games', icon: Gamepad2 }
 ];
