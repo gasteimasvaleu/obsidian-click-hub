@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import QuizPlayer from "./QuizPlayer";
 import MemoryPlayer from "./MemoryPlayer";
 import WordSearchPlayer from "./WordSearchPlayer";
+import PuzzlePlayer from "./PuzzlePlayer";
 
 export default function GamePlayer() {
   const { id } = useParams();
@@ -78,20 +79,7 @@ export default function GamePlayer() {
     case "wordsearch":
       return <WordSearchPlayer />;
     case "puzzle":
-      return (
-        <div className="min-h-screen bg-gradient-to-b from-background to-background/80">
-          <FuturisticNavbar />
-          <div className="container mx-auto px-4 pt-24 pb-12">
-            <GlassCard className="max-w-md mx-auto text-center">
-              <h2 className="text-2xl font-bold text-primary mb-4">Em Breve!</h2>
-              <p className="mb-6">Este tipo de jogo ainda está sendo desenvolvido.</p>
-              <Button onClick={() => navigate("/games")}>
-                Voltar aos Jogos
-              </Button>
-            </GlassCard>
-          </div>
-        </div>
-      );
+      return <PuzzlePlayer />;
     default:
       return (
         <div className="min-h-screen bg-gradient-to-b from-background to-background/80">
