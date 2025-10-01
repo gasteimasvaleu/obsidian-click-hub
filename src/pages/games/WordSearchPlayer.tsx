@@ -5,6 +5,7 @@ import { FuturisticNavbar } from "@/components/FuturisticNavbar";
 import { GlassCard } from "@/components/GlassCard";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface GameData {
   words: string[];
@@ -27,8 +28,9 @@ interface CellSelection {
 }
 
 // Função para gerar o grid do caça-palavras
-function generateWordSearchGrid(words: string[], gridSize: number = 15): WordSearchGame {
-  const grid: string[][] = Array(gridSize).fill(null).map(() => Array(gridSize).fill(''));
+function generateWordSearchGrid(words: string[], gridSize: number = 15, isMobile: boolean = false): WordSearchGame {
+  const actualGridSize = isMobile ? 12 : gridSize;
+  const grid: string[][] = Array(actualGridSize).fill(null).map(() => Array(actualGridSize).fill(''));
   const placedWords: WordSearchGame['words'] = [];
   
   const directions = [
@@ -43,7 +45,7 @@ function generateWordSearchGrid(words: string[], gridSize: number = 15): WordSea
       const newRow = row + i * dir.dr;
       const newCol = col + i * dir.dc;
       
-      if (newRow < 0 || newRow >= gridSize || newCol < 0 || newCol >= gridSize) {
+      if (newRow < 0 || newRow >= actualGridSize || newCol < 0 || newCol >= actualGridSize) {
         return false;
       }
       
@@ -76,8 +78,8 @@ function generateWordSearchGrid(words: string[], gridSize: number = 15): WordSea
     
     while (!placed && attempts < 100) {
       const direction = directions[Math.floor(Math.random() * directions.length)];
-      const row = Math.floor(Math.random() * gridSize);
-      const col = Math.floor(Math.random() * gridSize);
+      const row = Math.floor(Math.random() * actualGridSize);
+      const col = Math.floor(Math.random() * actualGridSize);
       
       if (canPlaceWord(upperWord, row, col, direction)) {
         placeWord(upperWord, row, col, direction);
@@ -89,8 +91,8 @@ function generateWordSearchGrid(words: string[], gridSize: number = 15): WordSea
 
   // Preencher espaços vazios com letras aleatórias
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  for (let i = 0; i < gridSize; i++) {
-    for (let j = 0; j < gridSize; j++) {
+  for (let i = 0; i < actualGridSize; i++) {
+    for (let j = 0; j < actualGridSize; j++) {
       if (grid[i][j] === '') {
         grid[i][j] = alphabet[Math.floor(Math.random() * alphabet.length)];
       }
@@ -103,6 +105,7 @@ function generateWordSearchGrid(words: string[], gridSize: number = 15): WordSea
 export default function WordSearchPlayer() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const [game, setGame] = useState<WordSearchGame | null>(null);
   const [loading, setLoading] = useState(true);
   const [foundWords, setFoundWords] = useState<Set<string>>(new Set());
@@ -129,7 +132,7 @@ export default function WordSearchPlayer() {
       setTitle(data.title);
       
       const gameData = data.content_json as unknown as GameData;
-      const generatedGame = generateWordSearchGrid(gameData.words);
+      const generatedGame = generateWordSearchGrid(gameData.words, 15, isMobile);
       
       // Adicionar dicas às palavras
       generatedGame.words.forEach(wordObj => {
@@ -167,6 +170,41 @@ export default function WordSearchPlayer() {
   };
 
   const handleMouseUp = () => {
+    if (selectedCells.length < 2) {
+      setSelecting(false);
+      setSelectedCells([]);
+      return;
+    }
+
+    checkSelectedWord();
+    setSelecting(false);
+    setSelectedCells([]);
+  };
+
+  // Suporte para touch (mobile)
+  const handleTouchStart = (row: number, col: number) => {
+    setSelecting(true);
+    setSelectedCells([{ row, col }]);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!selecting) return;
+    
+    const touch = e.touches[0];
+    const element = document.elementFromPoint(touch.clientX, touch.clientY);
+    
+    if (element && element.hasAttribute('data-row') && element.hasAttribute('data-col')) {
+      const row = parseInt(element.getAttribute('data-row') || '0');
+      const col = parseInt(element.getAttribute('data-col') || '0');
+      
+      const lastCell = selectedCells[selectedCells.length - 1];
+      if (!lastCell || lastCell.row !== row || lastCell.col !== col) {
+        setSelectedCells([...selectedCells, { row, col }]);
+      }
+    }
+  };
+
+  const handleTouchEnd = () => {
     if (selectedCells.length < 2) {
       setSelecting(false);
       setSelectedCells([]);
@@ -249,27 +287,27 @@ export default function WordSearchPlayer() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-background/80">
       <FuturisticNavbar />
-      <div className="container mx-auto px-4 pt-24 pb-12">
-        <GlassCard className="max-w-4xl mx-auto">
-          <h1 className="text-3xl font-bold text-primary mb-6 text-center">{title}</h1>
+      <div className="container mx-auto px-2 md:px-4 pt-24 pb-12">
+        <GlassCard className="max-w-4xl mx-auto p-3 md:p-6">
+          <h1 className="text-2xl md:text-3xl font-bold text-primary mb-4 md:mb-6 text-center">{title}</h1>
           
-          <div className="grid md:grid-cols-3 gap-6">
-            {/* Lista de palavras */}
-            <div className="md:col-span-1">
-              <h2 className="text-xl font-semibold mb-4 text-foreground">Palavras para encontrar:</h2>
-              <div className="space-y-2 max-h-[500px] overflow-y-auto">
+          <div className="flex flex-col gap-4 md:gap-6 md:grid md:grid-cols-3">
+            {/* Lista de palavras - Primeiro em mobile */}
+            <div className="md:col-span-1 order-2 md:order-1">
+              <h2 className="text-lg md:text-xl font-semibold mb-3 md:mb-4 text-foreground">Palavras para encontrar:</h2>
+              <div className={`space-y-2 ${isMobile ? 'max-h-[200px]' : 'max-h-[500px]'} overflow-y-auto`}>
                 {game.words.map((wordObj, index) => (
                   <div
                     key={index}
-                    className={`p-3 rounded transition-colors ${
+                    className={`p-2 md:p-3 rounded transition-colors ${
                       foundWords.has(wordObj.word)
                         ? "bg-primary/20 text-primary line-through"
                         : "bg-muted text-foreground"
                     }`}
                   >
-                    <div className="font-semibold">{wordObj.word}</div>
+                    <div className="font-semibold text-sm md:text-base">{wordObj.word}</div>
                     {wordObj.hint && (
-                      <div className="text-sm text-muted-foreground mt-1">{wordObj.hint}</div>
+                      <div className="text-xs md:text-sm text-muted-foreground mt-1">{wordObj.hint}</div>
                     )}
                   </div>
                 ))}
@@ -283,24 +321,29 @@ export default function WordSearchPlayer() {
             </div>
 
             {/* Grid do caça-palavras */}
-            <div className="md:col-span-2">
+            <div className="md:col-span-2 order-1 md:order-2 flex justify-center">
               <div
-                className="inline-block mx-auto"
+                className="inline-block"
                 onMouseUp={handleMouseUp}
                 onMouseLeave={() => {
                   setSelecting(false);
                   setSelectedCells([]);
                 }}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
               >
-                <div className="grid gap-1 select-none">
+                <div className={`grid ${isMobile ? 'gap-0.5' : 'gap-1'} select-none`}>
                   {game.grid.map((row, rowIndex) => (
-                    <div key={rowIndex} className="flex gap-1">
+                    <div key={rowIndex} className={`flex ${isMobile ? 'gap-0.5' : 'gap-1'}`}>
                       {row.map((letter, colIndex) => (
                         <div
                           key={colIndex}
+                          data-row={rowIndex}
+                          data-col={colIndex}
                           className={`
-                            w-10 h-10 flex items-center justify-center
-                            font-bold text-lg rounded cursor-pointer
+                            ${isMobile ? 'w-6 h-6 text-xs' : 'w-10 h-10 text-lg'}
+                            flex items-center justify-center
+                            font-bold rounded cursor-pointer
                             transition-colors duration-200
                             ${isCellInFoundWord(rowIndex, colIndex)
                               ? "bg-primary text-primary-foreground"
@@ -311,6 +354,7 @@ export default function WordSearchPlayer() {
                           `}
                           onMouseDown={() => handleCellMouseDown(rowIndex, colIndex)}
                           onMouseEnter={() => handleCellMouseEnter(rowIndex, colIndex)}
+                          onTouchStart={() => handleTouchStart(rowIndex, colIndex)}
                         >
                           {letter}
                         </div>
@@ -322,11 +366,11 @@ export default function WordSearchPlayer() {
             </div>
           </div>
 
-          <div className="mt-6 flex justify-center gap-4">
-            <Button onClick={() => navigate("/games")} variant="outline">
+          <div className="mt-4 md:mt-6 flex justify-center gap-2 md:gap-4">
+            <Button onClick={() => navigate("/games")} variant="outline" size={isMobile ? "sm" : "default"}>
               Voltar aos Jogos
             </Button>
-            <Button onClick={loadGame}>Reiniciar</Button>
+            <Button onClick={loadGame} size={isMobile ? "sm" : "default"}>Reiniciar</Button>
           </div>
         </GlassCard>
       </div>
