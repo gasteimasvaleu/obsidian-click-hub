@@ -178,7 +178,7 @@ const QuizPlayer = () => {
   }
 
   return (
-    <div className="min-h-screen bg-black pb-24">
+      <div className="min-h-screen bg-black pb-32">
       <FuturisticNavbar />
       
       <main className="container mx-auto px-4 pt-24">

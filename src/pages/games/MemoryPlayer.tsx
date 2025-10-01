@@ -233,7 +233,7 @@ export default function MemoryPlayer() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-background/80">
       <FuturisticNavbar />
-      <div className="container mx-auto px-4 pt-24 pb-12">
+      <div className="container mx-auto px-4 pt-24 pb-32">
         <GlassCard className="max-w-4xl mx-auto">
           <div className="mb-6">
             <h1 className="text-2xl md:text-3xl font-bold text-primary mb-2">{game.title}</h1>
