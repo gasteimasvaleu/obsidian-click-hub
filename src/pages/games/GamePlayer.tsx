@@ -6,6 +6,7 @@ import { GlassCard } from "@/components/GlassCard";
 import { Button } from "@/components/ui/button";
 import QuizPlayer from "./QuizPlayer";
 import MemoryPlayer from "./MemoryPlayer";
+import WordSearchPlayer from "./WordSearchPlayer";
 
 export default function GamePlayer() {
   const { id } = useParams();
@@ -74,7 +75,8 @@ export default function GamePlayer() {
       return <QuizPlayer />;
     case "memory":
       return <MemoryPlayer />;
-    case "word_search":
+    case "wordsearch":
+      return <WordSearchPlayer />;
     case "puzzle":
       return (
         <div className="min-h-screen bg-gradient-to-b from-background to-background/80">
