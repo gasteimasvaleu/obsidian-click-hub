@@ -6,10 +6,16 @@ import { GlassCard } from "@/components/GlassCard";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
+interface GameData {
+  words: string[];
+  hints: { [key: string]: string };
+}
+
 interface WordSearchGame {
   grid: string[][];
   words: Array<{
     word: string;
+    hint: string;
     start: { row: number; col: number };
     end: { row: number; col: number };
   }>;
@@ -18,6 +24,80 @@ interface WordSearchGame {
 interface CellSelection {
   row: number;
   col: number;
+}
+
+// Função para gerar o grid do caça-palavras
+function generateWordSearchGrid(words: string[], gridSize: number = 15): WordSearchGame {
+  const grid: string[][] = Array(gridSize).fill(null).map(() => Array(gridSize).fill(''));
+  const placedWords: WordSearchGame['words'] = [];
+  
+  const directions = [
+    { dr: 0, dc: 1 },   // horizontal
+    { dr: 1, dc: 0 },   // vertical
+    { dr: 1, dc: 1 },   // diagonal \
+    { dr: 1, dc: -1 },  // diagonal /
+  ];
+
+  const canPlaceWord = (word: string, row: number, col: number, dir: { dr: number; dc: number }): boolean => {
+    for (let i = 0; i < word.length; i++) {
+      const newRow = row + i * dir.dr;
+      const newCol = col + i * dir.dc;
+      
+      if (newRow < 0 || newRow >= gridSize || newCol < 0 || newCol >= gridSize) {
+        return false;
+      }
+      
+      if (grid[newRow][newCol] !== '' && grid[newRow][newCol] !== word[i]) {
+        return false;
+      }
+    }
+    return true;
+  };
+
+  const placeWord = (word: string, row: number, col: number, dir: { dr: number; dc: number }): void => {
+    const start = { row, col };
+    for (let i = 0; i < word.length; i++) {
+      const newRow = row + i * dir.dr;
+      const newCol = col + i * dir.dc;
+      grid[newRow][newCol] = word[i];
+    }
+    const end = { 
+      row: row + (word.length - 1) * dir.dr, 
+      col: col + (word.length - 1) * dir.dc 
+    };
+    placedWords.push({ word, hint: '', start, end });
+  };
+
+  // Tentar colocar cada palavra
+  words.forEach(word => {
+    const upperWord = word.toUpperCase();
+    let placed = false;
+    let attempts = 0;
+    
+    while (!placed && attempts < 100) {
+      const direction = directions[Math.floor(Math.random() * directions.length)];
+      const row = Math.floor(Math.random() * gridSize);
+      const col = Math.floor(Math.random() * gridSize);
+      
+      if (canPlaceWord(upperWord, row, col, direction)) {
+        placeWord(upperWord, row, col, direction);
+        placed = true;
+      }
+      attempts++;
+    }
+  });
+
+  // Preencher espaços vazios com letras aleatórias
+  const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  for (let i = 0; i < gridSize; i++) {
+    for (let j = 0; j < gridSize; j++) {
+      if (grid[i][j] === '') {
+        grid[i][j] = alphabet[Math.floor(Math.random() * alphabet.length)];
+      }
+    }
+  }
+
+  return { grid, words: placedWords };
 }
 
 export default function WordSearchPlayer() {
@@ -47,7 +127,16 @@ export default function WordSearchPlayer() {
       if (!data) throw new Error("Jogo não encontrado");
 
       setTitle(data.title);
-      setGame(data.content_json as unknown as WordSearchGame);
+      
+      const gameData = data.content_json as unknown as GameData;
+      const generatedGame = generateWordSearchGrid(gameData.words);
+      
+      // Adicionar dicas às palavras
+      generatedGame.words.forEach(wordObj => {
+        wordObj.hint = gameData.hints[wordObj.word] || '';
+      });
+      
+      setGame(generatedGame);
     } catch (error) {
       console.error("Erro ao carregar jogo:", error);
       toast.error("Erro ao carregar o jogo");
@@ -168,17 +257,20 @@ export default function WordSearchPlayer() {
             {/* Lista de palavras */}
             <div className="md:col-span-1">
               <h2 className="text-xl font-semibold mb-4 text-foreground">Palavras para encontrar:</h2>
-              <div className="space-y-2">
+              <div className="space-y-2 max-h-[500px] overflow-y-auto">
                 {game.words.map((wordObj, index) => (
                   <div
                     key={index}
-                    className={`p-2 rounded transition-colors ${
+                    className={`p-3 rounded transition-colors ${
                       foundWords.has(wordObj.word)
                         ? "bg-primary/20 text-primary line-through"
                         : "bg-muted text-foreground"
                     }`}
                   >
-                    {wordObj.word}
+                    <div className="font-semibold">{wordObj.word}</div>
+                    {wordObj.hint && (
+                      <div className="text-sm text-muted-foreground mt-1">{wordObj.hint}</div>
+                    )}
                   </div>
                 ))}
               </div>
