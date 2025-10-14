@@ -7,6 +7,7 @@ import * as Icons from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { Gamepad2, Brain, Grid3x3, Search, Puzzle, X } from "lucide-react";
 
 interface Game {
   id: string;
@@ -23,6 +24,8 @@ const Games = () => {
   const navigate = useNavigate();
   const [games, setGames] = useState<Game[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedType, setSelectedType] = useState<string>("all");
+  const [selectedDifficulty, setSelectedDifficulty] = useState<string>("all");
 
   useEffect(() => {
     loadGames();
@@ -48,6 +51,32 @@ const Games = () => {
     Fácil: "bg-primary/20 text-primary border-primary/40",
     Médio: "bg-blue-500/20 text-blue-400 border-blue-400/40",
     Difícil: "bg-red-500/20 text-red-400 border-red-400/40",
+  };
+
+  const gameTypes = [
+    { value: "all", label: "Todos", icon: Gamepad2 },
+    { value: "quiz", label: "Quiz", icon: Brain },
+    { value: "memory", label: "Memória", icon: Grid3x3 },
+    { value: "wordsearch", label: "Caça-palavras", icon: Search },
+    { value: "puzzle", label: "Quebra-cabeça", icon: Puzzle },
+  ];
+
+  const difficulties = [
+    { value: "all", label: "Todas", color: "text-foreground" },
+    { value: "Fácil", label: "Fácil", color: "text-primary" },
+    { value: "Médio", label: "Médio", color: "text-blue-400" },
+    { value: "Difícil", label: "Difícil", color: "text-red-400" },
+  ];
+
+  const filteredGames = games.filter((game) => {
+    const typeMatch = selectedType === "all" || game.type === selectedType;
+    const difficultyMatch = selectedDifficulty === "all" || game.difficulty === selectedDifficulty;
+    return typeMatch && difficultyMatch;
+  });
+
+  const clearFilters = () => {
+    setSelectedType("all");
+    setSelectedDifficulty("all");
   };
 
   return (
@@ -85,20 +114,97 @@ const Games = () => {
           </p>
         </div>
 
+        {/* Filters Section */}
+        <GlassCard className="max-w-6xl mx-auto mb-8 animate-fade-in">
+          <div className="space-y-6">
+            {/* Game Type Filters */}
+            <div>
+              <h3 className="text-sm font-medium text-muted-foreground mb-3">Tipo de Jogo</h3>
+              <div className="flex flex-wrap gap-2">
+                {gameTypes.map((type) => {
+                  const IconComponent = type.icon;
+                  const isActive = selectedType === type.value;
+                  return (
+                    <Button
+                      key={type.value}
+                      variant={isActive ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setSelectedType(type.value)}
+                      className={`transition-all duration-300 ${
+                        isActive ? "neon-glow" : ""
+                      }`}
+                    >
+                      <IconComponent size={16} />
+                      {type.label}
+                    </Button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Difficulty Filters */}
+            <div>
+              <h3 className="text-sm font-medium text-muted-foreground mb-3">Dificuldade</h3>
+              <div className="flex flex-wrap gap-2">
+                {difficulties.map((diff) => {
+                  const isActive = selectedDifficulty === diff.value;
+                  return (
+                    <Button
+                      key={diff.value}
+                      variant={isActive ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setSelectedDifficulty(diff.value)}
+                      className={`transition-all duration-300 ${
+                        isActive ? "neon-glow" : ""
+                      } ${diff.color}`}
+                    >
+                      {diff.label}
+                    </Button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Clear Filters & Results Counter */}
+            <div className="flex items-center justify-between pt-2 border-t border-border/50">
+              <p className="text-sm text-muted-foreground">
+                {loading ? (
+                  "Carregando..."
+                ) : (
+                  `${filteredGames.length} ${filteredGames.length === 1 ? "jogo encontrado" : "jogos encontrados"}`
+                )}
+              </p>
+              {(selectedType !== "all" || selectedDifficulty !== "all") && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={clearFilters}
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  <X size={16} />
+                  Limpar Filtros
+                </Button>
+              )}
+            </div>
+          </div>
+        </GlassCard>
+
         {/* Games Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl mx-auto">
           {loading ? (
             <div className="col-span-2 text-center py-12">
               <p className="text-muted-foreground">Carregando jogos...</p>
             </div>
-          ) : games.length === 0 ? (
+          ) : filteredGames.length === 0 ? (
             <div className="col-span-2 text-center py-12">
               <p className="text-muted-foreground">
-                Nenhum jogo disponível no momento. Volte em breve! 🎮
+                {games.length === 0 
+                  ? "Nenhum jogo disponível no momento. Volte em breve! 🎮"
+                  : "Nenhum jogo encontrado com os filtros selecionados. 🔍"}
               </p>
             </div>
           ) : (
-            games.map((game) => {
+            filteredGames.map((game) => {
               const IconComponent = (Icons as any)[game.icon_name] || Icons.Gamepad2;
               return (
                 <GlassCard
@@ -144,7 +250,7 @@ const Games = () => {
         </div>
 
         {/* Coming Soon Message */}
-        {!loading && games.length > 0 && (
+        {!loading && filteredGames.length > 0 && (
           <div className="text-center mt-12 animate-fade-in">
             <p className="text-muted-foreground">
               Mais jogos em breve! 🚀
