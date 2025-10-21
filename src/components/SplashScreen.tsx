@@ -97,7 +97,7 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
         }}
       >
         <source
-          src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/splash2.mp4"
+          src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/novosplash.mp4"
           type="video/mp4"
         />
         {/* Fallback for browsers that don't support video */}
