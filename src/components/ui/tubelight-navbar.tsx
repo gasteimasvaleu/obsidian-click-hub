@@ -44,7 +44,7 @@ export function NavBar({ items, className }: NavBarProps) {
         className,
       )}
     >
-      <div className="flex items-center gap-2.5 md:gap-3 glass border border-primary/20 backdrop-blur-lg py-1 px-1 rounded-2xl shadow-lg">
+      <div className="flex items-center gap-1.5 md:gap-3 glass border border-primary/20 backdrop-blur-lg py-2 px-2 rounded-2xl shadow-lg">
         {items.map((item) => {
           const Icon = item.icon
           const isActive = activeTab === item.name
@@ -53,16 +53,31 @@ export function NavBar({ items, className }: NavBarProps) {
             <Link
               key={item.name}
               to={item.url}
-              onClick={() => setActiveTab(item.name)}
+              onClick={() => {
+                setActiveTab(item.name);
+                
+                // Haptic feedback em dispositivos móveis
+                if ('vibrate' in navigator && window.innerWidth < 768) {
+                  navigator.vibrate(10);
+                }
+              }}
               className={cn(
-                "relative cursor-pointer text-sm font-semibold px-4 py-2 md:px-6 md:py-2 rounded-full transition-colors",
+                "relative cursor-pointer text-sm font-semibold rounded-full transition-all duration-300",
+                "min-w-[48px] min-h-[48px] flex items-center justify-center",
+                "px-3 py-3 md:px-6 md:py-2",
                 "text-primary/80 hover:text-primary",
+                "active:scale-95",
                 isActive && "bg-primary/10 text-primary",
               )}
             >
               <span className="flex items-center gap-2">
                 <Icon size={24} strokeWidth={2.5} />
-                <span className="hidden md:inline">{item.name}</span>
+                <span className={cn(
+                  "transition-all duration-200 overflow-hidden whitespace-nowrap",
+                  isActive ? "inline max-w-[200px] opacity-100" : "hidden md:inline md:max-w-[200px] md:opacity-100"
+                )}>
+                  {item.name}
+                </span>
               </span>
               {isActive && (
                 <motion.div
