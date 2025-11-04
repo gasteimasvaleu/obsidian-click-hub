@@ -87,33 +87,37 @@ const Games = () => {
       
       <main className="container mx-auto px-4 pt-4">
         {/* Hero Section */}
-        <div className="text-center mb-12 animate-fade-in">
-          {/* Video Animation */}
-          <div className="flex justify-center">
-            <video
-              className="w-[500px] h-[500px] max-w-full"
-              autoPlay
-              muted
-              playsInline
-              onEnded={(e) => {
-                const video = e.currentTarget;
-                video.currentTime = 0;
-                video.pause();
-              }}
-            >
-              <source 
-                src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/jesusgame.mp4" 
-                type="video/mp4" 
-              />
-            </video>
+        <div className="flex justify-center mb-12 animate-fade-in">
+          <div className="flex flex-col items-center w-full max-w-3xl">
+            {/* Video Animation */}
+            <div className="flex justify-center mb-8">
+              <video
+                className="w-[500px] h-[500px] max-w-full"
+                autoPlay
+                muted
+                playsInline
+                onEnded={(e) => {
+                  const video = e.currentTarget;
+                  video.currentTime = 0;
+                  video.pause();
+                }}
+              >
+                <source 
+                  src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/jesusgame.mp4" 
+                  type="video/mp4" 
+                />
+              </video>
+            </div>
+            
+            <GlassCard className="w-full text-center">
+              <h1 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-primary via-primary-glow to-primary bg-clip-text text-transparent">
+                Jogos & Quizzes
+              </h1>
+              <p className="text-lg md:text-xl text-foreground/80">
+                Aprenda a Bíblia brincando! 🎮
+              </p>
+            </GlassCard>
           </div>
-
-          <h1 className="text-3xl font-bold mb-4 bg-gradient-to-r from-primary via-primary-glow to-primary bg-clip-text text-transparent">
-            Jogos & Quizzes
-          </h1>
-          <p className="text-xl text-foreground/80">
-            Aprenda a Bíblia brincando! 🎮
-          </p>
         </div>
 
         {/* Filters Section */}
