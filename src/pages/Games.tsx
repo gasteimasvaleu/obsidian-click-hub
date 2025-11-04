@@ -87,10 +87,10 @@ const Games = () => {
       
       <main className="container mx-auto px-4 pt-4">
         {/* Hero Section */}
-        <div className="flex justify-center mb-12 animate-fade-in">
+        <div className="flex justify-center mb-6 animate-fade-in">
           <div className="flex flex-col items-center w-full max-w-3xl">
             {/* Video Animation */}
-            <div className="flex justify-center mb-8">
+            <div className="flex justify-center mb-4">
               <video
                 className="w-[500px] h-[500px] max-w-full"
                 autoPlay
