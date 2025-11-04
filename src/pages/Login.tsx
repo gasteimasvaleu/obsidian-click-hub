@@ -60,10 +60,10 @@ const Login = () => {
       <Card className="w-full max-w-md glass border-primary/20">
         <CardHeader className="text-center">
           <CardTitle className="text-3xl font-bold bg-gradient-to-r from-primary via-primary-glow to-primary bg-clip-text text-transparent">
-            Amigo Divino
+            Bem-vindo
           </CardTitle>
           <CardDescription className="text-muted-foreground">
-            Entre para acessar o conteúdo exclusivo
+            Acesse jogos, e-books e todo o conteúdo exclusivo
           </CardDescription>
         </CardHeader>
         <CardContent>
