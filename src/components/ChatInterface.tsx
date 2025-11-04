@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Send } from "lucide-react";
+import { ArrowLeft, Send, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -154,9 +154,13 @@ export const ChatInterface = () => {
             <Button
               onClick={handleSendMessage}
               disabled={isLoading || !input.trim()}
-              className="bg-primary hover:bg-primary/80"
+              className="bg-primary hover:bg-primary/80 transition-all duration-300 active:scale-95 disabled:opacity-50"
             >
-              <Send className="h-4 w-4" />
+              {isLoading ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Send className="h-4 w-4" />
+              )}
             </Button>
           </div>
         </div>

@@ -126,16 +126,16 @@ const Games = () => {
                   const IconComponent = type.icon;
                   const isActive = selectedType === type.value;
                   return (
-                    <Button
+                  <Button
                       key={type.value}
                       variant={isActive ? "default" : "outline"}
                       size="sm"
                       onClick={() => setSelectedType(type.value)}
-                      className={`transition-all duration-300 ${
-                        isActive ? "neon-glow" : ""
+                      className={`transition-all duration-300 active:scale-95 group ${
+                        isActive ? "neon-glow shadow-lg shadow-primary/50" : "hover:border-primary/50"
                       }`}
                     >
-                      <IconComponent size={16} />
+                      <IconComponent size={16} className="transition-transform duration-300 group-hover:rotate-12" />
                       {type.label}
                     </Button>
                   );
@@ -155,8 +155,8 @@ const Games = () => {
                       variant={isActive ? "default" : "outline"}
                       size="sm"
                       onClick={() => setSelectedDifficulty(diff.value)}
-                      className={`transition-all duration-300 ${
-                        isActive ? "neon-glow" : ""
+                      className={`transition-all duration-300 active:scale-95 ${
+                        isActive ? "neon-glow shadow-lg shadow-primary/50" : "hover:border-primary/50"
                       } ${diff.color}`}
                     >
                       {diff.label}
@@ -212,17 +212,19 @@ const Games = () => {
               return (
                 <GlassCard
                   key={game.id}
-                  className="hover:scale-105 transition-transform duration-300"
+                  hoverable
+                  pressable
+                  className="group"
                 >
                   <div className="flex flex-col h-full">
                     {/* Icon and Badge */}
                     <div className="flex items-start justify-between mb-4">
-                      <div className={`p-3 rounded-lg bg-background/50 ${game.color}`}>
+                      <div className={`p-3 rounded-lg bg-background/50 ${game.color} transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg`}>
                         <IconComponent size={32} />
                       </div>
                       <Badge 
                         variant="outline" 
-                        className={`${difficultyColors[game.difficulty as keyof typeof difficultyColors]} border`}
+                        className={`${difficultyColors[game.difficulty as keyof typeof difficultyColors]} border transition-all duration-300 group-hover:scale-105`}
                       >
                         {game.difficulty}
                       </Badge>
@@ -240,8 +242,11 @@ const Games = () => {
 
                     {/* Action Button */}
                     <Button 
-                      className="w-full"
-                      onClick={() => navigate(`/games/${game.id}/play`)}
+                      className="w-full transition-all duration-300 hover:shadow-lg hover:shadow-primary/50 active:scale-95"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(`/games/${game.id}/play`);
+                      }}
                     >
                       Jogar Agora
                     </Button>
