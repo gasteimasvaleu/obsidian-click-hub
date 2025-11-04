@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
 import { CheckCircle2, XCircle, ArrowLeft, RotateCcw } from "lucide-react";
+import { fireBasicConfetti, fireRainbowConfetti } from "@/lib/confetti";
 
 interface QuizQuestion {
   question: string;
@@ -138,6 +139,16 @@ const QuizPlayer = () => {
 
   if (gameFinished) {
     const percentage = Math.round((score / questions.length) * 100);
+    
+    // Disparar confetti quando a tela renderizar
+    useEffect(() => {
+      if (percentage === 100) {
+        fireRainbowConfetti(); // Score perfeito
+      } else if (percentage >= 70) {
+        fireBasicConfetti(); // Score bom
+      }
+    }, []); // Apenas uma vez ao montar
+
     return (
       <div className="min-h-screen bg-black pb-24">
         <FuturisticNavbar />

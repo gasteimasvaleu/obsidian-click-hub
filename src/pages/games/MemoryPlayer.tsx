@@ -7,6 +7,7 @@ import { GlassCard } from "@/components/GlassCard";
 import { GridSkeleton } from "@/components/skeletons/GridSkeleton";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ArrowLeft, RotateCcw } from "lucide-react";
+import { fireCompleteConfetti } from "@/lib/confetti";
 
 interface MemoryPair {
   card1: string;
@@ -134,7 +135,10 @@ export default function MemoryPlayer() {
 
         // Verificar se o jogo terminou
         if (matchedPairs + 1 === game!.content_json.pairs.length) {
-          setGameFinished(true);
+          setTimeout(() => {
+            setGameFinished(true);
+            fireCompleteConfetti(); // 🎉 Celebração de 2.5s
+          }, 800); // Delay para o usuário ver o último par antes da celebração
         }
       }, 600);
     } else {

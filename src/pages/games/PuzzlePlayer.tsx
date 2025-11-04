@@ -10,6 +10,7 @@ import { Progress } from "@/components/ui/progress";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { ChevronLeft, ChevronRight, Shuffle } from "lucide-react";
 import { toast } from "sonner";
+import { fireCompleteConfetti } from "@/lib/confetti";
 
 interface PuzzleScene {
   title: string;
@@ -131,6 +132,7 @@ export default function PuzzlePlayer() {
     if (allCorrect && currentTiles.length > 0) {
       setCompleted(true);
       toast.success("🎉 Parabéns! Você completou o quebra-cabeça!");
+      fireCompleteConfetti(); // 🎉 Celebração de 2.5s
     }
   };
 

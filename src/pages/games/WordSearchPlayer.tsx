@@ -8,6 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { fireMiniConfetti, fireCompleteConfetti } from "@/lib/confetti";
 
 interface GameData {
   words: string[];
@@ -233,9 +234,13 @@ export default function WordSearchPlayer() {
     if (foundWord && !foundWords.has(foundWord.word)) {
       setFoundWords(new Set([...foundWords, foundWord.word]));
       toast.success(`Palavra encontrada: ${foundWord.word}!`);
+      fireMiniConfetti(); // 🎉 Mini celebração a cada palavra
       
       if (foundWords.size + 1 === game.words.length) {
-        toast.success("Parabéns! Você encontrou todas as palavras!");
+        setTimeout(() => {
+          toast.success("Parabéns! Você encontrou todas as palavras!");
+          fireCompleteConfetti(); // 🎉 Celebração completa
+        }, 500);
       }
     }
   };
