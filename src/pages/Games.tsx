@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Gamepad2, Brain, Grid3x3, Search, Puzzle, X } from "lucide-react";
+import { EmptyState } from "@/components/EmptyState";
 
 interface Game {
   id: string;
@@ -199,13 +200,24 @@ const Games = () => {
               ))}
             </>
           ) : filteredGames.length === 0 ? (
-            <div className="col-span-2 text-center py-12">
-              <p className="text-muted-foreground">
-                {games.length === 0 
-                  ? "Nenhum jogo disponível no momento. Volte em breve! 🎮"
-                  : "Nenhum jogo encontrado com os filtros selecionados. 🔍"}
-              </p>
-            </div>
+            games.length === 0 ? (
+              <EmptyState
+                icon={<Gamepad2 size={40} strokeWidth={1.5} />}
+                title="Nenhum jogo disponível"
+                description="Estamos preparando jogos incríveis para você! Volte em breve para descobrir desafios bíblicos divertidos e educativos. 🎮✨"
+              />
+            ) : (
+              <EmptyState
+                icon={<Search size={40} strokeWidth={1.5} />}
+                title="Nenhum jogo encontrado"
+                description="Não encontramos jogos que correspondam aos filtros selecionados. Tente ajustar o tipo de jogo ou nível de dificuldade."
+                action={{
+                  label: "Limpar Filtros",
+                  onClick: clearFilters,
+                  icon: <X size={16} />
+                }}
+              />
+            )
           ) : (
             filteredGames.map((game) => {
               const IconComponent = (Icons as any)[game.icon_name] || Icons.Gamepad2;

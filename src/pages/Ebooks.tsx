@@ -4,7 +4,8 @@ import { GlassCard } from "@/components/GlassCard";
 import { NeonButton } from "@/components/NeonButton";
 import { EbookItemSkeleton } from "@/components/skeletons/EbookItemSkeleton";
 import { supabase } from "@/integrations/supabase/client";
-import { FileText, Music, Download, Clock } from "lucide-react";
+import { FileText, Music, Download, Clock, BookOpen } from "lucide-react";
+import { EmptyState } from "@/components/EmptyState";
 import { toast } from "sonner";
 
 interface Ebook {
@@ -97,9 +98,12 @@ const Ebooks = () => {
                 ))}
               </div>
             ) : ebooks.length === 0 ? (
-              <div className="text-muted-foreground text-center py-8">
-                Nenhum conteúdo disponível no momento
-              </div>
+              <EmptyState
+                icon={<BookOpen size={40} strokeWidth={1.5} />}
+                title="Biblioteca em construção"
+                description="Estamos preparando uma coleção especial de ebooks e audiobooks bíblicos para você! Em breve você terá acesso a histórias inspiradoras e conteúdo educativo. 📚🎧"
+                className="my-8"
+              />
             ) : (
               <div className="space-y-4 mb-8">
                 {ebooks.map((ebook) => (
