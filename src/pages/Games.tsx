@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { FuturisticNavbar } from "@/components/FuturisticNavbar";
 import { GlassCard } from "@/components/GlassCard";
+import { GameCardSkeleton } from "@/components/skeletons/GameCardSkeleton";
 import * as Icons from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -192,9 +193,11 @@ const Games = () => {
         {/* Games Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl mx-auto">
           {loading ? (
-            <div className="col-span-2 text-center py-12">
-              <p className="text-muted-foreground">Carregando jogos...</p>
-            </div>
+            <>
+              {Array.from({ length: 6 }).map((_, i) => (
+                <GameCardSkeleton key={i} />
+              ))}
+            </>
           ) : filteredGames.length === 0 ? (
             <div className="col-span-2 text-center py-12">
               <p className="text-muted-foreground">

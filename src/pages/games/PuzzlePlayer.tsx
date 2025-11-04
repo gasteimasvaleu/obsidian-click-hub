@@ -3,6 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { FuturisticNavbar } from "@/components/FuturisticNavbar";
 import { GlassCard } from "@/components/GlassCard";
+import { GridSkeleton } from "@/components/skeletons/GridSkeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -149,8 +151,15 @@ export default function PuzzlePlayer() {
       <div className="min-h-screen bg-gradient-to-b from-background to-background/80">
         <FuturisticNavbar />
         <div className="container mx-auto px-4 pt-24 pb-12">
-          <div className="flex justify-center items-center min-h-[60vh]">
-            <div className="animate-pulse text-primary text-xl">Carregando jogo...</div>
+          <div className="max-w-4xl mx-auto space-y-6">
+            <GlassCard className="space-y-4">
+              <Skeleton className="h-8 w-64 bg-white/10" />
+              <Skeleton className="h-4 w-full bg-white/10" />
+              <Skeleton className="h-4 w-3/4 bg-white/10" />
+            </GlassCard>
+            <GlassCard>
+              <GridSkeleton rows={4} cols={4} className="max-w-md mx-auto" />
+            </GlassCard>
           </div>
         </div>
       </div>

@@ -3,6 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { FuturisticNavbar } from "@/components/FuturisticNavbar";
 import { GlassCard } from "@/components/GlassCard";
+import { GridSkeleton } from "@/components/skeletons/GridSkeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -262,9 +264,20 @@ export default function WordSearchPlayer() {
       <div className="min-h-screen bg-gradient-to-b from-background to-background/80">
         <FuturisticNavbar />
         <div className="container mx-auto px-4 pt-24 pb-12">
-          <div className="flex justify-center items-center min-h-[60vh]">
-            <div className="animate-pulse text-primary text-xl">Carregando jogo...</div>
-          </div>
+          <GlassCard className="max-w-4xl mx-auto p-6">
+            <Skeleton className="h-8 w-64 mb-6 bg-white/10 mx-auto" />
+            <div className="grid md:grid-cols-3 gap-6">
+              <div className="space-y-2">
+                <Skeleton className="h-6 w-40 bg-white/10" />
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Skeleton key={i} className="h-12 w-full bg-white/10" />
+                ))}
+              </div>
+              <div className="md:col-span-2">
+                <GridSkeleton rows={isMobile ? 12 : 15} cols={isMobile ? 12 : 15} />
+              </div>
+            </div>
+          </GlassCard>
         </div>
       </div>
     );

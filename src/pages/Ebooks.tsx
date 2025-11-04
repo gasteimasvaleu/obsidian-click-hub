@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { FuturisticNavbar } from "@/components/FuturisticNavbar";
 import { GlassCard } from "@/components/GlassCard";
 import { NeonButton } from "@/components/NeonButton";
+import { EbookItemSkeleton } from "@/components/skeletons/EbookItemSkeleton";
 import { supabase } from "@/integrations/supabase/client";
 import { FileText, Music, Download, Clock } from "lucide-react";
 import { toast } from "sonner";
@@ -90,8 +91,10 @@ const Ebooks = () => {
             </p>
           
             {loading ? (
-              <div className="text-muted-foreground text-center py-8">
-                Carregando conteúdo...
+              <div className="space-y-4">
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <EbookItemSkeleton key={i} />
+                ))}
               </div>
             ) : ebooks.length === 0 ? (
               <div className="text-muted-foreground text-center py-8">

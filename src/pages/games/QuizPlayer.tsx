@@ -3,6 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { FuturisticNavbar } from "@/components/FuturisticNavbar";
 import { GlassCard } from "@/components/GlassCard";
+import { GridSkeleton } from "@/components/skeletons/GridSkeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -106,8 +108,21 @@ const QuizPlayer = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <p className="text-foreground/80">Carregando jogo...</p>
+      <div className="min-h-screen bg-black pb-24">
+        <FuturisticNavbar />
+        <main className="container mx-auto px-4 pt-24">
+          <div className="max-w-3xl mx-auto space-y-4">
+            <Skeleton className="h-8 w-48 bg-white/10" />
+            <GlassCard>
+              <Skeleton className="h-8 w-full mb-6 bg-white/10" />
+              <div className="space-y-3">
+                {Array.from({ length: 4 }).map((_, i) => (
+                  <Skeleton key={i} className="h-16 w-full bg-white/10" />
+                ))}
+              </div>
+            </GlassCard>
+          </div>
+        </main>
       </div>
     );
   }
