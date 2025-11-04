@@ -5,6 +5,7 @@ import { NeonButton } from "@/components/NeonButton";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Upload, Download, RotateCcw, Sparkles, ImageIcon, Wand2 } from "lucide-react";
+import { GlassCard } from "@/components/GlassCard";
 
 const BoobieGoods = () => {
   const [originalFile, setOriginalFile] = useState<File | null>(null);
@@ -161,30 +162,36 @@ const BoobieGoods = () => {
       
       <div className="container mx-auto px-4 pt-24 pb-32">
         {/* Header */}
-        <div className="text-center mb-12">
-          {/* Animação */}
-          <div className="flex justify-center mb-8">
-            <video
-              src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/animacaoebooks.mp4"
-              className="max-w-full h-auto rounded-xl"
-              style={{ maxWidth: '500px', maxHeight: '500px' }}
-              autoPlay
-              muted
-              playsInline
-              onEnded={(e) => {
-                e.currentTarget.currentTime = 0;
-              }}
-            />
+        <div className="flex justify-center mb-12">
+          <div className="flex flex-col items-center w-full max-w-3xl">
+            {/* Animação */}
+            <div className="flex justify-center mb-8">
+              <video
+                src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/animacaoebooks.mp4"
+                className="max-w-full h-auto rounded-xl"
+                style={{ maxWidth: '500px', maxHeight: '500px' }}
+                autoPlay
+                muted
+                playsInline
+                onEnded={(e) => {
+                  e.currentTarget.currentTime = 0;
+                }}
+              />
+            </div>
+            
+            <GlassCard className="w-full text-center">
+              <div className="flex items-center justify-center gap-3 mb-4">
+                <Wand2 className="text-primary animate-glow" size={32} />
+                <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-primary via-primary to-primary/60 bg-clip-text text-transparent">
+                  Foto para Colorir AI
+                </h1>
+                <Sparkles className="text-primary animate-glow" size={32} />
+              </div>
+              <p className="text-foreground/80 text-lg">
+                Transforme suas fotos em desenhos para colorir usando IA avançada
+              </p>
+            </GlassCard>
           </div>
-          
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <Wand2 className="text-primary animate-glow" size={32} />
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-primary via-primary to-primary/60 bg-clip-text text-transparent">Foto para Colorir AI</h1>
-            <Sparkles className="text-primary animate-glow" size={32} />
-          </div>
-          <p className="text-foreground/80 text-lg max-w-2xl mx-auto">
-            Transforme suas fotos em desenhos para colorir usando IA avançada
-          </p>
         </div>
 
         {/* Main Content */}
