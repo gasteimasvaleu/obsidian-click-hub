@@ -111,14 +111,14 @@ export const ParentsGuideForm = ({
           {/* Step 1: Nome */}
           {currentStep === 1 && (
             <div className="space-y-4 animate-fade-in">
-              <h2 className="text-2xl font-semibold text-foreground">
+              <h2 className="text-lg font-semibold text-foreground">
                 Como você chama seu filho(a)?
               </h2>
               <Input
                 placeholder="Digite o nome ou apelido"
                 value={formData.nome}
                 onChange={(e) => updateFormData('nome', e.target.value)}
-                className="text-lg"
+                className=""
                 autoFocus
               />
             </div>
@@ -127,7 +127,7 @@ export const ParentsGuideForm = ({
           {/* Step 2: Sexo */}
           {currentStep === 2 && (
             <div className="space-y-4 animate-fade-in">
-              <h2 className="text-2xl font-semibold text-foreground">
+              <h2 className="text-lg font-semibold text-foreground">
                 Sexo da criança
               </h2>
               <div className="grid grid-cols-2 gap-4">
@@ -162,7 +162,7 @@ export const ParentsGuideForm = ({
           {/* Step 3: Idade */}
           {currentStep === 3 && (
             <div className="space-y-6 animate-fade-in">
-              <h2 className="text-2xl font-semibold text-foreground">
+              <h2 className="text-lg font-semibold text-foreground">
                 Quantos anos {formData.nome} tem?
               </h2>
               <div className="text-center">
@@ -188,7 +188,7 @@ export const ParentsGuideForm = ({
           {/* Step 4: Comportamento */}
           {currentStep === 4 && (
             <div className="space-y-4 animate-fade-in">
-              <h2 className="text-2xl font-semibold text-foreground">
+              <h2 className="text-lg font-semibold text-foreground">
                 Como você descreveria o comportamento de {formData.nome}?
               </h2>
               <p className="text-sm text-muted-foreground">
@@ -199,7 +199,7 @@ export const ParentsGuideForm = ({
                   <Badge
                     key={option}
                     variant={formData.comportamento.includes(option) ? "default" : "outline"}
-                    className="cursor-pointer text-base py-2 px-4"
+                    className="cursor-pointer text-sm py-1.5 px-3"
                     onClick={() => toggleArrayItem('comportamento', option)}
                   >
                     {option}
@@ -212,7 +212,7 @@ export const ParentsGuideForm = ({
           {/* Step 5: Personalidade */}
           {currentStep === 5 && (
             <div className="space-y-4 animate-fade-in">
-              <h2 className="text-2xl font-semibold text-foreground">
+              <h2 className="text-lg font-semibold text-foreground">
                 Qual a personalidade de {formData.nome}?
               </h2>
               <p className="text-sm text-muted-foreground">
@@ -223,7 +223,7 @@ export const ParentsGuideForm = ({
                   <Badge
                     key={option}
                     variant={formData.personalidade.includes(option) ? "default" : "outline"}
-                    className="cursor-pointer text-base py-2 px-4"
+                    className="cursor-pointer text-sm py-1.5 px-3"
                     onClick={() => toggleArrayItem('personalidade', option)}
                   >
                     {option}
@@ -236,7 +236,7 @@ export const ParentsGuideForm = ({
           {/* Step 6: Nível Bíblico */}
           {currentStep === 6 && (
             <div className="space-y-4 animate-fade-in">
-              <h2 className="text-2xl font-semibold text-foreground">
+              <h2 className="text-lg font-semibold text-foreground">
                 Qual o nível de conhecimento bíblico?
               </h2>
               <div className="space-y-3">
@@ -253,7 +253,7 @@ export const ParentsGuideForm = ({
                     )}
                     onClick={() => updateFormData('nivelBiblico', nivel.value)}
                   >
-                    <div className="font-medium text-lg">{nivel.label}</div>
+                    <div className="font-medium text-base">{nivel.label}</div>
                     <div className="text-sm text-muted-foreground">{nivel.desc}</div>
                   </Card>
                 ))}
@@ -264,7 +264,7 @@ export const ParentsGuideForm = ({
           {/* Step 7: Contexto */}
           {currentStep === 7 && (
             <div className="space-y-4 animate-fade-in">
-              <h2 className="text-2xl font-semibold text-foreground">
+              <h2 className="text-lg font-semibold text-foreground">
                 Onde e quando você planeja ensinar?
               </h2>
               <Textarea
@@ -283,7 +283,7 @@ export const ParentsGuideForm = ({
           {/* Step 8: Desafio */}
           {currentStep === 8 && (
             <div className="space-y-4 animate-fade-in">
-              <h2 className="text-2xl font-semibold text-foreground">
+              <h2 className="text-lg font-semibold text-foreground">
                 Há algum desafio específico? (Opcional)
               </h2>
               <Textarea
@@ -302,7 +302,7 @@ export const ParentsGuideForm = ({
           {/* Step 9: Passagem */}
           {currentStep === 9 && (
             <div className="space-y-4 animate-fade-in">
-              <h2 className="text-2xl font-semibold text-foreground">
+              <h2 className="text-lg font-semibold text-foreground">
                 Qual passagem bíblica você quer ensinar?
               </h2>
               <Textarea
