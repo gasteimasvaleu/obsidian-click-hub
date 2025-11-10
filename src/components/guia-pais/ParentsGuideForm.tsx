@@ -316,13 +316,13 @@ export const ParentsGuideForm = ({
         </div>
 
         {/* Navigation Buttons */}
-        <div className="flex gap-4 mt-8">
+        <div className="flex flex-col sm:flex-row gap-4 mt-8">
           {currentStep > 1 && (
             <Button
               variant="outline"
               onClick={handleBack}
               disabled={isGenerating}
-              className="flex-1"
+              className="w-full sm:flex-1"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Voltar
@@ -333,7 +333,7 @@ export const ParentsGuideForm = ({
             <Button
               onClick={handleNext}
               disabled={!canProceed() || isGenerating}
-              className="flex-1"
+              className="w-full sm:flex-1"
             >
               Próximo
               <ArrowRight className="w-4 h-4 ml-2" />
@@ -342,17 +342,19 @@ export const ParentsGuideForm = ({
             <Button
               onClick={handleSubmit}
               disabled={!canProceed() || isGenerating}
-              className="flex-1"
+              className="w-full sm:flex-1"
             >
               {isGenerating ? (
                 <>
                   <Sparkles className="w-4 h-4 mr-2 animate-spin" />
-                  Gerando Guia...
+                  <span className="hidden sm:inline">Gerando Guia...</span>
+                  <span className="sm:hidden">Gerando...</span>
                 </>
               ) : (
                 <>
                   <Sparkles className="w-4 h-4 mr-2" />
-                  Gerar Guia Personalizado
+                  <span className="hidden sm:inline">Gerar Guia Personalizado</span>
+                  <span className="sm:hidden">Gerar Guia</span>
                 </>
               )}
             </Button>
