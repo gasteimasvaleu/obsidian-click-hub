@@ -119,7 +119,6 @@ export const ParentsGuideForm = ({
                 value={formData.nome}
                 onChange={(e) => updateFormData('nome', e.target.value)}
                 className=""
-                autoFocus
               />
             </div>
           )}
@@ -310,7 +309,6 @@ export const ParentsGuideForm = ({
                 value={formData.passagem}
                 onChange={(e) => updateFormData('passagem', e.target.value)}
                 className="min-h-[120px]"
-                autoFocus
               />
             </div>
           )}
