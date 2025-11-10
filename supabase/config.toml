@@ -5,3 +5,6 @@ verify_jwt = false
 
 [functions.generate-game-content]
 verify_jwt = true
+
+[functions.generate-parents-guide]
+verify_jwt = false

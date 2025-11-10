@@ -4,7 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Home, Package, BookOpen, Heart, Gamepad2, Palette } from "lucide-react";
+import { Home, Package, BookOpen, Heart, Gamepad2, Palette, Users } from "lucide-react";
 import { NavBar } from "@/components/ui/tubelight-navbar";
 import { SplashScreen } from "./components/SplashScreen";
 import { PWAInstallModal } from "./components/PWAInstallModal";
@@ -22,6 +22,7 @@ import Dashboard from "./pages/admin/Dashboard";
 import EbooksManager from "./pages/admin/EbooksManager";
 import GamesManager from "./pages/admin/GamesManager";
 import GameGenerator from "./pages/admin/GameGenerator";
+import GuiaPais from "./pages/GuiaPais";
 import NotFound from "./pages/NotFound";
 import { ExternalFrame } from "./components/ExternalFrame";
 import { ChatInterface } from "./components/ChatInterface";
@@ -33,6 +34,7 @@ const navItems = [
   { name: 'Colorir', url: '/boobiegoods', icon: Palette },
   { name: 'Ebooks & Áudio', url: '/ebooks', icon: BookOpen },
   { name: 'Amigo Divino', url: '/amigodivino', icon: Heart },
+  { name: 'Guia para Pais', url: '/guia-pais', icon: Users },
   { name: 'Games', url: '/games', icon: Gamepad2 }
 ];
 
@@ -92,6 +94,7 @@ const App = () => {
               <Route path="/amigodivino" element={<AmigoDivino />} />
               <Route path="/amigodivino/chat" element={<ChatInterface />} />
               <Route path="/sobre" element={<Sobre />} />
+              <Route path="/guia-pais" element={<GuiaPais />} />
               <Route path="/games" element={<Games />} />
               <Route path="/games/:id/play" element={<GamePlayer />} />
               <Route path="/login" element={<Login />} />
