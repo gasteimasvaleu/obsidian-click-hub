@@ -9,6 +9,7 @@ import { Slider } from "@/components/ui/slider";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, ArrowRight, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { GlassCard } from "@/components/GlassCard";
 
 interface ParentsGuideFormProps {
   formData: FormData;
@@ -86,14 +87,14 @@ export const ParentsGuideForm = ({
   return (
     <div className="max-w-2xl mx-auto animate-fade-in">
       {/* Header */}
-      <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold text-primary mb-4 animate-glow">
+      <GlassCard className="max-w-2xl mx-auto text-center mb-8">
+        <h1 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-primary via-primary to-primary/60 bg-clip-text text-transparent">
           Guia para Pais
         </h1>
-        <p className="text-muted-foreground">
+        <p className="text-lg text-foreground/80">
           Crie um guia personalizado para ensinar a Bíblia ao seu filho
         </p>
-      </div>
+      </GlassCard>
 
       {/* Progress */}
       <div className="mb-8">
