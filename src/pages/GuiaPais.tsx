@@ -129,7 +129,7 @@ const GuiaPais = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black via-purple-950 to-black relative pb-24">
+    <div className="min-h-screen bg-black relative pb-24">
       <FuturisticNavbar />
       
       <div className="flex items-center justify-center min-h-screen pt-16 px-4">
