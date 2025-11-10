@@ -129,25 +129,43 @@ const GuiaPais = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black via-purple-950 to-black">
+    <div className="min-h-screen bg-gradient-to-b from-black via-purple-950 to-black relative pb-24">
       <FuturisticNavbar />
       
-      <main className="container mx-auto px-4 pt-24 pb-32">
-        {!generatedGuide ? (
-          <ParentsGuideForm
-            formData={formData}
-            setFormData={setFormData}
-            onGenerate={handleGenerateGuide}
-            isGenerating={isGenerating}
-          />
-        ) : (
-          <GuideDisplay 
-            guide={generatedGuide} 
-            formData={formData}
-            onNewGuide={handleNewGuide}
-          />
-        )}
-      </main>
+      <div className="flex items-center justify-center min-h-screen pt-16 px-4">
+        <div className="flex flex-col items-center w-full">
+          {/* Video animation */}
+          <div className="flex justify-center mb-8">
+            <video
+              src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/jesuspais.mp4"
+              width="500"
+              height="500"
+              autoPlay
+              muted
+              playsInline
+              onEnded={(e) => {
+                e.currentTarget.currentTime = 0;
+              }}
+              className="rounded-lg"
+            />
+          </div>
+          
+          {!generatedGuide ? (
+            <ParentsGuideForm
+              formData={formData}
+              setFormData={setFormData}
+              onGenerate={handleGenerateGuide}
+              isGenerating={isGenerating}
+            />
+          ) : (
+            <GuideDisplay 
+              guide={generatedGuide} 
+              formData={formData}
+              onNewGuide={handleNewGuide}
+            />
+          )}
+        </div>
+      </div>
     </div>
   );
 };
