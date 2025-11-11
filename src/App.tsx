@@ -23,6 +23,7 @@ import EbooksManager from "./pages/admin/EbooksManager";
 import GamesManager from "./pages/admin/GamesManager";
 import GameGenerator from "./pages/admin/GameGenerator";
 import GuiaPais from "./pages/GuiaPais";
+import LandingPageSections from "./pages/LandingPageSections";
 import NotFound from "./pages/NotFound";
 import { ExternalFrame } from "./components/ExternalFrame";
 import { ChatInterface } from "./components/ChatInterface";
@@ -95,6 +96,7 @@ const App = () => {
               <Route path="/amigodivino/chat" element={<ChatInterface />} />
               <Route path="/sobre" element={<Sobre />} />
               <Route path="/guia-pais" element={<GuiaPais />} />
+              <Route path="/landing-page-sections" element={<LandingPageSections />} />
               <Route path="/games" element={<Games />} />
               <Route path="/games/:id/play" element={<GamePlayer />} />
               <Route path="/login" element={<Login />} />
