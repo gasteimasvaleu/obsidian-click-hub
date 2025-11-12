@@ -180,13 +180,9 @@ const BoobieGoods = () => {
             </div>
             
             <GlassCard className="w-full text-center">
-              <div className="flex items-center justify-center gap-3 mb-4">
-                <Wand2 className="text-primary animate-glow" size={32} />
-                <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-primary via-primary to-primary/60 bg-clip-text text-transparent">
-                  Foto para Colorir AI
-                </h1>
-                <Sparkles className="text-primary animate-glow" size={32} />
-              </div>
+              <h1 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-primary via-primary to-primary/60 bg-clip-text text-transparent">
+                Foto para Colorir AI
+              </h1>
               <p className="text-foreground/80 text-lg">
                 Transforme suas fotos em desenhos para colorir usando IA avançada
               </p>
