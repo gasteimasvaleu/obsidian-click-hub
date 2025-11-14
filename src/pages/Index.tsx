@@ -22,13 +22,19 @@ const Index = () => {
     <div className="min-h-screen bg-black relative flex flex-col pb-24">
       <FuturisticNavbar />
       
-      {/* Logo image section */}
+      {/* Logo video section */}
       <div className="flex justify-center px-4 pt-8 pb-4">
-        <img 
-          src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/logoapp2.png"
-          alt="Logo BibliaToonKids" 
+        <video 
+          src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/video_517d0687_1763117222774.mp4"
           className="max-w-full h-auto"
           style={{ maxWidth: '500px', maxHeight: '300px' }}
+          autoPlay
+          muted
+          playsInline
+          onEnded={(e) => {
+            const video = e.currentTarget;
+            video.currentTime = 0;
+          }}
         />
       </div>
       
