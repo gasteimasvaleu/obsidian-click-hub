@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Info, UserCircle, LogOut } from "lucide-react";
+import { Info, UserCircle, LogOut, LogIn } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 
 export const FuturisticNavbar = () => {
@@ -16,7 +16,7 @@ export const FuturisticNavbar = () => {
           BíbliaToonKIDS
         </h1>
         <div className="flex items-center gap-4">
-          {user && (
+          {user ? (
             <>
               <Link to="/profile">
                 <UserCircle 
@@ -35,6 +35,13 @@ export const FuturisticNavbar = () => {
                 />
               </button>
             </>
+          ) : (
+            <Link to="/login" title="Entrar">
+              <LogIn 
+                size={24} 
+                className="text-primary hover:animate-glow cursor-pointer transition-all duration-300"
+              />
+            </Link>
           )}
           <Link to="/sobre">
             <Info 
