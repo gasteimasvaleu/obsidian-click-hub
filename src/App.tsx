@@ -18,6 +18,7 @@ import Sobre from "./pages/Sobre";
 import Games from "./pages/Games";
 import GamePlayer from "./pages/games/GamePlayer";
 import Login from "./pages/Login";
+import Profile from "./pages/Profile";
 import Dashboard from "./pages/admin/Dashboard";
 import EbooksManager from "./pages/admin/EbooksManager";
 import GamesManager from "./pages/admin/GamesManager";
@@ -98,6 +99,7 @@ const App = () => {
               <Route path="/games" element={<Games />} />
               <Route path="/games/:id/play" element={<GamePlayer />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/profile" element={<Profile />} />
               <Route path="/admin" element={<Dashboard />} />
               <Route path="/admin/ebooks" element={<EbooksManager />} />
               <Route path="/admin/games" element={<GamesManager />} />
