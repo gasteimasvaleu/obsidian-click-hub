@@ -164,9 +164,9 @@ const BoobieGoods = () => {
         {/* Header */}
         <div className="flex justify-center mb-12">
           <div className="flex flex-col items-center w-full max-w-3xl">
-        {/* Animação */}
-        <div className="flex justify-center w-full mb-8 px-4">
-          <GlassCard className="w-full max-w-[500px] p-0 overflow-hidden">
+          {/* Animação */}
+          <div className="flex justify-center w-full mb-8">
+            <GlassCard className="w-full max-w-[500px] p-0 overflow-hidden">
             <video
               src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/colorir%20novo.mp4"
               className="w-full h-auto"

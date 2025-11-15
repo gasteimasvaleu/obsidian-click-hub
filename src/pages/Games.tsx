@@ -89,9 +89,9 @@ const Games = () => {
         {/* Hero Section */}
         <div className="flex justify-center mb-6 animate-fade-in">
           <div className="flex flex-col items-center w-full max-w-3xl">
-            {/* Video Animation */}
-            <div className="flex justify-center w-full mb-4 px-4">
-              <GlassCard className="w-full max-w-[500px] p-0 overflow-hidden">
+        {/* Video Animation */}
+        <div className="flex justify-center w-full mb-4">
+          <GlassCard className="w-full max-w-[500px] p-0 overflow-hidden">
                 <video
                   src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/video_be332ed2_1763196148899.mp4"
                   className="w-full h-auto"
