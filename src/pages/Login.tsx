@@ -45,8 +45,9 @@ const Login = () => {
     const email = formData.get('signup-email') as string;
     const password = formData.get('signup-password') as string;
     const fullName = formData.get('full-name') as string;
+    const phone = formData.get('phone') as string;
 
-    const { error } = await signUp(email, password, fullName);
+    const { error } = await signUp(email, password, fullName, phone);
 
     if (!error) {
       toast.success('Conta criada! Verifique seu email.');
@@ -113,6 +114,16 @@ const Login = () => {
                     type="text"
                     placeholder="Seu nome"
                     required
+                    disabled={isLoading}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="phone">Telefone (opcional)</Label>
+                  <Input
+                    id="phone"
+                    name="phone"
+                    type="tel"
+                    placeholder="(11) 99999-9999"
                     disabled={isLoading}
                   />
                 </div>
