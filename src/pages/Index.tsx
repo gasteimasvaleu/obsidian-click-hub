@@ -42,19 +42,21 @@ const Index = () => {
       <FuturisticNavbar />
       
       {/* Logo video section */}
-      <div className="flex justify-center w-full overflow-hidden pt-16 pb-4">
-        <video 
-          src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/video_517d0687_1763117222774.mp4"
-          className="w-full h-auto max-w-[500px] px-4"
-          style={{ maxHeight: '300px' }}
-          autoPlay
-          muted
-          playsInline
-          onEnded={(e) => {
-            const video = e.currentTarget;
-            video.currentTime = 0;
-          }}
-        />
+      <div className="flex justify-center w-full pt-16 pb-4 px-4">
+        <GlassCard className="w-full max-w-[500px] p-0 overflow-hidden">
+          <video 
+            src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/video_517d0687_1763117222774.mp4"
+            className="w-full h-auto"
+            style={{ maxHeight: '300px' }}
+            autoPlay
+            muted
+            playsInline
+            onEnded={(e) => {
+              const video = e.currentTarget;
+              video.currentTime = 0;
+            }}
+          />
+        </GlassCard>
       </div>
       
       <div className="flex-1 px-4 pb-8">
