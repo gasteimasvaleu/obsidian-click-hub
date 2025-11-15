@@ -90,23 +90,19 @@ const Games = () => {
         <div className="flex justify-center mb-6 animate-fade-in">
           <div className="flex flex-col items-center w-full max-w-3xl">
             {/* Video Animation */}
-            <div className="flex justify-center mb-4">
+            <div className="flex justify-center w-full overflow-hidden mb-4">
               <video
-                className="w-[500px] h-[500px] max-w-full"
+                src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/video_be332ed2_1763196148899.mp4"
+                className="w-full h-auto max-w-[500px] px-4"
+                style={{ maxHeight: '300px' }}
                 autoPlay
                 muted
                 playsInline
                 onEnded={(e) => {
                   const video = e.currentTarget;
                   video.currentTime = 0;
-                  video.pause();
                 }}
-              >
-                <source 
-                  src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/jesusgame.mp4" 
-                  type="video/mp4" 
-                />
-              </video>
+              />
             </div>
             
             <GlassCard className="w-full text-center">
