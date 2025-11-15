@@ -132,8 +132,8 @@ const GuiaPais = () => {
     <div className="min-h-screen bg-black relative pb-24">
       <FuturisticNavbar />
       
-      <div className="flex items-center justify-center min-h-screen pt-16 px-4">
-        <div className="flex flex-col items-center w-full">
+      <div className="pt-16 px-4">
+        <div className="flex flex-col items-center w-full max-w-4xl mx-auto">
           {/* Video animation */}
           <div className="flex justify-center w-full overflow-hidden mb-8">
             <video
