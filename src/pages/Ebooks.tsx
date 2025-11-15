@@ -7,6 +7,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { FileText, Music, Download, Clock, BookOpen } from "lucide-react";
 import { EmptyState } from "@/components/EmptyState";
 import { toast } from "sonner";
+import { useUserProgress } from "@/hooks/useUserProgress";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface Ebook {
   id: string;
@@ -21,6 +23,8 @@ interface Ebook {
 }
 
 const Ebooks = () => {
+  const { user } = useAuth();
+  const { addActivity } = useUserProgress();
   const [ebooks, setEbooks] = useState<Ebook[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -44,7 +48,7 @@ const Ebooks = () => {
     setLoading(false);
   };
 
-  const handleDownloadClick = (ebook: Ebook) => {
+  const handleDownloadClick = async (ebook: Ebook) => {
     if (!ebook.file_url) {
       toast.error("Arquivo não disponível");
       return;
@@ -53,6 +57,17 @@ const Ebooks = () => {
     // Open file URL in new tab
     window.open(ebook.file_url, "_blank");
     toast.success(`Download iniciado: ${ebook.title}`);
+    
+    // Registrar que o usuário acessou/leu o ebook
+    if (user) {
+      const pointsEarned = 20;
+      await addActivity(
+        'ebook_read',
+        ebook.id,
+        ebook.title,
+        pointsEarned
+      );
+    }
   };
 
   const isAudioBook = (format: string) => {

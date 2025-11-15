@@ -8,6 +8,8 @@ import { GridSkeleton } from "@/components/skeletons/GridSkeleton";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ArrowLeft, RotateCcw } from "lucide-react";
 import { fireCompleteConfetti } from "@/lib/confetti";
+import { useUserProgress } from "@/hooks/useUserProgress";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface MemoryPair {
   card1: string;
@@ -38,6 +40,8 @@ interface Card {
 export default function MemoryPlayer() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const { addActivity } = useUserProgress();
   const [game, setGame] = useState<Game | null>(null);
   const [loading, setLoading] = useState(true);
   const [cards, setCards] = useState<Card[]>([]);
@@ -129,16 +133,25 @@ export default function MemoryPlayer() {
               : card
           )
         );
-        setMatchedPairs(matchedPairs + 1);
+        const newMatchedPairs = matchedPairs + 1;
+        setMatchedPairs(newMatchedPairs);
         setFlippedCards([]);
         setCanFlip(true);
 
-        // Verificar se o jogo terminou
-        if (matchedPairs + 1 === game!.content_json.pairs.length) {
-          setTimeout(() => {
-            setGameFinished(true);
-            fireCompleteConfetti(); // 🎉 Celebração de 2.5s
-          }, 800); // Delay para o usuário ver o último par antes da celebração
+        // Verificar se jogo completou
+        if (game && newMatchedPairs === game.content_json.pairs.length) {
+          setGameFinished(true);
+          fireCompleteConfetti();
+          
+          if (user) {
+            const pointsEarned = calculateMemoryPoints(moves + 1, game.content_json.pairs.length);
+            addActivity(
+              'game_completed',
+              game.id,
+              game.title,
+              pointsEarned
+            );
+          }
         }
       }, 600);
     } else {
@@ -159,6 +172,18 @@ export default function MemoryPlayer() {
       setGameFinished(false);
       setCanFlip(true);
     }
+  };
+
+  const calculateMemoryPoints = (moves: number, totalPairs: number): number => {
+    const perfectMoves = totalPairs;
+    let points = 40;
+    
+    // Bônus por eficiência
+    if (moves <= perfectMoves) return points + 40; // Perfeito!
+    if (moves <= perfectMoves * 1.5) return points + 20;
+    if (moves <= perfectMoves * 2) return points + 10;
+    
+    return points;
   };
 
   if (loading) {

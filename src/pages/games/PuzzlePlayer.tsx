@@ -11,6 +11,8 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { ChevronLeft, ChevronRight, Shuffle } from "lucide-react";
 import { toast } from "sonner";
 import { fireCompleteConfetti } from "@/lib/confetti";
+import { useUserProgress } from "@/hooks/useUserProgress";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface PuzzleScene {
   title: string;
@@ -28,6 +30,8 @@ export default function PuzzlePlayer() {
   const { id } = useParams();
   const navigate = useNavigate();
   const isMobile = useIsMobile();
+  const { user } = useAuth();
+  const { addActivity } = useUserProgress();
   
   const [game, setGame] = useState<PuzzleGame | null>(null);
   const [loading, setLoading] = useState(true);
@@ -132,7 +136,22 @@ export default function PuzzlePlayer() {
     if (allCorrect && currentTiles.length > 0) {
       setCompleted(true);
       toast.success("🎉 Parabéns! Você completou o quebra-cabeça!");
-      fireCompleteConfetti(); // 🎉 Celebração de 2.5s
+      fireCompleteConfetti();
+      
+      // Registrar se é a última cena
+      if (game && user) {
+        const isLastScene = currentSceneIndex === game.scenes.length - 1;
+        
+        if (isLastScene) {
+          const pointsEarned = 60;
+          addActivity(
+            'game_completed',
+            id || '',
+            game.title,
+            pointsEarned
+          );
+        }
+      }
     }
   };
 

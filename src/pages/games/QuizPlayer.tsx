@@ -11,6 +11,8 @@ import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
 import { CheckCircle2, XCircle, ArrowLeft, RotateCcw } from "lucide-react";
 import { fireBasicConfetti, fireRainbowConfetti } from "@/lib/confetti";
+import { useUserProgress } from "@/hooks/useUserProgress";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface QuizQuestion {
   question: string;
@@ -35,6 +37,8 @@ interface Game {
 const QuizPlayer = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const { addActivity } = useUserProgress();
   const [game, setGame] = useState<Game | null>(null);
   const [loading, setLoading] = useState(true);
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -95,7 +99,35 @@ const QuizPlayer = () => {
       setShowFeedback(false);
     } else {
       setGameFinished(true);
+      fireRainbowConfetti();
+      
+      // Registrar conclusão do jogo
+      if (user && game) {
+        const pointsEarned = calculatePoints(score, game.content_json.questions.length, game.difficulty);
+        addActivity(
+          'game_completed',
+          game.id,
+          game.title,
+          pointsEarned
+        );
+      }
     }
+  };
+
+  const calculatePoints = (score: number, total: number, difficulty: string): number => {
+    const percentage = (score / total) * 100;
+    let basePoints = 30;
+    
+    // Bônus por dificuldade
+    if (difficulty === 'medium') basePoints = 50;
+    if (difficulty === 'hard') basePoints = 70;
+    
+    // Bônus por performance
+    if (percentage === 100) return basePoints + 30; // Perfeito!
+    if (percentage >= 80) return basePoints + 20;
+    if (percentage >= 60) return basePoints + 10;
+    
+    return basePoints;
   };
 
   const handleReplay = () => {

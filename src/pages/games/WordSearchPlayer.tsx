@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { fireMiniConfetti, fireCompleteConfetti } from "@/lib/confetti";
+import { useUserProgress } from "@/hooks/useUserProgress";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface GameData {
   words: string[];
@@ -109,11 +111,14 @@ export default function WordSearchPlayer() {
   const { id } = useParams();
   const navigate = useNavigate();
   const isMobile = useIsMobile();
+  const { user } = useAuth();
+  const { addActivity } = useUserProgress();
   const [game, setGame] = useState<WordSearchGame | null>(null);
   const [loading, setLoading] = useState(true);
   const [foundWords, setFoundWords] = useState<Set<string>>(new Set());
   const [selecting, setSelecting] = useState(false);
   const [selectedCells, setSelectedCells] = useState<CellSelection[]>([]);
+  const [gameTitle, setGameTitle] = useState<string>('');
   const [title, setTitle] = useState("");
 
   useEffect(() => {
@@ -133,6 +138,7 @@ export default function WordSearchPlayer() {
       if (!data) throw new Error("Jogo não encontrado");
 
       setTitle(data.title);
+      setGameTitle(data.title);
       
       const gameData = data.content_json as unknown as GameData;
       const generatedGame = generateWordSearchGrid(gameData.words, 15, isMobile);
@@ -232,14 +238,26 @@ export default function WordSearchPlayer() {
     );
 
     if (foundWord && !foundWords.has(foundWord.word)) {
-      setFoundWords(new Set([...foundWords, foundWord.word]));
+      const newFoundWords = new Set([...foundWords, foundWord.word]);
+      setFoundWords(newFoundWords);
       toast.success(`Palavra encontrada: ${foundWord.word}!`);
-      fireMiniConfetti(); // 🎉 Mini celebração a cada palavra
+      fireMiniConfetti();
       
-      if (foundWords.size + 1 === game.words.length) {
+      // Verificar se todas as palavras foram encontradas
+      if (newFoundWords.size === game.words.length) {
         setTimeout(() => {
           toast.success("Parabéns! Você encontrou todas as palavras!");
-          fireCompleteConfetti(); // 🎉 Celebração completa
+          fireCompleteConfetti();
+          
+          if (user) {
+            const pointsEarned = 50;
+            addActivity(
+              'game_completed',
+              id || '',
+              gameTitle || 'Caça-Palavras',
+              pointsEarned
+            );
+          }
         }, 500);
       }
     }
