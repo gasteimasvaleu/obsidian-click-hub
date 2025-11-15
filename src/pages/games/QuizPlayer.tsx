@@ -171,15 +171,6 @@ const QuizPlayer = () => {
 
   if (gameFinished) {
     const percentage = Math.round((score / questions.length) * 100);
-    
-    // Disparar confetti quando a tela renderizar
-    useEffect(() => {
-      if (percentage === 100) {
-        fireRainbowConfetti(); // Score perfeito
-      } else if (percentage >= 70) {
-        fireBasicConfetti(); // Score bom
-      }
-    }, []); // Apenas uma vez ao montar
 
     return (
       <div className="min-h-screen bg-black pb-24">
