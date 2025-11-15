@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
 
 const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -56,6 +57,15 @@ const Login = () => {
     setIsLoading(false);
   };
 
+  const handleClearSession = async () => {
+    setIsLoading(true);
+    await supabase.auth.signOut();
+    localStorage.clear();
+    toast.success('Sessão limpa com sucesso!');
+    setIsLoading(false);
+    window.location.reload();
+  };
+
   return (
     <div className="min-h-screen bg-black flex items-center justify-center p-4">
       <Card className="w-full max-w-md glass border-primary/20">
@@ -66,6 +76,16 @@ const Login = () => {
           <CardDescription className="text-muted-foreground">
             Acesse jogos, e-books e todo o conteúdo exclusivo
           </CardDescription>
+          <Button 
+            type="button" 
+            variant="ghost" 
+            size="sm"
+            onClick={handleClearSession}
+            disabled={isLoading}
+            className="text-xs text-muted-foreground hover:text-primary mt-2"
+          >
+            {isLoading ? 'Limpando...' : 'Limpar sessão'}
+          </Button>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="signin" className="w-full">
