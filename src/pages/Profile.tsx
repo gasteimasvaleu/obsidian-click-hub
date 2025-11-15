@@ -5,14 +5,20 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Trophy, Star, Target, Activity } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Trophy, Star, Target, Activity, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 
 const Profile = () => {
-  const { user, loading: authLoading } = useAuth();
+  const { user, loading: authLoading, signOut } = useAuth();
   const { progress, badges, activities, loading: progressLoading } = useUserProgress();
   const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await signOut();
+    navigate('/login');
+  };
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -77,6 +83,17 @@ const Profile = () => {
                   <Progress value={levelProgress} className="h-3" />
                 </div>
               </div>
+            </div>
+            
+            <div className="mt-6 pt-6 border-t border-primary/20">
+              <Button 
+                variant="outline" 
+                className="w-full md:w-auto border-red-500/50 text-red-500 hover:bg-red-500/10 hover:text-red-400"
+                onClick={handleLogout}
+              >
+                <LogOut className="w-4 h-4 mr-2" />
+                Sair da Conta
+              </Button>
             </div>
           </CardContent>
         </Card>
