@@ -6,25 +6,52 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Trophy, Star, Target, Activity, LogOut } from 'lucide-react';
+import { Trophy, Star, Target, Activity, LogOut, Camera } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { AvatarUpload } from '@/components/profile/AvatarUpload';
+import { supabase } from '@/integrations/supabase/client';
 
 const Profile = () => {
   const { user, loading: authLoading, signOut } = useAuth();
   const { progress, badges, activities, loading: progressLoading } = useUserProgress();
   const navigate = useNavigate();
+  const [showAvatarUpload, setShowAvatarUpload] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState<string>('');
 
   const handleLogout = async () => {
     await signOut();
     navigate('/login');
   };
 
+  // Fetch profile data including avatar_url
+  useEffect(() => {
+    const fetchProfile = async () => {
+      if (!user) return;
+      
+      const { data } = await supabase
+        .from('profiles')
+        .select('avatar_url')
+        .eq('id', user.id)
+        .single();
+      
+      if (data?.avatar_url) {
+        setAvatarUrl(data.avatar_url);
+      }
+    };
+    
+    fetchProfile();
+  }, [user]);
+
   useEffect(() => {
     if (!authLoading && !user) {
       navigate('/login');
     }
   }, [user, authLoading, navigate]);
+
+  const handleAvatarUploadSuccess = (url: string) => {
+    setAvatarUrl(url);
+  };
 
   if (authLoading || progressLoading) {
     return (
@@ -45,12 +72,21 @@ const Profile = () => {
         <Card className="glass border-primary/20 mb-6">
           <CardContent className="pt-6">
             <div className="flex flex-col md:flex-row items-center gap-6">
-              <Avatar className="w-24 h-24 border-4 border-primary/30">
-                <AvatarImage src={user.user_metadata?.avatar_url} />
-                <AvatarFallback className="bg-primary/20 text-primary text-2xl font-bold">
-                  {user.user_metadata?.full_name?.charAt(0) || user.email?.charAt(0).toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
+              <div className="relative group">
+                <Avatar className="w-24 h-24 border-4 border-primary/30">
+                  <AvatarImage src={avatarUrl || user.user_metadata?.avatar_url} />
+                  <AvatarFallback className="bg-primary/20 text-primary text-2xl font-bold">
+                    {user.user_metadata?.full_name?.charAt(0) || user.email?.charAt(0).toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+                <button
+                  onClick={() => setShowAvatarUpload(true)}
+                  className="absolute inset-0 flex items-center justify-center bg-black/60 rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                  title="Alterar foto"
+                >
+                  <Camera className="w-6 h-6 text-white" />
+                </button>
+              </div>
               
               <div className="flex-1 text-center md:text-left">
                 <h1 className="text-3xl font-bold text-white mb-1">
@@ -207,6 +243,17 @@ const Profile = () => {
             </Tabs>
           </CardContent>
         </Card>
+
+        {/* Avatar Upload Modal */}
+        <AvatarUpload
+          currentAvatarUrl={avatarUrl}
+          userId={user.id}
+          userName={user.user_metadata?.full_name}
+          userEmail={user.email}
+          open={showAvatarUpload}
+          onOpenChange={setShowAvatarUpload}
+          onUploadSuccess={handleAvatarUploadSuccess}
+        />
       </div>
     </div>
   );
