@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { FuturisticNavbar } from "@/components/FuturisticNavbar";
+import { GlassCard } from "@/components/GlassCard";
 import { ParentsGuideForm } from "@/components/guia-pais/ParentsGuideForm";
 import { GuideDisplay } from "@/components/guia-pais/GuideDisplay";
 import { useToast } from "@/hooks/use-toast";
@@ -135,18 +136,20 @@ const GuiaPais = () => {
       <div className="pt-16 px-4">
         <div className="flex flex-col items-center w-full max-w-4xl mx-auto">
           {/* Video animation */}
-          <div className="flex justify-center w-full overflow-hidden mb-8">
-            <video
-              src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/guipais.mp4"
-              className="w-full h-auto max-w-[500px] px-4"
-              style={{ maxHeight: '300px' }}
-              autoPlay
-              muted
-              playsInline
-              onEnded={(e) => {
-                e.currentTarget.currentTime = 0;
-              }}
-            />
+          <div className="flex justify-center w-full mb-8 px-4">
+            <GlassCard className="w-full max-w-[500px] p-0 overflow-hidden">
+              <video
+                src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/guipais.mp4"
+                className="w-full h-auto"
+                style={{ maxHeight: '300px' }}
+                autoPlay
+                muted
+                playsInline
+                onEnded={(e) => {
+                  e.currentTarget.currentTime = 0;
+                }}
+              />
+            </GlassCard>
           </div>
           
           {!generatedGuide ? (

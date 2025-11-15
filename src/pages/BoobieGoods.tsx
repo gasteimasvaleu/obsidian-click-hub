@@ -164,20 +164,22 @@ const BoobieGoods = () => {
         {/* Header */}
         <div className="flex justify-center mb-12">
           <div className="flex flex-col items-center w-full max-w-3xl">
-            {/* Animação */}
-            <div className="flex justify-center w-full overflow-hidden mb-8">
-              <video
-                src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/colorir%20novo.mp4"
-                className="w-full h-auto max-w-[500px] px-4"
-                style={{ maxHeight: '300px' }}
-                autoPlay
-                muted
-                playsInline
-                onEnded={(e) => {
-                  e.currentTarget.currentTime = 0;
-                }}
-              />
-            </div>
+        {/* Animação */}
+        <div className="flex justify-center w-full mb-8 px-4">
+          <GlassCard className="w-full max-w-[500px] p-0 overflow-hidden">
+            <video
+              src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/colorir%20novo.mp4"
+              className="w-full h-auto"
+              style={{ maxHeight: '300px' }}
+              autoPlay
+              muted
+              playsInline
+              onEnded={(e) => {
+                e.currentTarget.currentTime = 0;
+              }}
+            />
+          </GlassCard>
+        </div>
             
             <GlassCard className="w-full text-center">
               <h1 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-primary via-primary to-primary/60 bg-clip-text text-transparent">
