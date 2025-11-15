@@ -165,11 +165,11 @@ const BoobieGoods = () => {
         <div className="flex justify-center mb-12">
           <div className="flex flex-col items-center w-full max-w-3xl">
             {/* Animação */}
-            <div className="flex justify-center mb-8">
+            <div className="flex justify-center w-full overflow-hidden mb-8">
               <video
-                src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/animacaoebooks.mp4"
-                className="max-w-full h-auto rounded-xl"
-                style={{ maxWidth: '500px', maxHeight: '500px' }}
+                src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/colorir%20novo.mp4"
+                className="w-full h-auto max-w-[500px] px-4"
+                style={{ maxHeight: '300px' }}
                 autoPlay
                 muted
                 playsInline
