@@ -42,7 +42,7 @@ const Index = () => {
       <FuturisticNavbar />
       
       {/* Logo video section */}
-      <div className="flex justify-center w-full overflow-hidden pt-8 pb-4">
+      <div className="flex justify-center w-full overflow-hidden pt-16 pb-4">
         <video 
           src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/video_517d0687_1763117222774.mp4"
           className="w-full h-auto max-w-[500px] px-4"
