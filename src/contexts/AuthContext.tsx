@@ -23,16 +23,46 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
+      async (event, session) => {
+        // Detectar eventos de desconexão
+        if (event === 'SIGNED_OUT') {
+          setSession(null);
+          setUser(null);
+          setIsAdmin(false);
+          setLoading(false);
+          return;
+        }
+
         setSession(session);
         setUser(session?.user ?? null);
         
         if (session?.user) {
-          setTimeout(() => {
-            checkAdminStatus(session.user.id);
+          // Verificar se o usuário ainda existe no banco
+          setTimeout(async () => {
+            try {
+              const { data: profile, error } = await supabase
+                .from('profiles')
+                .select('id')
+                .eq('id', session.user.id)
+                .maybeSingle();
+              
+              // Se o perfil não existe, usuário foi deletado
+              if (error || !profile) {
+                console.log('User deleted, signing out...');
+                await supabase.auth.signOut();
+                return;
+              }
+              
+              checkAdminStatus(session.user.id);
+            } catch (err) {
+              console.error('Error checking user existence:', err);
+              setIsAdmin(false);
+              setLoading(false);
+            }
           }, 0);
         } else {
           setIsAdmin(false);
+          setLoading(false);
         }
       }
     );
