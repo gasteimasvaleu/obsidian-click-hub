@@ -6,6 +6,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Info } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -76,6 +78,15 @@ const Login = () => {
           <CardDescription className="text-muted-foreground">
             Acesse jogos, e-books e todo o conteúdo exclusivo
           </CardDescription>
+          
+          <Alert className="mt-4 border-primary/30 bg-primary/5">
+            <Info className="h-4 w-4 text-primary" />
+            <AlertDescription className="text-xs text-muted-foreground ml-2">
+              <strong className="text-primary">Atenção:</strong> Este cadastro é independente da plataforma externa. 
+              Mesmo que você já tenha login na plataforma, será necessário criar uma nova conta aqui para acessar o app.
+            </AlertDescription>
+          </Alert>
+
           <Button 
             type="button" 
             variant="ghost" 
