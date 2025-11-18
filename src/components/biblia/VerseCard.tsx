@@ -106,12 +106,12 @@ export default function VerseCard({ verse, bookName, chapterNumber, isFavorite }
             <p className="text-foreground text-lg mb-3">{verse.text}</p>
             <p className="text-muted-foreground text-sm mb-3">{reference}</p>
 
-            <div className="flex flex-wrap gap-2">
-              <Button size="sm" variant="outline" onClick={handleCopy}>
+            <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2">
+              <Button size="sm" variant="outline" onClick={handleCopy} className="w-full sm:w-auto">
                 <Copy size={16} className="mr-1" /> Copiar
               </Button>
               
-              <Button size="sm" variant="outline" onClick={handleShare}>
+              <Button size="sm" variant="outline" onClick={handleShare} className="w-full sm:w-auto">
                 <Share2 size={16} className="mr-1" /> Compartilhar
               </Button>
               
@@ -121,6 +121,7 @@ export default function VerseCard({ verse, bookName, chapterNumber, isFavorite }
                     size="sm" 
                     variant={isFavorite ? "default" : "outline"}
                     onClick={() => toggleFavoriteMutation.mutate()}
+                    className="w-full sm:w-auto"
                   >
                     <Star size={16} className="mr-1" /> 
                     {isFavorite ? 'Favoritado' : 'Favoritar'}
@@ -130,6 +131,7 @@ export default function VerseCard({ verse, bookName, chapterNumber, isFavorite }
                     size="sm" 
                     variant="outline"
                     onClick={() => setShowNoteDialog(true)}
+                    className="w-full sm:w-auto"
                   >
                     <StickyNote size={16} className="mr-1" /> Nota
                   </Button>
