@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { FuturisticNavbar } from "@/components/FuturisticNavbar";
 import { CheckCircle2, Share2, FileDown, Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
 export default function DailyDevotionalPage() {
@@ -212,7 +212,7 @@ export default function DailyDevotionalPage() {
       <div className="container mx-auto px-4 pt-20 max-w-3xl">
         <div className="text-center mb-6">
           <p className="text-muted-foreground text-lg">
-            📅 {format(new Date(devotional.devotional_date), "EEEE, d 'de' MMMM 'de' yyyy", { locale: ptBR })}
+            📅 {format(parseISO(devotional.devotional_date), "EEEE, d 'de' MMMM 'de' yyyy", { locale: ptBR })}
           </p>
         </div>
 
