@@ -229,19 +229,20 @@ export default function DailyDevotionalPage() {
       <FuturisticNavbar />
       
       <div className="container mx-auto px-4 pt-20 max-w-3xl">
-        <div className="text-center mb-6">
-          <p className="text-muted-foreground text-lg">
+        <GlassCard className="mb-6 text-center bg-gradient-to-br from-purple-500/10 to-blue-500/10 border-purple-400/30">
+          <p className="text-muted-foreground text-sm mb-4">
             📅 {format(parseISO(devotional.devotional_date), "EEEE, d 'de' MMMM 'de' yyyy", { locale: ptBR })}
           </p>
-        </div>
-
-        <h1 className="text-4xl font-bold text-foreground text-center mb-2">
-          {devotional.theme}
-        </h1>
-        <p className="text-center text-blue-400 mb-8">
-          📖 {devotional.book_name} {devotional.chapter}:{devotional.verse_start}
-          {devotional.verse_end && `-${devotional.verse_end}`}
-        </p>
+          
+          <h1 className="text-4xl font-bold text-foreground mb-3">
+            {devotional.theme}
+          </h1>
+          
+          <p className="text-blue-400 text-lg">
+            📖 {devotional.book_name} {devotional.chapter}:{devotional.verse_start}
+            {devotional.verse_end && `-${devotional.verse_end}`}
+          </p>
+        </GlassCard>
 
         <GlassCard className="mb-6">
           <h2 className="text-xl font-semibold text-foreground mb-3">📝 Introdução</h2>
