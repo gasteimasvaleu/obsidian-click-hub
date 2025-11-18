@@ -344,6 +344,23 @@ export default function DailyDevotionalPage() {
       <FuturisticNavbar />
       
       <div className="container mx-auto px-4 pt-20 max-w-3xl">
+        {/* Video animation */}
+        <div className="flex justify-center w-full mb-8">
+          <GlassCard className="w-full max-w-[500px] p-0 overflow-hidden">
+            <video
+              src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/video_6b50c453_1763462346092.mp4"
+              className="w-full h-auto"
+              style={{ maxHeight: '300px' }}
+              autoPlay
+              muted
+              playsInline
+              onEnded={(e) => {
+                e.currentTarget.currentTime = 0;
+              }}
+            />
+          </GlassCard>
+        </div>
+
         <GlassCard className="mb-6 text-center bg-gradient-to-br from-purple-500/10 to-blue-500/10 border-purple-400/30">
           <p className="text-muted-foreground text-sm mb-4">
             📅 {format(parseISO(devotional.devotional_date), "EEEE, d 'de' MMMM 'de' yyyy", { locale: ptBR })}
