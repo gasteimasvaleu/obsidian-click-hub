@@ -142,13 +142,31 @@ export default function DailyDevotionalPage() {
     mutationFn: async () => {
       if (!user || !devotional) throw new Error('Dados incompletos');
 
-      await supabase
+      // Verificar se já existe um registro
+      const { data: existing } = await supabase
         .from('user_devotional_progress')
-        .upsert({
-          user_id: user.id,
-          devotional_id: devotional.id,
-          user_notes: userNotes
-        });
+        .select('id')
+        .eq('user_id', user.id)
+        .eq('devotional_id', devotional.id)
+        .single();
+
+      if (existing) {
+        // Se existe, fazer UPDATE apenas do user_notes
+        await supabase
+          .from('user_devotional_progress')
+          .update({ user_notes: userNotes })
+          .eq('user_id', user.id)
+          .eq('devotional_id', devotional.id);
+      } else {
+        // Se não existe, criar novo registro
+        await supabase
+          .from('user_devotional_progress')
+          .insert({
+            user_id: user.id,
+            devotional_id: devotional.id,
+            user_notes: userNotes
+          });
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['devotional-progress'] });
