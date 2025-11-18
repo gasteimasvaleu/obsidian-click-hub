@@ -95,7 +95,7 @@ export default function VerseCard({ verse, bookName, chapterNumber, isFavorite }
       <GlassCard 
         className={`p-4 ${isFavorite ? 'bg-yellow-500/5 border-yellow-400/30' : ''}`}
       >
-        <div className="flex gap-4">
+        <div className="flex flex-col sm:flex-row gap-4">
           <div className="flex-shrink-0">
             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center">
               <span className="text-white font-bold">{verse.verse_number}</span>
@@ -105,40 +105,40 @@ export default function VerseCard({ verse, bookName, chapterNumber, isFavorite }
           <div className="flex-1">
             <p className="text-foreground text-lg mb-3">{verse.text}</p>
             <p className="text-muted-foreground text-sm mb-3">{reference}</p>
-
-            <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2">
-              <Button size="sm" variant="outline" onClick={handleCopy} className="w-full sm:w-auto">
-                <Copy size={16} className="mr-1" /> Copiar
-              </Button>
-              
-              <Button size="sm" variant="outline" onClick={handleShare} className="w-full sm:w-auto">
-                <Share2 size={16} className="mr-1" /> Compartilhar
-              </Button>
-              
-              {user && (
-                <>
-                  <Button 
-                    size="sm" 
-                    variant={isFavorite ? "default" : "outline"}
-                    onClick={() => toggleFavoriteMutation.mutate()}
-                    className="w-full sm:w-auto"
-                  >
-                    <Star size={16} className="mr-1" /> 
-                    {isFavorite ? 'Favoritado' : 'Favoritar'}
-                  </Button>
-                  
-                  <Button 
-                    size="sm" 
-                    variant="outline"
-                    onClick={() => setShowNoteDialog(true)}
-                    className="w-full sm:w-auto"
-                  >
-                    <StickyNote size={16} className="mr-1" /> Nota
-                  </Button>
-                </>
-              )}
-            </div>
           </div>
+        </div>
+
+        <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2 mt-3">
+          <Button size="sm" variant="outline" onClick={handleCopy} className="w-full sm:w-auto">
+            <Copy size={16} className="mr-1" /> Copiar
+          </Button>
+          
+          <Button size="sm" variant="outline" onClick={handleShare} className="w-full sm:w-auto">
+            <Share2 size={16} className="mr-1" /> Compartilhar
+          </Button>
+          
+          {user && (
+            <>
+              <Button 
+                size="sm" 
+                variant={isFavorite ? "default" : "outline"}
+                onClick={() => toggleFavoriteMutation.mutate()}
+                className="w-full sm:w-auto"
+              >
+                <Star size={16} className="mr-1" /> 
+                {isFavorite ? 'Favoritado' : 'Favoritar'}
+              </Button>
+              
+              <Button 
+                size="sm" 
+                variant="outline"
+                onClick={() => setShowNoteDialog(true)}
+                className="w-full sm:w-auto"
+              >
+                <StickyNote size={16} className="mr-1" /> Nota
+              </Button>
+            </>
+          )}
         </div>
       </GlassCard>
 
