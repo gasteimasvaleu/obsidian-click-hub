@@ -80,6 +80,9 @@ export default function DailyDevotionalPage() {
       } else {
         toast.error(error.message || 'Erro ao gerar devocional');
       }
+    },
+    onSettled: () => {
+      setIsGenerating(false);
     }
   });
 
