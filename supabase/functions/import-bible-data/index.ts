@@ -30,6 +30,22 @@ serve(async (req) => {
     let chaptersImported = 0;
     let versesImported = 0;
 
+    // Helper to determine testament from group
+    const getTestament = (book: any): string => {
+      const oldTestamentGroups = ['pentateuco', 'historicos', 'poeticos', 'profetas_maiores', 'profetas_menores'];
+      if (book.testament === 'VT' || oldTestamentGroups.includes(book.group)) {
+        return 'antigo';
+      }
+      return 'novo';
+    };
+
+    // Helper to get abbreviation
+    const getAbbrev = (book: any): string => {
+      if (typeof book.abbrev === 'string') return book.abbrev;
+      if (book.abbrev?.pt) return book.abbrev.pt;
+      return book.name.toLowerCase().substring(0, 2);
+    };
+
     // Process each book
     for (const book of bibleData) {
       console.log(`Processing book: ${book.name}`);
@@ -39,11 +55,11 @@ serve(async (req) => {
         .from('bible_books')
         .insert({
           name: book.name,
-          abbrev: book.abbrev.pt,
-          testament: book.testament === 'VT' ? 'antigo' : 'novo',
-          book_order: book.order || booksImported + 1,
+          abbrev: getAbbrev(book),
+          testament: getTestament(book),
+          book_order: booksImported + 1,
           chapters_count: book.chapters.length,
-          category: book.group
+          category: book.group || 'outros'
         })
         .select()
         .single();
