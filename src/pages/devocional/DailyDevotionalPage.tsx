@@ -6,7 +6,7 @@ import { GlassCard } from "@/components/GlassCard";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { FuturisticNavbar } from "@/components/FuturisticNavbar";
-import { CheckCircle2, Share2, FileDown } from "lucide-react";
+import { CheckCircle2, Share2, FileDown, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -15,8 +15,9 @@ export default function DailyDevotionalPage() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const [userNotes, setUserNotes] = useState("");
+  const [isGenerating, setIsGenerating] = useState(false);
 
-  const { data: devotional } = useQuery({
+  const { data: devotional, isLoading, error } = useQuery({
     queryKey: ['daily-devotional'],
     queryFn: async () => {
       const today = format(new Date(), 'yyyy-MM-dd');
@@ -26,6 +27,9 @@ export default function DailyDevotionalPage() {
         .eq('devotional_date', today)
         .eq('available', true)
         .single();
+      
+      // Se não houver devocional, retornar null (não throw error)
+      if (error && error.code === 'PGRST116') return null;
       if (error) throw error;
       return data;
     }
@@ -52,6 +56,40 @@ export default function DailyDevotionalPage() {
       setUserNotes(progress.user_notes);
     }
   }, [progress]);
+
+  // Mutation para gerar devocional automaticamente
+  const generateDevotionalMutation = useMutation({
+    mutationFn: async () => {
+      const today = format(new Date(), 'yyyy-MM-dd');
+      const { data, error } = await supabase.functions.invoke('generate-devotional', {
+        body: { date: today, count: 1 }
+      });
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['daily-devotional'] });
+      toast.success('✨ Devocional gerado com sucesso!');
+    },
+    onError: (error: any) => {
+      console.error('Erro ao gerar devocional:', error);
+      if (error.message?.includes('Rate limit')) {
+        toast.error('Limite de requisições atingido. Tente novamente em 1 minuto.');
+      } else if (error.message?.includes('Créditos')) {
+        toast.error('Créditos insuficientes. Adicione fundos no Lovable AI.');
+      } else {
+        toast.error(error.message || 'Erro ao gerar devocional');
+      }
+    }
+  });
+
+  // Auto-gerar quando não houver devocional
+  useEffect(() => {
+    if (!isLoading && !devotional && !isGenerating && !error) {
+      setIsGenerating(true);
+      generateDevotionalMutation.mutate();
+    }
+  }, [devotional, isLoading, isGenerating, error]);
 
   const markAsReadMutation = useMutation({
     mutationFn: async () => {
@@ -134,6 +172,24 @@ export default function DailyDevotionalPage() {
   const handleGeneratePDF = () => {
     toast.info("Funcionalidade em desenvolvimento");
   };
+
+  // Loading state para geração
+  if (isLoading || isGenerating || generateDevotionalMutation.isPending) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <FuturisticNavbar />
+        <div className="text-center">
+          <Loader2 className="animate-spin text-blue-400 mx-auto mb-4" size={48} />
+          <p className="text-foreground text-xl">
+            {isGenerating ? '✨ Gerando devocional do dia...' : 'Carregando...'}
+          </p>
+          <p className="text-muted-foreground text-sm mt-2">
+            Isso pode levar alguns segundos
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   if (!devotional) {
     return (

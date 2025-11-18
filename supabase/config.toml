@@ -8,3 +8,9 @@ verify_jwt = true
 
 [functions.generate-parents-guide]
 verify_jwt = false
+
+[functions.generate-devotional]
+verify_jwt = false
+
+[functions.import-bible-data]
+verify_jwt = true
