@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { FuturisticNavbar } from "@/components/FuturisticNavbar";
 import VerseCard from "@/components/biblia/VerseCard";
+import { GlassCard } from "@/components/GlassCard";
 
 const VERSES_PER_PAGE = 15;
 
@@ -81,18 +82,23 @@ export default function ChapterReaderPage() {
       <FuturisticNavbar />
       
       <div className="container mx-auto px-4 pt-20">
-        <Button
-          variant="ghost"
-          onClick={() => navigate(`/biblia/${bookId}`)}
-          className="mb-4"
-        >
-          <ChevronLeft size={20} /> Voltar
-        </Button>
-
-        <h1 className="text-3xl font-bold text-foreground mb-2">
-          {book?.name} - Capítulo {chapterNumber}
-        </h1>
-        <p className="text-muted-foreground mb-6">{verses?.length} versículos</p>
+        <GlassCard className="mb-6">
+          <h1 className="text-3xl font-bold text-foreground mb-3">
+            {book?.name} - Capítulo {chapterNumber}
+          </h1>
+          
+          <div className="flex justify-between items-center">
+            <p className="text-muted-foreground">{verses?.length} versículos</p>
+            
+            <Button
+              variant="ghost"
+              onClick={() => navigate(`/biblia/${bookId}`)}
+              size="sm"
+            >
+              <ChevronLeft size={16} /> Voltar
+            </Button>
+          </div>
+        </GlassCard>
 
         <div className="space-y-4 mb-6">
           {paginatedVerses.map(verse => (
