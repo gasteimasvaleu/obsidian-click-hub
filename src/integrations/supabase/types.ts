@@ -642,6 +642,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_random_verse: {
+        Args: never
+        Returns: {
+          book_name: string
+          chapter: number
+          text: string
+          verse_number: number
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
