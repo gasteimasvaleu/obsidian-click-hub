@@ -4,11 +4,15 @@ import { FuturisticNavbar } from "@/components/FuturisticNavbar";
 import { Users, Palette, BookOpen, MessageCircle, Gamepad2, Info, Package, Book, Heart } from "lucide-react";
 import { useState, useEffect } from "react";
 import { RedirectModal } from "@/components/RedirectModal";
+import { PWAInstallModal } from "@/components/PWAInstallModal";
+import { usePWAInstall } from "@/hooks/usePWAInstall";
 // Cache refresh fix
 
 const Index = () => {
   const navigate = useNavigate();
   const [showRedirectModal, setShowRedirectModal] = useState(false);
+  const [showPWAModal, setShowPWAModal] = useState(false);
+  const { isInstallable, shouldShowModal, installPWA, markModalAsSeen } = usePWAInstall();
 
   // Check if user returned from external login
   useEffect(() => {
@@ -19,6 +23,29 @@ const Index = () => {
       localStorage.removeItem('appState');
     }
   }, []);
+
+  // Show PWA install modal after user lands on Index (already logged in)
+  useEffect(() => {
+    // Small delay to let page render first
+    const timer = setTimeout(() => {
+      if (shouldShowModal) {
+        setShowPWAModal(true);
+      }
+    }, 1000);
+    
+    return () => clearTimeout(timer);
+  }, [shouldShowModal]);
+
+  const handlePWAInstall = () => {
+    installPWA();
+    setShowPWAModal(false);
+    markModalAsSeen();
+  };
+
+  const handlePWAClose = () => {
+    setShowPWAModal(false);
+    markModalAsSeen();
+  };
 
   // Card principal
   const mainAction = {
@@ -147,6 +174,14 @@ const Index = () => {
         onClose={() => setShowRedirectModal(false)}
         targetUrl="https://bibliatoonkids.themembers.com.br/login"
         title="Biblia Toon Kids"
+      />
+
+      {/* PWA Install Modal */}
+      <PWAInstallModal 
+        isOpen={showPWAModal}
+        onClose={handlePWAClose}
+        onInstall={handlePWAInstall}
+        isInstallable={isInstallable}
       />
     </div>
   );

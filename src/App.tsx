@@ -7,8 +7,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Home, Package, BookOpen, Heart, Gamepad2, Palette, Users, MessageCircle } from "lucide-react";
 import { NavBar } from "@/components/ui/tubelight-navbar";
 import { SplashScreen } from "./components/SplashScreen";
-import { PWAInstallModal } from "./components/PWAInstallModal";
-import { usePWAInstall } from "./hooks/usePWAInstall";
 import { AuthProvider } from "./contexts/AuthContext";
 import Index from "./pages/Index";
 import BoobieGoods from "./pages/BoobieGoods";
@@ -51,30 +49,10 @@ const navItems = [
 
 const App = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [showPWAModal, setShowPWAModal] = useState(false);
-  const { isInstallable, shouldShowModal, installPWA, markModalAsSeen } = usePWAInstall();
 
   const handleSplashComplete = () => {
     console.log("Splash completed, setting isLoading to false");
     setIsLoading(false);
-    
-    // Show PWA modal after splash if conditions are met
-    setTimeout(() => {
-      if (shouldShowModal) {
-        setShowPWAModal(true);
-      }
-    }, 500);
-  };
-
-  const handlePWAInstall = () => {
-    installPWA();
-    setShowPWAModal(false);
-    markModalAsSeen();
-  };
-
-  const handlePWAClose = () => {
-    setShowPWAModal(false);
-    markModalAsSeen();
   };
 
   console.log("App rendering, isLoading:", isLoading);
@@ -99,25 +77,25 @@ const App = () => {
           <Sonner />
           <BrowserRouter>
             <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/boobiegoods" element={<BoobieGoods />} />
-              <Route path="/ebooks" element={<Ebooks />} />
-              <Route path="/amigodivino" element={<AmigoDivino />} />
-              <Route path="/amigodivino/chat" element={<ChatInterface />} />
-              <Route path="/sobre" element={<Sobre />} />
-              <Route path="/guia-pais" element={<GuiaPais />} />
-              <Route path="/games" element={<Games />} />
-              <Route path="/games/:id/play" element={<GamePlayer />} />
-              <Route path="/games/:gameId/memory" element={<MemoryPlayer />} />
-              <Route path="/games/:gameId/wordsearch" element={<WordSearchPlayer />} />
-              <Route path="/games/:gameId/quiz" element={<QuizPlayer />} />
-              <Route path="/games/:gameId/puzzle" element={<PuzzlePlayer />} />
-              <Route path="/biblia" element={<BibliaPage />} />
-              <Route path="/biblia/:bookId" element={<BookChaptersPage />} />
-              <Route path="/biblia/:bookId/:chapterNumber" element={<ChapterReaderPage />} />
-              <Route path="/devocional" element={<DailyDevotionalPage />} />
+              <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
+              <Route path="/boobiegoods" element={<ProtectedRoute><BoobieGoods /></ProtectedRoute>} />
+              <Route path="/ebooks" element={<ProtectedRoute><Ebooks /></ProtectedRoute>} />
+              <Route path="/amigodivino" element={<ProtectedRoute><AmigoDivino /></ProtectedRoute>} />
+              <Route path="/amigodivino/chat" element={<ProtectedRoute><ChatInterface /></ProtectedRoute>} />
+              <Route path="/sobre" element={<ProtectedRoute><Sobre /></ProtectedRoute>} />
+              <Route path="/guia-pais" element={<ProtectedRoute><GuiaPais /></ProtectedRoute>} />
+              <Route path="/games" element={<ProtectedRoute><Games /></ProtectedRoute>} />
+              <Route path="/games/:id/play" element={<ProtectedRoute><GamePlayer /></ProtectedRoute>} />
+              <Route path="/games/:gameId/memory" element={<ProtectedRoute><MemoryPlayer /></ProtectedRoute>} />
+              <Route path="/games/:gameId/wordsearch" element={<ProtectedRoute><WordSearchPlayer /></ProtectedRoute>} />
+              <Route path="/games/:gameId/quiz" element={<ProtectedRoute><QuizPlayer /></ProtectedRoute>} />
+              <Route path="/games/:gameId/puzzle" element={<ProtectedRoute><PuzzlePlayer /></ProtectedRoute>} />
+              <Route path="/biblia" element={<ProtectedRoute><BibliaPage /></ProtectedRoute>} />
+              <Route path="/biblia/:bookId" element={<ProtectedRoute><BookChaptersPage /></ProtectedRoute>} />
+              <Route path="/biblia/:bookId/:chapterNumber" element={<ProtectedRoute><ChapterReaderPage /></ProtectedRoute>} />
+              <Route path="/devocional" element={<ProtectedRoute><DailyDevotionalPage /></ProtectedRoute>} />
               <Route path="/login" element={<Login />} />
-              <Route path="/profile" element={<Profile />} />
+              <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
               <Route path="/admin" element={<ProtectedRoute requireAdmin><Dashboard /></ProtectedRoute>} />
               <Route path="/admin/ebooks" element={<ProtectedRoute requireAdmin><EbooksManager /></ProtectedRoute>} />
               <Route path="/admin/games" element={<ProtectedRoute requireAdmin><GamesManager /></ProtectedRoute>} />
@@ -128,14 +106,6 @@ const App = () => {
             </Routes>
             <NavBar items={navItems} />
           </BrowserRouter>
-          
-          {/* PWA Install Modal */}
-          <PWAInstallModal 
-            isOpen={showPWAModal}
-            onClose={handlePWAClose}
-            onInstall={handlePWAInstall}
-            isInstallable={isInstallable}
-          />
         </TooltipProvider>
       </AuthProvider>
     </QueryClientProvider>
