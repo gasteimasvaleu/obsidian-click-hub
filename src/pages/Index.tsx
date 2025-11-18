@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { FuturisticNavbar } from "@/components/FuturisticNavbar";
 import { GlassCard } from "@/components/GlassCard";
+import { FuturisticNavbar } from "@/components/FuturisticNavbar";
+import { Users, Palette, BookOpen, MessageCircle, Gamepad2, Info, Package, Book, Heart } from "lucide-react";
+import { useState, useEffect } from "react";
 import { RedirectModal } from "@/components/RedirectModal";
-import { Package, Palette, BookOpen, Heart, Users, Gamepad2, Info } from "lucide-react";
 // Cache refresh fix
 
 const Index = () => {
@@ -27,6 +27,22 @@ const Index = () => {
     action: () => setShowRedirectModal(true),
     gradient: "from-pink-500 to-purple-500"
   };
+
+  // Cards especiais: Bíblia e Devocional
+  const specialActions = [
+    { 
+      title: "Bíblia Interativa", 
+      icon: Book, 
+      action: () => navigate('/biblia'), 
+      gradient: "from-blue-500 to-indigo-600" 
+    },
+    { 
+      title: "Devocional Diário", 
+      icon: Heart, 
+      action: () => navigate('/devocional'), 
+      gradient: "from-purple-500 to-pink-500" 
+    }
+  ];
 
   // Cards de navegação
   const navigationActions = [
@@ -62,22 +78,45 @@ const Index = () => {
       <div className="flex-1 px-4 pb-8">
         <div className="w-full max-w-4xl mx-auto space-y-4">
           
-          {/* Card Principal - Full Width */}
-          <GlassCard
-            hoverable
-            pressable
-            onClick={mainAction.action}
-            className="flex flex-col items-center justify-center p-8 cursor-pointer"
-          >
-            <div className={`mb-4 p-5 rounded-full bg-gradient-to-br ${mainAction.gradient} shadow-lg`}>
-              <mainAction.icon size={40} className="text-white" />
-            </div>
-            <span className="text-white text-center font-bold text-lg">
-              {mainAction.title}
-            </span>
-          </GlassCard>
+        {/* Card Principal - Full Width */}
+        <GlassCard
+          hoverable
+          pressable
+          onClick={mainAction.action}
+          className="flex flex-col items-center justify-center p-8 cursor-pointer"
+        >
+          <div className={`mb-4 p-5 rounded-full bg-gradient-to-br ${mainAction.gradient} shadow-lg`}>
+            <mainAction.icon size={40} className="text-white" />
+          </div>
+          <span className="text-white text-center font-bold text-lg">
+            {mainAction.title}
+          </span>
+        </GlassCard>
 
-          {/* Grid de Navegação - 2 Colunas */}
+        {/* Cards Especiais: Bíblia + Devocional - Grid 2 Colunas */}
+        <div className="grid grid-cols-2 gap-4">
+          {specialActions.map((action, index) => {
+            const Icon = action.icon;
+            return (
+              <GlassCard
+                key={index}
+                hoverable
+                pressable
+                onClick={action.action}
+                className="flex flex-col items-center justify-center p-6 min-h-[140px] cursor-pointer"
+              >
+                <div className={`mb-3 p-4 rounded-full bg-gradient-to-br ${action.gradient} shadow-lg`}>
+                  <Icon size={32} className="text-white" />
+                </div>
+                <span className="text-white text-center font-semibold text-sm">
+                  {action.title}
+                </span>
+              </GlassCard>
+            );
+          })}
+        </div>
+
+        {/* Grid de Navegação - 2 Colunas */}
           <div className="grid grid-cols-2 gap-4">
             {navigationActions.map((action, index) => {
               const Icon = action.icon;

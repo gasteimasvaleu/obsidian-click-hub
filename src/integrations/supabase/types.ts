@@ -14,6 +14,163 @@ export type Database = {
   }
   public: {
     Tables: {
+      bible_books: {
+        Row: {
+          abbrev: string
+          book_order: number
+          category: string
+          chapters_count: number
+          created_at: string | null
+          id: string
+          name: string
+          testament: string
+        }
+        Insert: {
+          abbrev: string
+          book_order: number
+          category: string
+          chapters_count: number
+          created_at?: string | null
+          id?: string
+          name: string
+          testament: string
+        }
+        Update: {
+          abbrev?: string
+          book_order?: number
+          category?: string
+          chapters_count?: number
+          created_at?: string | null
+          id?: string
+          name?: string
+          testament?: string
+        }
+        Relationships: []
+      }
+      bible_chapters: {
+        Row: {
+          book_id: string
+          chapter_number: number
+          created_at: string | null
+          id: string
+          verses_count: number
+        }
+        Insert: {
+          book_id: string
+          chapter_number: number
+          created_at?: string | null
+          id?: string
+          verses_count: number
+        }
+        Update: {
+          book_id?: string
+          chapter_number?: number
+          created_at?: string | null
+          id?: string
+          verses_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bible_chapters_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: false
+            referencedRelation: "bible_books"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      bible_verses: {
+        Row: {
+          chapter_id: string
+          created_at: string | null
+          id: string
+          text: string
+          verse_number: number
+        }
+        Insert: {
+          chapter_id: string
+          created_at?: string | null
+          id?: string
+          text: string
+          verse_number: number
+        }
+        Update: {
+          chapter_id?: string
+          created_at?: string | null
+          id?: string
+          text?: string
+          verse_number?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bible_verses_chapter_id_fkey"
+            columns: ["chapter_id"]
+            isOneToOne: false
+            referencedRelation: "bible_chapters"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      daily_devotionals: {
+        Row: {
+          available: boolean | null
+          book_name: string
+          chapter: number
+          created_at: string | null
+          devotional_date: string
+          id: string
+          introduction: string
+          practical_applications: string
+          prayer: string
+          question: string
+          reflection: string
+          theme: string
+          title: string
+          updated_at: string | null
+          verse_end: number | null
+          verse_start: number
+          verse_text: string
+        }
+        Insert: {
+          available?: boolean | null
+          book_name: string
+          chapter: number
+          created_at?: string | null
+          devotional_date: string
+          id?: string
+          introduction: string
+          practical_applications: string
+          prayer: string
+          question: string
+          reflection: string
+          theme: string
+          title: string
+          updated_at?: string | null
+          verse_end?: number | null
+          verse_start: number
+          verse_text: string
+        }
+        Update: {
+          available?: boolean | null
+          book_name?: string
+          chapter?: number
+          created_at?: string | null
+          devotional_date?: string
+          id?: string
+          introduction?: string
+          practical_applications?: string
+          prayer?: string
+          question?: string
+          reflection?: string
+          theme?: string
+          title?: string
+          updated_at?: string | null
+          verse_end?: number | null
+          verse_start?: number
+          verse_text?: string
+        }
+        Relationships: []
+      }
       ebooks: {
         Row: {
           available: boolean | null
@@ -234,6 +391,76 @@ export type Database = {
           },
         ]
       }
+      user_devotional_progress: {
+        Row: {
+          completed_at: string | null
+          created_at: string | null
+          devotional_id: string
+          id: string
+          marked_as_read: boolean | null
+          updated_at: string | null
+          user_id: string
+          user_notes: string | null
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string | null
+          devotional_id: string
+          id?: string
+          marked_as_read?: boolean | null
+          updated_at?: string | null
+          user_id: string
+          user_notes?: string | null
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string | null
+          devotional_id?: string
+          id?: string
+          marked_as_read?: boolean | null
+          updated_at?: string | null
+          user_id?: string
+          user_notes?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_devotional_progress_devotional_id_fkey"
+            columns: ["devotional_id"]
+            isOneToOne: false
+            referencedRelation: "daily_devotionals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_favorite_verses: {
+        Row: {
+          created_at: string | null
+          id: string
+          user_id: string
+          verse_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          user_id: string
+          verse_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          user_id?: string
+          verse_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_favorite_verses_verse_id_fkey"
+            columns: ["verse_id"]
+            isOneToOne: false
+            referencedRelation: "bible_verses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_favorites: {
         Row: {
           content_id: string
@@ -268,9 +495,12 @@ export type Database = {
       }
       user_progress: {
         Row: {
+          bible_chapters_read: number | null
           coloring_completed: number
           created_at: string
+          devotionals_completed: number | null
           ebooks_read: number
+          favorite_verses_count: number | null
           games_completed: number
           id: string
           last_activity_date: string | null
@@ -281,9 +511,12 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          bible_chapters_read?: number | null
           coloring_completed?: number
           created_at?: string
+          devotionals_completed?: number | null
           ebooks_read?: number
+          favorite_verses_count?: number | null
           games_completed?: number
           id?: string
           last_activity_date?: string | null
@@ -294,9 +527,12 @@ export type Database = {
           user_id: string
         }
         Update: {
+          bible_chapters_read?: number | null
           coloring_completed?: number
           created_at?: string
+          devotionals_completed?: number | null
           ebooks_read?: number
+          favorite_verses_count?: number | null
           games_completed?: number
           id?: string
           last_activity_date?: string | null
@@ -312,6 +548,35 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: true
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_reading_history: {
+        Row: {
+          chapter_id: string
+          id: string
+          read_at: string | null
+          user_id: string
+        }
+        Insert: {
+          chapter_id: string
+          id?: string
+          read_at?: string | null
+          user_id: string
+        }
+        Update: {
+          chapter_id?: string
+          id?: string
+          read_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_reading_history_chapter_id_fkey"
+            columns: ["chapter_id"]
+            isOneToOne: false
+            referencedRelation: "bible_chapters"
             referencedColumns: ["id"]
           },
         ]
@@ -336,6 +601,41 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      user_verse_notes: {
+        Row: {
+          created_at: string | null
+          id: string
+          note: string
+          updated_at: string | null
+          user_id: string
+          verse_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          note: string
+          updated_at?: string | null
+          user_id: string
+          verse_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          note?: string
+          updated_at?: string | null
+          user_id?: string
+          verse_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_verse_notes_verse_id_fkey"
+            columns: ["verse_id"]
+            isOneToOne: false
+            referencedRelation: "bible_verses"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
