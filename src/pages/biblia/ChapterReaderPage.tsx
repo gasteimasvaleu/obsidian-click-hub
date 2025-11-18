@@ -89,7 +89,7 @@ export default function ChapterReaderPage() {
           <ChevronLeft size={20} /> Voltar
         </Button>
 
-        <h1 className="text-4xl font-bold text-foreground mb-2">
+        <h1 className="text-3xl font-bold text-foreground mb-2">
           {book?.name} - Capítulo {chapterNumber}
         </h1>
         <p className="text-muted-foreground mb-6">{verses?.length} versículos</p>
