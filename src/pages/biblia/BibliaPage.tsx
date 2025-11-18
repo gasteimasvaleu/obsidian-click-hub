@@ -84,9 +84,14 @@ export default function BibliaPage() {
       <FuturisticNavbar />
       
       <div className="container mx-auto px-4 pt-20">
-        <h1 className="text-4xl font-bold text-foreground mb-6 text-center">
-          📖 Bíblia Interativa
-        </h1>
+        <GlassCard className="mb-6 text-center bg-gradient-to-br from-blue-500/10 to-purple-500/10 border-blue-400/30">
+          <h1 className="text-4xl font-bold text-foreground mb-2">
+            Bíblia Interativa
+          </h1>
+          <p className="text-muted-foreground text-base">
+            Explore as Sagradas Escrituras de forma interativa e organize seus estudos
+          </p>
+        </GlassCard>
 
         <div className="relative mb-6">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={20} />
