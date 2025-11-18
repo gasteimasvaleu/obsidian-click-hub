@@ -49,7 +49,7 @@ export default function BookChaptersPage() {
           <ChevronLeft size={20} /> Voltar
         </Button>
 
-        <h1 className="text-4xl font-bold text-foreground mb-2">{book?.name}</h1>
+        <h1 className="text-3xl font-bold text-foreground mb-2">{book?.name}</h1>
         <p className="text-muted-foreground mb-6">{book?.chapters_count} capítulos</p>
 
         <div className="grid grid-cols-4 md:grid-cols-8 lg:grid-cols-10 gap-3">
