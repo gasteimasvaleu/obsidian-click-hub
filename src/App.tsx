@@ -17,16 +17,26 @@ import AmigoDivino from "./pages/AmigoDivino";
 import Sobre from "./pages/Sobre";
 import Games from "./pages/Games";
 import GamePlayer from "./pages/games/GamePlayer";
+import MemoryPlayer from "./pages/games/MemoryPlayer";
+import WordSearchPlayer from "./pages/games/WordSearchPlayer";
+import QuizPlayer from "./pages/games/QuizPlayer";
+import PuzzlePlayer from "./pages/games/PuzzlePlayer";
 import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import Dashboard from "./pages/admin/Dashboard";
 import EbooksManager from "./pages/admin/EbooksManager";
 import GamesManager from "./pages/admin/GamesManager";
 import GameGenerator from "./pages/admin/GameGenerator";
+import BibliaPage from "./pages/biblia/BibliaPage";
+import BookChaptersPage from "./pages/biblia/BookChaptersPage";
+import ChapterReaderPage from "./pages/biblia/ChapterReaderPage";
+import DailyDevotionalPage from "./pages/devocional/DailyDevotionalPage";
+import DevotionalsManager from "./pages/admin/DevotionalsManager";
 import GuiaPais from "./pages/GuiaPais";
 import NotFound from "./pages/NotFound";
 import { ExternalFrame } from "./components/ExternalFrame";
 import { ChatInterface } from "./components/ChatInterface";
+import { ProtectedRoute } from "./components/admin/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
@@ -98,14 +108,22 @@ const App = () => {
               <Route path="/guia-pais" element={<GuiaPais />} />
               <Route path="/games" element={<Games />} />
               <Route path="/games/:id/play" element={<GamePlayer />} />
+              <Route path="/games/:gameId/memory" element={<MemoryPlayer />} />
+              <Route path="/games/:gameId/wordsearch" element={<WordSearchPlayer />} />
+              <Route path="/games/:gameId/quiz" element={<QuizPlayer />} />
+              <Route path="/games/:gameId/puzzle" element={<PuzzlePlayer />} />
+              <Route path="/biblia" element={<BibliaPage />} />
+              <Route path="/biblia/:bookId" element={<BookChaptersPage />} />
+              <Route path="/biblia/:bookId/:chapterNumber" element={<ChapterReaderPage />} />
+              <Route path="/devocional" element={<DailyDevotionalPage />} />
               <Route path="/login" element={<Login />} />
               <Route path="/profile" element={<Profile />} />
-              <Route path="/admin" element={<Dashboard />} />
-              <Route path="/admin/ebooks" element={<EbooksManager />} />
-              <Route path="/admin/games" element={<GamesManager />} />
-              <Route path="/admin/games/generate" element={<GameGenerator />} />
+              <Route path="/admin" element={<ProtectedRoute requireAdmin><Dashboard /></ProtectedRoute>} />
+              <Route path="/admin/ebooks" element={<ProtectedRoute requireAdmin><EbooksManager /></ProtectedRoute>} />
+              <Route path="/admin/games" element={<ProtectedRoute requireAdmin><GamesManager /></ProtectedRoute>} />
+              <Route path="/admin/games/generate" element={<ProtectedRoute requireAdmin><GameGenerator /></ProtectedRoute>} />
+              <Route path="/admin/devocionais" element={<ProtectedRoute requireAdmin><DevotionalsManager /></ProtectedRoute>} />
               <Route path="/external-login" element={<ExternalFrame url="https://bibliatoonkids.themembers.com.br/login" title="Login - Biblia Toon Kids" />} />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
             <NavBar items={navItems} />
