@@ -10,6 +10,7 @@ import { CheckCircle2, Share2, FileDown, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { format, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import jsPDF from 'jspdf';
 
 export default function DailyDevotionalPage() {
   const { user } = useAuth();
@@ -182,17 +183,131 @@ export default function DailyDevotionalPage() {
     if (navigator.share) {
       try {
         await navigator.share({ text: shareText });
+        toast.success("Compartilhado com sucesso!");
       } catch (error) {
-        console.log('Compartilhamento cancelado');
+        if (error instanceof Error && error.name !== 'AbortError') {
+          toast.error("Erro ao compartilhar");
+        }
       }
     } else {
       navigator.clipboard.writeText(shareText);
-      toast.success("Conteúdo copiado!");
+      toast.success("Conteúdo copiado para área de transferência!");
     }
   };
 
   const handleGeneratePDF = () => {
-    toast.info("Funcionalidade em desenvolvimento");
+    if (!devotional) return;
+    
+    try {
+      const doc = new jsPDF();
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const margin = 20;
+      const maxWidth = pageWidth - 2 * margin;
+      let yPosition = 20;
+
+      // Título
+      doc.setFontSize(20);
+      doc.setFont('helvetica', 'bold');
+      const titleLines = doc.splitTextToSize(devotional.theme, maxWidth);
+      doc.text(titleLines, margin, yPosition);
+      yPosition += titleLines.length * 10 + 10;
+
+      // Data
+      doc.setFontSize(12);
+      doc.setFont('helvetica', 'normal');
+      doc.text(
+        format(parseISO(devotional.devotional_date), "d 'de' MMMM 'de' yyyy", { locale: ptBR }), 
+        margin, 
+        yPosition
+      );
+      yPosition += 15;
+
+      // Versículo
+      doc.setFont('helvetica', 'bold');
+      doc.text(
+        `${devotional.book_name} ${devotional.chapter}:${devotional.verse_start}${devotional.verse_end ? `-${devotional.verse_end}` : ''}`, 
+        margin, 
+        yPosition
+      );
+      yPosition += 10;
+      
+      doc.setFont('helvetica', 'italic');
+      const verseLines = doc.splitTextToSize(`"${devotional.verse_text}"`, maxWidth);
+      doc.text(verseLines, margin, yPosition);
+      yPosition += verseLines.length * 7 + 15;
+
+      // Introdução
+      doc.setFont('helvetica', 'bold');
+      doc.text('Introdução', margin, yPosition);
+      yPosition += 7;
+      doc.setFont('helvetica', 'normal');
+      const introLines = doc.splitTextToSize(devotional.introduction, maxWidth);
+      doc.text(introLines, margin, yPosition);
+      yPosition += introLines.length * 7 + 10;
+
+      // Reflexão
+      if (yPosition > 250) {
+        doc.addPage();
+        yPosition = 20;
+      }
+      doc.setFont('helvetica', 'bold');
+      doc.text('Reflexão', margin, yPosition);
+      yPosition += 7;
+      doc.setFont('helvetica', 'normal');
+      const reflectionLines = doc.splitTextToSize(devotional.reflection, maxWidth);
+      doc.text(reflectionLines, margin, yPosition);
+      yPosition += reflectionLines.length * 7 + 10;
+
+      // Aplicações Práticas
+      if (yPosition > 250) {
+        doc.addPage();
+        yPosition = 20;
+      }
+      doc.setFont('helvetica', 'bold');
+      doc.text('Aplicações Práticas', margin, yPosition);
+      yPosition += 7;
+      doc.setFont('helvetica', 'normal');
+      const practicalLines = doc.splitTextToSize(devotional.practical_applications, maxWidth);
+      doc.text(practicalLines, margin, yPosition);
+      yPosition += practicalLines.length * 7 + 10;
+
+      // Oração
+      if (yPosition > 250) {
+        doc.addPage();
+        yPosition = 20;
+      }
+      doc.setFont('helvetica', 'bold');
+      doc.text('Oração', margin, yPosition);
+      yPosition += 7;
+      doc.setFont('helvetica', 'italic');
+      const prayerLines = doc.splitTextToSize(devotional.prayer, maxWidth);
+      doc.text(prayerLines, margin, yPosition);
+      yPosition += prayerLines.length * 7;
+
+      // Anotações do usuário (se existirem)
+      if (userNotes && userNotes.trim()) {
+        if (yPosition > 230) {
+          doc.addPage();
+          yPosition = 20;
+        } else {
+          yPosition += 15;
+        }
+        doc.setFont('helvetica', 'bold');
+        doc.text('Minhas Anotações', margin, yPosition);
+        yPosition += 7;
+        doc.setFont('helvetica', 'normal');
+        const notesLines = doc.splitTextToSize(userNotes, maxWidth);
+        doc.text(notesLines, margin, yPosition);
+      }
+
+      // Salvar arquivo
+      const fileName = `devocional-${devotional.devotional_date}.pdf`;
+      doc.save(fileName);
+      toast.success("PDF gerado com sucesso! 📄");
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      toast.error("Erro ao gerar PDF");
+    }
   };
 
   // Loading state para geração
