@@ -151,6 +151,7 @@ export default function DailyDevotionalPage() {
         });
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['devotional-progress'] });
       toast.success('Anotações salvas com sucesso!');
     }
   });
