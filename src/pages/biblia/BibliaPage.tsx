@@ -64,8 +64,8 @@ export default function BibliaPage() {
           <BookOpen className="text-white" size={24} />
         </div>
         <div>
-          <h3 className="text-foreground font-semibold">{book.name}</h3>
-          <p className="text-muted-foreground text-sm">{book.chapters_count} capítulos</p>
+          <h3 className="text-xl font-bold text-foreground">{book.name}</h3>
+          <p className="text-muted-foreground text-base">{book.chapters_count} capítulos</p>
         </div>
       </div>
     </GlassCard>
