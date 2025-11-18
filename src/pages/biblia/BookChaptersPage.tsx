@@ -41,16 +41,21 @@ export default function BookChaptersPage() {
       <FuturisticNavbar />
       
       <div className="container mx-auto px-4 pt-20">
-        <Button
-          variant="ghost"
-          onClick={() => navigate('/biblia')}
-          className="mb-4"
-        >
-          <ChevronLeft size={20} /> Voltar
-        </Button>
-
-        <h1 className="text-3xl font-bold text-foreground mb-2">{book?.name}</h1>
-        <p className="text-muted-foreground mb-6">{book?.chapters_count} capítulos</p>
+        <GlassCard className="mb-6">
+          <h1 className="text-3xl font-bold text-foreground mb-3">{book?.name}</h1>
+          
+          <div className="flex justify-between items-center">
+            <p className="text-muted-foreground">{book?.chapters_count} capítulos</p>
+            
+            <Button
+              variant="ghost"
+              onClick={() => navigate('/biblia')}
+              size="sm"
+            >
+              <ChevronLeft size={16} /> Voltar
+            </Button>
+          </div>
+        </GlassCard>
 
         <div className="grid grid-cols-4 md:grid-cols-8 lg:grid-cols-10 gap-3">
           {chapters?.map(chapter => (
