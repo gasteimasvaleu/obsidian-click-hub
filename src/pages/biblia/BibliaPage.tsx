@@ -84,6 +84,23 @@ export default function BibliaPage() {
       <FuturisticNavbar />
       
       <div className="container mx-auto px-4 pt-20">
+        {/* Video animation */}
+        <div className="flex justify-center w-full mb-8">
+          <GlassCard className="w-full max-w-[500px] p-0 overflow-hidden">
+            <video
+              src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/video_33032f19_1763462060427.mp4"
+              className="w-full h-auto"
+              style={{ maxHeight: '300px' }}
+              autoPlay
+              muted
+              playsInline
+              onEnded={(e) => {
+                e.currentTarget.currentTime = 0;
+              }}
+            />
+          </GlassCard>
+        </div>
+
         <GlassCard className="mb-6 text-center bg-gradient-to-br from-blue-500/10 to-purple-500/10 border-blue-400/30">
           <h1 className="text-4xl font-bold text-foreground mb-2">
             Bíblia Interativa
