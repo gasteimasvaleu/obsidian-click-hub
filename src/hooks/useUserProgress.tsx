@@ -9,6 +9,7 @@ interface UserProgress {
   games_completed: number;
   ebooks_read: number;
   coloring_completed: number;
+  devotionals_completed: number;
   streak_days: number;
   last_activity_date: string | null;
 }
