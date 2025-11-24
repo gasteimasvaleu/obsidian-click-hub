@@ -178,11 +178,56 @@ export default function DailyDevotionalPage() {
   const handleShare = async () => {
     if (!devotional) return;
     
-    const shareText = `📿 Devocional: ${devotional.theme}\n\n"${devotional.verse_text}" - ${devotional.book_name} ${devotional.chapter}:${devotional.verse_start}`;
+    // Formatar data para português
+    const formattedDate = format(parseISO(devotional.devotional_date), "d 'de' MMMM 'de' yyyy", { locale: ptBR });
+    
+    // Montar texto completo do devocional
+    const shareText = `📿 DEVOCIONAL DIÁRIO
+  
+📅 ${formattedDate}
+━━━━━━━━━━━━━━━━━━━━
+
+✨ ${devotional.theme}
+
+━━━━━━━━━━━━━━━━━━━━
+📖 VERSÍCULO DO DIA
+${devotional.book_name} ${devotional.chapter}:${devotional.verse_start}${devotional.verse_end ? `-${devotional.verse_end}` : ''}
+
+"${devotional.verse_text}"
+
+━━━━━━━━━━━━━━━━━━━━
+📝 INTRODUÇÃO
+
+${devotional.introduction}
+
+━━━━━━━━━━━━━━━━━━━━
+💭 REFLEXÃO
+
+${devotional.reflection}
+
+━━━━━━━━━━━━━━━━━━━━
+🤔 PARA REFLETIR
+
+${devotional.question}
+
+━━━━━━━━━━━━━━━━━━━━
+🎯 APLICAÇÕES PRÁTICAS
+
+${devotional.practical_applications}
+
+━━━━━━━━━━━━━━━━━━━━
+🙏 ORAÇÃO
+
+${devotional.prayer}
+
+━━━━━━━━━━━━━━━━━━━━`;
     
     if (navigator.share) {
       try {
-        await navigator.share({ text: shareText });
+        await navigator.share({ 
+          text: shareText,
+          title: `Devocional: ${devotional.theme}`
+        });
         toast.success("Compartilhado com sucesso!");
       } catch (error) {
         if (error instanceof Error && error.name !== 'AbortError') {
@@ -191,7 +236,7 @@ export default function DailyDevotionalPage() {
       }
     } else {
       navigator.clipboard.writeText(shareText);
-      toast.success("Conteúdo copiado para área de transferência!");
+      toast.success("Conteúdo completo copiado para área de transferência!");
     }
   };
 
