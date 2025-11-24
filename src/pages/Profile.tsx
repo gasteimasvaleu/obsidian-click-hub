@@ -68,7 +68,7 @@ const Profile = () => {
   const nextLevelPoints = (progress.level * 100) - progress.total_points;
 
   return (
-    <div className="min-h-screen bg-black p-4 md:p-8">
+    <div className="min-h-screen bg-black p-4 md:p-8 pb-28 md:pb-8">
       <div className="max-w-6xl mx-auto">
         <Card className="glass border-primary/20 mb-6">
           <CardContent className="pt-6">
