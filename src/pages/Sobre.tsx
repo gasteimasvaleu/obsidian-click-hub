@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { FuturisticNavbar } from "@/components/FuturisticNavbar";
 import { NeonButton } from "@/components/NeonButton";
+import { GlassCard } from "@/components/GlassCard";
 import { useNavigate } from "react-router-dom";
 
 const fadeInUp = {
@@ -112,11 +113,11 @@ const differentials = [
 
 const SectionTitle = ({ children, icon: Icon }: { children: React.ReactNode; icon: any }) => (
   <motion.div 
-    className="flex items-center gap-3 mb-8"
+    className="flex items-center justify-center gap-3 mb-8"
     {...fadeInUp}
   >
     <Icon className="w-8 h-8 text-primary" />
-    <h2 className="text-3xl font-bold bg-gradient-to-r from-primary via-purple-400 to-primary bg-clip-text text-transparent">
+    <h2 className="text-3xl font-bold text-white">
       {children}
     </h2>
   </motion.div>
@@ -143,23 +144,23 @@ const Sobre = () => {
       <FuturisticNavbar />
       
       {/* Hero Section */}
-      <div className="relative min-h-[40vh] md:min-h-[50vh] flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/20 via-purple-500/10 to-black" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-primary/20 via-transparent to-transparent" />
-        
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="relative z-10 text-center px-4 pt-20"
-        >
-          <h1 className="text-4xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-primary via-purple-400 to-primary bg-clip-text text-transparent">
-            Sobre o BíbliaToonKIDS
-          </h1>
-          <p className="text-xl md:text-2xl text-white/80">
-            Transformando fé em aventura
-          </p>
-        </motion.div>
+      <div className="relative pt-20 pb-8">
+        <div className="max-w-7xl mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <GlassCard className="text-center p-8 md:p-12 border-primary/20">
+              <h1 className="text-4xl md:text-6xl font-bold mb-4 text-white">
+                Sobre o BíbliaToonKIDS
+              </h1>
+              <p className="text-xl md:text-2xl text-white/80">
+                Transformando fé em aventura
+              </p>
+            </GlassCard>
+          </motion.div>
+        </div>
       </div>
 
       {/* Content Container */}
@@ -269,9 +270,9 @@ const Sobre = () => {
           <div className="glass rounded-2xl p-8 md:p-12 border border-primary/20 relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-purple-500/5 to-transparent" />
             <div className="relative z-10">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-primary via-purple-400 to-primary bg-clip-text text-transparent">
-                Junte-se a nós
-              </h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">
+            Junte-se a nós
+          </h2>
               <p className="text-foreground/90 text-lg mb-8 max-w-3xl mx-auto leading-relaxed">
                 Venha fazer parte da família BíbliaToon KIDS! Assine, explore o conteúdo, interaja com a comunidade e transforme o aprendizado da fé em uma aventura inesquecível. O futuro dos nossos pequenos começa com sementes de valores — e estamos prontos para plantar juntos.
               </p>
