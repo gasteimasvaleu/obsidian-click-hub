@@ -6,10 +6,11 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Trophy, Star, Target, Activity, LogOut, Camera } from 'lucide-react';
+import { Trophy, Star, Target, Activity, LogOut, Camera, BookOpen } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { AvatarUpload } from '@/components/profile/AvatarUpload';
+import { DevotionalHistoryTab } from '@/components/profile/DevotionalHistoryTab';
 import { supabase } from '@/integrations/supabase/client';
 
 const Profile = () => {
@@ -134,7 +135,7 @@ const Profile = () => {
           </CardContent>
         </Card>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           <Card className="glass border-primary/20">
             <CardHeader className="pb-3">
               <CardTitle className="text-lg flex items-center gap-2">
@@ -164,6 +165,19 @@ const Profile = () => {
           <Card className="glass border-primary/20">
             <CardHeader className="pb-3">
               <CardTitle className="text-lg flex items-center gap-2">
+                <BookOpen className="w-5 h-5 text-primary" />
+                Devocionais
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-3xl font-bold text-primary">{progress.devotionals_completed ?? 0}</p>
+              <p className="text-sm text-muted-foreground">devocionais lidos</p>
+            </CardContent>
+          </Card>
+
+          <Card className="glass border-primary/20">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-lg flex items-center gap-2">
                 <Activity className="w-5 h-5 text-primary" />
                 Sequência
               </CardTitle>
@@ -178,9 +192,10 @@ const Profile = () => {
         <Card className="glass border-primary/20">
           <CardContent className="pt-6">
             <Tabs defaultValue="badges">
-              <TabsList className="grid w-full grid-cols-2">
+              <TabsList className="grid w-full grid-cols-3">
                 <TabsTrigger value="badges">Conquistas</TabsTrigger>
-                <TabsTrigger value="activities">Atividades Recentes</TabsTrigger>
+                <TabsTrigger value="activities">Atividades</TabsTrigger>
+                <TabsTrigger value="devotionals">Devocionais</TabsTrigger>
               </TabsList>
 
               <TabsContent value="badges" className="mt-4">
@@ -239,6 +254,10 @@ const Profile = () => {
                     ))}
                   </div>
                 )}
+              </TabsContent>
+
+              <TabsContent value="devotionals" className="mt-4">
+                <DevotionalHistoryTab userId={user.id} />
               </TabsContent>
             </Tabs>
           </CardContent>
