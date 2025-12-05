@@ -193,7 +193,7 @@ const Profile = () => {
         <Card className="glass border-primary/20">
           <CardContent className="pt-6">
             <Tabs defaultValue="badges">
-              <TabsList className="grid w-full grid-cols-4">
+              <TabsList className="grid w-full grid-cols-2 md:grid-cols-4">
                 <TabsTrigger value="badges">Conquistas</TabsTrigger>
                 <TabsTrigger value="activities">Atividades</TabsTrigger>
                 <TabsTrigger value="devotionals">Devocionais</TabsTrigger>
