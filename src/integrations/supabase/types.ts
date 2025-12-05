@@ -85,6 +85,7 @@ export type Database = {
           created_at: string | null
           id: string
           text: string
+          theological_comment: string | null
           verse_number: number
         }
         Insert: {
@@ -92,6 +93,7 @@ export type Database = {
           created_at?: string | null
           id?: string
           text: string
+          theological_comment?: string | null
           verse_number: number
         }
         Update: {
@@ -99,6 +101,7 @@ export type Database = {
           created_at?: string | null
           id?: string
           text?: string
+          theological_comment?: string | null
           verse_number?: number
         }
         Relationships: [

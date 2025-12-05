@@ -1,19 +1,21 @@
 import { useState } from "react";
 import { GlassCard } from "@/components/GlassCard";
 import { Button } from "@/components/ui/button";
-import { Copy, Share2, Star, StickyNote } from "lucide-react";
+import { Copy, Share2, Star, StickyNote, MessageSquareText, Loader2, ChevronDown, ChevronUp } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 interface VerseCardProps {
   verse: {
     id: string;
     verse_number: number;
     text: string;
+    theological_comment?: string | null;
   };
   bookName: string;
   chapterNumber: number;
@@ -25,6 +27,9 @@ export default function VerseCard({ verse, bookName, chapterNumber, isFavorite }
   const queryClient = useQueryClient();
   const [showNoteDialog, setShowNoteDialog] = useState(false);
   const [note, setNote] = useState("");
+  const [showComment, setShowComment] = useState(false);
+  const [comment, setComment] = useState<string | null>(verse.theological_comment || null);
+  const [isLoadingComment, setIsLoadingComment] = useState(false);
 
   const reference = `${bookName} ${chapterNumber}:${verse.verse_number}`;
 
@@ -46,6 +51,49 @@ export default function VerseCard({ verse, bookName, chapterNumber, isFavorite }
     } else {
       navigator.clipboard.writeText(shareText);
       toast.success("Link copiado para compartilhar!");
+    }
+  };
+
+  const handleLoadComment = async () => {
+    // If already have comment, just toggle visibility
+    if (comment) {
+      setShowComment(!showComment);
+      return;
+    }
+
+    setIsLoadingComment(true);
+    setShowComment(true);
+
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-verse-comment', {
+        body: { verse_id: verse.id }
+      });
+
+      if (error) throw error;
+
+      if (data?.comment) {
+        setComment(data.comment);
+        if (data.cached) {
+          console.log('Comentário carregado do cache');
+        } else {
+          console.log('Novo comentário gerado');
+        }
+      } else {
+        throw new Error('Comentário não retornado');
+      }
+    } catch (error: any) {
+      console.error('Erro ao carregar comentário:', error);
+      
+      if (error.message?.includes('429') || error.status === 429) {
+        toast.error('Limite de requisições. Tente novamente em alguns minutos.');
+      } else if (error.message?.includes('402') || error.status === 402) {
+        toast.error('Créditos de IA esgotados.');
+      } else {
+        toast.error('Erro ao carregar comentário teológico.');
+      }
+      setShowComment(false);
+    } finally {
+      setIsLoadingComment(false);
     }
   };
 
@@ -117,6 +165,22 @@ export default function VerseCard({ verse, bookName, chapterNumber, isFavorite }
             <Share2 size={16} className="mr-1" /> Compartilhar
           </Button>
           
+          <Button 
+            size="sm" 
+            variant={showComment ? "default" : "outline"}
+            onClick={handleLoadComment}
+            disabled={isLoadingComment}
+            className="w-full sm:w-auto"
+          >
+            {isLoadingComment ? (
+              <Loader2 size={16} className="mr-1 animate-spin" />
+            ) : (
+              <MessageSquareText size={16} className="mr-1" />
+            )}
+            {comment ? 'Comentário' : 'Comentário'}
+            {showComment ? <ChevronUp size={14} className="ml-1" /> : <ChevronDown size={14} className="ml-1" />}
+          </Button>
+          
           {user && (
             <>
               <Button 
@@ -140,6 +204,26 @@ export default function VerseCard({ verse, bookName, chapterNumber, isFavorite }
             </>
           )}
         </div>
+
+        {/* Theological Comment Collapsible */}
+        <Collapsible open={showComment} onOpenChange={setShowComment}>
+          <CollapsibleContent className="mt-4">
+            <div className="bg-primary/5 border border-primary/20 rounded-lg p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <MessageSquareText size={16} className="text-primary" />
+                <span className="text-sm font-semibold text-primary">Comentário Teológico</span>
+              </div>
+              {isLoadingComment ? (
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <Loader2 size={16} className="animate-spin" />
+                  <span className="text-sm">Gerando comentário...</span>
+                </div>
+              ) : comment ? (
+                <p className="text-foreground/90 text-sm leading-relaxed">{comment}</p>
+              ) : null}
+            </div>
+          </CollapsibleContent>
+        </Collapsible>
       </GlassCard>
 
       <Dialog open={showNoteDialog} onOpenChange={setShowNoteDialog}>
