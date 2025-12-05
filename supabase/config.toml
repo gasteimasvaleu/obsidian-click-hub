@@ -14,3 +14,6 @@ verify_jwt = false
 
 [functions.import-bible-data]
 verify_jwt = true
+
+[functions.generate-verse-comment]
+verify_jwt = false
