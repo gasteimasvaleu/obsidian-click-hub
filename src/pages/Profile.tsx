@@ -6,11 +6,12 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Trophy, Star, Target, Activity, LogOut, Camera, BookOpen } from 'lucide-react';
+import { Trophy, Star, Target, Activity, LogOut, Camera, BookOpen, StickyNote } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { AvatarUpload } from '@/components/profile/AvatarUpload';
 import { DevotionalHistoryTab } from '@/components/profile/DevotionalHistoryTab';
+import { VerseNotesTab } from '@/components/profile/VerseNotesTab';
 import { supabase } from '@/integrations/supabase/client';
 
 const Profile = () => {
@@ -192,10 +193,14 @@ const Profile = () => {
         <Card className="glass border-primary/20">
           <CardContent className="pt-6">
             <Tabs defaultValue="badges">
-              <TabsList className="grid w-full grid-cols-3">
+              <TabsList className="grid w-full grid-cols-4">
                 <TabsTrigger value="badges">Conquistas</TabsTrigger>
                 <TabsTrigger value="activities">Atividades</TabsTrigger>
                 <TabsTrigger value="devotionals">Devocionais</TabsTrigger>
+                <TabsTrigger value="notes">
+                  <StickyNote className="w-4 h-4 mr-1 hidden sm:inline" />
+                  Anotações
+                </TabsTrigger>
               </TabsList>
 
               <TabsContent value="badges" className="mt-4">
@@ -258,6 +263,10 @@ const Profile = () => {
 
               <TabsContent value="devotionals" className="mt-4">
                 <DevotionalHistoryTab userId={user.id} />
+              </TabsContent>
+
+              <TabsContent value="notes" className="mt-4">
+                <VerseNotesTab userId={user.id} />
               </TabsContent>
             </Tabs>
           </CardContent>
