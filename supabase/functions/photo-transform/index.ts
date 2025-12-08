@@ -10,63 +10,6 @@ interface TransformRequest {
   fileName: string;
 }
 
-const runwareService = {
-  async generateImage(imageUrl: string, prompt: string) {
-    const apiKey = Deno.env.get('RUNWARE_API_KEY');
-    if (!apiKey) {
-      throw new Error('RUNWARE_API_KEY not configured');
-    }
-
-    const payload = [
-      {
-        taskType: "authentication",
-        apiKey: apiKey
-      },
-      {
-        taskType: "imageInference", 
-        taskUUID: crypto.randomUUID(),
-        positivePrompt: prompt,
-        inputImageURL: imageUrl,
-        model: "runware:100@1",
-        width: 1024,
-        height: 1024,
-        numberResults: 1,
-        outputFormat: "WEBP",
-        CFGScale: 3.0,
-        scheduler: "FlowMatchEulerDiscreteScheduler",
-        strength: 0.3,
-        steps: 20
-      }
-    ];
-
-    const response = await fetch('https://api.runware.ai/v1', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload)
-    });
-
-    if (!response.ok) {
-      const errorBody = await response.text();
-      console.error('Runware API error details:', errorBody);
-      throw new Error(`Runware API error: ${response.statusText} - ${errorBody}`);
-    }
-
-    const result = await response.json();
-    console.log('Runware response:', result);
-    
-    if (result.data && result.data.length > 0) {
-      const imageData = result.data.find((item: any) => item.taskType === 'imageInference');
-      if (imageData && imageData.imageURL) {
-        return imageData.imageURL;
-      }
-    }
-    
-    throw new Error('Failed to generate image from Runware API');
-  }
-};
-
 Deno.serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -78,6 +21,11 @@ Deno.serve(async (req) => {
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseKey);
+
+    const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
+    if (!LOVABLE_API_KEY) {
+      throw new Error('LOVABLE_API_KEY not configured');
+    }
 
     if (req.method !== 'POST') {
       return new Response('Method not allowed', { 
@@ -96,31 +44,129 @@ Deno.serve(async (req) => {
     }
 
     console.log('Processing image transformation for:', fileName);
+    console.log('Image URL:', imageUrl);
 
-    // Define the prompt for coloring book style while preserving human features
-    const prompt = "Convert this human portrait photo into a black and white coloring book page. Keep the person's face, facial features, hair, and expression exactly as they are. Simple clean line art style with clear outlines, white background, black lines only. Do not change the person into an animal or character.";
+    // Optimized prompt for coloring book pages using Gemini
+    const prompt = `Converta esta foto de retrato humano em uma página de livro de colorir em preto e branco.
 
-    // Call Runware API to transform the image
-    const transformedImageUrl = await runwareService.generateImage(imageUrl, prompt);
+REGRAS IMPORTANTES:
+1. Mantenha EXATAMENTE as feições faciais, expressão facial e penteado da pessoa original
+2. Use apenas linhas pretas finas e limpas sobre fundo totalmente branco
+3. Crie contornos claros e bem definidos adequados para colorir
+4. Simplifique detalhes menores mas PRESERVE a semelhança e identidade da pessoa
+5. Estilo de ilustração para livro de colorir infantil
+6. SEM preenchimentos, sombreamentos ou gradientes - apenas linhas de contorno
+7. A imagem deve parecer uma página de livro de colorir profissional`;
 
-    // Download the transformed image
-    const imageResponse = await fetch(transformedImageUrl);
-    if (!imageResponse.ok) {
-      throw new Error('Failed to download transformed image');
+    console.log('Calling Lovable AI Gateway...');
+
+    // Call Lovable AI Gateway with the image
+    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${LOVABLE_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "google/gemini-2.5-flash-image-preview",
+        messages: [
+          {
+            role: "user",
+            content: [
+              {
+                type: "text",
+                text: prompt
+              },
+              {
+                type: "image_url",
+                image_url: {
+                  url: imageUrl
+                }
+              }
+            ]
+          }
+        ],
+        modalities: ["image", "text"]
+      })
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Lovable AI Gateway error:', response.status, errorText);
+      
+      if (response.status === 429) {
+        return new Response(
+          JSON.stringify({
+            success: false,
+            error: 'Limite de requisições excedido. Tente novamente em alguns segundos.'
+          }),
+          {
+            status: 429,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          }
+        );
+      }
+      
+      if (response.status === 402) {
+        return new Response(
+          JSON.stringify({
+            success: false,
+            error: 'Créditos insuficientes. Por favor, adicione créditos à sua conta.'
+          }),
+          {
+            status: 402,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          }
+        );
+      }
+      
+      throw new Error(`Lovable AI Gateway error: ${response.status} - ${errorText}`);
     }
 
-    const imageBlob = await imageResponse.blob();
-    const imageBuffer = await imageBlob.arrayBuffer();
+    const data = await response.json();
+    console.log('Lovable AI response received');
+
+    // Extract the generated image from the response
+    const generatedImage = data.choices?.[0]?.message?.images?.[0]?.image_url?.url;
+    
+    if (!generatedImage) {
+      console.error('No image in response:', JSON.stringify(data));
+      throw new Error('Failed to generate image - no image in response');
+    }
+
+    console.log('Image generated successfully, processing for storage...');
+
+    // Extract base64 data (remove the data:image/... prefix if present)
+    let base64Data = generatedImage;
+    let contentType = 'image/png';
+    
+    if (generatedImage.startsWith('data:')) {
+      const matches = generatedImage.match(/^data:([^;]+);base64,(.+)$/);
+      if (matches) {
+        contentType = matches[1];
+        base64Data = matches[2];
+      }
+    }
+
+    // Convert base64 to Uint8Array
+    const binaryString = atob(base64Data);
+    const bytes = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
+    }
 
     // Generate a unique filename for the transformed image
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-    const transformedFileName = `transformed_${timestamp}_${fileName}`;
+    const extension = contentType.includes('png') ? 'png' : contentType.includes('webp') ? 'webp' : 'jpg';
+    const transformedFileName = `transformed_${timestamp}_${fileName.replace(/\.[^/.]+$/, '')}.${extension}`;
+
+    console.log('Uploading to storage:', transformedFileName);
 
     // Upload the transformed image to Supabase Storage
     const { data: uploadData, error: uploadError } = await supabase.storage
       .from('photo-transforms')
-      .upload(`transformed/${transformedFileName}`, imageBuffer, {
-        contentType: 'image/webp',
+      .upload(`transformed/${transformedFileName}`, bytes, {
+        contentType: contentType,
         upsert: false
       });
 
