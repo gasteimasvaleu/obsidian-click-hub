@@ -44,7 +44,8 @@ Deno.serve(async (req) => {
     }
 
     console.log('Processing image transformation for:', fileName);
-    console.log('Image URL:', imageUrl);
+    console.log('Image URL (first 100 chars):', imageUrl.substring(0, 100));
+    console.log('Using Lovable AI Gateway with Gemini model');
 
     // Optimized prompt for coloring book pages using Gemini
     const prompt = `Converta esta foto de retrato humano em uma página de livro de colorir em preto e branco.
