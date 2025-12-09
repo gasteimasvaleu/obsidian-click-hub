@@ -106,11 +106,18 @@ const BoobieGoods = () => {
         throw new Error(`Erro na transformação: ${transformError.message}`);
       }
 
-      if (!transformData.success) {
+      // Verificação robusta - compatível com diferentes formatos de resposta
+      if (transformData.success === false) {
         throw new Error(transformData.error || 'Falha na transformação');
       }
 
-      setTransformedImage(transformData.transformedImageUrl);
+      const imageUrl = transformData.transformedImageUrl;
+      if (!imageUrl) {
+        console.error('Response data:', transformData);
+        throw new Error('Nenhuma imagem foi gerada na transformação');
+      }
+
+      setTransformedImage(imageUrl);
       toast.success("Transformação concluída! 🎨");
 
     } catch (error) {
