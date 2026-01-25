@@ -45,6 +45,7 @@ import CoursesManager from "./pages/admin/plataforma/CoursesManager";
 import ModulesManager from "./pages/admin/plataforma/ModulesManager";
 import LessonsManager from "./pages/admin/plataforma/LessonsManager";
 import MaterialsManager from "./pages/admin/plataforma/MaterialsManager";
+import PlatformSettingsManager from "./pages/admin/plataforma/PlatformSettingsManager";
 
 const queryClient = new QueryClient();
 
@@ -115,6 +116,7 @@ const App = () => {
               <Route path="/admin/games" element={<ProtectedRoute requireAdmin><GamesManager /></ProtectedRoute>} />
               <Route path="/admin/games/generate" element={<ProtectedRoute requireAdmin><GameGenerator /></ProtectedRoute>} />
               <Route path="/admin/devocionais" element={<ProtectedRoute requireAdmin><DevotionalsManager /></ProtectedRoute>} />
+              <Route path="/admin/plataforma/configuracoes" element={<ProtectedRoute requireAdmin><PlatformSettingsManager /></ProtectedRoute>} />
               <Route path="/admin/plataforma/cursos" element={<ProtectedRoute requireAdmin><CoursesManager /></ProtectedRoute>} />
               <Route path="/admin/plataforma/modulos" element={<ProtectedRoute requireAdmin><ModulesManager /></ProtectedRoute>} />
               <Route path="/admin/plataforma/aulas" element={<ProtectedRoute requireAdmin><LessonsManager /></ProtectedRoute>} />
