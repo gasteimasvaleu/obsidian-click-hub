@@ -187,6 +187,7 @@ export function MediaUploader({
         <div className="relative">
           {renderPreview()}
           <Button
+            type="button"
             variant="destructive"
             size="icon"
             className="absolute top-2 right-2 h-8 w-8"
