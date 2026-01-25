@@ -1,9 +1,8 @@
 import { useState } from "react";
-import { ExternalLink, FileText, Download, ChevronDown, ChevronUp } from "lucide-react";
+import { ExternalLink, FileText, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { LessonPlaylist } from "./LessonPlaylist";
-import { ExternalContentModal } from "./ExternalContentModal";
 import { MaterialsList } from "./MaterialsList";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
@@ -47,10 +46,15 @@ export function LessonPlayer({
   currentLessonId,
 }: LessonPlayerProps) {
   const isMobile = useIsMobile();
-  const [externalModalOpen, setExternalModalOpen] = useState(false);
   const [showRelated, setShowRelated] = useState(!isMobile);
 
   const isExternalContentOnly = externalContentUrl && !videoUrl;
+
+  const openExternalContent = () => {
+    if (externalContentUrl) {
+      window.open(externalContentUrl, "_blank", "noopener,noreferrer");
+    }
+  };
 
   const isYouTube = videoUrl?.includes("youtube.com") || videoUrl?.includes("youtu.be");
   const isVimeo = videoUrl?.includes("vimeo.com");
@@ -113,7 +117,7 @@ export function LessonPlayer({
                 <Button
                   variant="default"
                   size="lg"
-                  onClick={() => setExternalModalOpen(true)}
+                  onClick={openExternalContent}
                   className="gap-2"
                 >
                   <ExternalLink className="h-5 w-5" />
@@ -140,7 +144,7 @@ export function LessonPlayer({
         {externalContentUrl && videoUrl && (
           <Button
             variant="outline"
-            onClick={() => setExternalModalOpen(true)}
+            onClick={openExternalContent}
             className="gap-2"
           >
             <ExternalLink className="h-4 w-4" />
@@ -202,13 +206,6 @@ export function LessonPlayer({
         </div>
       )}
 
-      {/* External content modal */}
-      <ExternalContentModal
-        open={externalModalOpen}
-        onOpenChange={setExternalModalOpen}
-        url={externalContentUrl || ""}
-        title="Conteúdo externo"
-      />
     </div>
   );
 }
