@@ -98,6 +98,7 @@ export default function CoursePage() {
         description={course.description}
         aspectRatioDesktop={1440 / 730}
         aspectRatioMobile={1080 / 1920}
+        bottomGradient
       />
 
       {/* Back button and modules */}

@@ -96,6 +96,7 @@ export default function ModulePage() {
         description={module.description}
         aspectRatioDesktop={1440 / 730}
         aspectRatioMobile={300 / 580}
+        bottomGradient
       />
 
       {/* Back button and lessons */}
