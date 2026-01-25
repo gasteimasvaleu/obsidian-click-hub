@@ -1,0 +1,197 @@
+import { useState } from "react";
+import { ExternalLink, FileText, Download, ChevronDown, ChevronUp } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { LessonPlaylist } from "./LessonPlaylist";
+import { ExternalContentModal } from "./ExternalContentModal";
+import { MaterialsList } from "./MaterialsList";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { cn } from "@/lib/utils";
+
+interface LessonMaterial {
+  id: string;
+  title: string;
+  file_url: string;
+  file_type: string;
+  file_size?: number;
+}
+
+interface RelatedLesson {
+  id: string;
+  title: string;
+  description: string;
+  thumbnail?: string;
+  duration?: number;
+  linkTo: string;
+}
+
+interface LessonPlayerProps {
+  videoUrl?: string;
+  videoSource?: "upload" | "external";
+  title: string;
+  description: string;
+  externalContentUrl?: string;
+  materials: LessonMaterial[];
+  relatedLessons: RelatedLesson[];
+  currentLessonId: string;
+}
+
+export function LessonPlayer({
+  videoUrl,
+  videoSource = "upload",
+  title,
+  description,
+  externalContentUrl,
+  materials,
+  relatedLessons,
+  currentLessonId,
+}: LessonPlayerProps) {
+  const isMobile = useIsMobile();
+  const [externalModalOpen, setExternalModalOpen] = useState(false);
+  const [showRelated, setShowRelated] = useState(!isMobile);
+
+  const isYouTube = videoUrl?.includes("youtube.com") || videoUrl?.includes("youtu.be");
+  const isVimeo = videoUrl?.includes("vimeo.com");
+
+  const getEmbedUrl = (url: string) => {
+    if (isYouTube) {
+      const videoId = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/)?.[1];
+      return videoId ? `https://www.youtube.com/embed/${videoId}` : url;
+    }
+    if (isVimeo) {
+      const videoId = url.match(/vimeo\.com\/(\d+)/)?.[1];
+      return videoId ? `https://player.vimeo.com/video/${videoId}` : url;
+    }
+    return url;
+  };
+
+  const renderVideo = () => {
+    if (!videoUrl) {
+      return (
+        <div className="w-full h-full bg-muted flex items-center justify-center">
+          <span className="text-muted-foreground">Vídeo não disponível</span>
+        </div>
+      );
+    }
+
+    if (videoSource === "external" || isYouTube || isVimeo) {
+      return (
+        <iframe
+          src={getEmbedUrl(videoUrl)}
+          title={title}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+          className="w-full h-full"
+        />
+      );
+    }
+
+    return (
+      <video
+        src={videoUrl}
+        controls
+        controlsList="nodownload"
+        className="w-full h-full object-contain bg-black"
+      >
+        Seu navegador não suporta o elemento de vídeo.
+      </video>
+    );
+  };
+
+  return (
+    <div className={cn("flex flex-col lg:flex-row gap-6", isMobile && "gap-4")}>
+      {/* Main content */}
+      <div className="flex-1 min-w-0 space-y-4">
+        {/* Video player */}
+        <div className="bg-black rounded-lg overflow-hidden">
+          <AspectRatio ratio={16 / 9}>
+            {renderVideo()}
+          </AspectRatio>
+        </div>
+
+        {/* Title and description */}
+        <div className="space-y-2">
+          <h1 className="text-xl md:text-2xl font-bold text-foreground">
+            {title}
+          </h1>
+          <p className="text-muted-foreground whitespace-pre-wrap">
+            {description}
+          </p>
+        </div>
+
+        {/* External content button */}
+        {externalContentUrl && (
+          <Button
+            variant="outline"
+            onClick={() => setExternalModalOpen(true)}
+            className="gap-2"
+          >
+            <ExternalLink className="h-4 w-4" />
+            Abrir conteúdo externo
+          </Button>
+        )}
+
+        {/* Materials */}
+        {materials.length > 0 && (
+          <div className="space-y-3">
+            <h2 className="text-lg font-semibold flex items-center gap-2">
+              <FileText className="h-5 w-5" />
+              Materiais complementares
+            </h2>
+            <MaterialsList materials={materials} />
+          </div>
+        )}
+
+        {/* Mobile: Related lessons */}
+        {isMobile && relatedLessons.length > 0 && (
+          <div className="border-t pt-4">
+            <Button
+              variant="ghost"
+              className="w-full justify-between"
+              onClick={() => setShowRelated(!showRelated)}
+            >
+              <span className="font-semibold">Próximas aulas ({relatedLessons.length})</span>
+              {showRelated ? (
+                <ChevronUp className="h-5 w-5" />
+              ) : (
+                <ChevronDown className="h-5 w-5" />
+              )}
+            </Button>
+            {showRelated && (
+              <LessonPlaylist
+                items={relatedLessons}
+                layout="vertical"
+                currentLessonId={currentLessonId}
+                className="mt-2"
+              />
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Desktop: Sidebar with related lessons */}
+      {!isMobile && relatedLessons.length > 0 && (
+        <div className="w-80 flex-shrink-0">
+          <div className="sticky top-4 bg-card rounded-lg p-4 border">
+            <h2 className="font-semibold mb-3">Próximas aulas</h2>
+            <div className="max-h-[calc(100vh-200px)] overflow-y-auto">
+              <LessonPlaylist
+                items={relatedLessons}
+                layout="vertical"
+                currentLessonId={currentLessonId}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* External content modal */}
+      <ExternalContentModal
+        open={externalModalOpen}
+        onOpenChange={setExternalModalOpen}
+        url={externalContentUrl || ""}
+        title="Conteúdo externo"
+      />
+    </div>
+  );
+}

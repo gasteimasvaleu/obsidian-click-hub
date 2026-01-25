@@ -114,6 +114,104 @@ export type Database = {
           },
         ]
       }
+      course_modules: {
+        Row: {
+          available: boolean | null
+          banner_desktop: string | null
+          banner_mobile: string | null
+          course_id: string
+          created_at: string
+          description: string
+          display_order: number
+          id: string
+          thumbnail: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          available?: boolean | null
+          banner_desktop?: string | null
+          banner_mobile?: string | null
+          course_id: string
+          created_at?: string
+          description: string
+          display_order?: number
+          id?: string
+          thumbnail?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          available?: boolean | null
+          banner_desktop?: string | null
+          banner_mobile?: string | null
+          course_id?: string
+          created_at?: string
+          description?: string
+          display_order?: number
+          id?: string
+          thumbnail?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_modules_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      courses: {
+        Row: {
+          available: boolean | null
+          banner_desktop: string | null
+          banner_mobile: string | null
+          created_at: string
+          description: string
+          display_order: number
+          id: string
+          thumbnail: string | null
+          title: string
+          updated_at: string
+          use_video: boolean | null
+          video_desktop: string | null
+          video_mobile: string | null
+        }
+        Insert: {
+          available?: boolean | null
+          banner_desktop?: string | null
+          banner_mobile?: string | null
+          created_at?: string
+          description: string
+          display_order?: number
+          id?: string
+          thumbnail?: string | null
+          title: string
+          updated_at?: string
+          use_video?: boolean | null
+          video_desktop?: string | null
+          video_mobile?: string | null
+        }
+        Update: {
+          available?: boolean | null
+          banner_desktop?: string | null
+          banner_mobile?: string | null
+          created_at?: string
+          description?: string
+          display_order?: number
+          id?: string
+          thumbnail?: string | null
+          title?: string
+          updated_at?: string
+          use_video?: boolean | null
+          video_desktop?: string | null
+          video_mobile?: string | null
+        }
+        Relationships: []
+      }
       daily_devotionals: {
         Row: {
           available: boolean | null
@@ -263,6 +361,103 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: []
+      }
+      lesson_materials: {
+        Row: {
+          created_at: string
+          display_order: number
+          file_size: number | null
+          file_type: string
+          file_url: string
+          id: string
+          lesson_id: string
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number
+          file_size?: number | null
+          file_type: string
+          file_url: string
+          id?: string
+          lesson_id: string
+          title: string
+        }
+        Update: {
+          created_at?: string
+          display_order?: number
+          file_size?: number | null
+          file_type?: string
+          file_url?: string
+          id?: string
+          lesson_id?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lesson_materials_lesson_id_fkey"
+            columns: ["lesson_id"]
+            isOneToOne: false
+            referencedRelation: "module_lessons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      module_lessons: {
+        Row: {
+          available: boolean | null
+          created_at: string
+          description: string
+          display_order: number
+          duration: number | null
+          external_content_url: string | null
+          id: string
+          module_id: string
+          thumbnail: string | null
+          title: string
+          updated_at: string
+          video_source: string | null
+          video_url: string | null
+        }
+        Insert: {
+          available?: boolean | null
+          created_at?: string
+          description: string
+          display_order?: number
+          duration?: number | null
+          external_content_url?: string | null
+          id?: string
+          module_id: string
+          thumbnail?: string | null
+          title: string
+          updated_at?: string
+          video_source?: string | null
+          video_url?: string | null
+        }
+        Update: {
+          available?: boolean | null
+          created_at?: string
+          description?: string
+          display_order?: number
+          duration?: number | null
+          external_content_url?: string | null
+          id?: string
+          module_id?: string
+          thumbnail?: string | null
+          title?: string
+          updated_at?: string
+          video_source?: string | null
+          video_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "module_lessons_module_id_fkey"
+            columns: ["module_id"]
+            isOneToOne: false
+            referencedRelation: "course_modules"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
