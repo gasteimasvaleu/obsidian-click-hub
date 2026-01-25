@@ -4,7 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Home, Package, BookOpen, Heart, Gamepad2, Palette, Users, MessageCircle } from "lucide-react";
+import { Home, Package, BookOpen, Heart, Gamepad2, Palette, Users, MessageCircle, GraduationCap } from "lucide-react";
 import { NavBar } from "@/components/ui/tubelight-navbar";
 import { SplashScreen } from "./components/SplashScreen";
 import { AuthProvider } from "./contexts/AuthContext";
@@ -36,13 +36,23 @@ import { ExternalFrame } from "./components/ExternalFrame";
 import { ChatInterface } from "./components/ChatInterface";
 import { ProtectedRoute } from "./components/admin/ProtectedRoute";
 
+// Plataforma pages
+import PlataformaPage from "./pages/plataforma/PlataformaPage";
+import CoursePage from "./pages/plataforma/CoursePage";
+import ModulePage from "./pages/plataforma/ModulePage";
+import LessonPage from "./pages/plataforma/LessonPage";
+import CoursesManager from "./pages/admin/plataforma/CoursesManager";
+import ModulesManager from "./pages/admin/plataforma/ModulesManager";
+import LessonsManager from "./pages/admin/plataforma/LessonsManager";
+import MaterialsManager from "./pages/admin/plataforma/MaterialsManager";
+
 const queryClient = new QueryClient();
 
 const navItems = [
   { name: 'Início', url: '/', icon: Home },
   { name: 'Colorir', url: '/boobiegoods', icon: Palette },
   { name: 'Mídia', url: '/ebooks', icon: BookOpen },
-  { name: 'Chat', url: '/amigodivino', icon: MessageCircle },
+  { name: 'Cursos', url: '/plataforma', icon: GraduationCap },
   { name: 'Guia', url: '/guia-pais', icon: Users },
   { name: 'Games', url: '/games', icon: Gamepad2 }
 ];
@@ -96,11 +106,19 @@ const App = () => {
               <Route path="/devocional" element={<ProtectedRoute><DailyDevotionalPage /></ProtectedRoute>} />
               <Route path="/login" element={<Login />} />
               <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+              <Route path="/plataforma" element={<ProtectedRoute><PlataformaPage /></ProtectedRoute>} />
+              <Route path="/plataforma/curso/:courseId" element={<ProtectedRoute><CoursePage /></ProtectedRoute>} />
+              <Route path="/plataforma/modulo/:moduleId" element={<ProtectedRoute><ModulePage /></ProtectedRoute>} />
+              <Route path="/plataforma/aula/:lessonId" element={<ProtectedRoute><LessonPage /></ProtectedRoute>} />
               <Route path="/admin" element={<ProtectedRoute requireAdmin><Dashboard /></ProtectedRoute>} />
               <Route path="/admin/ebooks" element={<ProtectedRoute requireAdmin><EbooksManager /></ProtectedRoute>} />
               <Route path="/admin/games" element={<ProtectedRoute requireAdmin><GamesManager /></ProtectedRoute>} />
               <Route path="/admin/games/generate" element={<ProtectedRoute requireAdmin><GameGenerator /></ProtectedRoute>} />
               <Route path="/admin/devocionais" element={<ProtectedRoute requireAdmin><DevotionalsManager /></ProtectedRoute>} />
+              <Route path="/admin/plataforma/cursos" element={<ProtectedRoute requireAdmin><CoursesManager /></ProtectedRoute>} />
+              <Route path="/admin/plataforma/modulos" element={<ProtectedRoute requireAdmin><ModulesManager /></ProtectedRoute>} />
+              <Route path="/admin/plataforma/aulas" element={<ProtectedRoute requireAdmin><LessonsManager /></ProtectedRoute>} />
+              <Route path="/admin/plataforma/materiais" element={<ProtectedRoute requireAdmin><MaterialsManager /></ProtectedRoute>} />
               <Route path="/external-login" element={<ExternalFrame url="https://bibliatoonkids.themembers.com.br/login" title="Login - Biblia Toon Kids" />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
