@@ -480,7 +480,7 @@ export default function LessonsManager() {
                     }
                     onRemove={() => setFormData({ ...formData, video_url: null })}
                     aspectRatio={16 / 9}
-                    maxSizeMB={500}
+                    maxSizeMB={1000}
                   />
                 ) : (
                   <div className="space-y-2">
