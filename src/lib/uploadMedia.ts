@@ -15,7 +15,7 @@ interface UploadResult {
 }
 
 export async function uploadMedia(options: UploadOptions): Promise<UploadResult> {
-  const { file, bucket, folder, maxSizeMB = 10, acceptedTypes } = options;
+  const { file, bucket, folder, maxSizeMB = 1000, acceptedTypes } = options;
 
   // Validate file size
   const maxSizeBytes = maxSizeMB * 1024 * 1024;
