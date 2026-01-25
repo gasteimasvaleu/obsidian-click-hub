@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, BookOpen, Gamepad2, GraduationCap, Layers, PlaySquare, FileText } from 'lucide-react';
+import { LayoutDashboard, BookOpen, Gamepad2, GraduationCap, Layers, PlaySquare, FileText, Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navItems = [
@@ -9,6 +9,7 @@ const navItems = [
 ];
 
 const plataformaItems = [
+  { name: 'Configurações', url: '/admin/plataforma/configuracoes', icon: Settings },
   { name: 'Cursos', url: '/admin/plataforma/cursos', icon: GraduationCap },
   { name: 'Módulos', url: '/admin/plataforma/modulos', icon: Layers },
   { name: 'Aulas', url: '/admin/plataforma/aulas', icon: PlaySquare },

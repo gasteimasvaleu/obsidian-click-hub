@@ -11,10 +11,7 @@ interface Course {
   description: string;
   banner_desktop: string | null;
   banner_mobile: string | null;
-  video_desktop: string | null;
-  video_mobile: string | null;
   thumbnail: string | null;
-  use_video: boolean | null;
   display_order: number;
 }
 
@@ -27,7 +24,33 @@ interface CourseModule {
   display_order: number;
 }
 
+interface PlatformSettings {
+  hero_banner_desktop: string | null;
+  hero_banner_mobile: string | null;
+  hero_video_desktop: string | null;
+  hero_video_mobile: string | null;
+  hero_use_video: string;
+  hero_title: string;
+  hero_description: string;
+  carousel_title: string;
+  carousel_description: string;
+}
+
 export default function PlataformaPage() {
+  const { data: settings, isLoading: loadingSettings } = useQuery({
+    queryKey: ["platform_settings"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("platform_settings")
+        .select("*");
+      if (error) throw error;
+      return data.reduce((acc, item) => {
+        acc[item.key as keyof PlatformSettings] = item.value;
+        return acc;
+      }, {} as PlatformSettings);
+    },
+  });
+
   const { data: courses, isLoading: loadingCourses } = useQuery({
     queryKey: ["courses"],
     queryFn: async () => {
@@ -54,10 +77,7 @@ export default function PlataformaPage() {
     },
   });
 
-  const isLoading = loadingCourses || loadingModules;
-
-  // Get the first course for the hero banner
-  const heroCourse = courses?.[0];
+  const isLoading = loadingSettings || loadingCourses || loadingModules;
 
   // Group modules by course
   const modulesByCourse = modules?.reduce((acc, module) => {
@@ -102,13 +122,13 @@ export default function PlataformaPage() {
     <div className="min-h-screen pb-24">
       {/* Hero Banner */}
       <ResponsiveHeroBanner
-        bannerDesktop={heroCourse?.banner_desktop || undefined}
-        bannerMobile={heroCourse?.banner_mobile || undefined}
-        videoDesktop={heroCourse?.video_desktop || undefined}
-        videoMobile={heroCourse?.video_mobile || undefined}
-        useVideo={heroCourse?.use_video || false}
-        title="BíbliaToonKIDS – A Bíblia Ganha Vida para as Crianças e Pais!"
-        description="BíbliaToonKIDS é uma plataforma cristã para crianças com animações bíblicas em 3D, músicas originais, vídeos interativos, PDFs para colorir e materiais exclusivos para os pais. Uma forma divertida e profunda de ensinar a Palavra de Deus desde cedo!"
+        bannerDesktop={settings?.hero_banner_desktop || undefined}
+        bannerMobile={settings?.hero_banner_mobile || undefined}
+        videoDesktop={settings?.hero_video_desktop || undefined}
+        videoMobile={settings?.hero_video_mobile || undefined}
+        useVideo={settings?.hero_use_video === "true"}
+        title={settings?.hero_title || ""}
+        description={settings?.hero_description || ""}
         aspectRatioDesktop={2560 / 1440}
         aspectRatioMobile={1080 / 1920}
       />
@@ -116,8 +136,8 @@ export default function PlataformaPage() {
       <div className="py-8 space-y-10">
         {/* Courses Carousel */}
         <CourseCarousel
-          title="Explore o Mundo Encantado da BíbliaToon Kids!"
-          description="Conheça nossos produtos exclusivos criados para ensinar a Palavra de Deus de forma divertida e inesquecível! Navegue pelo carrossel e descubra animações em 3D, livros digitais ilustrados, jogos bíblicos, músicas infantis, atividades para colorir e muito mais. Tudo com linguagem acessível, visual encantador e valores cristãos em cada detalhe. Ideal para pais, escolas e ministérios infantis que querem plantar fé e propósito no coração das crianças!"
+          title={settings?.carousel_title || "Cursos"}
+          description={settings?.carousel_description || ""}
           items={courses.map((course) => ({
             id: course.id,
             title: course.title,
