@@ -12,6 +12,7 @@ interface ResponsiveHeroBannerProps {
   aspectRatioDesktop?: number;
   aspectRatioMobile?: number;
   overlay?: boolean;
+  bottomGradient?: boolean;
 }
 
 export function ResponsiveHeroBanner({
@@ -25,6 +26,7 @@ export function ResponsiveHeroBanner({
   aspectRatioDesktop = 16 / 9,
   aspectRatioMobile = 9 / 16,
   overlay = true,
+  bottomGradient = false,
 }: ResponsiveHeroBannerProps) {
   const isMobile = useIsMobile();
 
@@ -74,6 +76,10 @@ export function ResponsiveHeroBanner({
             alt={title || "Banner"}
             className="w-full h-full object-cover"
           />
+        )}
+
+        {bottomGradient && (
+          <div className="absolute inset-x-0 bottom-0 h-32 md:h-48 bg-gradient-to-t from-black via-black/60 to-transparent pointer-events-none" />
         )}
 
         {overlay && (title || description) && (
