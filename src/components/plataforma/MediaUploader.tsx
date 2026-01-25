@@ -28,7 +28,7 @@ export function MediaUploader({
   onUploadSuccess,
   onRemove,
   aspectRatio,
-  maxSizeMB = 10,
+  maxSizeMB = 1000,
   disabled = false,
   dimensions,
 }: MediaUploaderProps) {
