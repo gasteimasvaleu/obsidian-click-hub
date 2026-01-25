@@ -50,6 +50,8 @@ export function LessonPlayer({
   const [externalModalOpen, setExternalModalOpen] = useState(false);
   const [showRelated, setShowRelated] = useState(!isMobile);
 
+  const isExternalContentOnly = externalContentUrl && !videoUrl;
+
   const isYouTube = videoUrl?.includes("youtube.com") || videoUrl?.includes("youtu.be");
   const isVimeo = videoUrl?.includes("vimeo.com");
 
@@ -102,10 +104,25 @@ export function LessonPlayer({
     <div className={cn("flex flex-col lg:flex-row gap-6", isMobile && "gap-4")}>
       {/* Main content */}
       <div className="flex-1 min-w-0 space-y-4">
-        {/* Video player */}
+        {/* Video player or external content button */}
         <div className="bg-black rounded-lg overflow-hidden">
           <AspectRatio ratio={16 / 9}>
-            {renderVideo()}
+            {isExternalContentOnly ? (
+              <div className="w-full h-full bg-muted flex flex-col items-center justify-center gap-4">
+                <ExternalLink className="h-12 w-12 text-muted-foreground" />
+                <Button
+                  variant="default"
+                  size="lg"
+                  onClick={() => setExternalModalOpen(true)}
+                  className="gap-2"
+                >
+                  <ExternalLink className="h-5 w-5" />
+                  Abrir conteúdo externo
+                </Button>
+              </div>
+            ) : (
+              renderVideo()
+            )}
           </AspectRatio>
         </div>
 
@@ -119,8 +136,8 @@ export function LessonPlayer({
           </p>
         </div>
 
-        {/* External content button */}
-        {externalContentUrl && (
+        {/* External content button - only show if has both video AND external content */}
+        {externalContentUrl && videoUrl && (
           <Button
             variant="outline"
             onClick={() => setExternalModalOpen(true)}
