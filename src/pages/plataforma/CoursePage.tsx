@@ -13,6 +13,8 @@ interface Course {
   description: string;
   banner_desktop: string | null;
   banner_mobile: string | null;
+  page_image_desktop: string | null;
+  page_image_mobile: string | null;
 }
 
 interface CourseModule {
@@ -90,12 +92,12 @@ export default function CoursePage() {
     <div className="min-h-screen pb-24">
       {/* Hero Banner */}
       <ResponsiveHeroBanner
-        bannerDesktop={course.banner_desktop || undefined}
-        bannerMobile={course.banner_mobile || undefined}
+        bannerDesktop={course.page_image_desktop || course.banner_desktop || undefined}
+        bannerMobile={course.page_image_mobile || course.banner_mobile || undefined}
         title={course.title}
         description={course.description}
         aspectRatioDesktop={1440 / 730}
-        aspectRatioMobile={300 / 580}
+        aspectRatioMobile={1080 / 1920}
       />
 
       {/* Back button and modules */}

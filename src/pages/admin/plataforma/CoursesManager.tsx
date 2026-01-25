@@ -35,6 +35,8 @@ interface Course {
   video_desktop: string | null;
   video_mobile: string | null;
   use_video: boolean | null;
+  page_image_desktop: string | null;
+  page_image_mobile: string | null;
   display_order: number;
   available: boolean | null;
 }
@@ -50,6 +52,8 @@ const defaultFormData: CourseFormData = {
   video_desktop: null,
   video_mobile: null,
   use_video: false,
+  page_image_desktop: null,
+  page_image_mobile: null,
   display_order: 0,
   available: false,
 };
@@ -136,6 +140,8 @@ export default function CoursesManager() {
       video_desktop: course.video_desktop,
       video_mobile: course.video_mobile,
       use_video: course.use_video,
+      page_image_desktop: course.page_image_desktop,
+      page_image_mobile: course.page_image_mobile,
       display_order: course.display_order,
       available: course.available,
     });
@@ -326,6 +332,45 @@ export default function CoursesManager() {
                   aspectRatio={300 / 580}
                   maxSizeMB={5}
                 />
+              </div>
+
+              <div className="space-y-4">
+                <h3 className="font-semibold">Imagens da Página do Curso</h3>
+                <p className="text-sm text-muted-foreground">
+                  Imagens exibidas no header da página individual do curso
+                </p>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <MediaUploader
+                    label="Imagem Desktop"
+                    accept="image"
+                    folder="courses/page-images/desktop"
+                    currentUrl={formData.page_image_desktop || undefined}
+                    onUploadSuccess={(url) =>
+                      setFormData({ ...formData, page_image_desktop: url })
+                    }
+                    onRemove={() =>
+                      setFormData({ ...formData, page_image_desktop: null })
+                    }
+                    dimensions="1440x730"
+                    aspectRatio={1440 / 730}
+                    maxSizeMB={5}
+                  />
+                  <MediaUploader
+                    label="Imagem Mobile"
+                    accept="image"
+                    folder="courses/page-images/mobile"
+                    currentUrl={formData.page_image_mobile || undefined}
+                    onUploadSuccess={(url) =>
+                      setFormData({ ...formData, page_image_mobile: url })
+                    }
+                    onRemove={() =>
+                      setFormData({ ...formData, page_image_mobile: null })
+                    }
+                    dimensions="1080x1920"
+                    aspectRatio={1080 / 1920}
+                    maxSizeMB={5}
+                  />
+                </div>
               </div>
 
               {formData.use_video ? (
