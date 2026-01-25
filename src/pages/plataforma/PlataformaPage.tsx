@@ -117,7 +117,7 @@ export default function PlataformaPage() {
         {/* Courses Carousel */}
         <CourseCarousel
           title="Explore o Mundo Encantado da BíbliaToon Kids!"
-          description="Escolha um curso para começar sua jornada"
+          description="Conheça nossos produtos exclusivos criados para ensinar a Palavra de Deus de forma divertida e inesquecível! Navegue pelo carrossel e descubra animações em 3D, livros digitais ilustrados, jogos bíblicos, músicas infantis, atividades para colorir e muito mais. Tudo com linguagem acessível, visual encantador e valores cristãos em cada detalhe. Ideal para pais, escolas e ministérios infantis que querem plantar fé e propósito no coração das crianças!"
           items={courses.map((course) => ({
             id: course.id,
             title: course.title,
