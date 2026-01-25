@@ -108,7 +108,7 @@ export default function PlataformaPage() {
         videoMobile={heroCourse?.video_mobile || undefined}
         useVideo={heroCourse?.use_video || false}
         title="Plataforma de Cursos"
-        description="Explore nossos cursos e transforme seu conhecimento"
+        description="BíbliaToonKIDS é uma plataforma cristã para crianças com animações bíblicas em 3D, músicas originais, vídeos interativos, PDFs para colorir e materiais exclusivos para os pais. Uma forma divertida e profunda de ensinar a Palavra de Deus desde cedo!"
         aspectRatioDesktop={2560 / 1440}
         aspectRatioMobile={1080 / 1920}
       />
