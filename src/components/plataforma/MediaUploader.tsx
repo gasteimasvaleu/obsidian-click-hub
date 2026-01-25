@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 import { Upload, X, Loader2, FileVideo, FileImage, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -36,6 +36,11 @@ export function MediaUploader({
   const [progress, setProgress] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [preview, setPreview] = useState<string | null>(currentUrl || null);
+
+  // Sync preview state with currentUrl prop
+  useEffect(() => {
+    setPreview(currentUrl || null);
+  }, [currentUrl]);
 
   const acceptedTypes = accept === "image" 
     ? IMAGE_TYPES 
@@ -98,10 +103,13 @@ export function MediaUploader({
   });
 
   const handleRemove = async () => {
+    // Delete from storage if there's a saved URL
     if (currentUrl) {
       await deleteMedia("plataforma", currentUrl);
     }
+    // Clear local preview
     setPreview(null);
+    // Notify parent component
     onRemove?.();
   };
 
