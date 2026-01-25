@@ -173,6 +173,8 @@ export type Database = {
           description: string
           display_order: number
           id: string
+          page_image_desktop: string | null
+          page_image_mobile: string | null
           thumbnail: string | null
           title: string
           updated_at: string
@@ -188,6 +190,8 @@ export type Database = {
           description: string
           display_order?: number
           id?: string
+          page_image_desktop?: string | null
+          page_image_mobile?: string | null
           thumbnail?: string | null
           title: string
           updated_at?: string
@@ -203,6 +207,8 @@ export type Database = {
           description?: string
           display_order?: number
           id?: string
+          page_image_desktop?: string | null
+          page_image_mobile?: string | null
           thumbnail?: string | null
           title?: string
           updated_at?: string
