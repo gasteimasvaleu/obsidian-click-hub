@@ -116,7 +116,7 @@ export default function PlataformaPage() {
       <div className="py-8 space-y-10">
         {/* Courses Carousel */}
         <CourseCarousel
-          title="Cursos Disponíveis"
+          title="Explore o Mundo Encantado da BíbliaToon Kids!"
           description="Escolha um curso para começar sua jornada"
           items={courses.map((course) => ({
             id: course.id,
