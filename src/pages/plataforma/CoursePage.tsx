@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { ResponsiveHeroBanner } from "@/components/plataforma/ResponsiveHeroBanner";
 import { ModulePlaylist } from "@/components/plataforma/ModulePlaylist";
+import { PlataformaLayout } from "@/components/plataforma/PlataformaLayout";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -64,32 +65,34 @@ export default function CoursePage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen pb-24">
+      <PlataformaLayout>
         <Skeleton className="w-full aspect-video" />
         <div className="p-4 space-y-4">
           {[1, 2, 3].map((i) => (
             <Skeleton key={i} className="h-24 w-full" />
           ))}
         </div>
-      </div>
+      </PlataformaLayout>
     );
   }
 
   if (!course) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center pb-24 px-4">
-        <h1 className="text-2xl font-bold text-foreground mb-2">
-          Curso não encontrado
-        </h1>
-        <Link to="/plataforma">
-          <Button variant="outline">Voltar para Plataforma</Button>
-        </Link>
-      </div>
+      <PlataformaLayout>
+        <div className="flex-1 flex flex-col items-center justify-center px-4">
+          <h1 className="text-2xl font-bold text-foreground mb-2">
+            Curso não encontrado
+          </h1>
+          <Link to="/plataforma">
+            <Button variant="outline">Voltar para Plataforma</Button>
+          </Link>
+        </div>
+      </PlataformaLayout>
     );
   }
 
   return (
-    <div className="min-h-screen pb-24">
+    <PlataformaLayout>
       {/* Hero Banner */}
       <ResponsiveHeroBanner
         bannerDesktop={course.page_image_desktop || course.banner_desktop || undefined}
@@ -123,6 +126,6 @@ export default function CoursePage() {
           />
         </div>
       </div>
-    </div>
+    </PlataformaLayout>
   );
 }
