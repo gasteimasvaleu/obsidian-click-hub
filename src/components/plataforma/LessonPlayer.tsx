@@ -47,6 +47,8 @@ export function LessonPlayer({
 }: LessonPlayerProps) {
   const isMobile = useIsMobile();
   const [showRelated, setShowRelated] = useState(!isMobile);
+  const [videoError, setVideoError] = useState(false);
+  const [isBuffering, setIsBuffering] = useState(false);
 
   const isExternalContentOnly = externalContentUrl && !videoUrl;
 
@@ -93,14 +95,52 @@ export function LessonPlayer({
     }
 
     return (
-      <video
-        src={videoUrl}
-        controls
-        controlsList="nodownload"
-        className="w-full h-full object-contain bg-black"
-      >
-        Seu navegador não suporta o elemento de vídeo.
-      </video>
+      <div className="relative w-full h-full">
+        <video
+          src={videoUrl}
+          controls
+          controlsList="nodownload"
+          className="w-full h-full object-contain bg-black"
+          preload="metadata"
+          onError={(e) => {
+            console.error("Video error:", e);
+            setVideoError(true);
+          }}
+          onWaiting={() => setIsBuffering(true)}
+          onPlaying={() => {
+            setIsBuffering(false);
+            setVideoError(false);
+          }}
+          onStalled={() => {
+            console.warn("Video stalled - network issue");
+          }}
+        >
+          Seu navegador não suporta o elemento de vídeo.
+        </video>
+        
+        {/* Buffering indicator */}
+        {isBuffering && !videoError && (
+          <div className="absolute inset-0 bg-black/50 flex items-center justify-center pointer-events-none">
+            <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+          </div>
+        )}
+        
+        {/* Error state */}
+        {videoError && (
+          <div className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center gap-4">
+            <p className="text-white text-center px-4">Erro ao carregar o vídeo</p>
+            <Button 
+              onClick={() => {
+                setVideoError(false);
+                window.location.reload();
+              }}
+              variant="default"
+            >
+              Tentar novamente
+            </Button>
+          </div>
+        )}
+      </div>
     );
   };
 
