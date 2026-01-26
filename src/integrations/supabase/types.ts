@@ -489,6 +489,42 @@ export type Database = {
         }
         Relationships: []
       }
+      prayers: {
+        Row: {
+          available: boolean | null
+          category: string
+          content: string
+          created_at: string | null
+          display_order: number
+          icon_name: string
+          id: string
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          available?: boolean | null
+          category: string
+          content: string
+          created_at?: string | null
+          display_order?: number
+          icon_name?: string
+          id?: string
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          available?: boolean | null
+          category?: string
+          content?: string
+          created_at?: string | null
+          display_order?: number
+          icon_name?: string
+          id?: string
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -692,6 +728,35 @@ export type Database = {
             columns: ["devotional_id"]
             isOneToOne: false
             referencedRelation: "daily_devotionals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_favorite_prayers: {
+        Row: {
+          created_at: string | null
+          id: string
+          prayer_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          prayer_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          prayer_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_favorite_prayers_prayer_id_fkey"
+            columns: ["prayer_id"]
+            isOneToOne: false
+            referencedRelation: "prayers"
             referencedColumns: ["id"]
           },
         ]
