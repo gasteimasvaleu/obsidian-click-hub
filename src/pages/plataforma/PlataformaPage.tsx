@@ -4,6 +4,7 @@ import { ResponsiveHeroBanner } from "@/components/plataforma/ResponsiveHeroBann
 import { CourseCarousel } from "@/components/plataforma/CourseCarousel";
 import { Skeleton } from "@/components/ui/skeleton";
 import { GraduationCap } from "lucide-react";
+import { FuturisticNavbar } from "@/components/FuturisticNavbar";
 
 interface Course {
   id: string;
@@ -119,7 +120,8 @@ export default function PlataformaPage() {
   }
 
   return (
-    <div className="min-h-screen pb-24">
+    <div className="min-h-screen pb-24 pt-16">
+      <FuturisticNavbar />
       {/* Hero Banner */}
       <ResponsiveHeroBanner
         bannerDesktop={settings?.hero_banner_desktop || undefined}
