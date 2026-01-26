@@ -4,12 +4,12 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Home, Package, BookOpen, Heart, Gamepad2, Palette, Users, MessageCircle, GraduationCap } from "lucide-react";
+import { Home, Package, BookOpen, Heart, Gamepad2, Users, MessageCircle, GraduationCap, BookHeart } from "lucide-react";
 import { NavBar } from "@/components/ui/tubelight-navbar";
 import { SplashScreen } from "./components/SplashScreen";
 import { AuthProvider } from "./contexts/AuthContext";
 import Index from "./pages/Index";
-import BoobieGoods from "./pages/BoobieGoods";
+import Oracoes from "./pages/Oracoes";
 import Ebooks from "./pages/Ebooks";
 import AmigoDivino from "./pages/AmigoDivino";
 import Sobre from "./pages/Sobre";
@@ -46,12 +46,13 @@ import ModulesManager from "./pages/admin/plataforma/ModulesManager";
 import LessonsManager from "./pages/admin/plataforma/LessonsManager";
 import MaterialsManager from "./pages/admin/plataforma/MaterialsManager";
 import PlatformSettingsManager from "./pages/admin/plataforma/PlatformSettingsManager";
+import PrayersManager from "./pages/admin/PrayersManager";
 
 const queryClient = new QueryClient();
 
 const navItems = [
   { name: 'Início', url: '/', icon: Home },
-  { name: 'Colorir', url: '/boobiegoods', icon: Palette },
+  { name: 'Orações', url: '/oracoes', icon: BookHeart },
   { name: 'Mídia', url: '/ebooks', icon: BookOpen },
   { name: 'Cursos', url: '/plataforma', icon: GraduationCap },
   { name: 'Guia', url: '/guia-pais', icon: Users },
@@ -94,7 +95,7 @@ const App = () => {
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
-              <Route path="/boobiegoods" element={<ProtectedRoute><BoobieGoods /></ProtectedRoute>} />
+              <Route path="/oracoes" element={<ProtectedRoute><Oracoes /></ProtectedRoute>} />
               <Route path="/ebooks" element={<ProtectedRoute><Ebooks /></ProtectedRoute>} />
               <Route path="/amigodivino" element={<ProtectedRoute><AmigoDivino /></ProtectedRoute>} />
               <Route path="/amigodivino/chat" element={<ProtectedRoute><ChatInterface /></ProtectedRoute>} />
@@ -122,6 +123,7 @@ const App = () => {
               <Route path="/admin/games/generate" element={<ProtectedRoute requireAdmin><GameGenerator /></ProtectedRoute>} />
               <Route path="/admin/devocionais" element={<ProtectedRoute requireAdmin><DevotionalsManager /></ProtectedRoute>} />
               <Route path="/admin/plataforma/configuracoes" element={<ProtectedRoute requireAdmin><PlatformSettingsManager /></ProtectedRoute>} />
+              <Route path="/admin/oracoes" element={<ProtectedRoute requireAdmin><PrayersManager /></ProtectedRoute>} />
               <Route path="/admin/plataforma/cursos" element={<ProtectedRoute requireAdmin><CoursesManager /></ProtectedRoute>} />
               <Route path="/admin/plataforma/modulos" element={<ProtectedRoute requireAdmin><ModulesManager /></ProtectedRoute>} />
               <Route path="/admin/plataforma/aulas" element={<ProtectedRoute requireAdmin><LessonsManager /></ProtectedRoute>} />
