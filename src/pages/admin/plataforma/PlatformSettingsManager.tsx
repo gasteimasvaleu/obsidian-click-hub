@@ -20,8 +20,6 @@ interface PlatformSettings {
   hero_use_video: string;
   hero_title: string;
   hero_description: string;
-  carousel_title: string;
-  carousel_description: string;
 }
 
 const defaultSettings: PlatformSettings = {
@@ -32,8 +30,6 @@ const defaultSettings: PlatformSettings = {
   hero_use_video: "false",
   hero_title: "",
   hero_description: "",
-  carousel_title: "",
-  carousel_description: "",
 };
 
 export default function PlatformSettingsManager() {
@@ -238,41 +234,6 @@ export default function PlatformSettingsManager() {
                     rows={4}
                   />
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Carousel Section */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Carrossel de Cursos</CardTitle>
-              <CardDescription>
-                Configure o título e descrição do carrossel de cursos
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="carousel-title">Título do Carrossel</Label>
-                <Input
-                  id="carousel-title"
-                  value={formData.carousel_title || ""}
-                  onChange={(e) =>
-                    setFormData({ ...formData, carousel_title: e.target.value })
-                  }
-                  placeholder="Explore o Mundo Encantado..."
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="carousel-description">Descrição do Carrossel</Label>
-                <Textarea
-                  id="carousel-description"
-                  value={formData.carousel_description || ""}
-                  onChange={(e) =>
-                    setFormData({ ...formData, carousel_description: e.target.value })
-                  }
-                  placeholder="Descrição do carrossel de cursos..."
-                  rows={4}
-                />
               </div>
             </CardContent>
           </Card>
