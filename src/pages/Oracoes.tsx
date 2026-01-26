@@ -121,7 +121,7 @@ const Oracoes = () => {
             {/* Video Animation */}
             <div className="flex justify-center w-full mb-6">
               <GlassCard className="w-full max-w-[500px] p-0 overflow-hidden">
-                <video src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/oracoes.mp4" className="w-full h-auto" style={{
+                <video src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/materials/oracoes.mp4" className="w-full h-auto" style={{
                 maxHeight: "280px"
               }} autoPlay muted playsInline loop onError={e => {
                 // Hide video container if video fails to load
