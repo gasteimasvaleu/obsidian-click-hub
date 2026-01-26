@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 import { ExternalLink, FileText, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
@@ -49,8 +49,65 @@ export function LessonPlayer({
   const [showRelated, setShowRelated] = useState(!isMobile);
   const [videoError, setVideoError] = useState(false);
   const [isBuffering, setIsBuffering] = useState(false);
+  const [stallCount, setStallCount] = useState(0);
+  const [lastPosition, setLastPosition] = useState(0);
+  const [hasRetried, setHasRetried] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   const isExternalContentOnly = externalContentUrl && !videoUrl;
+
+  // Save position continuously for recovery
+  const handleTimeUpdate = useCallback(() => {
+    if (videoRef.current) {
+      setLastPosition(videoRef.current.currentTime);
+    }
+  }, []);
+
+  // Handle video stall with recovery attempt
+  const handleStalled = useCallback(() => {
+    console.warn("Video stalled - attempting recovery");
+    setStallCount(prev => {
+      const newCount = prev + 1;
+      // After 3 consecutive stalls, show buffering indicator
+      if (newCount >= 3) {
+        setIsBuffering(true);
+      }
+      return newCount;
+    });
+  }, []);
+
+  // Handle video playing - reset error states
+  const handlePlaying = useCallback(() => {
+    setIsBuffering(false);
+    setVideoError(false);
+    setStallCount(0);
+    setHasRetried(false);
+  }, []);
+
+  // Handle video error with automatic retry
+  const handleVideoError = useCallback((e: React.SyntheticEvent<HTMLVideoElement>) => {
+    console.error("Video error:", e);
+    
+    // Try to recover automatically once
+    if (!hasRetried && videoRef.current && lastPosition > 0) {
+      console.log("Attempting video recovery from position:", lastPosition);
+      setHasRetried(true);
+      const video = videoRef.current;
+      video.load();
+      video.currentTime = lastPosition;
+      video.play().catch(() => {
+        console.error("Recovery failed, showing error state");
+        setVideoError(true);
+      });
+    } else {
+      setVideoError(true);
+    }
+  }, [hasRetried, lastPosition]);
+
+  // Reset stall count when video can play through
+  const handleCanPlayThrough = useCallback(() => {
+    setStallCount(0);
+  }, []);
 
   const openExternalContent = () => {
     if (externalContentUrl) {
@@ -97,23 +154,19 @@ export function LessonPlayer({
     return (
       <div className="relative w-full h-full">
         <video
+          ref={videoRef}
           src={videoUrl}
           controls
           controlsList="nodownload"
+          playsInline
           className="w-full h-full object-contain bg-black"
           preload="metadata"
-          onError={(e) => {
-            console.error("Video error:", e);
-            setVideoError(true);
-          }}
+          onError={handleVideoError}
           onWaiting={() => setIsBuffering(true)}
-          onPlaying={() => {
-            setIsBuffering(false);
-            setVideoError(false);
-          }}
-          onStalled={() => {
-            console.warn("Video stalled - network issue");
-          }}
+          onPlaying={handlePlaying}
+          onStalled={handleStalled}
+          onTimeUpdate={handleTimeUpdate}
+          onCanPlayThrough={handleCanPlayThrough}
         >
           Seu navegador não suporta o elemento de vídeo.
         </video>
