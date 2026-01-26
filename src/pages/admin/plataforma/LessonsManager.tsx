@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { AdminLayout } from "@/components/admin/AdminLayout";
@@ -29,9 +29,37 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { MediaUploader } from "@/components/plataforma/MediaUploader";
-import { Plus, Pencil, Trash2, Eye, EyeOff, Clock } from "lucide-react";
+import { Plus, Pencil, Trash2, Eye, EyeOff, Clock, Check } from "lucide-react";
 import { toast } from "sonner";
+
+// Helper functions for video URL parsing
+const extractVideoId = (url: string): { type: "youtube" | "vimeo"; id: string } | null => {
+  if (!url) return null;
+  
+  // YouTube
+  const ytMatch = url.match(
+    /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/
+  );
+  if (ytMatch) return { type: "youtube", id: ytMatch[1] };
+
+  // Vimeo
+  const vimeoMatch = url.match(/vimeo\.com\/(\d+)/);
+  if (vimeoMatch) return { type: "vimeo", id: vimeoMatch[1] };
+
+  return null;
+};
+
+const getEmbedUrl = (videoInfo: { type: string; id: string }): string => {
+  if (videoInfo.type === "youtube") {
+    return `https://www.youtube.com/embed/${videoInfo.id}`;
+  }
+  if (videoInfo.type === "vimeo") {
+    return `https://player.vimeo.com/video/${videoInfo.id}`;
+  }
+  return "";
+};
 
 interface Course {
   id: string;
@@ -80,6 +108,14 @@ export default function LessonsManager() {
   const [formData, setFormData] = useState<LessonFormData>(defaultFormData);
   const [selectedCourse, setSelectedCourse] = useState<string>("all");
   const [selectedModule, setSelectedModule] = useState<string>("all");
+
+  // Compute video info for preview
+  const videoInfo = useMemo(() => {
+    if (formData.video_source === "external" && formData.video_url) {
+      return extractVideoId(formData.video_url);
+    }
+    return null;
+  }, [formData.video_source, formData.video_url]);
 
   const { data: courses } = useQuery({
     queryKey: ["admin-courses"],
@@ -483,7 +519,7 @@ export default function LessonsManager() {
                     maxSizeMB={1000}
                   />
                 ) : (
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     <Label>URL do Vídeo (YouTube/Vimeo)</Label>
                     <Input
                       placeholder="https://youtube.com/watch?v=..."
@@ -492,6 +528,30 @@ export default function LessonsManager() {
                         setFormData({ ...formData, video_url: e.target.value })
                       }
                     />
+                    
+                    {/* Video Preview */}
+                    {videoInfo && (
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2 text-sm text-green-600">
+                          <Check className="h-4 w-4" />
+                          Vídeo {videoInfo.type === "youtube" ? "YouTube" : "Vimeo"} detectado
+                        </div>
+                        <AspectRatio ratio={16 / 9} className="bg-black rounded-lg overflow-hidden">
+                          <iframe
+                            src={getEmbedUrl(videoInfo)}
+                            className="w-full h-full"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                          />
+                        </AspectRatio>
+                      </div>
+                    )}
+                    
+                    {formData.video_url && !videoInfo && (
+                      <p className="text-sm text-destructive">
+                        URL não reconhecida. Use links do YouTube ou Vimeo.
+                      </p>
+                    )}
                   </div>
                 )}
               </div>
