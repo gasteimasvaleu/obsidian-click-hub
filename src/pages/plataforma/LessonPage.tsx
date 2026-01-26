@@ -2,6 +2,7 @@ import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { LessonPlayer } from "@/components/plataforma/LessonPlayer";
+import { PlataformaLayout } from "@/components/plataforma/PlataformaLayout";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -77,29 +78,33 @@ export default function LessonPage() {
 
   if (loadingLesson) {
     return (
-      <div className="min-h-screen pb-24 p-4">
-        <Skeleton className="w-full aspect-video mb-4" />
-        <Skeleton className="h-8 w-3/4 mb-2" />
-        <Skeleton className="h-4 w-full" />
-      </div>
+      <PlataformaLayout>
+        <div className="p-4">
+          <Skeleton className="w-full aspect-video mb-4" />
+          <Skeleton className="h-8 w-3/4 mb-2" />
+          <Skeleton className="h-4 w-full" />
+        </div>
+      </PlataformaLayout>
     );
   }
 
   if (!lesson) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center pb-24 px-4">
-        <h1 className="text-2xl font-bold text-foreground mb-2">
-          Aula não encontrada
-        </h1>
-        <Link to="/plataforma">
-          <Button variant="outline">Voltar para Plataforma</Button>
-        </Link>
-      </div>
+      <PlataformaLayout>
+        <div className="flex-1 flex flex-col items-center justify-center px-4">
+          <h1 className="text-2xl font-bold text-foreground mb-2">
+            Aula não encontrada
+          </h1>
+          <Link to="/plataforma">
+            <Button variant="outline">Voltar para Plataforma</Button>
+          </Link>
+        </div>
+      </PlataformaLayout>
     );
   }
 
   return (
-    <div className="min-h-screen pb-24">
+    <PlataformaLayout>
       {/* Back button */}
       <div className="p-4">
         <Link to={`/plataforma/modulo/${lesson.module_id}`}>
@@ -135,6 +140,6 @@ export default function LessonPage() {
           currentLessonId={lessonId || ""}
         />
       </div>
-    </div>
+    </PlataformaLayout>
   );
 }
