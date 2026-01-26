@@ -21,6 +21,9 @@ export default defineConfig(({ mode }) => ({
         cleanupOutdatedCaches: true,
         skipWaiting: true,
         clientsClaim: true,
+        // Exclude video files from SW interception - let browser handle them directly
+        // This prevents iOS fullscreen exit issues caused by range request problems
+        navigateFallbackDenylist: [/\.(?:mp4|webm|ogg|mov)$/i],
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
@@ -36,8 +39,9 @@ export default defineConfig(({ mode }) => ({
               }
             }
           },
+          // Supabase API cache - exclude video storage URLs
           {
-            urlPattern: /^https:\/\/.*\.supabase\.co\/.*/i,
+            urlPattern: /^https:\/\/.*\.supabase\.co\/(?!storage\/.*\.(?:mp4|webm|ogg|mov)).*/i,
             handler: 'NetworkFirst',
             options: {
               cacheName: 'supabase-api-cache',
@@ -45,39 +49,6 @@ export default defineConfig(({ mode }) => ({
               expiration: {
                 maxEntries: 50,
                 maxAgeSeconds: 60 * 5
-              }
-            }
-          },
-          // Video files with Range Requests support
-          {
-            urlPattern: /\.(?:mp4|webm|ogg|mov)$/i,
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'video-cache',
-              rangeRequests: true,
-              expiration: {
-                maxEntries: 20,
-                maxAgeSeconds: 60 * 60 * 24 * 7 // 7 days
-              },
-              cacheableResponse: {
-                statuses: [0, 200]
-              }
-            }
-          },
-          // Supabase Storage videos with Range Requests support
-          {
-            urlPattern: /^https:\/\/.*\.supabase\.co\/storage\/.*\.(?:mp4|webm|ogg|mov)$/i,
-            handler: 'NetworkFirst',
-            options: {
-              cacheName: 'supabase-video-cache',
-              rangeRequests: true,
-              networkTimeoutSeconds: 10,
-              expiration: {
-                maxEntries: 30,
-                maxAgeSeconds: 60 * 60 * 24 * 7 // 7 days
-              },
-              cacheableResponse: {
-                statuses: [0, 200]
               }
             }
           }
