@@ -43,6 +43,7 @@ interface Prayer {
 }
 
 const categories = [
+  // Novas categorias tradicionais
   { id: "essencial", name: "Essencial" },
   { id: "mariana", name: "Maria" },
   { id: "protecao", name: "Proteção" },
@@ -51,6 +52,14 @@ const categories = [
   { id: "espirito_santo", name: "Espírito Santo" },
   { id: "eucaristica", name: "Eucarística" },
   { id: "misericordia", name: "Misericórdia" },
+  // Categorias infantis antigas
+  { id: "familia", name: "Família" },
+  { id: "saude", name: "Saúde" },
+  { id: "escola", name: "Escola" },
+  { id: "gratidao", name: "Gratidão" },
+  { id: "amigos", name: "Amigos" },
+  { id: "noite", name: "Noite" },
+  { id: "manha", name: "Manhã" },
 ];
 
 const icons = [
@@ -62,6 +71,10 @@ const icons = [
   { id: "sparkles", name: "Brilhos (Sparkles)" },
   { id: "church", name: "Igreja (Church)" },
   { id: "heart-handshake", name: "Misericórdia (HeartHandshake)" },
+  { id: "users", name: "Família (Users)" },
+  { id: "graduation-cap", name: "Escola (GraduationCap)" },
+  { id: "moon", name: "Lua (Moon)" },
+  { id: "sun", name: "Sol (Sun)" },
 ];
 
 const PrayersManager = () => {
