@@ -43,23 +43,27 @@ interface Prayer {
 }
 
 const categories = [
-  // Novas categorias tradicionais
+  // Orações tradicionais
   { id: "essencial", name: "Essencial" },
   { id: "mariana", name: "Maria" },
-  { id: "protecao", name: "Proteção" },
-  { id: "penitencia", name: "Penitência" },
-  { id: "refeicao", name: "Refeição" },
   { id: "espirito_santo", name: "Espírito Santo" },
   { id: "eucaristica", name: "Eucarística" },
   { id: "misericordia", name: "Misericórdia" },
-  // Categorias infantis antigas
+  { id: "penitencia", name: "Penitência" },
+  { id: "santos", name: "Santos" },
+  { id: "sacramentos", name: "Sacramentos" },
+  { id: "vocacao", name: "Vocação" },
+  // Orações do dia a dia
+  { id: "protecao", name: "Proteção" },
+  { id: "refeicao", name: "Refeição" },
+  { id: "manha", name: "Manhã" },
+  { id: "noite", name: "Noite" },
+  // Orações infantis
   { id: "familia", name: "Família" },
-  { id: "saude", name: "Saúde" },
+  { id: "amigos", name: "Amigos" },
   { id: "escola", name: "Escola" },
   { id: "gratidao", name: "Gratidão" },
-  { id: "amigos", name: "Amigos" },
-  { id: "noite", name: "Noite" },
-  { id: "manha", name: "Manhã" },
+  { id: "saude", name: "Saúde" },
 ];
 
 const icons = [
@@ -75,6 +79,9 @@ const icons = [
   { id: "graduation-cap", name: "Escola (GraduationCap)" },
   { id: "moon", name: "Lua (Moon)" },
   { id: "sun", name: "Sol (Sun)" },
+  { id: "crown", name: "Coroa (Crown)" },
+  { id: "droplets", name: "Gotas (Droplets)" },
+  { id: "compass", name: "Bússola (Compass)" },
 ];
 
 const PrayersManager = () => {
