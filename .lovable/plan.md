@@ -1,137 +1,165 @@
 
 
-## Preview de Vídeo YouTube no Formulário de Aulas
+## Sistema de Carrosseis Personalizados
 
-### Objetivo
-Adicionar um preview em tempo real do vídeo do YouTube no modal de inclusão/edição de aulas, permitindo que o administrador visualize o vídeo antes de salvar.
+### Situação Atual
 
----
+A página `/plataforma` já exibe automaticamente um carrossel para cada curso que possui módulos. O curso **"BíbliaToon KIDS - Contos Bíblicos"** possui 12 módulos e já aparece corretamente.
 
-### Mudanças Planejadas
+### O que será implementado
 
-**Arquivo:** `src/pages/admin/plataforma/LessonsManager.tsx`
-
-1. **Criar função de extração de ID do YouTube**
-   - Reutilizar a lógica existente em `LessonPlayer.tsx`
-   - Detectar URLs do YouTube (youtube.com e youtu.be)
-   - Extrair o videoId para gerar o embed
-
-2. **Adicionar componente de preview inline**
-   - Exibir iframe do YouTube abaixo do campo de URL
-   - Mostrar preview automaticamente quando URL válida é detectada
-   - Proporção 16:9 para manter consistência visual
-
-3. **Melhorar validação visual**
-   - Indicador de URL válida/inválida
-   - Mensagem de erro para URLs inválidas
-   - Suporte também para Vimeo (bonus)
+Um sistema gerenciável onde o admin pode criar carrosseis vinculados a cursos específicos, com controle sobre título, descrição, ordem e visibilidade.
 
 ---
 
-### Interface Proposta
+### 1. Nova Tabela no Banco de Dados
+
+**Tabela: `platform_carousels`**
+
+| Coluna | Tipo | Descrição |
+|--------|------|-----------|
+| id | uuid | ID único |
+| course_id | uuid | Curso cujos módulos serão exibidos |
+| title | text | Título customizado (opcional) |
+| description | text | Descrição customizada (opcional) |
+| display_order | integer | Ordem na página |
+| available | boolean | Visível publicamente |
+
+**Migração automática**: Criar carrossel para o curso "Contos Bíblicos" já existente, mantendo o comportamento atual.
+
+---
+
+### 2. Página de Gerenciamento (Admin)
+
+**Nova página**: `src/pages/admin/plataforma/CarouselsManager.tsx`
+
+**Funcionalidades**:
+- Listar carrosseis existentes com ordenação
+- Criar novo carrossel selecionando um curso
+- Editar título/descrição customizados
+- Toggle de visibilidade
+- Excluir carrossel
+- Preview da quantidade de módulos
+
+**Interface do formulário:**
+```text
+┌──────────────────────────────────────────────────┐
+│  Novo Carrossel                                  │
+├──────────────────────────────────────────────────┤
+│  Curso: [▼ Selecione um curso              ]     │
+│                                                  │
+│  Título (opcional):                              │
+│  [________________________________]              │
+│  Deixe vazio para usar o título do curso         │
+│                                                  │
+│  Descrição (opcional):                           │
+│  [________________________________]              │
+│                                                  │
+│  [✓] Disponível                                  │
+│                                                  │
+│  ℹ️ Este curso tem 12 módulos                    │
+│                                                  │
+│                    [Salvar Carrossel]            │
+└──────────────────────────────────────────────────┘
+```
+
+---
+
+### 3. Atualizações de Arquivos
+
+**`src/components/admin/AdminSidebar.tsx`**
+- Adicionar item "Carrosseis" na seção Plataforma
+- URL: `/admin/plataforma/carrosseis`
+- Ícone: `LayoutGrid`
+
+**`src/App.tsx`**
+- Adicionar rota protegida para CarouselsManager
+
+**`src/pages/plataforma/PlataformaPage.tsx`**
+- Substituir a iteração automática sobre cursos
+- Buscar carrosseis da tabela `platform_carousels`
+- Para cada carrossel, mostrar módulos do curso vinculado
+- Usar título/descrição customizados ou do curso (fallback)
+
+---
+
+### 4. SQL Migration
+
+```sql
+-- Criar tabela de carrosseis
+CREATE TABLE IF NOT EXISTS public.platform_carousels (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  course_id uuid NOT NULL REFERENCES public.courses(id) ON DELETE CASCADE,
+  title text,
+  description text,
+  display_order integer NOT NULL DEFAULT 0,
+  available boolean DEFAULT false,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now()
+);
+
+-- Habilitar RLS
+ALTER TABLE public.platform_carousels ENABLE ROW LEVEL SECURITY;
+
+-- Policy: Qualquer pessoa pode ver carrosseis disponíveis
+CREATE POLICY "Anyone can view available carousels"
+ON public.platform_carousels FOR SELECT
+USING (available = true);
+
+-- Policy: Admins podem gerenciar
+CREATE POLICY "Admins can manage carousels"
+ON public.platform_carousels FOR ALL
+USING (has_role(auth.uid(), 'admin'));
+
+-- Trigger para updated_at
+CREATE TRIGGER update_platform_carousels_updated_at
+  BEFORE UPDATE ON public.platform_carousels
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
+
+-- Criar carrossel para o curso Contos Bíblicos existente
+INSERT INTO public.platform_carousels (course_id, display_order, available)
+SELECT id, display_order, true
+FROM public.courses 
+WHERE title LIKE '%Contos Bíblicos%';
+```
+
+---
+
+### 5. Fluxo de Dados na Página Pública
 
 ```text
-┌─────────────────────────────────────────────────┐
-│  URL do Vídeo (YouTube/Vimeo)                   │
-│  ┌─────────────────────────────────────────────┐│
-│  │ https://youtube.com/watch?v=abc123         ││
-│  └─────────────────────────────────────────────┘│
-│  ✓ Vídeo detectado                              │
-│  ┌─────────────────────────────────────────────┐│
-│  │                                             ││
-│  │         [YouTube Player Embed]              ││
-│  │                                             ││
-│  └─────────────────────────────────────────────┘│
-└─────────────────────────────────────────────────┘
+PlataformaPage
+     │
+     ▼
+Busca platform_carousels (available=true)
+     │
+     ▼
+Para cada carrossel:
+  ├─ Busca módulos do course_id
+  ├─ Usa título customizado OU título do curso
+  ├─ Usa descrição customizada OU descrição do curso
+  └─ Renderiza CourseCarousel com os módulos
 ```
 
 ---
 
-### Detalhes Técnicos
+### Arquivos a Criar/Modificar
 
-**Funções auxiliares a adicionar:**
-
-```typescript
-const extractVideoId = (url: string) => {
-  // YouTube
-  const ytMatch = url.match(
-    /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/
-  );
-  if (ytMatch) return { type: "youtube", id: ytMatch[1] };
-
-  // Vimeo
-  const vimeoMatch = url.match(/vimeo\.com\/(\d+)/);
-  if (vimeoMatch) return { type: "vimeo", id: vimeoMatch[1] };
-
-  return null;
-};
-
-const getEmbedUrl = (videoInfo: { type: string; id: string }) => {
-  if (videoInfo.type === "youtube") {
-    return `https://www.youtube.com/embed/${videoInfo.id}`;
-  }
-  if (videoInfo.type === "vimeo") {
-    return `https://player.vimeo.com/video/${videoInfo.id}`;
-  }
-  return null;
-};
-```
-
-**Componente de preview (inline no formulário):**
-
-```tsx
-{formData.video_source === "external" && (
-  <div className="space-y-3">
-    <Label>URL do Vídeo (YouTube/Vimeo)</Label>
-    <Input
-      placeholder="https://youtube.com/watch?v=..."
-      value={formData.video_url || ""}
-      onChange={(e) =>
-        setFormData({ ...formData, video_url: e.target.value })
-      }
-    />
-    
-    {/* Preview */}
-    {videoInfo && (
-      <div className="space-y-2">
-        <div className="flex items-center gap-2 text-sm text-green-600">
-          <Check className="h-4 w-4" />
-          Vídeo {videoInfo.type === "youtube" ? "YouTube" : "Vimeo"} detectado
-        </div>
-        <AspectRatio ratio={16 / 9} className="bg-black rounded-lg overflow-hidden">
-          <iframe
-            src={getEmbedUrl(videoInfo)}
-            className="w-full h-full"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media"
-            allowFullScreen
-          />
-        </AspectRatio>
-      </div>
-    )}
-    
-    {formData.video_url && !videoInfo && (
-      <p className="text-sm text-destructive">
-        URL não reconhecida. Use links do YouTube ou Vimeo.
-      </p>
-    )}
-  </div>
-)}
-```
+| Ação | Arquivo |
+|------|---------|
+| Criar | Migration SQL |
+| Criar | `src/pages/admin/plataforma/CarouselsManager.tsx` |
+| Modificar | `src/components/admin/AdminSidebar.tsx` |
+| Modificar | `src/App.tsx` |
+| Modificar | `src/pages/plataforma/PlataformaPage.tsx` |
 
 ---
 
-### Imports Necessários
+### Resultado Final
 
-Adicionar ao arquivo:
-- `Check` do lucide-react (para indicador de sucesso)
-- `AspectRatio` de `@/components/ui/aspect-ratio`
-
----
-
-### Benefícios
-
-- Feedback visual imediato antes de salvar
-- Validação de URL em tempo real
-- Confirmação de que o vídeo correto foi selecionado
-- Experiência de administração mais intuitiva
+- O carrossel "Contos Bíblicos" continuará funcionando normalmente
+- Admins poderão criar novos carrosseis para outros cursos
+- Cada carrossel pode ter título/descrição personalizados
+- Controle total sobre ordenação e visibilidade
 
