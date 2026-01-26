@@ -90,10 +90,10 @@ export function CourseCarousel({
             </CarouselItem>
           ))}
         </CarouselContent>
-        {items.length > 3 && (
+      {items.length > 3 && (
           <>
-            <CarouselPrevious className="hidden md:flex -left-4" />
-            <CarouselNext className="hidden md:flex -right-4" />
+            <CarouselPrevious className="flex left-1 md:-left-4" />
+            <CarouselNext className="flex right-1 md:-right-4" />
           </>
         )}
       </Carousel>
