@@ -465,6 +465,47 @@ export type Database = {
           },
         ]
       }
+      platform_carousels: {
+        Row: {
+          available: boolean | null
+          course_id: string
+          created_at: string
+          description: string | null
+          display_order: number
+          id: string
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          available?: boolean | null
+          course_id: string
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          id?: string
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          available?: boolean | null
+          course_id?: string
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          id?: string
+          title?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "platform_carousels_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       platform_settings: {
         Row: {
           created_at: string | null
