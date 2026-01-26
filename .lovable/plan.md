@@ -1,61 +1,69 @@
 
-
-## Corrigir Orações Antigas que "Sumiram"
+## Corrigir Erro de Upload no Bucket "criativos"
 
 ### Diagnóstico
 
-As orações antigas **NÃO foram deletadas** - ainda estão no banco de dados. O problema é que o `CategoryGrid.tsx` foi atualizado com **novas categorias** (`essencial`, `mariana`, `protecao`...), mas as orações antigas usam **categorias diferentes** (`familia`, `saude`, `escola`...).
+O erro `new row violates row-level security policy` ocorre porque o bucket `criativos` **não tem políticas RLS para INSERT** (upload).
 
-### Estado Atual do Banco
+Ao verificar as políticas de storage:
 
-| Tipo | Quantidade | Categorias | Data |
-|------|------------|------------|------|
-| Orações Infantis (antigas) | 29 | familia, saude, escola, gratidao, amigos, noite, manha, refeicao | 11:36:17 |
-| Orações Tradicionais (novas) | 20 | essencial, mariana, protecao, penitencia, refeicao, espirito_santo, eucaristica, misericordia | 11:49:25 |
-
----
-
-### Solução Proposta: Combinar Todas as Categorias
-
-Vou atualizar o `CategoryGrid.tsx` para incluir **todas as categorias** (antigas + novas), permitindo que o usuário veja tanto as orações infantis quanto as tradicionais.
-
-#### Categorias Combinadas (15 no total)
-
-| ID | Nome | Ícone | Tipo |
-|----|------|-------|------|
-| essencial | Essencial | BookOpen | Nova |
-| mariana | Maria | Star | Nova |
-| protecao | Proteção | Shield | Ambas |
-| penitencia | Penitência | Heart | Nova |
-| refeicao | Refeição | UtensilsCrossed | Ambas |
-| espirito_santo | Espírito Santo | Sparkles | Nova |
-| eucaristica | Eucarística | Church | Nova |
-| misericordia | Misericórdia | HeartHandshake | Nova |
-| familia | Família | Users | Antiga |
-| saude | Saúde | Heart | Antiga |
-| escola | Escola | GraduationCap | Antiga |
-| gratidao | Gratidão | Sparkles | Antiga |
-| amigos | Amigos | Heart | Antiga |
-| noite | Noite | Moon | Antiga |
-| manha | Manhã | Sun | Antiga |
+| Bucket | Política de INSERT | Status |
+|--------|-------------------|--------|
+| plataforma | Admins can upload | OK |
+| story-thumbnails | Admins can upload | OK |
+| avatars | Users can upload own | OK |
+| criativos | **NENHUMA** | ERRO |
 
 ---
 
-### Alterações Necessárias
+### Solução
 
-**1. Atualizar CategoryGrid.tsx**
+Criar 3 políticas RLS para o bucket `criativos`:
 
-Adicionar as categorias antigas de volta ao array, mantendo também as novas categorias tradicionais.
+1. **SELECT** - Permitir que qualquer pessoa visualize os arquivos (público)
+2. **INSERT** - Permitir que admins façam upload
+3. **DELETE** - Permitir que admins deletem arquivos
 
-**2. Atualizar PrayersManager.tsx**
+---
 
-Sincronizar o dropdown do admin para incluir todas as categorias.
+### SQL Migration
+
+```sql
+-- 1. Política de leitura pública
+CREATE POLICY "Anyone can view criativos files"
+  ON storage.objects FOR SELECT
+  USING (bucket_id = 'criativos');
+
+-- 2. Política de upload para admins
+CREATE POLICY "Admins can upload criativos files"
+  ON storage.objects FOR INSERT
+  WITH CHECK (
+    bucket_id = 'criativos' 
+    AND has_role(auth.uid(), 'admin')
+  );
+
+-- 3. Política de deleção para admins
+CREATE POLICY "Admins can delete criativos files"
+  ON storage.objects FOR DELETE
+  USING (
+    bucket_id = 'criativos' 
+    AND has_role(auth.uid(), 'admin')
+  );
+```
+
+---
+
+### Alterações
+
+| Tipo | Descrição |
+|------|-----------|
+| Database Migration | Adicionar 3 políticas RLS ao bucket `criativos` |
 
 ---
 
 ### Resultado Esperado
 
-- Todas as 49 orações visíveis (29 infantis + 20 tradicionais)
-- 15 categorias para filtrar
-- Botão favoritos funcionando para todas
-
+Após a migration:
+- Admins conseguirão fazer upload de ebooks, audiobooks e vídeos
+- Qualquer usuário poderá visualizar os arquivos
+- Apenas admins poderão deletar arquivos
