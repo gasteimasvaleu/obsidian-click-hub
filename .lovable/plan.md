@@ -1,186 +1,137 @@
 
 
-## Expansão Robusta do Livrinho de Orações
+## Preview de Vídeo YouTube no Formulário de Aulas
 
-### Diagnóstico Atual
-
-| Categoria | Qtd Atual | Tamanho Médio |
-|-----------|-----------|---------------|
-| Essencial | 3 | 327 chars |
-| Mariana | 8 | 402 chars |
-| Eucarística | 1 | 1077 chars |
-| Espírito Santo | 1 | 401 chars |
-| Misericórdia | 1 | 599 chars |
-| Proteção | 5 | 150 chars |
-| Penitência | 2 | 280 chars |
-| Refeição | 5 | 99 chars |
-| Família | 4 | 102 chars |
-| Amigos | 3 | 82 chars |
-| Escola | 4 | 91 chars |
-| Gratidão | 3 | 96 chars |
-| Manhã | 3 | 87 chars |
-| Noite | 3 | 86 chars |
-| Saúde | 3 | 87 chars |
-
-**Total atual: 49 orações**
+### Objetivo
+Adicionar um preview em tempo real do vídeo do YouTube no modal de inclusão/edição de aulas, permitindo que o administrador visualize o vídeo antes de salvar.
 
 ---
 
-### Plano de Expansão
+### Mudanças Planejadas
 
-#### 1. Novas Orações Tradicionais Completas
+**Arquivo:** `src/pages/admin/plataforma/LessonsManager.tsx`
 
-**Categoria Essencial (adicionar 5):**
-- Sinal da Cruz
-- Ato de Fé
-- Ato de Esperança
-- Ato de Caridade
-- Oração a São José
+1. **Criar função de extração de ID do YouTube**
+   - Reutilizar a lógica existente em `LessonPlayer.tsx`
+   - Detectar URLs do YouTube (youtube.com e youtu.be)
+   - Extrair o videoId para gerar o embed
 
-**Categoria Mariana (adicionar 4):**
-- Consagração a Nossa Senhora
-- Oração a Nossa Senhora Aparecida
-- Oração a Nossa Senhora de Fátima
-- Terço (instruções completas)
+2. **Adicionar componente de preview inline**
+   - Exibir iframe do YouTube abaixo do campo de URL
+   - Mostrar preview automaticamente quando URL válida é detectada
+   - Proporção 16:9 para manter consistência visual
 
-**Categoria Espírito Santo (adicionar 4):**
-- Sequência do Espírito Santo (Veni Sancte Spiritus)
-- Oração ao Espírito Santo de Santo Agostinho
-- Oração dos Sete Dons
-- Veni Creator Spiritus
-
-**Categoria Eucarística (adicionar 3):**
-- Oração de Santo Tomás antes da Comunhão
-- Oração após a Comunhão
-- Anima Christi
-
-**Categoria Misericórdia (adicionar 2):**
-- Oração a Jesus Misericordioso
-- Ladainha da Divina Misericórdia
-
-**Categoria Penitência (adicionar 2):**
-- Miserere (Salmo 50)
-- Confissão Geral
+3. **Melhorar validação visual**
+   - Indicador de URL válida/inválida
+   - Mensagem de erro para URLs inválidas
+   - Suporte também para Vimeo (bonus)
 
 ---
 
-#### 2. Expandir Orações Infantis (tornar mais completas)
+### Interface Proposta
 
-**Família (adicionar 4):**
-- Oração pela Unidade Familiar (completa)
-- Oração pelos Padrinhos
-- Oração para Resolver Conflitos
-- Bênção da Família
-
-**Amigos (adicionar 4):**
-- Oração pela Amizade Verdadeira
-- Oração por Amigos Distantes
-- Oração para Perdoar um Amigo
-- Oração de Gratidão pelos Amigos
-
-**Escola (adicionar 4):**
-- Oração pelo Ano Letivo
-- Oração nas Dificuldades de Aprendizado
-- Oração de Formatura/Encerramento
-- Oração pela Escola
-
-**Gratidão (adicionar 4):**
-- Oração de Ação de Graças Solene
-- Te Deum (versão simplificada)
-- Oração de Gratidão pela Vida
-- Oração pelos Dons Recebidos
-
-**Manhã (adicionar 3):**
-- Oferecimento do Dia Completo
-- Oração das Laudes (simplificada)
-- Consagração da Manhã
-
-**Noite (adicionar 3):**
-- Oração de Completas (simplificada)
-- Exame de Consciência Noturno
-- Oração de Entrega do Dia
-
-**Saúde (adicionar 4):**
-- Oração pelos Doentes
-- Oração a São Pio de Pietrelcina
-- Oração por Cura Interior
-- Oração pelos Médicos e Enfermeiros
-
----
-
-#### 3. Novas Categorias Sugeridas
-
-**Santos (nova categoria - 8 orações):**
-- Oração de São Francisco de Assis
-- Oração de Santo Inácio de Loyola
-- Oração de Santa Teresa de Ávila
-- Oração de São João Paulo II
-- Oração de Madre Teresa de Calcutá
-- Oração a São Miguel Arcanjo
-- Oração ao Anjo da Guarda (expandida)
-- Oração a São Judas Tadeu
-
-**Sacramentos (nova categoria - 5 orações):**
-- Preparação para Batismo
-- Preparação para Primeira Comunhão
-- Preparação para Crisma
-- Oração pelo Matrimônio
-- Oração pelos Sacerdotes
-
-**Vocação (nova categoria - 4 orações):**
-- Oração pela Minha Vocação
-- Oração pelas Vocações Sacerdotais
-- Oração pelas Vocações Religiosas
-- Oração pela Vocação Matrimonial
-
----
-
-### Resumo da Expansão
-
-| Tipo | Quantidade |
-|------|------------|
-| Orações atuais | 49 |
-| Novas orações tradicionais | +20 |
-| Orações infantis expandidas | +26 |
-| Novas categorias | +17 |
-| **Total Final** | **~112 orações** |
-
----
-
-### Implementação Técnica
-
-1. **Banco de Dados**
-   - Inserir novas orações na tabela `prayers` via SQL
-   - Adicionar novas categorias no array `categories` em `CategoryGrid.tsx`
-   - Adicionar novos ícones no `iconMap` para novas categorias
-
-2. **Novos Ícones para Categorias**
-   - Santos: `Crown` ou `Users`
-   - Sacramentos: `Droplets` ou `Cross`
-   - Vocação: `Compass` ou `Map`
-
-3. **Admin Manager**
-   - Atualizar lista de categorias em `PrayersManager.tsx`
+```text
+┌─────────────────────────────────────────────────┐
+│  URL do Vídeo (YouTube/Vimeo)                   │
+│  ┌─────────────────────────────────────────────┐│
+│  │ https://youtube.com/watch?v=abc123         ││
+│  └─────────────────────────────────────────────┘│
+│  ✓ Vídeo detectado                              │
+│  ┌─────────────────────────────────────────────┐│
+│  │                                             ││
+│  │         [YouTube Player Embed]              ││
+│  │                                             ││
+│  └─────────────────────────────────────────────┘│
+└─────────────────────────────────────────────────┘
+```
 
 ---
 
 ### Detalhes Técnicos
 
-**Arquivos a modificar:**
-- `src/components/oracoes/CategoryGrid.tsx` - adicionar novas categorias
-- `src/pages/admin/PrayersManager.tsx` - adicionar novas categorias no select
-- Banco de dados - inserir ~63 novas orações via SQL
+**Funções auxiliares a adicionar:**
 
-**Estrutura de cada oração:**
-```sql
-INSERT INTO prayers (title, content, category, icon_name, display_order, available)
-VALUES (
-  'Título da Oração',
-  'Texto completo da oração com formatação...',
-  'categoria',
-  'nome-do-icone',
-  ordem,
-  true
-);
+```typescript
+const extractVideoId = (url: string) => {
+  // YouTube
+  const ytMatch = url.match(
+    /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/
+  );
+  if (ytMatch) return { type: "youtube", id: ytMatch[1] };
+
+  // Vimeo
+  const vimeoMatch = url.match(/vimeo\.com\/(\d+)/);
+  if (vimeoMatch) return { type: "vimeo", id: vimeoMatch[1] };
+
+  return null;
+};
+
+const getEmbedUrl = (videoInfo: { type: string; id: string }) => {
+  if (videoInfo.type === "youtube") {
+    return `https://www.youtube.com/embed/${videoInfo.id}`;
+  }
+  if (videoInfo.type === "vimeo") {
+    return `https://player.vimeo.com/video/${videoInfo.id}`;
+  }
+  return null;
+};
 ```
+
+**Componente de preview (inline no formulário):**
+
+```tsx
+{formData.video_source === "external" && (
+  <div className="space-y-3">
+    <Label>URL do Vídeo (YouTube/Vimeo)</Label>
+    <Input
+      placeholder="https://youtube.com/watch?v=..."
+      value={formData.video_url || ""}
+      onChange={(e) =>
+        setFormData({ ...formData, video_url: e.target.value })
+      }
+    />
+    
+    {/* Preview */}
+    {videoInfo && (
+      <div className="space-y-2">
+        <div className="flex items-center gap-2 text-sm text-green-600">
+          <Check className="h-4 w-4" />
+          Vídeo {videoInfo.type === "youtube" ? "YouTube" : "Vimeo"} detectado
+        </div>
+        <AspectRatio ratio={16 / 9} className="bg-black rounded-lg overflow-hidden">
+          <iframe
+            src={getEmbedUrl(videoInfo)}
+            className="w-full h-full"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media"
+            allowFullScreen
+          />
+        </AspectRatio>
+      </div>
+    )}
+    
+    {formData.video_url && !videoInfo && (
+      <p className="text-sm text-destructive">
+        URL não reconhecida. Use links do YouTube ou Vimeo.
+      </p>
+    )}
+  </div>
+)}
+```
+
+---
+
+### Imports Necessários
+
+Adicionar ao arquivo:
+- `Check` do lucide-react (para indicador de sucesso)
+- `AspectRatio` de `@/components/ui/aspect-ratio`
+
+---
+
+### Benefícios
+
+- Feedback visual imediato antes de salvar
+- Validação de URL em tempo real
+- Confirmação de que o vídeo correto foi selecionado
+- Experiência de administração mais intuitiva
 
