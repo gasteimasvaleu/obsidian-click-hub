@@ -3,14 +3,12 @@ import { GlassCard } from "@/components/GlassCard";
 import { FuturisticNavbar } from "@/components/FuturisticNavbar";
 import { Users, Palette, BookOpen, MessageCircle, Gamepad2, UserCircle, Package, Book, Heart } from "lucide-react";
 import { useState, useEffect } from "react";
-import { RedirectModal } from "@/components/RedirectModal";
 import { PWAInstallModal } from "@/components/PWAInstallModal";
 import { usePWAInstall } from "@/hooks/usePWAInstall";
 // Cache refresh fix
 
 const Index = () => {
   const navigate = useNavigate();
-  const [showRedirectModal, setShowRedirectModal] = useState(false);
   const [showPWAModal, setShowPWAModal] = useState(false);
   const { isInstallable, shouldShowModal, installPWA, markModalAsSeen } = usePWAInstall();
 
@@ -51,7 +49,7 @@ const Index = () => {
   const mainAction = {
     title: "Acessar Plataforma",
     icon: Package,
-    action: () => setShowRedirectModal(true),
+    action: () => navigate('/plataforma'),
     gradient: "from-pink-500 to-purple-500"
   };
 
@@ -169,13 +167,6 @@ const Index = () => {
         </div>
       </div>
       
-      <RedirectModal
-        isOpen={showRedirectModal}
-        onClose={() => setShowRedirectModal(false)}
-        targetUrl="https://bibliatoonkids.themembers.com.br/login"
-        title="Biblia Toon Kids"
-      />
-
       {/* PWA Install Modal */}
       <PWAInstallModal 
         isOpen={showPWAModal}
