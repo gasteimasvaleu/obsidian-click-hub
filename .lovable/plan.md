@@ -1,40 +1,173 @@
 
 
-## Adicionar FuturisticNavbar na página /plataforma
+## Criar PlataformaLayout Wrapper
 
-### Contexto
-A página `/plataforma` atualmente não exibe a navbar superior (FuturisticNavbar) que mostra o logo "BíbliaToonKIDS" e os ícones de perfil/login/sobre. O menu inferior (tubelight-navbar) já está presente globalmente.
+### Objetivo
+Criar um componente wrapper `PlataformaLayout` que centraliza a navbar superior e os paddings corretos, eliminando repetição de código nas páginas da plataforma.
 
-### Mudança Necessária
+---
 
-**Arquivo:** `src/pages/plataforma/PlataformaPage.tsx`
+### Arquivos a Criar
 
-### 1. Importar o componente FuturisticNavbar
+#### 1. `src/components/plataforma/PlataformaLayout.tsx`
 
 ```tsx
 import { FuturisticNavbar } from "@/components/FuturisticNavbar";
+
+interface PlataformaLayoutProps {
+  children: React.ReactNode;
+}
+
+export function PlataformaLayout({ children }: PlataformaLayoutProps) {
+  return (
+    <div className="min-h-screen pb-24 pt-16">
+      <FuturisticNavbar />
+      {children}
+    </div>
+  );
+}
 ```
 
-### 2. Adicionar a navbar no JSX
+---
 
-Adicionar o componente `<FuturisticNavbar />` no início do conteúdo da página, e ajustar o padding-top para acomodar a navbar fixa.
+### Arquivos a Modificar
 
-### 3. Ajustar o layout
+#### 2. `src/pages/plataforma/PlataformaPage.tsx`
 
-Como a navbar é `fixed top-0`, o conteúdo da página precisa de um `pt-16` (ou similar) para não ficar escondido atrás dela.
+**Mudanças:**
+- Remover import do `FuturisticNavbar`
+- Adicionar import do `PlataformaLayout`
+- Substituir a div wrapper pelo `PlataformaLayout`
+- Remover a chamada `<FuturisticNavbar />` do JSX
 
-**Container principal de:**
+**De:**
 ```tsx
-<div className="min-h-screen pb-24">
+import { FuturisticNavbar } from "@/components/FuturisticNavbar";
+// ...
+return (
+  <div className="min-h-screen pb-24 pt-16">
+    <FuturisticNavbar />
+    {/* conteúdo */}
+  </div>
+);
 ```
 
 **Para:**
 ```tsx
-<div className="min-h-screen pb-24 pt-16">
+import { PlataformaLayout } from "@/components/plataforma/PlataformaLayout";
+// ...
+return (
+  <PlataformaLayout>
+    {/* conteúdo */}
+  </PlataformaLayout>
+);
 ```
 
-### Resultado
-- A navbar superior com o logo e ícones de perfil/login/sobre aparecerá na página /plataforma
-- O hero banner e conteúdo ficarão corretamente posicionados abaixo da navbar
-- Consistência visual com as outras páginas do app
+---
+
+#### 3. `src/pages/plataforma/CoursePage.tsx`
+
+**Mudanças:**
+- Adicionar import do `PlataformaLayout`
+- Envolver o conteúdo principal com `PlataformaLayout`
+- Ajustar os estados de loading e erro para também usar o layout
+
+**De:**
+```tsx
+return (
+  <div className="min-h-screen pb-24">
+    {/* Hero Banner e conteúdo */}
+  </div>
+);
+```
+
+**Para:**
+```tsx
+import { PlataformaLayout } from "@/components/plataforma/PlataformaLayout";
+// ...
+return (
+  <PlataformaLayout>
+    {/* Hero Banner e conteúdo */}
+  </PlataformaLayout>
+);
+```
+
+---
+
+#### 4. `src/pages/plataforma/ModulePage.tsx`
+
+**Mudanças:**
+- Adicionar import do `PlataformaLayout`
+- Envolver o conteúdo principal com `PlataformaLayout`
+- Ajustar os estados de loading e erro para também usar o layout
+
+**De:**
+```tsx
+return (
+  <div className="min-h-screen pb-24">
+    {/* Hero Banner e conteúdo */}
+  </div>
+);
+```
+
+**Para:**
+```tsx
+import { PlataformaLayout } from "@/components/plataforma/PlataformaLayout";
+// ...
+return (
+  <PlataformaLayout>
+    {/* Hero Banner e conteúdo */}
+  </PlataformaLayout>
+);
+```
+
+---
+
+#### 5. `src/pages/plataforma/LessonPage.tsx`
+
+**Mudanças:**
+- Adicionar import do `PlataformaLayout`
+- Envolver o conteúdo principal com `PlataformaLayout`
+- Ajustar os estados de loading e erro para também usar o layout
+
+**De:**
+```tsx
+return (
+  <div className="min-h-screen pb-24">
+    {/* Conteúdo da aula */}
+  </div>
+);
+```
+
+**Para:**
+```tsx
+import { PlataformaLayout } from "@/components/plataforma/PlataformaLayout";
+// ...
+return (
+  <PlataformaLayout>
+    {/* Conteúdo da aula */}
+  </PlataformaLayout>
+);
+```
+
+---
+
+### Resumo das Alterações
+
+| Arquivo | Ação |
+|---------|------|
+| `src/components/plataforma/PlataformaLayout.tsx` | Criar novo |
+| `src/pages/plataforma/PlataformaPage.tsx` | Refatorar para usar PlataformaLayout |
+| `src/pages/plataforma/CoursePage.tsx` | Adicionar PlataformaLayout |
+| `src/pages/plataforma/ModulePage.tsx` | Adicionar PlataformaLayout |
+| `src/pages/plataforma/LessonPage.tsx` | Adicionar PlataformaLayout |
+
+---
+
+### Benefícios
+
+- **DRY (Don't Repeat Yourself):** Remove a duplicação de código de layout em 4 páginas
+- **Manutenção Simplificada:** Alterações futuras na navbar ou paddings são feitas em um único lugar
+- **Consistência Visual:** Garante que todas as páginas da plataforma tenham a mesma estrutura
+- **Escalabilidade:** Facilita a adição de novas páginas da plataforma no futuro
 
