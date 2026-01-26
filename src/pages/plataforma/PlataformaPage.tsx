@@ -37,6 +37,16 @@ interface PlatformSettings {
   carousel_description: string;
 }
 
+interface PlatformCarousel {
+  id: string;
+  course_id: string;
+  title: string | null;
+  description: string | null;
+  display_order: number;
+  available: boolean;
+  course: Course | null;
+}
+
 export default function PlataformaPage() {
   const { data: settings, isLoading: loadingSettings } = useQuery({
     queryKey: ["platform_settings"],
@@ -78,7 +88,23 @@ export default function PlataformaPage() {
     },
   });
 
-  const isLoading = loadingSettings || loadingCourses || loadingModules;
+  const { data: carousels, isLoading: loadingCarousels } = useQuery({
+    queryKey: ["platform_carousels"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("platform_carousels")
+        .select(`
+          *,
+          course:courses(id, title, description, thumbnail, banner_desktop, banner_mobile, display_order)
+        `)
+        .eq("available", true)
+        .order("display_order");
+      if (error) throw error;
+      return data as PlatformCarousel[];
+    },
+  });
+
+  const isLoading = loadingSettings || loadingCourses || loadingModules || loadingCarousels;
 
   // Group modules by course
   const modulesByCourse = modules?.reduce((acc, module) => {
@@ -148,16 +174,16 @@ export default function PlataformaPage() {
           className="px-4"
         />
 
-        {/* Modules for each course */}
-        {courses.map((course) => {
-          const courseModules = modulesByCourse?.[course.id] || [];
+        {/* Custom Carousels - Modules from selected courses */}
+        {carousels?.map((carousel) => {
+          const courseModules = modulesByCourse?.[carousel.course_id] || [];
           if (courseModules.length === 0) return null;
 
           return (
             <CourseCarousel
-              key={course.id}
-              title={course.title}
-              description={course.description}
+              key={carousel.id}
+              title={carousel.title || carousel.course?.title || ""}
+              description={carousel.description || carousel.course?.description || ""}
               items={courseModules.map((module) => ({
                 id: module.id,
                 title: module.title,
