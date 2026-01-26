@@ -47,7 +47,7 @@ const Index = () => {
 
   // Card principal
   const mainAction = {
-    title: "Acessar Plataforma",
+    title: "Acessar Cursos",
     icon: Package,
     action: () => navigate('/plataforma'),
     gradient: "from-pink-500 to-purple-500"
