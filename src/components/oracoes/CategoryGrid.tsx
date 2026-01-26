@@ -1,4 +1,4 @@
-import { BookOpen, Star, Shield, Heart, UtensilsCrossed, Sparkles, Church, HeartHandshake, Users, GraduationCap, Moon, Sun, LucideIcon } from "lucide-react";
+import { BookOpen, Star, Shield, Heart, UtensilsCrossed, Sparkles, Church, HeartHandshake, Users, GraduationCap, Moon, Sun, Crown, Droplets, Compass, LucideIcon } from "lucide-react";
 import { GlassCard } from "@/components/GlassCard";
 
 export interface Category {
@@ -7,24 +7,28 @@ export interface Category {
   icon: string;
 }
 
-const categories: Category[] = [
-  // Novas categorias tradicionais
+export const categories: Category[] = [
+  // Orações tradicionais
   { id: "essencial", name: "Essencial", icon: "book-open" },
   { id: "mariana", name: "Maria", icon: "star" },
-  { id: "protecao", name: "Proteção", icon: "shield" },
-  { id: "penitencia", name: "Penitência", icon: "heart" },
-  { id: "refeicao", name: "Refeição", icon: "utensils-crossed" },
   { id: "espirito_santo", name: "Espírito Santo", icon: "sparkles" },
   { id: "eucaristica", name: "Eucarística", icon: "church" },
   { id: "misericordia", name: "Misericórdia", icon: "heart-handshake" },
-  // Categorias infantis antigas
+  { id: "penitencia", name: "Penitência", icon: "heart" },
+  { id: "santos", name: "Santos", icon: "crown" },
+  { id: "sacramentos", name: "Sacramentos", icon: "droplets" },
+  { id: "vocacao", name: "Vocação", icon: "compass" },
+  // Orações do dia a dia
+  { id: "protecao", name: "Proteção", icon: "shield" },
+  { id: "refeicao", name: "Refeição", icon: "utensils-crossed" },
+  { id: "manha", name: "Manhã", icon: "sun" },
+  { id: "noite", name: "Noite", icon: "moon" },
+  // Orações infantis
   { id: "familia", name: "Família", icon: "users" },
-  { id: "saude", name: "Saúde", icon: "heart" },
+  { id: "amigos", name: "Amigos", icon: "heart" },
   { id: "escola", name: "Escola", icon: "graduation-cap" },
   { id: "gratidao", name: "Gratidão", icon: "sparkles" },
-  { id: "amigos", name: "Amigos", icon: "heart" },
-  { id: "noite", name: "Noite", icon: "moon" },
-  { id: "manha", name: "Manhã", icon: "sun" },
+  { id: "saude", name: "Saúde", icon: "heart" },
 ];
 
 const iconMap: Record<string, LucideIcon> = {
@@ -40,6 +44,9 @@ const iconMap: Record<string, LucideIcon> = {
   "graduation-cap": GraduationCap,
   "moon": Moon,
   "sun": Sun,
+  "crown": Crown,
+  "droplets": Droplets,
+  "compass": Compass,
 };
 
 interface CategoryGridProps {
@@ -114,5 +121,3 @@ export const CategoryGrid = ({
     </div>
   );
 };
-
-export { categories };
