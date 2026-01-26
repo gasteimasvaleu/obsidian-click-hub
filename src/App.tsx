@@ -59,10 +59,15 @@ const navItems = [
 ];
 
 const App = () => {
-  const [isLoading, setIsLoading] = useState(true);
+  // Check if splash was already shown in this session
+  const [isLoading, setIsLoading] = useState(() => {
+    const splashShown = sessionStorage.getItem('splashShown');
+    return !splashShown;
+  });
 
   const handleSplashComplete = () => {
     console.log("Splash completed, setting isLoading to false");
+    sessionStorage.setItem('splashShown', 'true');
     setIsLoading(false);
   };
 
