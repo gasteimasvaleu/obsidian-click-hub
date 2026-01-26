@@ -15,45 +15,74 @@ export default defineConfig(({ mode }) => ({
     mode === "development" && componentTagger(),
     VitePWA({
       registerType: 'autoUpdate',
-      workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,jpg,jpeg,webp,woff,woff2}'],
-        maximumFileSizeToCacheInBytes: 4 * 1024 * 1024, // 4 MB
-        cleanupOutdatedCaches: true,
-        skipWaiting: true,
-        clientsClaim: true,
-        // Exclude video files from SW interception - let browser handle them directly
-        // This prevents iOS fullscreen exit issues caused by range request problems
-        navigateFallbackDenylist: [/\.(?:mp4|webm|ogg|mov)$/i],
-        runtimeCaching: [
-          {
-            urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'google-fonts-cache',
-              expiration: {
-                maxEntries: 10,
-                maxAgeSeconds: 60 * 60 * 24 * 365
-              },
-              cacheableResponse: {
-                statuses: [0, 200]
-              }
-            }
+  workbox: {
+    globPatterns: ['**/*.{js,css,html,ico,png,svg,jpg,jpeg,webp,woff,woff2}'],
+    maximumFileSizeToCacheInBytes: 4 * 1024 * 1024, // 4 MB
+    cleanupOutdatedCaches: true,
+    skipWaiting: true,
+    clientsClaim: true,
+    runtimeCaching: [
+      {
+        urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
+        handler: 'CacheFirst',
+        options: {
+          cacheName: 'google-fonts-cache',
+          expiration: {
+            maxEntries: 10,
+            maxAgeSeconds: 60 * 60 * 24 * 365
           },
-          // Supabase API cache - exclude video storage URLs
-          {
-            urlPattern: /^https:\/\/.*\.supabase\.co\/(?!storage\/.*\.(?:mp4|webm|ogg|mov)).*/i,
-            handler: 'NetworkFirst',
-            options: {
-              cacheName: 'supabase-api-cache',
-              networkTimeoutSeconds: 10,
-              expiration: {
-                maxEntries: 50,
-                maxAgeSeconds: 60 * 5
-              }
-            }
+          cacheableResponse: {
+            statuses: [0, 200]
           }
-        ]
+        }
       },
+      // Cache para vídeos locais com Range Requests
+      {
+        urlPattern: /\.(?:mp4|webm|ogg|mov)$/i,
+        handler: 'CacheFirst',
+        options: {
+          cacheName: 'video-cache',
+          rangeRequests: true,
+          expiration: {
+            maxEntries: 20,
+            maxAgeSeconds: 60 * 60 * 24 * 7 // 7 dias
+          },
+          cacheableResponse: {
+            statuses: [200]
+          }
+        }
+      },
+      // Cache para vídeos do Supabase Storage com Range Requests
+      {
+        urlPattern: /^https:\/\/.*\.supabase\.co\/storage\/.*\.(?:mp4|webm|ogg|mov)/i,
+        handler: 'CacheFirst',
+        options: {
+          cacheName: 'supabase-video-cache',
+          rangeRequests: true,
+          expiration: {
+            maxEntries: 30,
+            maxAgeSeconds: 60 * 60 * 24 * 7 // 7 dias
+          },
+          cacheableResponse: {
+            statuses: [200]
+          }
+        }
+      },
+      // Supabase API cache (excluindo storage)
+      {
+        urlPattern: /^https:\/\/.*\.supabase\.co\/(?!storage\/).*/i,
+        handler: 'NetworkFirst',
+        options: {
+          cacheName: 'supabase-api-cache',
+          networkTimeoutSeconds: 10,
+          expiration: {
+            maxEntries: 50,
+            maxAgeSeconds: 60 * 5
+          }
+        }
+      }
+    ]
+  },
       includeAssets: ['pwa-192x192.png', 'pwa-512x512.png', 'favicon.ico'],
       manifest: {
         name: 'BíbliaToonKIDS',
