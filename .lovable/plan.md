@@ -1,114 +1,61 @@
 
 
+## Corrigir Orações Antigas que "Sumiram"
 
-## Importar 20 Orações Católicas Tradicionais do GitHub
+### Diagnóstico
 
-### Fonte dos Dados
+As orações antigas **NÃO foram deletadas** - ainda estão no banco de dados. O problema é que o `CategoryGrid.tsx` foi atualizado com **novas categorias** (`essencial`, `mariana`, `protecao`...), mas as orações antigas usam **categorias diferentes** (`familia`, `saude`, `escola`...).
 
-**Repositório:** Augusto240/catholic_prayers_api  
-**Licença:** MIT (livre para uso)
+### Estado Atual do Banco
 
----
-
-### Orações a Serem Importadas
-
-| # | Título | Categoria Original | Categoria Mapeada |
-|---|--------|-------------------|-------------------|
-| 1 | Ave Maria | mariana | mariana |
-| 2 | Pai Nosso | essencial | essencial |
-| 3 | Credo | essencial | essencial |
-| 4 | Glória | essencial | essencial |
-| 5 | Salve Rainha | mariana | mariana |
-| 6 | Santo Anjo | proteção | protecao |
-| 7 | Ato de Contrição | penitência | penitencia |
-| 8 | Magnificat | mariana | mariana |
-| 9 | Memorare (Lembrai-vos) | mariana | mariana |
-| 10 | Angelus | mariana | mariana |
-| 11 | Regina Coeli | mariana | mariana |
-| 12 | Oração a São Miguel Arcanjo | proteção | protecao |
-| 13 | Confiteor (Confesso) | penitência | penitencia |
-| 14 | Oração Antes da Refeição | cotidiano | refeicao |
-| 15 | Oração Depois da Refeição | cotidiano | refeicao |
-| 16 | Sub Tuum Praesidium | mariana | mariana |
-| 17 | Veni Sancte Spiritus | espírito_santo | espirito_santo |
-| 18 | Oração de Fátima | mariana | mariana |
-| 19 | Adoro Te Devote | eucarística | eucaristica |
-| 20 | Terço da Divina Misericórdia | divina_misericórdia | misericordia |
+| Tipo | Quantidade | Categorias | Data |
+|------|------------|------------|------|
+| Orações Infantis (antigas) | 29 | familia, saude, escola, gratidao, amigos, noite, manha, refeicao | 11:36:17 |
+| Orações Tradicionais (novas) | 20 | essencial, mariana, protecao, penitencia, refeicao, espirito_santo, eucaristica, misericordia | 11:49:25 |
 
 ---
 
-### Novas Categorias
+### Solução Proposta: Combinar Todas as Categorias
 
-| Categoria | Nome Exibido | Ícone | Qtd Orações |
-|-----------|--------------|-------|-------------|
-| essencial | Essencial | BookOpen | 3 |
-| mariana | Maria | Star | 9 |
-| protecao | Proteção | Shield | 2 |
-| penitencia | Penitência | Heart | 2 |
-| refeicao | Refeição | UtensilsCrossed | 2 |
-| espirito_santo | Espírito Santo | Sparkles | 1 |
-| eucaristica | Eucarística | Church | 1 |
-| misericordia | Misericórdia | HeartHandshake | 1 |
+Vou atualizar o `CategoryGrid.tsx` para incluir **todas as categorias** (antigas + novas), permitindo que o usuário veja tanto as orações infantis quanto as tradicionais.
 
----
+#### Categorias Combinadas (15 no total)
 
-### Alterações a Serem Feitas
-
-**1. Migration SQL (inserir orações)**
-
-Vou usar a ferramenta de insert para adicionar as 20 orações ao banco:
-- Remover orações de exemplo anteriores (opcionalmente mantê-las)
-- Inserir as 20 orações tradicionais com categorias mapeadas
-
-**2. Atualizar CategoryGrid.tsx**
-
-Substituir as categorias atuais (familia, saude, escola, etc.) pelas novas:
-
-```typescript
-const categories: Category[] = [
-  { id: "essencial", name: "Essencial", icon: "book-open" },
-  { id: "mariana", name: "Maria", icon: "star" },
-  { id: "protecao", name: "Proteção", icon: "shield" },
-  { id: "penitencia", name: "Penitência", icon: "heart" },
-  { id: "refeicao", name: "Refeição", icon: "utensils-crossed" },
-  { id: "espirito_santo", name: "Espírito Santo", icon: "sparkles" },
-  { id: "eucaristica", name: "Eucarística", icon: "church" },
-  { id: "misericordia", name: "Misericórdia", icon: "heart-handshake" },
-];
-
-const iconMap: Record<string, LucideIcon> = {
-  "book-open": BookOpen,
-  "star": Star,
-  "shield": Shield,
-  "heart": Heart,
-  "sparkles": Sparkles,
-  "heart-handshake": HeartHandshake,
-  "utensils-crossed": UtensilsCrossed,
-  "church": Church,
-};
-```
-
-**3. Atualizar PrayersManager.tsx (Admin)**
-
-Atualizar o dropdown de categorias com as mesmas 8 categorias novas.
+| ID | Nome | Ícone | Tipo |
+|----|------|-------|------|
+| essencial | Essencial | BookOpen | Nova |
+| mariana | Maria | Star | Nova |
+| protecao | Proteção | Shield | Ambas |
+| penitencia | Penitência | Heart | Nova |
+| refeicao | Refeição | UtensilsCrossed | Ambas |
+| espirito_santo | Espírito Santo | Sparkles | Nova |
+| eucaristica | Eucarística | Church | Nova |
+| misericordia | Misericórdia | HeartHandshake | Nova |
+| familia | Família | Users | Antiga |
+| saude | Saúde | Heart | Antiga |
+| escola | Escola | GraduationCap | Antiga |
+| gratidao | Gratidão | Sparkles | Antiga |
+| amigos | Amigos | Heart | Antiga |
+| noite | Noite | Moon | Antiga |
+| manha | Manhã | Sun | Antiga |
 
 ---
 
-### Resumo das Alterações
+### Alterações Necessárias
 
-| Arquivo | Ação | Descrição |
-|---------|------|-----------|
-| Banco de dados | INSERT | 20 orações tradicionais católicas |
-| `src/components/oracoes/CategoryGrid.tsx` | Editar | Novas 8 categorias com ícones |
-| `src/pages/admin/PrayersManager.tsx` | Editar | Atualizar dropdown de categorias |
+**1. Atualizar CategoryGrid.tsx**
+
+Adicionar as categorias antigas de volta ao array, mantendo também as novas categorias tradicionais.
+
+**2. Atualizar PrayersManager.tsx**
+
+Sincronizar o dropdown do admin para incluir todas as categorias.
 
 ---
 
-### Resultado Final
+### Resultado Esperado
 
-Após a implementação, a página de Orações terá:
-- 8 categorias organizadas (Essencial, Maria, Proteção, Penitência, Refeição, Espírito Santo, Eucarística, Misericórdia)
-- 20 orações tradicionais católicas importadas do repositório
-- Botão de favoritos funcionando
-- Admin consegue gerenciar todas as orações
+- Todas as 49 orações visíveis (29 infantis + 20 tradicionais)
+- 15 categorias para filtrar
+- Botão favoritos funcionando para todas
 
