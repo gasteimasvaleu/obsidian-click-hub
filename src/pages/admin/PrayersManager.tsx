@@ -43,27 +43,25 @@ interface Prayer {
 }
 
 const categories = [
-  { id: "familia", name: "Família" },
-  { id: "saude", name: "Saúde" },
+  { id: "essencial", name: "Essencial" },
+  { id: "mariana", name: "Maria" },
   { id: "protecao", name: "Proteção" },
-  { id: "escola", name: "Escola" },
-  { id: "gratidao", name: "Gratidão" },
-  { id: "amigos", name: "Amigos" },
-  { id: "noite", name: "Noite" },
-  { id: "manha", name: "Manhã" },
+  { id: "penitencia", name: "Penitência" },
   { id: "refeicao", name: "Refeição" },
+  { id: "espirito_santo", name: "Espírito Santo" },
+  { id: "eucaristica", name: "Eucarística" },
+  { id: "misericordia", name: "Misericórdia" },
 ];
 
 const icons = [
-  { id: "users", name: "Família (Users)" },
-  { id: "heart", name: "Coração (Heart)" },
+  { id: "book-open", name: "Livro (BookOpen)" },
+  { id: "star", name: "Estrela (Star)" },
   { id: "shield", name: "Escudo (Shield)" },
-  { id: "graduation-cap", name: "Escola (GraduationCap)" },
-  { id: "sparkles", name: "Brilhos (Sparkles)" },
-  { id: "heart-handshake", name: "Amizade (HeartHandshake)" },
-  { id: "moon", name: "Lua (Moon)" },
-  { id: "sun", name: "Sol (Sun)" },
+  { id: "heart", name: "Coração (Heart)" },
   { id: "utensils-crossed", name: "Talheres (UtensilsCrossed)" },
+  { id: "sparkles", name: "Brilhos (Sparkles)" },
+  { id: "church", name: "Igreja (Church)" },
+  { id: "heart-handshake", name: "Misericórdia (HeartHandshake)" },
 ];
 
 const PrayersManager = () => {
@@ -72,8 +70,8 @@ const PrayersManager = () => {
   const [formData, setFormData] = useState({
     title: "",
     content: "",
-    category: "familia",
-    icon_name: "heart",
+    category: "essencial",
+    icon_name: "book-open",
     display_order: 0,
     available: true,
   });
@@ -167,8 +165,8 @@ const PrayersManager = () => {
       setFormData({
         title: "",
         content: "",
-        category: "familia",
-        icon_name: "heart",
+        category: "essencial",
+        icon_name: "book-open",
         display_order: 0,
         available: true,
       });
