@@ -1,4 +1,4 @@
-import { BookOpen, Star, Shield, Heart, UtensilsCrossed, Sparkles, Church, HeartHandshake, LucideIcon } from "lucide-react";
+import { BookOpen, Star, Shield, Heart, UtensilsCrossed, Sparkles, Church, HeartHandshake, Users, GraduationCap, Moon, Sun, LucideIcon } from "lucide-react";
 import { GlassCard } from "@/components/GlassCard";
 
 export interface Category {
@@ -8,6 +8,7 @@ export interface Category {
 }
 
 const categories: Category[] = [
+  // Novas categorias tradicionais
   { id: "essencial", name: "Essencial", icon: "book-open" },
   { id: "mariana", name: "Maria", icon: "star" },
   { id: "protecao", name: "Proteção", icon: "shield" },
@@ -16,6 +17,14 @@ const categories: Category[] = [
   { id: "espirito_santo", name: "Espírito Santo", icon: "sparkles" },
   { id: "eucaristica", name: "Eucarística", icon: "church" },
   { id: "misericordia", name: "Misericórdia", icon: "heart-handshake" },
+  // Categorias infantis antigas
+  { id: "familia", name: "Família", icon: "users" },
+  { id: "saude", name: "Saúde", icon: "heart" },
+  { id: "escola", name: "Escola", icon: "graduation-cap" },
+  { id: "gratidao", name: "Gratidão", icon: "sparkles" },
+  { id: "amigos", name: "Amigos", icon: "heart" },
+  { id: "noite", name: "Noite", icon: "moon" },
+  { id: "manha", name: "Manhã", icon: "sun" },
 ];
 
 const iconMap: Record<string, LucideIcon> = {
@@ -27,6 +36,10 @@ const iconMap: Record<string, LucideIcon> = {
   "sparkles": Sparkles,
   "church": Church,
   "heart-handshake": HeartHandshake,
+  "users": Users,
+  "graduation-cap": GraduationCap,
+  "moon": Moon,
+  "sun": Sun,
 };
 
 interface CategoryGridProps {
