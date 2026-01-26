@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Trophy, Star, Target, Activity, LogOut, Camera, BookOpen, StickyNote } from 'lucide-react';
+import { Trophy, Star, Target, Activity, LogOut, Camera, BookOpen, StickyNote, Music } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { AvatarUpload } from '@/components/profile/AvatarUpload';
@@ -153,13 +153,13 @@ const Profile = () => {
           <Card className="glass border-primary/20">
             <CardHeader className="pb-3">
               <CardTitle className="text-lg flex items-center gap-2">
-                <Activity className="w-5 h-5 text-primary" />
-                E-books
+                <Music className="w-5 h-5 text-primary" />
+                Músicas
               </CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-3xl font-bold text-primary">{progress.ebooks_read}</p>
-              <p className="text-sm text-muted-foreground">e-books lidos</p>
+              <p className="text-sm text-muted-foreground">músicas ouvidas</p>
             </CardContent>
           </Card>
 
@@ -292,8 +292,8 @@ const getBadgeName = (badgeType: string): string => {
     first_game: 'Primeiro Jogo',
     games_5: '5 Jogos',
     games_10: '10 Jogos',
-    first_ebook: 'Primeiro E-book',
-    ebooks_5: '5 E-books',
+    first_ebook: 'Primeira Música',
+    ebooks_5: '5 Músicas',
     level_5: 'Nível 5',
     level_10: 'Nível 10',
   };
@@ -303,7 +303,8 @@ const getBadgeName = (badgeType: string): string => {
 const getActivityTypeName = (type: string): string => {
   const names: { [key: string]: string } = {
     game_completed: 'Jogo completado',
-    ebook_read: 'E-book lido',
+    ebook_read: 'Música ouvida',
+    music_listened: 'Música ouvida',
     coloring_completed: 'Colorir completado',
   };
   return names[type] || type;

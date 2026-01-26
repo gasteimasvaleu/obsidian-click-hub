@@ -128,7 +128,7 @@ export const useUserProgress = () => {
 
     if (activityType === 'game_completed') {
       updates.games_completed = progress.games_completed + 1;
-    } else if (activityType === 'ebook_read') {
+    } else if (activityType === 'ebook_read' || activityType === 'music_listened') {
       updates.ebooks_read = progress.ebooks_read + 1;
     } else if (activityType === 'coloring_completed') {
       updates.coloring_completed = progress.coloring_completed + 1;
@@ -224,8 +224,8 @@ const getBadgeName = (badgeType: string): string => {
     first_game: 'Primeiro Jogo',
     games_5: '5 Jogos Completos',
     games_10: '10 Jogos Completos',
-    first_ebook: 'Primeiro E-book',
-    ebooks_5: '5 E-books Lidos',
+    first_ebook: 'Primeira Música',
+    ebooks_5: '5 Músicas Ouvidas',
     level_5: 'Nível 5',
     level_10: 'Nível 10',
   };

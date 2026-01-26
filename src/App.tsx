@@ -4,13 +4,13 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Home, Package, BookOpen, Heart, Gamepad2, Users, MessageCircle, GraduationCap, BookHeart } from "lucide-react";
+import { Home, Package, BookOpen, Heart, Gamepad2, Users, MessageCircle, GraduationCap, BookHeart, Music } from "lucide-react";
 import { NavBar } from "@/components/ui/tubelight-navbar";
 import { SplashScreen } from "./components/SplashScreen";
 import { AuthProvider } from "./contexts/AuthContext";
 import Index from "./pages/Index";
 import Oracoes from "./pages/Oracoes";
-import Ebooks from "./pages/Ebooks";
+import Audiofy from "./pages/Audiofy";
 import AmigoDivino from "./pages/AmigoDivino";
 import Sobre from "./pages/Sobre";
 import Games from "./pages/Games";
@@ -53,7 +53,7 @@ const queryClient = new QueryClient();
 const navItems = [
   { name: 'Início', url: '/', icon: Home },
   { name: 'Orações', url: '/oracoes', icon: BookHeart },
-  { name: 'Mídia', url: '/ebooks', icon: BookOpen },
+  { name: 'Audiofy', url: '/audiofy', icon: Music },
   { name: 'Cursos', url: '/plataforma', icon: GraduationCap },
   { name: 'Guia', url: '/guia-pais', icon: Users },
   { name: 'Games', url: '/games', icon: Gamepad2 }
@@ -96,7 +96,7 @@ const App = () => {
             <Routes>
               <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
               <Route path="/oracoes" element={<ProtectedRoute><Oracoes /></ProtectedRoute>} />
-              <Route path="/ebooks" element={<ProtectedRoute><Ebooks /></ProtectedRoute>} />
+              <Route path="/audiofy" element={<ProtectedRoute><Audiofy /></ProtectedRoute>} />
               <Route path="/amigodivino" element={<ProtectedRoute><AmigoDivino /></ProtectedRoute>} />
               <Route path="/amigodivino/chat" element={<ProtectedRoute><ChatInterface /></ProtectedRoute>} />
               <Route path="/sobre" element={<ProtectedRoute><Sobre /></ProtectedRoute>} />

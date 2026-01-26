@@ -63,7 +63,7 @@ const Ebooks = () => {
     if (user) {
       const pointsEarned = 20;
       await addActivity(
-        'ebook_read',
+        'music_listened',
         ebook.id,
         ebook.title,
         pointsEarned
@@ -90,7 +90,7 @@ const Ebooks = () => {
       setPlayingAudio(ebook.id);
       
       if (user) {
-        await addActivity('ebook_read', ebook.id, ebook.title, 20);
+        await addActivity('music_listened', ebook.id, ebook.title, 20);
       }
     }
   };
@@ -172,10 +172,10 @@ const Ebooks = () => {
           
           <GlassCard className="max-w-2xl mx-auto text-center">
             <h1 className="text-3xl font-bold mb-6 bg-gradient-to-r from-primary via-primary to-primary/60 bg-clip-text text-transparent">
-              Biblioteca Digital
+              Audiofy
             </h1>
             <p className="text-foreground/80 mb-8 text-lg">
-              Ebooks, audiobooks e vídeos exclusivos
+              Músicas cristãs para crianças
             </p>
           
             {loading ? (
@@ -186,9 +186,9 @@ const Ebooks = () => {
               </div>
             ) : ebooks.length === 0 ? (
               <EmptyState
-                icon={<BookOpen size={40} strokeWidth={1.5} />}
-                title="Biblioteca em construção"
-                description="Estamos preparando uma coleção especial de ebooks, audiobooks e vídeos para você! 📚🎧🎬"
+                icon={<Music size={40} strokeWidth={1.5} />}
+                title="Músicas em construção"
+                description="Estamos preparando uma coleção especial de músicas cristãs para você! 🎵"
                 className="my-8"
               />
             ) : (

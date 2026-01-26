@@ -1,10 +1,10 @@
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, BookOpen, Gamepad2, GraduationCap, Layers, PlaySquare, FileText, Settings } from 'lucide-react';
+import { LayoutDashboard, Music, Gamepad2, GraduationCap, Layers, PlaySquare, FileText, Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navItems = [
   { name: 'Dashboard', url: '/admin', icon: LayoutDashboard },
-  { name: 'Ebooks', url: '/admin/ebooks', icon: BookOpen },
+  { name: 'Audiofy', url: '/admin/ebooks', icon: Music },
   { name: 'Jogos', url: '/admin/games', icon: Gamepad2 },
 ];
 
