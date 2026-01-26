@@ -1,19 +1,18 @@
 
-
-## Alterar "Colorir" para "Orações" com Ícone Correto
+## Alterar "Ebooks & Áudio" para "Audiofy" com Ícone de Música
 
 ### Resumo
 
-Alterar o primeiro item do array `navigationActions` de "Colorir" para "Orações", atualizando o ícone de `Palette` para um ícone mais adequado para orações e a rota de navegação.
+Atualizar o item "Ebooks & Áudio" no array `navigationActions` para "Audiofy", alterar o ícone de `BookOpen` para `Music`, e atualizar a rota para `/audiofy`.
 
 ---
 
-### Alteração Necessária
+### Alterações Necessárias
 
 | Arquivo | Linha | Alteração |
 |---------|-------|-----------|
-| `src/pages/Index.tsx` | 4 | Adicionar import do ícone `HandHeart` |
-| `src/pages/Index.tsx` | 74 | Atualizar item "Colorir" para "Orações" |
+| `src/pages/Index.tsx` | 4 | Substituir `BookOpen` por `Music` no import |
+| `src/pages/Index.tsx` | 75 | Atualizar item para "Audiofy" com ícone `Music` e rota `/audiofy` |
 
 ---
 
@@ -22,27 +21,26 @@ Alterar o primeiro item do array `navigationActions` de "Colorir" para "Oraçõe
 **Linha 4 - Imports:**
 ```typescript
 // Antes
-import { Users, Palette, BookOpen, MessageCircle, Gamepad2, UserCircle, Package, Book, Heart } from "lucide-react";
+import { Users, BookOpen, MessageCircle, Gamepad2, UserCircle, Package, Book, Heart, HandHeart } from "lucide-react";
 
 // Depois
-import { Users, BookOpen, MessageCircle, Gamepad2, UserCircle, Package, Book, Heart, HandHeart } from "lucide-react";
+import { Users, Music, MessageCircle, Gamepad2, UserCircle, Package, Book, Heart, HandHeart } from "lucide-react";
 ```
 
-**Linha 74 - Item do array:**
+**Linha 75 - Item do array:**
 ```typescript
 // Antes
-{ title: "Colorir", icon: Palette, action: () => navigate('/boobiegoods'), gradient: "from-blue-500 to-cyan-500" },
+{ title: "Ebooks & Áudio", icon: BookOpen, action: () => navigate('/ebooks'), gradient: "from-green-500 to-emerald-500" },
 
 // Depois
-{ title: "Orações", icon: HandHeart, action: () => navigate('/oracoes'), gradient: "from-blue-500 to-cyan-500" },
+{ title: "Audiofy", icon: Music, action: () => navigate('/audiofy'), gradient: "from-green-500 to-emerald-500" },
 ```
 
 ---
 
 ### Resultado Esperado
 
-1. O card "Colorir" será substituído por "Orações"
-2. O ícone de paleta será substituído pelo ícone `HandHeart` (mãos em oração)
-3. O clique direcionará para a página `/oracoes`
-4. O gradiente azul será mantido
-
+1. O card "Ebooks & Áudio" será substituído por "Audiofy"
+2. O ícone de livro aberto será substituído pelo ícone `Music` (nota musical)
+3. O clique direcionará para a página `/audiofy`
+4. O gradiente verde será mantido
