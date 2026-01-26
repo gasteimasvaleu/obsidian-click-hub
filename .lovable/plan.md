@@ -1,153 +1,200 @@
 
 
-## Corrigir Player de Vídeo no PWA - Suporte a Range Requests
+## Corrigir Saída Inesperada do Fullscreen no Player de Vídeo - iOS PWA
 
 ### Problema Identificado
 
-O Service Worker configurado pelo VitePWA não está tratando corretamente os **Range Requests** (HTTP 206 Partial Content), que são essenciais para o streaming progressivo de vídeos. 
+No iOS, quando o player de vídeo HTML5 encontra um problema de buffering ou erro de rede durante a reprodução em **fullscreen**, o Safari força a saída do modo fullscreen automaticamente. Isso acontece porque:
 
-Quando um vídeo HTML5 é reproduzido, o navegador faz requisições parciais (range requests) para carregar o vídeo em chunks. Se o Service Worker intercepta essas requisições mas não as processa corretamente, o vídeo para de funcionar quando tenta acessar partes ainda não carregadas.
+1. O iOS tem controle nativo sobre o fullscreen do elemento `<video>`
+2. Quando ocorre um erro de rede (evento `stalled` ou `error`), o iOS interpreta como falha e sai do fullscreen
+3. O Service Worker pode estar interceptando range requests incorretamente, causando interrupções
 
 ---
 
 ### Solução
 
-Precisamos fazer duas alterações principais:
+Precisamos implementar 3 melhorias:
 
 ---
 
-### 1. Atualizar a configuração do VitePWA para suportar Range Requests
-
-**Arquivo:** `vite.config.ts`
-
-Adicionar configuração de runtime caching específica para vídeos com suporte a range requests:
-
-```typescript
-runtimeCaching: [
-  // ... configurações existentes de fonts e supabase ...
-  
-  // Adicionar: Configuração para vídeos com Range Requests
-  {
-    urlPattern: /\.(?:mp4|webm|ogg|mov)$/i,
-    handler: 'CacheFirst',
-    options: {
-      cacheName: 'video-cache',
-      rangeRequests: true,  // Habilita o plugin de Range Requests
-      expiration: {
-        maxEntries: 20,
-        maxAgeSeconds: 60 * 60 * 24 * 7 // 7 dias
-      },
-      cacheableResponse: {
-        statuses: [0, 200]
-      }
-    }
-  },
-  
-  // Adicionar: Configuração para vídeos do Supabase Storage com Range Requests
-  {
-    urlPattern: /^https:\/\/.*\.supabase\.co\/storage\/.*\.(?:mp4|webm|ogg|mov)$/i,
-    handler: 'NetworkFirst',
-    options: {
-      cacheName: 'supabase-video-cache',
-      rangeRequests: true,  // Habilita o plugin de Range Requests
-      networkTimeoutSeconds: 10,
-      expiration: {
-        maxEntries: 30,
-        maxAgeSeconds: 60 * 60 * 24 * 7 // 7 dias
-      },
-      cacheableResponse: {
-        statuses: [0, 200]
-      }
-    }
-  }
-]
-```
-
----
-
-### 2. Adicionar tratamento de erros no componente de vídeo
+### 1. Melhorar o tratamento de erros para não disparar em eventos transientes
 
 **Arquivo:** `src/components/plataforma/LessonPlayer.tsx`
 
-Melhorar o elemento `<video>` para lidar com erros de carregamento e eventos de buffering:
+**Mudanças:**
+- Adicionar debounce no evento `onStalled` para não reagir a pausas temporárias de rede
+- Tentar retomar a reprodução automaticamente quando o evento `stalled` for disparado
+- Usar `onSuspend` para detectar quando o navegador está pausando o download propositalmente
+- Adicionar evento `onCanPlayThrough` para limpar estados de erro
 
 ```typescript
-// Adicionar state para erro
-const [videoError, setVideoError] = useState(false);
-const [isBuffering, setIsBuffering] = useState(false);
+// Adicionar ref para o elemento video
+const videoRef = useRef<HTMLVideoElement>(null);
+const [stallCount, setStallCount] = useState(0);
 
-// No renderVideo(), melhorar o elemento video:
-<video
-  src={videoUrl}
-  controls
-  controlsList="nodownload"
-  className="w-full h-full object-contain bg-black"
-  preload="metadata"  // Carrega apenas metadados inicialmente
-  onError={(e) => {
-    console.error("Video error:", e);
-    setVideoError(true);
-  }}
-  onWaiting={() => setIsBuffering(true)}
-  onPlaying={() => setIsBuffering(false)}
-  onStalled={() => {
-    console.warn("Video stalled - network issue");
-  }}
->
-  Seu navegador não suporta o elemento de vídeo.
-</video>
+// Função para tentar retomar reprodução
+const handleStalled = () => {
+  console.warn("Video stalled - attempting recovery");
+  setStallCount(prev => prev + 1);
+  
+  // Após 3 stalls consecutivos, mostrar aviso
+  if (stallCount >= 3) {
+    setIsBuffering(true);
+  }
+  
+  // Tentar retomar
+  if (videoRef.current && !videoRef.current.paused) {
+    const currentTime = videoRef.current.currentTime;
+    videoRef.current.load();
+    videoRef.current.currentTime = currentTime;
+    videoRef.current.play().catch(() => {});
+  }
+};
 
-// Adicionar UI para estado de erro
-{videoError && (
-  <div className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center gap-4">
-    <p className="text-white">Erro ao carregar o vídeo</p>
-    <Button onClick={() => window.location.reload()}>
-      Tentar novamente
-    </Button>
-  </div>
-)}
+// Limpar contador quando vídeo toca normalmente
+const handlePlaying = () => {
+  setIsBuffering(false);
+  setVideoError(false);
+  setStallCount(0);
+};
 ```
 
 ---
 
-### 3. (Opcional) Atualizar outros players de vídeo
+### 2. Adicionar lógica de retry automático para problemas de rede
 
-Os mesmos tratamentos devem ser aplicados a outros componentes que usam vídeo:
+**Arquivo:** `src/components/plataforma/LessonPlayer.tsx`
 
-- `src/components/SplashScreen.tsx` - Splash screen com vídeo
-- `src/components/plataforma/ResponsiveHeroBanner.tsx` - Banner com vídeo
-- `src/pages/biblia/BibliaPage.tsx` - Animação de vídeo
-- `src/pages/Games.tsx` - Animação de vídeo
+**Mudanças:**
+- Implementar retry automático quando o vídeo para por problemas de rede
+- Guardar a posição atual do vídeo antes de recarregar
+- Usar `timeupdate` para salvar progresso continuamente
+
+```typescript
+const [lastPosition, setLastPosition] = useState(0);
+
+// Salvar posição continuamente
+const handleTimeUpdate = () => {
+  if (videoRef.current) {
+    setLastPosition(videoRef.current.currentTime);
+  }
+};
+
+// No onError, tentar retomar da última posição
+const handleError = (e: React.SyntheticEvent<HTMLVideoElement>) => {
+  console.error("Video error:", e);
+  
+  // Tentar retomar automaticamente uma vez
+  if (!videoError && videoRef.current) {
+    const video = videoRef.current;
+    video.load();
+    video.currentTime = lastPosition;
+    video.play().catch(() => setVideoError(true));
+  } else {
+    setVideoError(true);
+  }
+};
+```
 
 ---
 
-### Resumo das Mudanças
+### 3. Usar atributos específicos para iOS no elemento video
+
+**Arquivo:** `src/components/plataforma/LessonPlayer.tsx`
+
+**Mudanças:**
+- Adicionar `playsInline` para evitar que o iOS force fullscreen nativo
+- Adicionar `webkit-playsinline` para compatibilidade
+- Usar `x5-video-player-type="h5"` para melhor compatibilidade com WebViews
+
+```tsx
+<video
+  ref={videoRef}
+  src={videoUrl}
+  controls
+  controlsList="nodownload"
+  playsInline
+  webkit-playsinline="true"
+  x5-video-player-type="h5"
+  className="w-full h-full object-contain bg-black"
+  preload="metadata"
+  onError={handleError}
+  onWaiting={() => setIsBuffering(true)}
+  onPlaying={handlePlaying}
+  onStalled={handleStalled}
+  onTimeUpdate={handleTimeUpdate}
+  onCanPlayThrough={() => setStallCount(0)}
+>
+  Seu navegador não suporta o elemento de vídeo.
+</video>
+```
+
+---
+
+### 4. Excluir vídeos do cache do Service Worker completamente
+
+**Arquivo:** `vite.config.ts`
+
+**Mudanças:**
+- Remover as regras de runtimeCaching para vídeos
+- Deixar o navegador lidar diretamente com os vídeos sem interceptação do SW
+- Adicionar vídeos ao `navigateFallbackDenylist` para não serem interceptados
+
+```typescript
+// Remover as regras de cache de vídeo que adicionamos antes
+// Ao invés de tentar cachear vídeos com range requests,
+// é mais seguro deixar o navegador lidar diretamente
+
+VitePWA({
+  // ... outras configurações ...
+  workbox: {
+    // Adicionar vídeos à lista de exclusão
+    navigateFallbackDenylist: [/\.(?:mp4|webm|ogg|mov)$/i],
+    
+    // Não pré-cachear vídeos
+    globPatterns: ['**/*.{js,css,html,ico,png,svg,jpg,jpeg,gif,woff,woff2}'],
+    
+    // Manter apenas caches que não são de vídeo
+    runtimeCaching: [
+      // Fonts
+      { /* ... manter configuração de fonts ... */ },
+      // Supabase API (excluindo storage de vídeos)
+      {
+        urlPattern: /^https:\/\/fnksvazibtekphseknob\.supabase\.co\/(?!storage\/.*\.(?:mp4|webm|ogg|mov))/i,
+        handler: 'NetworkFirst',
+        options: { /* ... */ }
+      }
+    ]
+  }
+})
+```
+
+---
+
+### Resumo das Alterações
 
 | Arquivo | Alteração |
 |---------|-----------|
-| `vite.config.ts` | Adicionar regras de caching para vídeos com `rangeRequests: true` |
-| `src/components/plataforma/LessonPlayer.tsx` | Adicionar handlers de erro e buffering no elemento video |
-| Outros componentes (opcional) | Aplicar os mesmos tratamentos de erro |
+| `src/components/plataforma/LessonPlayer.tsx` | Adicionar ref, retry automático, salvar posição, atributos iOS |
+| `vite.config.ts` | Excluir vídeos do cache do SW completamente |
 
 ---
 
-### Detalhes Técnicos
+### Por que isso resolve o problema
 
-**Por que isso resolve o problema:**
-
-1. **Range Requests Plugin**: O Workbox tem um plugin específico (`rangeRequests: true`) que intercepta requisições com header `Range` e retorna corretamente respostas HTTP 206 (Partial Content), permitindo que o vídeo carregue progressivamente.
-
-2. **Preload metadata**: Usar `preload="metadata"` ao invés do padrão faz o navegador carregar apenas informações básicas inicialmente, e depois carregar o conteúdo sob demanda.
-
-3. **Tratamento de erros**: Os eventos `onError`, `onWaiting` e `onStalled` permitem mostrar feedback ao usuário quando há problemas de rede.
-
-4. **Cache separado para vídeos**: Manter vídeos em um cache separado com políticas específicas evita conflitos com outros recursos.
+1. **Exclusão do cache**: O Service Worker deixa de interceptar requisições de vídeo, eliminando problemas de range requests
+2. **playsInline**: Evita comportamentos inesperados do fullscreen nativo do iOS
+3. **Retry automático**: Se o vídeo parar por problema de rede, tenta retomar automaticamente
+4. **Salvar posição**: Mesmo se precisar recarregar, volta para onde parou
 
 ---
 
-### Observação Importante
+### Alternativa: Usar HLS para streaming
 
-Após implementar essas mudanças, os usuários do PWA precisarão:
-1. Fechar completamente o app PWA
-2. Reabrir para que o novo Service Worker seja instalado
-3. O vídeo deve funcionar corretamente após a atualização
+Se os problemas persistirem, uma solução mais robusta seria converter os vídeos para HLS (HTTP Live Streaming) que é nativamente suportado pelo iOS e lida melhor com conexões instáveis. Isso requer:
+- Conversão dos vídeos para formato HLS (.m3u8 + segments)
+- Biblioteca como hls.js para suporte em outros navegadores
+
+Essa seria uma mudança mais significativa para implementar posteriormente se necessário.
 
