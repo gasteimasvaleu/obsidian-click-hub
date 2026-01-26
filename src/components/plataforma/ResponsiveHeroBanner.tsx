@@ -68,7 +68,10 @@ export function ResponsiveHeroBanner({
             muted
             loop
             playsInline
+            preload="metadata"
             className="w-full h-full object-cover"
+            onError={(e) => console.error("Banner video error:", e)}
+            onStalled={() => console.warn("Banner video stalled")}
           />
         ) : (
           <img

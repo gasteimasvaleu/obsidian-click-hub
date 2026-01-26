@@ -99,10 +99,13 @@ const Games = () => {
                   autoPlay
                   muted
                   playsInline
+                  preload="metadata"
                   onEnded={(e) => {
                     const video = e.currentTarget;
                     video.currentTime = 0;
                   }}
+                  onError={(e) => console.error("Games video error:", e)}
+                  onStalled={() => console.warn("Games video stalled")}
                 />
               </GlassCard>
             </div>

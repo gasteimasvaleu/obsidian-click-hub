@@ -94,9 +94,12 @@ export default function BibliaPage() {
               autoPlay
               muted
               playsInline
+              preload="metadata"
               onEnded={(e) => {
                 e.currentTarget.currentTime = 0;
               }}
+              onError={(e) => console.error("Biblia video error:", e)}
+              onStalled={() => console.warn("Biblia video stalled")}
             />
           </GlassCard>
         </div>

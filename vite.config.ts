@@ -47,6 +47,39 @@ export default defineConfig(({ mode }) => ({
                 maxAgeSeconds: 60 * 5
               }
             }
+          },
+          // Video files with Range Requests support
+          {
+            urlPattern: /\.(?:mp4|webm|ogg|mov)$/i,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'video-cache',
+              rangeRequests: true,
+              expiration: {
+                maxEntries: 20,
+                maxAgeSeconds: 60 * 60 * 24 * 7 // 7 days
+              },
+              cacheableResponse: {
+                statuses: [0, 200]
+              }
+            }
+          },
+          // Supabase Storage videos with Range Requests support
+          {
+            urlPattern: /^https:\/\/.*\.supabase\.co\/storage\/.*\.(?:mp4|webm|ogg|mov)$/i,
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'supabase-video-cache',
+              rangeRequests: true,
+              networkTimeoutSeconds: 10,
+              expiration: {
+                maxEntries: 30,
+                maxAgeSeconds: 60 * 60 * 24 * 7 // 7 days
+              },
+              cacheableResponse: {
+                statuses: [0, 200]
+              }
+            }
           }
         ]
       },
