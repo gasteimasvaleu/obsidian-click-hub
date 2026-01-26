@@ -1,168 +1,121 @@
 
 
-## Transformar Página /boobiegoods em Livrinho de Orações
+## Importar Orações do GitHub para o Banco de Dados
 
-### Visão Geral
+### Fonte de Dados
 
-Substituir a ferramenta de "Foto para Colorir" por um **Livrinho de Orações Digital** organizado por categorias, onde as crianças podem:
-- Navegar por categorias de orações (Família, Saúde, Proteção, Escola, etc.)
-- Ler orações pré-cadastradas
-- Favoritar orações para acesso rápido
+Repositório: **Augusto240/catholic_prayers_api**
+URL: `https://raw.githubusercontent.com/Augusto240/catholic_prayers_api/main/prayers.json`
+Licença: MIT (livre para uso)
 
----
-
-### Estrutura Visual
-
-```text
-┌─────────────────────────────────────────┐
-│  🙏 Livrinho de Orações                 │
-│  "Encontre a oração perfeita para       │
-│   cada momento"                         │
-├─────────────────────────────────────────┤
-│  [Categorias em Grid]                   │
-│  ┌──────┐ ┌──────┐ ┌──────┐            │
-│  │ 👨‍👩‍👧‍👦  │ │ ❤️   │ │ 🛡️   │            │
-│  │Família│ │Saúde │ │Proteção           │
-│  └──────┘ └──────┘ └──────┘            │
-│  ┌──────┐ ┌──────┐ ┌──────┐            │
-│  │ 📚   │ │ 🙏   │ │ ⭐   │            │
-│  │Escola│ │Gratid.│ │Favorit│            │
-│  └──────┘ └──────┘ └──────┘            │
-├─────────────────────────────────────────┤
-│  [Lista de Orações da Categoria]        │
-│  ┌─────────────────────────────────┐    │
-│  │ Oração pela Família             │    │
-│  │ "Querido Deus, abençoe minha..."│    │
-│  │ ⭐ Favoritar                    │    │
-│  └─────────────────────────────────┘    │
-└─────────────────────────────────────────┘
+O arquivo contém **20 orações católicas tradicionais** em português com a seguinte estrutura:
+```json
+{
+  "id": "ave_maria",
+  "title": "Ave Maria",
+  "category": "mariana",
+  "text": "Ave Maria, cheia de graça..."
+}
 ```
 
 ---
 
-### Banco de Dados
+### Mapeamento de Categorias
 
-**Tabela `prayers`** (Orações)
+As categorias do repositório precisam ser mapeadas para as nossas categorias existentes ou podemos adicionar novas:
 
-| Coluna | Tipo | Descrição |
-|--------|------|-----------|
-| id | uuid | Identificador único |
-| title | text | Título da oração |
-| content | text | Texto completo da oração |
-| category | text | Categoria (familia, saude, protecao, escola, gratidao, amigos, noite, manha, refeicao) |
-| icon_name | text | Nome do ícone Lucide |
-| display_order | integer | Ordem de exibição |
-| available | boolean | Se está disponível |
-| created_at | timestamp | Data de criação |
+| Categoria Original | Mapeamento Sugerido | Ícone |
+|-------------------|--------------------|----|
+| essencial | essencial (nova) | BookOpen |
+| mariana | mariana (nova) | Star |
+| proteção | protecao (existente) | Shield |
+| penitência | penitencia (nova) | Heart |
+| cotidiano | refeicao (existente) | UtensilsCrossed |
+| espírito_santo | espirito_santo (nova) | Sparkles |
+| eucarística | eucaristica (nova) | Church |
+| divina_misericórdia | misericordia (nova) | HeartHandshake |
 
-**Tabela `user_favorite_prayers`** (Favoritos)
-
-| Coluna | Tipo | Descrição |
-|--------|------|-----------|
-| id | uuid | Identificador único |
-| user_id | uuid | ID do usuário |
-| prayer_id | uuid | ID da oração |
-| created_at | timestamp | Data de quando favoritou |
-
-**RLS Policies:**
-- `prayers`: Qualquer um pode ler orações disponíveis, admins podem gerenciar
-- `user_favorite_prayers`: Usuários podem gerenciar apenas seus próprios favoritos
+**Opção A**: Manter as categorias originais do repositório (mais completo)
+**Opção B**: Adaptar para as categorias existentes (menos categorias)
 
 ---
 
-### Alterações no Frontend
+### Abordagem de Implementação
 
-**1. Renomear e atualizar a rota**
+**Opção 1: Migration SQL Direta** (Recomendado)
+- Inserir as 20 orações diretamente via SQL na migration
+- Simples e imediato
+- Não precisa de Edge Function
+
+**Opção 2: Edge Function para Importação**
+- Criar função que busca o JSON do GitHub
+- Útil se quiser atualizar futuramente
+- Mais complexo
+
+---
+
+### Alterações Propostas
+
+**1. Atualizar CategoryGrid com novas categorias**
+
+Adicionar as novas categorias que vieram do repositório:
+- Essencial (orações básicas)
+- Mariana (orações à Virgem Maria)
+- Penitência (arrependimento)
+- Espírito Santo
+- Eucarística (adoração eucarística)
+- Divina Misericórdia
 
 | Arquivo | Alteração |
 |---------|-----------|
-| `src/App.tsx` | Alterar import de `BoobieGoods` para `Oracoes`, atualizar navItems de "Colorir" para "Orações" com ícone `Heart` ou `BookHeart` |
+| `src/components/oracoes/CategoryGrid.tsx` | Adicionar novas categorias com ícones |
 
-**2. Nova página de Orações**
+**2. Atualizar lista de categorias no Admin**
 
-| Arquivo | Descrição |
+| Arquivo | Alteração |
 |---------|-----------|
-| `src/pages/Oracoes.tsx` | Página principal com grid de categorias e lista de orações |
+| `src/pages/admin/PrayersManager.tsx` | Adicionar novas categorias no dropdown |
 
-**Componentes da página:**
-- Header com vídeo animado (podemos manter ou trocar)
-- Grid de categorias (cards clicáveis com ícone e nome)
-- Tab/seção de "Favoritos" com estrela
-- Lista de orações da categoria selecionada
-- Cada oração em um GlassCard com:
-  - Título
-  - Texto da oração
-  - Botão de favoritar (estrela preenchida/vazia)
-  - Botão de compartilhar
+**3. Criar Migration SQL**
 
-**3. Componentes auxiliares**
+Inserir as 20 orações do repositório no banco:
 
-| Arquivo | Descrição |
-|---------|-----------|
-| `src/components/oracoes/CategoryGrid.tsx` | Grid de categorias com ícones |
-| `src/components/oracoes/PrayerCard.tsx` | Card individual de uma oração |
+```sql
+-- Limpar orações exemplo anteriores (opcional)
+DELETE FROM prayers WHERE title IN ('Oração pela Família', 'Oração pelos Pais', ...);
+
+-- Inserir orações do repositório GitHub
+INSERT INTO prayers (title, content, category, icon_name, display_order, available)
+VALUES 
+  ('Ave Maria', 'Ave Maria, cheia de graça...', 'mariana', 'star', 1, true),
+  ('Pai Nosso', 'Pai Nosso que estais nos Céus...', 'essencial', 'book-open', 2, true),
+  ...
+```
 
 ---
 
-### Categorias Sugeridas
+### Orações a Serem Importadas
 
-| Categoria | Ícone | Descrição |
-|-----------|-------|-----------|
-| familia | Users | Orações pela família |
-| saude | Heart | Orações por saúde e cura |
-| protecao | Shield | Orações de proteção |
-| escola | GraduationCap | Orações para escola/estudos |
-| gratidao | Sparkles | Orações de agradecimento |
-| amigos | Users | Orações pelos amigos |
-| noite | Moon | Orações antes de dormir |
-| manha | Sun | Orações ao acordar |
-| refeicao | UtensilsCrossed | Orações antes das refeições |
-
----
-
-### Admin: Gerenciador de Orações
-
-| Arquivo | Descrição |
-|---------|-----------|
-| `src/pages/admin/PrayersManager.tsx` | CRUD de orações para administradores |
-
-Funcionalidades:
-- Listar todas as orações
-- Criar nova oração (título, conteúdo, categoria, ícone)
-- Editar oração existente
-- Ativar/desativar oração
-- Reordenar orações
-
----
-
-### Fluxo de Uso
-
-1. Usuário acessa `/oracoes` (ou `/boobiegoods` que será redirecionado)
-2. Vê grid de categorias
-3. Clica em uma categoria (ex: "Família")
-4. Vê lista de orações dessa categoria
-5. Pode ler a oração completa
-6. Pode favoritar clicando na estrela
-7. Pode acessar "Favoritos" para ver suas orações salvas
-8. Pode compartilhar via WhatsApp/copiar texto
-
----
-
-### Dados Iniciais
-
-Vou incluir algumas orações pré-cadastradas para cada categoria como seed inicial, por exemplo:
-
-**Família:**
-- "Oração pela Família" - "Querido Deus, abençoe minha família hoje..."
-- "Oração pelos Pais" - "Senhor, obrigado pelos meus pais..."
-
-**Saúde:**
-- "Oração de Cura" - "Pai Celestial, te peço saúde..."
-
-**Proteção:**
-- "Oração de Proteção Diária" - "Deus, me proteja neste dia..."
-
-*(~30-40 orações distribuídas nas categorias)*
+1. **Ave Maria** - Categoria: mariana
+2. **Pai Nosso** - Categoria: essencial  
+3. **Credo** - Categoria: essencial
+4. **Glória** - Categoria: essencial
+5. **Salve Rainha** - Categoria: mariana
+6. **Santo Anjo** - Categoria: proteção
+7. **Ato de Contrição** - Categoria: penitência
+8. **Magnificat** - Categoria: mariana
+9. **Memorare (Lembrai-vos)** - Categoria: mariana
+10. **Angelus** - Categoria: mariana
+11. **Regina Coeli** - Categoria: mariana
+12. **Oração a São Miguel Arcanjo** - Categoria: proteção
+13. **Confiteor (Confesso)** - Categoria: penitência
+14. **Oração Antes da Refeição** - Categoria: cotidiano/refeicao
+15. **Oração Depois da Refeição** - Categoria: cotidiano/refeicao
+16. **Sub Tuum Praesidium** - Categoria: mariana
+17. **Veni Sancte Spiritus** - Categoria: espírito_santo
+18. **Oração de Fátima** - Categoria: mariana
+19. **Adoro Te Devote** - Categoria: eucarística
+20. **Terço da Divina Misericórdia** - Categoria: misericordia
 
 ---
 
@@ -170,17 +123,24 @@ Vou incluir algumas orações pré-cadastradas para cada categoria como seed ini
 
 | Arquivo | Tipo | Descrição |
 |---------|------|-----------|
-| Migration SQL | Criar | Tabelas `prayers` e `user_favorite_prayers` com RLS |
-| `src/pages/Oracoes.tsx` | Criar | Nova página de orações |
-| `src/components/oracoes/CategoryGrid.tsx` | Criar | Grid de categorias |
-| `src/components/oracoes/PrayerCard.tsx` | Criar | Card de oração |
-| `src/pages/admin/PrayersManager.tsx` | Criar | CRUD admin |
-| `src/App.tsx` | Editar | Atualizar rotas e navbar |
-| `src/pages/BoobieGoods.tsx` | Remover | Não será mais necessário |
+| Migration SQL | Criar | Inserir 20 orações do repositório GitHub |
+| `src/components/oracoes/CategoryGrid.tsx` | Editar | Adicionar 6 novas categorias |
+| `src/pages/admin/PrayersManager.tsx` | Editar | Atualizar dropdown de categorias |
 
 ---
 
-### Observação
+### Categorias Finais (após importação)
 
-A Edge Function `photo-transform` que era usada pela página de colorir pode ser mantida ou removida conforme preferir - ela não será mais necessária após essa mudança.
+| ID | Nome | Ícone | Qtd |
+|----|------|-------|-----|
+| essencial | Essencial | BookOpen | 3 |
+| mariana | Maria | Star | 9 |
+| protecao | Proteção | Shield | 2 |
+| penitencia | Penitência | Heart | 2 |
+| refeicao | Refeição | UtensilsCrossed | 2 |
+| espirito_santo | Espírito Santo | Sparkles | 1 |
+| eucaristica | Eucarística | Church | 1 |
+| misericordia | Misericórdia | HeartHandshake | 1 |
+
+Orações existentes das categorias anteriores (família, escola, etc.) podem ser mantidas ou substituídas.
 
