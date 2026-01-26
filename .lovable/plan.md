@@ -1,165 +1,57 @@
 
 
-## Sistema de Carrosseis Personalizados
+## Remoção do Card de Carrossel de Cursos
 
-### Situação Atual
-
-A página `/plataforma` já exibe automaticamente um carrossel para cada curso que possui módulos. O curso **"BíbliaToon KIDS - Contos Bíblicos"** possui 12 módulos e já aparece corretamente.
-
-### O que será implementado
-
-Um sistema gerenciável onde o admin pode criar carrosseis vinculados a cursos específicos, com controle sobre título, descrição, ordem e visibilidade.
+### Contexto
+Como agora existe uma área dedicada para gerenciamento de carrosseis (`/admin/plataforma/carrosseis`), o card "Carrossel de Cursos" na página de Configurações da Plataforma ficou redundante e deve ser removido.
 
 ---
 
-### 1. Nova Tabela no Banco de Dados
+### Mudanças Necessárias
 
-**Tabela: `platform_carousels`**
+**Arquivo:** `src/pages/admin/plataforma/PlatformSettingsManager.tsx`
 
-| Coluna | Tipo | Descrição |
-|--------|------|-----------|
-| id | uuid | ID único |
-| course_id | uuid | Curso cujos módulos serão exibidos |
-| title | text | Título customizado (opcional) |
-| description | text | Descrição customizada (opcional) |
-| display_order | integer | Ordem na página |
-| available | boolean | Visível publicamente |
+1. **Remover o Card do Carrossel** (linhas 245-278)
+   - Excluir todo o bloco `<Card>` que contém os campos de título e descrição do carrossel
 
-**Migração automática**: Criar carrossel para o curso "Contos Bíblicos" já existente, mantendo o comportamento atual.
+2. **Atualizar a interface `PlatformSettings`** (linhas 15-25)
+   - Remover `carousel_title` e `carousel_description` da interface
+
+3. **Atualizar `defaultSettings`** (linhas 27-37)
+   - Remover `carousel_title` e `carousel_description` dos valores padrão
 
 ---
 
-### 2. Página de Gerenciamento (Admin)
+### Código a Remover
 
-**Nova página**: `src/pages/admin/plataforma/CarouselsManager.tsx`
+```typescript
+// Da interface PlatformSettings (remover estas linhas):
+carousel_title: string;
+carousel_description: string;
 
-**Funcionalidades**:
-- Listar carrosseis existentes com ordenação
-- Criar novo carrossel selecionando um curso
-- Editar título/descrição customizados
-- Toggle de visibilidade
-- Excluir carrossel
-- Preview da quantidade de módulos
+// Do defaultSettings (remover estas linhas):
+carousel_title: "",
+carousel_description: "",
 
-**Interface do formulário:**
-```text
-┌──────────────────────────────────────────────────┐
-│  Novo Carrossel                                  │
-├──────────────────────────────────────────────────┤
-│  Curso: [▼ Selecione um curso              ]     │
-│                                                  │
-│  Título (opcional):                              │
-│  [________________________________]              │
-│  Deixe vazio para usar o título do curso         │
-│                                                  │
-│  Descrição (opcional):                           │
-│  [________________________________]              │
-│                                                  │
-│  [✓] Disponível                                  │
-│                                                  │
-│  ℹ️ Este curso tem 12 módulos                    │
-│                                                  │
-│                    [Salvar Carrossel]            │
-└──────────────────────────────────────────────────┘
+// Remover todo este bloco Card (linhas 245-278):
+<Card>
+  <CardHeader>
+    <CardTitle>Carrossel de Cursos</CardTitle>
+    ...
+  </CardHeader>
+  <CardContent>
+    ...
+  </CardContent>
+</Card>
 ```
 
 ---
 
-### 3. Atualizações de Arquivos
+### Resultado
 
-**`src/components/admin/AdminSidebar.tsx`**
-- Adicionar item "Carrosseis" na seção Plataforma
-- URL: `/admin/plataforma/carrosseis`
-- Ícone: `LayoutGrid`
+A página de Configurações da Plataforma ficará apenas com:
+- Configurações do Header (banner/vídeo e textos)
+- Botão de salvar
 
-**`src/App.tsx`**
-- Adicionar rota protegida para CarouselsManager
-
-**`src/pages/plataforma/PlataformaPage.tsx`**
-- Substituir a iteração automática sobre cursos
-- Buscar carrosseis da tabela `platform_carousels`
-- Para cada carrossel, mostrar módulos do curso vinculado
-- Usar título/descrição customizados ou do curso (fallback)
-
----
-
-### 4. SQL Migration
-
-```sql
--- Criar tabela de carrosseis
-CREATE TABLE IF NOT EXISTS public.platform_carousels (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  course_id uuid NOT NULL REFERENCES public.courses(id) ON DELETE CASCADE,
-  title text,
-  description text,
-  display_order integer NOT NULL DEFAULT 0,
-  available boolean DEFAULT false,
-  created_at timestamptz NOT NULL DEFAULT now(),
-  updated_at timestamptz NOT NULL DEFAULT now()
-);
-
--- Habilitar RLS
-ALTER TABLE public.platform_carousels ENABLE ROW LEVEL SECURITY;
-
--- Policy: Qualquer pessoa pode ver carrosseis disponíveis
-CREATE POLICY "Anyone can view available carousels"
-ON public.platform_carousels FOR SELECT
-USING (available = true);
-
--- Policy: Admins podem gerenciar
-CREATE POLICY "Admins can manage carousels"
-ON public.platform_carousels FOR ALL
-USING (has_role(auth.uid(), 'admin'));
-
--- Trigger para updated_at
-CREATE TRIGGER update_platform_carousels_updated_at
-  BEFORE UPDATE ON public.platform_carousels
-  FOR EACH ROW
-  EXECUTE FUNCTION update_updated_at_column();
-
--- Criar carrossel para o curso Contos Bíblicos existente
-INSERT INTO public.platform_carousels (course_id, display_order, available)
-SELECT id, display_order, true
-FROM public.courses 
-WHERE title LIKE '%Contos Bíblicos%';
-```
-
----
-
-### 5. Fluxo de Dados na Página Pública
-
-```text
-PlataformaPage
-     │
-     ▼
-Busca platform_carousels (available=true)
-     │
-     ▼
-Para cada carrossel:
-  ├─ Busca módulos do course_id
-  ├─ Usa título customizado OU título do curso
-  ├─ Usa descrição customizada OU descrição do curso
-  └─ Renderiza CourseCarousel com os módulos
-```
-
----
-
-### Arquivos a Criar/Modificar
-
-| Ação | Arquivo |
-|------|---------|
-| Criar | Migration SQL |
-| Criar | `src/pages/admin/plataforma/CarouselsManager.tsx` |
-| Modificar | `src/components/admin/AdminSidebar.tsx` |
-| Modificar | `src/App.tsx` |
-| Modificar | `src/pages/plataforma/PlataformaPage.tsx` |
-
----
-
-### Resultado Final
-
-- O carrossel "Contos Bíblicos" continuará funcionando normalmente
-- Admins poderão criar novos carrosseis para outros cursos
-- Cada carrossel pode ter título/descrição personalizados
-- Controle total sobre ordenação e visibilidade
+Os carrosseis agora são gerenciados exclusivamente na área dedicada `/admin/plataforma/carrosseis`.
 
