@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
-import { Loader2, CheckCircle, XCircle, AlertTriangle } from 'lucide-react';
+import { Loader2, CheckCircle, XCircle, AlertTriangle, Mail } from 'lucide-react';
 
 type TokenStatus = 'loading' | 'valid' | 'invalid' | 'expired' | 'success';
 
@@ -164,6 +164,15 @@ const Cadastro = () => {
       case 'valid':
         return (
           <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-3">
+              <p className="text-blue-400 text-sm flex items-start gap-2">
+                <Mail className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                <span>
+                  Não recebeu o email? Verifique sua caixa de <strong>spam</strong> ou <strong>lixo eletrônico</strong>.
+                </span>
+              </p>
+            </div>
+
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
