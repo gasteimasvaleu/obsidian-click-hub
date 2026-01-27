@@ -1,38 +1,28 @@
 
 
-## Exibir Título e Descrição Completos no Player
+## Alterar Vídeo da Página Audiofy
 
-### Problema Identificado
+### Mudança Solicitada
 
-O player de áudio atualmente usa a classe CSS `truncate` nos elementos de título e descrição, o que corta o texto quando é muito longo. O usuário quer ver o texto completo.
+Substituir o vídeo de animação na página Audiofy pelo novo vídeo musical.
 
-### Solução
+### Alteração
 
-Modificar o componente `AudioPlayer.tsx` para:
+**Arquivo:** `src/pages/Audiofy.tsx`
 
-1. Remover a classe `truncate` do título e descrição
-2. Reorganizar o layout para acomodar textos mais longos
-3. Permitir que o texto quebre em múltiplas linhas
+**Linha:** ~107
 
-### Mudanças no Código
+**De:**
+```
+https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/ebooksnovo.mp4
+```
 
-**Arquivo:** `src/components/audiofy/AudioPlayer.tsx`
+**Para:**
+```
+https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/bannermusical.mp4
+```
 
-**Antes (linhas 238-265):**
-- Layout horizontal com título e descrição truncados
-- Tempo de reprodução na mesma linha
+### Resultado
 
-**Depois:**
-- Título e descrição em layout vertical sem truncamento
-- Permitir quebra de linha natural (word-wrap)
-- Tempo de reprodução movido para linha separada ou abaixo
-- Ajuste de espaçamento para textos mais longos
-
-### Resultado Esperado
-
-Quando o usuário clicar em uma música:
-- O título completo aparecerá no player
-- A descrição completa aparecerá abaixo do título
-- O player expandirá verticalmente para acomodar textos longos
-- Layout permanece limpo e legível em mobile e desktop
+O vídeo `bannermusical.mp4` será exibido no topo da página Audiofy, mantendo as mesmas configurações de reprodução automática, mudo e loop.
 
