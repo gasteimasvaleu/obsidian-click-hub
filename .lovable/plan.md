@@ -1,9 +1,10 @@
 
-## Atualizar Remetente do Email para Domínio Próprio
+
+## Atualizar URL do Email de Cadastro
 
 ### Mudança Necessária
 
-Atualizar o endereço de email do remetente na edge function `hotmart-webhook` para usar o domínio configurado no Resend.
+Atualizar a URL base na função `sendSignupEmail` para apontar para o domínio próprio da aplicação.
 
 ### Alteração
 
@@ -11,20 +12,26 @@ Atualizar o endereço de email do remetente na edge function `hotmart-webhook` p
 
 | Campo | Valor Atual | Novo Valor |
 |-------|-------------|------------|
-| Remetente | `Biblia Toon Kids <noreply@bibliatoonkids.com.br>` | `Biblia Toon Kids <bibliatoonkids@bibliatoonkids.com>` |
+| URL Base | `https://obsidian-click-hub.lovable.app` | `https://app.bibliatoonkids.com` |
 
 ### Código
 
-Linha 200 será alterada de:
+Linha 195 será alterada de:
 ```typescript
-from: "Biblia Toon Kids <noreply@bibliatoonkids.com.br>",
+const appUrl = Deno.env.get("APP_URL") || "https://obsidian-click-hub.lovable.app";
 ```
 
 Para:
 ```typescript
-from: "Biblia Toon Kids <bibliatoonkids@bibliatoonkids.com>",
+const appUrl = "https://app.bibliatoonkids.com";
 ```
 
 ### Resultado
 
-Os emails de cadastro serão enviados a partir do seu domínio próprio verificado no Resend, garantindo melhor entregabilidade e profissionalismo.
+O link no email de cadastro direcionará para:
+```
+https://app.bibliatoonkids.com/cadastro?token=xxxxx
+```
+
+Isso garante que os novos assinantes serão redirecionados para o domínio correto da aplicação ao clicar no botão "Completar Cadastro".
+
