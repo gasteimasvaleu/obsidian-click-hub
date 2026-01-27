@@ -235,33 +235,35 @@ export const AudioPlayer = ({
         />
 
         {/* Track Info & Close */}
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-3 flex-1 min-w-0">
-            <div className="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center flex-shrink-0">
-              <Music className="w-5 h-5 text-primary" />
+        <div className="flex flex-col gap-2 mb-3">
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex items-start gap-3 flex-1">
+              <div className="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center flex-shrink-0">
+                <Music className="w-5 h-5 text-primary" />
+              </div>
+              <div className="flex-1">
+                <h4 className="text-sm font-semibold text-foreground leading-tight">
+                  {currentTrack.title}
+                </h4>
+                <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
+                  {currentTrack.description}
+                </p>
+              </div>
             </div>
-            <div className="min-w-0 flex-1">
-              <h4 className="text-sm font-semibold text-foreground truncate">
-                {currentTrack.title}
-              </h4>
-              <p className="text-xs text-muted-foreground truncate">
-                {currentTrack.description}
-              </p>
-            </div>
+            {onClose && (
+              <button
+                onClick={onClose}
+                className="p-1.5 rounded-full hover:bg-muted/50 transition-colors flex-shrink-0"
+              >
+                <X className="w-4 h-4 text-muted-foreground" />
+              </button>
+            )}
           </div>
-          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+          <div className="flex items-center justify-end gap-2 text-xs text-muted-foreground">
             <span>{formatTime(currentTime)}</span>
             <span>/</span>
             <span>{formatTime(duration)}</span>
           </div>
-          {onClose && (
-            <button
-              onClick={onClose}
-              className="ml-3 p-1.5 rounded-full hover:bg-muted/50 transition-colors"
-            >
-              <X className="w-4 h-4 text-muted-foreground" />
-            </button>
-          )}
         </div>
 
         {/* Progress Bar */}
