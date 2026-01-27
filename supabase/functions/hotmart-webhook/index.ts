@@ -53,9 +53,6 @@ serve(async (req: Request): Promise<Response> => {
 
     if (event === "PURCHASE_COMPLETE" || event === "PURCHASE_APPROVED") {
       const { buyer, purchase } = payload.data;
-      const signupToken = generateToken();
-      const expiresAt = new Date();
-      expiresAt.setHours(expiresAt.getHours() + 48); // Token expires in 48 hours
 
       // Check if subscriber already exists
       const { data: existingSubscriber } = await supabase
@@ -65,7 +62,33 @@ serve(async (req: Request): Promise<Response> => {
         .maybeSingle();
 
       if (existingSubscriber) {
-        // Update existing subscriber
+        // Se já está ativo, é uma RENOVAÇÃO - apenas atualizar timestamp
+        if (existingSubscriber.subscription_status === "active") {
+          const { error: updateError } = await supabase
+            .from("subscribers")
+            .update({
+              hotmart_transaction_id: purchase.transaction,
+              updated_at: new Date().toISOString(),
+            })
+            .eq("id", existingSubscriber.id);
+
+          if (updateError) {
+            console.error("Error updating subscriber on renewal:", updateError);
+            throw updateError;
+          }
+
+          console.log("Renewal processed for active subscriber:", buyer.email);
+          return new Response(
+            JSON.stringify({ success: true, message: "Renewal processed - no email sent" }),
+            { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
+          );
+        }
+
+        // Se status é cancelled/expired/pending, reativar com novo token
+        const signupToken = generateToken();
+        const expiresAt = new Date();
+        expiresAt.setHours(expiresAt.getHours() + 48);
+
         const { error: updateError } = await supabase
           .from("subscribers")
           .update({
@@ -74,9 +97,9 @@ serve(async (req: Request): Promise<Response> => {
             hotmart_transaction_id: purchase.transaction,
             hotmart_product_id: purchase.product.id,
             hotmart_offer_id: purchase.offer?.code || null,
-            subscription_status: existingSubscriber.subscription_status === "active" ? "active" : "pending",
-            signup_token: existingSubscriber.subscription_status === "active" ? null : signupToken,
-            signup_token_expires_at: existingSubscriber.subscription_status === "active" ? null : expiresAt.toISOString(),
+            subscription_status: "pending",
+            signup_token: signupToken,
+            signup_token_expires_at: expiresAt.toISOString(),
             updated_at: new Date().toISOString(),
           })
           .eq("id", existingSubscriber.id);
@@ -86,36 +109,41 @@ serve(async (req: Request): Promise<Response> => {
           throw updateError;
         }
 
-        // Only send email if not already active
-        if (existingSubscriber.subscription_status !== "active") {
-          await sendSignupEmail(buyer.email, buyer.name, signupToken);
-        }
-
-        console.log("Updated existing subscriber:", buyer.email);
-      } else {
-        // Create new subscriber
-        const { error: insertError } = await supabase
-          .from("subscribers")
-          .insert({
-            email: buyer.email,
-            full_name: buyer.name,
-            phone: buyer.phone || null,
-            hotmart_transaction_id: purchase.transaction,
-            hotmart_product_id: purchase.product.id,
-            hotmart_offer_id: purchase.offer?.code || null,
-            subscription_status: "pending",
-            signup_token: signupToken,
-            signup_token_expires_at: expiresAt.toISOString(),
-          });
-
-        if (insertError) {
-          console.error("Error creating subscriber:", insertError);
-          throw insertError;
-        }
-
         await sendSignupEmail(buyer.email, buyer.name, signupToken);
-        console.log("Created new subscriber:", buyer.email);
+        console.log("Reactivation email sent to:", buyer.email);
+
+        return new Response(
+          JSON.stringify({ success: true, message: "Reactivation processed successfully" }),
+          { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
+        );
       }
+      
+      // Create new subscriber
+      const signupToken = generateToken();
+      const expiresAt = new Date();
+      expiresAt.setHours(expiresAt.getHours() + 48);
+
+      const { error: insertError } = await supabase
+        .from("subscribers")
+        .insert({
+          email: buyer.email,
+          full_name: buyer.name,
+          phone: buyer.phone || null,
+          hotmart_transaction_id: purchase.transaction,
+          hotmart_product_id: purchase.product.id,
+          hotmart_offer_id: purchase.offer?.code || null,
+          subscription_status: "pending",
+          signup_token: signupToken,
+          signup_token_expires_at: expiresAt.toISOString(),
+        });
+
+      if (insertError) {
+        console.error("Error creating subscriber:", insertError);
+        throw insertError;
+      }
+
+      await sendSignupEmail(buyer.email, buyer.name, signupToken);
+      console.log("Created new subscriber:", buyer.email);
 
       return new Response(
         JSON.stringify({ success: true, message: "Purchase processed successfully" }),
