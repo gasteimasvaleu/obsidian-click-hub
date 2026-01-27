@@ -116,10 +116,8 @@ const Audiofy = () => {
                 style={{ maxHeight: '300px' }}
                 autoPlay
                 muted
+                loop
                 playsInline
-                onEnded={(e) => {
-                  e.currentTarget.currentTime = 0;
-                }}
               />
             </GlassCard>
           </div>
