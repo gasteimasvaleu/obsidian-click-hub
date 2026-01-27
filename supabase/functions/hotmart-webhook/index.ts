@@ -15,13 +15,14 @@ interface HotmartWebhookPayload {
       email: string;
       name: string;
       phone?: string;
+      checkout_phone?: string;
+    };
+    product: {
+      id: number;
+      name: string;
     };
     purchase: {
       transaction: string;
-      product: {
-        id: string;
-        name: string;
-      };
       offer?: {
         code: string;
       };
@@ -52,7 +53,7 @@ serve(async (req: Request): Promise<Response> => {
     const event = payload.event;
 
     if (event === "PURCHASE_COMPLETE" || event === "PURCHASE_APPROVED") {
-      const { buyer, purchase } = payload.data;
+      const { buyer, purchase, product } = payload.data;
 
       // Check if subscriber already exists
       const { data: existingSubscriber } = await supabase
@@ -95,7 +96,7 @@ serve(async (req: Request): Promise<Response> => {
             full_name: buyer.name,
             phone: buyer.phone || null,
             hotmart_transaction_id: purchase.transaction,
-            hotmart_product_id: purchase.product.id,
+            hotmart_product_id: String(product.id),
             hotmart_offer_id: purchase.offer?.code || null,
             subscription_status: "pending",
             signup_token: signupToken,
@@ -130,7 +131,7 @@ serve(async (req: Request): Promise<Response> => {
           full_name: buyer.name,
           phone: buyer.phone || null,
           hotmart_transaction_id: purchase.transaction,
-          hotmart_product_id: purchase.product.id,
+          hotmart_product_id: String(product.id),
           hotmart_offer_id: purchase.offer?.code || null,
           subscription_status: "pending",
           signup_token: signupToken,
