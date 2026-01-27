@@ -638,6 +638,7 @@ export type Database = {
           phone: string | null
           signup_token: string | null
           signup_token_expires_at: string | null
+          subscription_expires_at: string | null
           subscription_status: Database["public"]["Enums"]["subscription_status"]
           updated_at: string | null
           user_id: string | null
@@ -653,6 +654,7 @@ export type Database = {
           phone?: string | null
           signup_token?: string | null
           signup_token_expires_at?: string | null
+          subscription_expires_at?: string | null
           subscription_status?: Database["public"]["Enums"]["subscription_status"]
           updated_at?: string | null
           user_id?: string | null
@@ -668,6 +670,7 @@ export type Database = {
           phone?: string | null
           signup_token?: string | null
           signup_token_expires_at?: string | null
+          subscription_expires_at?: string | null
           subscription_status?: Database["public"]["Enums"]["subscription_status"]
           updated_at?: string | null
           user_id?: string | null

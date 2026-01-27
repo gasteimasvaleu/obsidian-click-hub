@@ -23,6 +23,7 @@ interface HotmartWebhookPayload {
     };
     purchase: {
       transaction: string;
+      date_next_charge?: number;  // timestamp em milissegundos
       offer?: {
         code: string;
       };
@@ -55,6 +56,11 @@ serve(async (req: Request): Promise<Response> => {
     if (event === "PURCHASE_COMPLETE" || event === "PURCHASE_APPROVED") {
       const { buyer, purchase, product } = payload.data;
 
+      // Convert date_next_charge (milliseconds) to ISO string
+      const subscriptionExpiresAt = purchase.date_next_charge 
+        ? new Date(purchase.date_next_charge).toISOString() 
+        : null;
+
       // Check if subscriber already exists
       const { data: existingSubscriber } = await supabase
         .from("subscribers")
@@ -69,6 +75,7 @@ serve(async (req: Request): Promise<Response> => {
             .from("subscribers")
             .update({
               hotmart_transaction_id: purchase.transaction,
+              subscription_expires_at: subscriptionExpiresAt,
               updated_at: new Date().toISOString(),
             })
             .eq("id", existingSubscriber.id);
@@ -99,6 +106,7 @@ serve(async (req: Request): Promise<Response> => {
             hotmart_product_id: String(product.id),
             hotmart_offer_id: purchase.offer?.code || null,
             subscription_status: "pending",
+            subscription_expires_at: subscriptionExpiresAt,
             signup_token: signupToken,
             signup_token_expires_at: expiresAt.toISOString(),
             updated_at: new Date().toISOString(),
@@ -134,6 +142,7 @@ serve(async (req: Request): Promise<Response> => {
           hotmart_product_id: String(product.id),
           hotmart_offer_id: purchase.offer?.code || null,
           subscription_status: "pending",
+          subscription_expires_at: subscriptionExpiresAt,
           signup_token: signupToken,
           signup_token_expires_at: expiresAt.toISOString(),
         });
