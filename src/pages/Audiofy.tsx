@@ -111,7 +111,7 @@ const Audiofy = () => {
           <div className="flex justify-center w-full mb-8">
             <GlassCard className="w-full max-w-[500px] p-0 overflow-hidden">
               <video
-                src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/ebooksnovo.mp4"
+                src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/bannermusical.mp4"
                 className="w-full h-auto"
                 style={{ maxHeight: '300px' }}
                 autoPlay
