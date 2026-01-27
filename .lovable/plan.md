@@ -1,57 +1,48 @@
 
-
-## Remoção do Card de Carrossel de Cursos
+## Remoção do Alerta de Plataforma Externa
 
 ### Contexto
-Como agora existe uma área dedicada para gerenciamento de carrosseis (`/admin/plataforma/carrosseis`), o card "Carrossel de Cursos" na página de Configurações da Plataforma ficou redundante e deve ser removido.
+O card de alerta na página de login menciona uma "plataforma externa" que não existe mais, então deve ser removido para evitar confusão.
 
 ---
 
 ### Mudanças Necessárias
 
-**Arquivo:** `src/pages/admin/plataforma/PlatformSettingsManager.tsx`
+**Arquivo:** `src/pages/Login.tsx`
 
-1. **Remover o Card do Carrossel** (linhas 245-278)
-   - Excluir todo o bloco `<Card>` que contém os campos de título e descrição do carrossel
+1. **Remover o componente Alert** (linhas 82-88)
+   - Excluir todo o bloco `<Alert>` que contém a mensagem sobre cadastro independente
 
-2. **Atualizar a interface `PlatformSettings`** (linhas 15-25)
-   - Remover `carousel_title` e `carousel_description` da interface
-
-3. **Atualizar `defaultSettings`** (linhas 27-37)
-   - Remover `carousel_title` e `carousel_description` dos valores padrão
+2. **Limpar imports não utilizados** (linha 9-10)
+   - Remover `Alert` e `AlertDescription` dos imports
+   - Remover `Info` do lucide-react (se não for usado em outro lugar)
 
 ---
 
 ### Código a Remover
 
-```typescript
-// Da interface PlatformSettings (remover estas linhas):
-carousel_title: string;
-carousel_description: string;
+```tsx
+// Remover import (linha 9):
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
-// Do defaultSettings (remover estas linhas):
-carousel_title: "",
-carousel_description: "",
+// Remover import do ícone Info (linha 10):
+import { Info } from 'lucide-react';
 
-// Remover todo este bloco Card (linhas 245-278):
-<Card>
-  <CardHeader>
-    <CardTitle>Carrossel de Cursos</CardTitle>
-    ...
-  </CardHeader>
-  <CardContent>
-    ...
-  </CardContent>
-</Card>
+// Remover todo este bloco (linhas 82-88):
+<Alert className="mt-4 border-primary/30 bg-primary/5">
+  <Info className="h-4 w-4 text-primary" />
+  <AlertDescription className="text-xs text-muted-foreground ml-2">
+    <strong className="text-primary">Atenção:</strong> Este cadastro é independente da plataforma externa. 
+    Mesmo que você já tenha login na plataforma, será necessário criar uma nova conta aqui para acessar o app.
+  </AlertDescription>
+</Alert>
 ```
 
 ---
 
 ### Resultado
 
-A página de Configurações da Plataforma ficará apenas com:
-- Configurações do Header (banner/vídeo e textos)
-- Botão de salvar
-
-Os carrosseis agora são gerenciados exclusivamente na área dedicada `/admin/plataforma/carrosseis`.
-
+A página de login ficará mais limpa, contendo apenas:
+- Título e descrição de boas-vindas
+- Botão "Limpar sessão"
+- Tabs de login/cadastro
