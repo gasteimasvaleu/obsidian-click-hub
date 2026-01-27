@@ -17,3 +17,9 @@ verify_jwt = true
 
 [functions.generate-verse-comment]
 verify_jwt = false
+
+[functions.hotmart-webhook]
+verify_jwt = false
+
+[functions.complete-signup]
+verify_jwt = false

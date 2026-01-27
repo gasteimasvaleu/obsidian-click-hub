@@ -20,6 +20,7 @@ import WordSearchPlayer from "./pages/games/WordSearchPlayer";
 import QuizPlayer from "./pages/games/QuizPlayer";
 import PuzzlePlayer from "./pages/games/PuzzlePlayer";
 import Login from "./pages/Login";
+import Cadastro from "./pages/Cadastro";
 import Profile from "./pages/Profile";
 import Dashboard from "./pages/admin/Dashboard";
 import EbooksManager from "./pages/admin/EbooksManager";
@@ -113,6 +114,7 @@ const App = () => {
               <Route path="/biblia/:bookId/:chapterNumber" element={<ProtectedRoute><ChapterReaderPage /></ProtectedRoute>} />
               <Route path="/devocional" element={<ProtectedRoute><DailyDevotionalPage /></ProtectedRoute>} />
               <Route path="/login" element={<Login />} />
+              <Route path="/cadastro" element={<Cadastro />} />
               <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
               <Route path="/plataforma" element={<ProtectedRoute><PlataformaPage /></ProtectedRoute>} />
               <Route path="/plataforma/curso/:courseId" element={<ProtectedRoute><CoursePage /></ProtectedRoute>} />
