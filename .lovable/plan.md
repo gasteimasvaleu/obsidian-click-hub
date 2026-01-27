@@ -1,102 +1,80 @@
 
 
-## Correção do Webhook Hotmart - Estrutura do Payload
+## Adicionar Coluna de Expiração de Assinatura
 
-### Problema Identificado
+### Contexto
 
-O código atual espera que o produto esteja em `payload.data.purchase.product`, mas a Hotmart envia o produto em `payload.data.product` (no nível raiz de `data`).
-
-**Erro registrado nos logs:**
-```
-TypeError: Cannot read properties of undefined (reading 'id')
-at hotmart-webhook/index.ts:96:46
-```
-
-### Estrutura Real do Payload Hotmart
-
-Com base no webhook recebido:
-```json
-{
-  "data": {
-    "product": {
-      "id": 6754817,
-      "name": "BíbliaToon KIDS"
-    },
-    "purchase": {
-      "transaction": "HP3059023753",
-      "offer": {
-        "code": "vqlbmkzk"
-      }
-    },
-    "buyer": {
-      "email": "direitaquevence@hotmail.com",
-      "name": "CAIO FIGUEIREDO ROBERTO"
-    }
-  }
-}
-```
+A Hotmart envia o campo `purchase.date_next_charge` nos webhooks de compra, que indica a data da próxima cobrança. Para assinaturas mensais, isso funciona como a data de expiração do período atual - após essa data, se o pagamento não for renovado, o usuário perde acesso.
 
 ### Alterações Necessárias
 
+#### 1. Migração de Banco de Dados
+
+Adicionar nova coluna na tabela `subscribers`:
+
+```sql
+ALTER TABLE subscribers
+ADD COLUMN subscription_expires_at TIMESTAMP WITH TIME ZONE;
+
+COMMENT ON COLUMN subscribers.subscription_expires_at IS 
+  'Data de expiração da assinatura (próxima cobrança da Hotmart)';
+```
+
+#### 2. Atualizar Edge Function `hotmart-webhook`
+
 **Arquivo:** `supabase/functions/hotmart-webhook/index.ts`
 
-**1. Atualizar a interface TypeScript (linhas 11-30):**
+**2.1 Atualizar interface TypeScript:**
 
-Corrigir a estrutura para refletir o payload real:
+Adicionar o campo `date_next_charge` na interface de purchase:
 
 ```typescript
-interface HotmartWebhookPayload {
-  event: string;
-  data: {
-    buyer: {
-      email: string;
-      name: string;
-      phone?: string;
-      checkout_phone?: string;
-    };
-    product: {
-      id: number;
-      name: string;
-    };
-    purchase: {
-      transaction: string;
-      offer?: {
-        code: string;
-      };
-    };
+purchase: {
+  transaction: string;
+  date_next_charge?: number;  // timestamp em milissegundos
+  offer?: {
+    code: string;
   };
-}
+};
 ```
 
-**2. Atualizar desestruturação do payload (linha 55):**
+**2.2 Processar a data no código:**
+
+Converter o timestamp de milissegundos para ISO string e salvar:
 
 ```typescript
-// De:
-const { buyer, purchase } = payload.data;
-
-// Para:
-const { buyer, purchase, product } = payload.data;
+// Converter date_next_charge (milissegundos) para Date
+const subscriptionExpiresAt = purchase.date_next_charge 
+  ? new Date(purchase.date_next_charge).toISOString() 
+  : null;
 ```
 
-**3. Corrigir referências ao product.id:**
+**2.3 Atualizar INSERT e UPDATE statements:**
 
-- **Linha 98:** `purchase.product.id` → `String(product.id)`
-- **Linha 133:** `purchase.product.id` → `String(product.id)`
+Incluir `subscription_expires_at` em todos os locais onde o subscriber é criado ou atualizado:
 
-O `id` da Hotmart é um número, então precisamos converter para string.
+- Renovação de assinatura ativa (linha ~70)
+- Reativação de assinatura cancelada (linha ~93)
+- Criação de novo subscriber (linha ~127)
 
-### Resumo das Mudanças
+### Lógica de Funcionamento
 
-| Local | Antes | Depois |
-|-------|-------|--------|
-| Interface | `purchase.product.id` | `product.id` no nível raiz |
-| Linha 55 | `{ buyer, purchase }` | `{ buyer, purchase, product }` |
-| Linha 98 | `purchase.product.id` | `String(product.id)` |
-| Linha 133 | `purchase.product.id` | `String(product.id)` |
+| Evento | Ação com subscription_expires_at |
+|--------|----------------------------------|
+| PURCHASE_COMPLETE | Salva date_next_charge como subscription_expires_at |
+| PURCHASE_APPROVED | Salva date_next_charge como subscription_expires_at |
+| Renovação (status active) | Atualiza subscription_expires_at com nova data |
+| SUBSCRIPTION_CANCELLATION | Mantém a data atual (usuário tem acesso até expirar) |
 
-### Após o Deploy
+### Uso Futuro
 
-Depois de corrigir e fazer deploy, será necessário:
-1. Reprocessar a compra de `direitaquevence@hotmail.com` manualmente, ou
-2. Solicitar que a Hotmart reenvie o webhook para essa transação
+Com esta coluna, você poderá:
+- Exibir ao usuário quando sua assinatura expira
+- Implementar lógica de bloqueio automático após expiração
+- Enviar lembretes antes da renovação
+- Verificar status real de acesso (mesmo após cancelamento, usuário tem acesso até a data de expiração)
+
+### Atualizar Registro Existente
+
+Após implementar, podemos atualizar o registro do `direitaquevence@hotmail.com` com a data de expiração correta baseada na compra de hoje.
 
