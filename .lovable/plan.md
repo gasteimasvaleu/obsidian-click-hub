@@ -1,42 +1,49 @@
 
 
-## Melhorar Template do Email com Link Clicável de Fallback
+## Adicionar Aviso sobre Email no Formulário de Cadastro
 
-### Situação Atual
+### Objetivo
+Adicionar um aviso informativo diretamente no formulário de cadastro (quando o token é válido) para que o usuário saiba verificar a caixa de spam caso não tenha recebido o email.
 
-O template de email já possui um texto de fallback (linhas 240-243), mas o link está apenas como texto estático dentro de um `<span>`, o que significa que o usuário precisa copiar e colar manualmente no navegador.
+### Implementação
 
-### Melhoria Proposta
+**Arquivo:** `src/pages/Cadastro.tsx`
 
-Converter o link de fallback de texto estático para um link clicável (`<a href>`), facilitando para usuários cujos clientes de email não renderizam o botão corretamente.
+**Alteração 1 - Import do ícone Mail (linha 9):**
 
-### Alteração
-
-**Arquivo:** `supabase/functions/hotmart-webhook/index.ts`
-
-**De (linhas 240-243):**
-```html
-<p style="color: #64748b; font-size: 12px; text-align: center;">
-  Caso o botão não funcione, copie e cole este link no navegador:<br>
-  <span style="color: #a855f7; word-break: break-all;">${signupUrl}</span>
-</p>
+```tsx
+import { Loader2, CheckCircle, XCircle, AlertTriangle, Mail } from 'lucide-react';
 ```
 
-**Para:**
-```html
-<p style="color: #64748b; font-size: 12px; text-align: center;">
-  Caso o botão não funcione, clique ou copie e cole este link no navegador:<br>
-  <a href="${signupUrl}" style="color: #a855f7; word-break: break-all; text-decoration: underline;">${signupUrl}</a>
-</p>
+**Alteração 2 - Adicionar aviso no formulário (estado `valid`, após linha 165):**
+
+O aviso será adicionado logo no início do formulário, antes do campo de email:
+
+```tsx
+case 'valid':
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      {/* Novo aviso informativo */}
+      <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-3 mb-2">
+        <p className="text-blue-400 text-sm flex items-start gap-2">
+          <Mail className="w-4 h-4 mt-0.5 flex-shrink-0" />
+          <span>
+            Não recebeu o email? Verifique sua caixa de <strong>spam</strong> ou <strong>lixo eletrônico</strong>.
+          </span>
+        </p>
+      </div>
+      
+      {/* Campos do formulário continuam aqui... */}
+      <div className="space-y-2">
+        <Label htmlFor="email">Email</Label>
+        ...
 ```
 
-### Resultado
+### Resultado Visual
 
-| Antes | Depois |
-|-------|--------|
-| Texto estático (precisa copiar/colar) | Link clicável + opção de copiar/colar |
-
-Os usuários agora terão duas opções para completar o cadastro:
-1. **Botão principal** - "Completar Cadastro" 
-2. **Link de fallback clicável** - para clientes de email que não renderizam botões
+O aviso aparecerá como uma caixa destacada em azul no topo do formulário com:
+- Ícone de envelope (Mail)
+- Texto: "Não recebeu o email? Verifique sua caixa de **spam** ou **lixo eletrônico**."
+- Estilo suave que não compete com os campos do formulário
+- Cor azul informativa (em vez de amarelo de alerta) para indicar uma dica útil
 
