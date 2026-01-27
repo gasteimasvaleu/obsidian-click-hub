@@ -238,8 +238,8 @@ async function sendSignupEmail(email: string, name: string, token: string): Prom
             </p>
             
             <p style="color: #64748b; font-size: 12px; text-align: center;">
-              Caso o botão não funcione, copie e cole este link no navegador:<br>
-              <span style="color: #a855f7; word-break: break-all;">${signupUrl}</span>
+              Caso o botão não funcione, clique ou copie e cole este link no navegador:<br>
+              <a href="${signupUrl}" style="color: #a855f7; word-break: break-all; text-decoration: underline;">${signupUrl}</a>
             </p>
           </div>
         </body>
