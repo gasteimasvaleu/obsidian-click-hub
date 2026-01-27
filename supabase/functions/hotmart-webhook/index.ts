@@ -197,7 +197,7 @@ async function sendSignupEmail(email: string, name: string, token: string): Prom
 
   try {
     const { error } = await resend.emails.send({
-      from: "Biblia Toon Kids <noreply@bibliatoonkids.com.br>",
+      from: "Biblia Toon Kids <bibliatoonkids@bibliatoonkids.com>",
       to: [email],
       subject: "🎉 Complete seu cadastro - Biblia Toon Kids",
       html: `
