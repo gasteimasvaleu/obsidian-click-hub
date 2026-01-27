@@ -1,80 +1,150 @@
 
 
-## Adicionar Coluna de Expiração de Assinatura
+## Player de Música com Playlist para Audiofy
 
-### Contexto
+### Visão Geral
 
-A Hotmart envia o campo `purchase.date_next_charge` nos webhooks de compra, que indica a data da próxima cobrança. Para assinaturas mensais, isso funciona como a data de expiração do período atual - após essa data, se o pagamento não for renovado, o usuário perde acesso.
+Criar um player de áudio persistente na página Audiofy que permite ao usuário selecionar múltiplas músicas e tocá-las como uma playlist, com controles completos de reprodução.
 
-### Alterações Necessárias
+### Funcionalidades
 
-#### 1. Migração de Banco de Dados
+**Player Principal (fixo na parte inferior)**
+- Barra de progresso clicável/arrastável
+- Botões de controle: anterior, play/pause, próxima
+- Exibição da música atual (título + artista/descrição)
+- Indicador de tempo atual / tempo total
+- Controle de volume
+- Botão de shuffle (ordem aleatória)
+- Botão de repeat (repetir playlist/música)
 
-Adicionar nova coluna na tabela `subscribers`:
+**Lista de Músicas**
+- Cada música mostra ícone de play ao lado
+- Indicador visual da música atual tocando
+- Clique em qualquer música adiciona à fila ou toca imediatamente
+- Animação de ondas sonoras na música em reprodução
 
-```sql
-ALTER TABLE subscribers
-ADD COLUMN subscription_expires_at TIMESTAMP WITH TIME ZONE;
+### Arquitetura
 
-COMMENT ON COLUMN subscribers.subscription_expires_at IS 
-  'Data de expiração da assinatura (próxima cobrança da Hotmart)';
+```
+src/
+├── components/
+│   └── audiofy/
+│       ├── AudioPlayer.tsx        # Player principal com controles
+│       ├── PlaylistQueue.tsx      # Lista de músicas na fila (opcional)
+│       └── SongItem.tsx           # Componente individual de música
+└── pages/
+    └── Audiofy.tsx                # Página atualizada
 ```
 
-#### 2. Atualizar Edge Function `hotmart-webhook`
+### Interface do Player
 
-**Arquivo:** `supabase/functions/hotmart-webhook/index.ts`
+```text
+┌─────────────────────────────────────────────────────────────┐
+│  🎵 Nome da Música                              0:45 / 3:22 │
+│  ────────────●──────────────────────────────────            │
+│                                                             │
+│     🔀     ⏮️     ▶️     ⏭️     🔁     🔊━━━●━━━━           │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
 
-**2.1 Atualizar interface TypeScript:**
+### Estados Gerenciados
 
-Adicionar o campo `date_next_charge` na interface de purchase:
+- `playlist`: Array de músicas selecionadas
+- `currentIndex`: Índice da música atual na playlist
+- `isPlaying`: Se está tocando
+- `currentTime`: Tempo atual de reprodução
+- `duration`: Duração total da música
+- `volume`: Volume (0-1)
+- `shuffle`: Modo aleatório ativo
+- `repeat`: Modo de repetição ('none' | 'all' | 'one')
 
+### Fluxo de Uso
+
+1. Usuário entra na página e vê lista de músicas
+2. Clica em uma música - player aparece e começa a tocar
+3. Pode clicar em outras músicas para adicionar à fila ou tocar imediatamente
+4. Player fica fixo na parte inferior enquanto navega pela lista
+5. Controles permitem pular, pausar, ajustar volume e progresso
+
+---
+
+### Detalhes Técnicos
+
+#### 1. Novo Componente `AudioPlayer.tsx`
+
+**Localização:** `src/components/audiofy/AudioPlayer.tsx`
+
+Componente que encapsula toda a lógica do player:
+- Usa um único elemento `<audio>` com ref
+- Gerencia eventos: `onTimeUpdate`, `onEnded`, `onLoadedMetadata`
+- Barra de progresso usando o componente `Slider` já existente
+- Controle de volume também com `Slider`
+- Animação de fade-in quando aparece
+
+**Props principais:**
 ```typescript
-purchase: {
-  transaction: string;
-  date_next_charge?: number;  // timestamp em milissegundos
-  offer?: {
-    code: string;
-  };
+interface AudioPlayerProps {
+  playlist: Track[];
+  currentIndex: number;
+  onTrackChange: (index: number) => void;
+  onClose?: () => void;
+}
+
+interface Track {
+  id: string;
+  title: string;
+  description: string;
+  file_url: string;
+  duration: number | null;
+  thumbnail_url: string | null;
+}
+```
+
+#### 2. Novo Componente `SongItem.tsx`
+
+**Localização:** `src/components/audiofy/SongItem.tsx`
+
+Componente para exibir cada música na lista:
+- Indicador visual quando é a música tocando (animação de ondas)
+- Botão de play que aparece no hover
+- Badge de duração
+
+#### 3. Atualização da Página `Audiofy.tsx`
+
+**Mudanças:**
+- Filtrar apenas itens com `content_type === 'audiobook'` (músicas)
+- Adicionar estado para playlist e índice atual
+- Renderizar `AudioPlayer` fixo no bottom quando há música selecionada
+- Adicionar padding-bottom extra quando player está visível
+
+**Lógica de seleção:**
+```typescript
+const handleSelectTrack = (track: Track, index: number) => {
+  setPlaylist(audioTracks); // Todas as músicas
+  setCurrentIndex(index);
 };
 ```
 
-**2.2 Processar a data no código:**
+#### 4. Estilos do Player
 
-Converter o timestamp de milissegundos para ISO string e salvar:
+O player terá visual consistente com o tema futurístico:
+- Background glass effect
+- Cores primary (verde neon)
+- Bordas arredondadas
+- Sombra neon sutil
+- Posição fixa no bottom da tela
 
-```typescript
-// Converter date_next_charge (milissegundos) para Date
-const subscriptionExpiresAt = purchase.date_next_charge 
-  ? new Date(purchase.date_next_charge).toISOString() 
-  : null;
-```
+### Compatibilidade Mobile
 
-**2.3 Atualizar INSERT e UPDATE statements:**
+- Player responsivo que se adapta a telas menores
+- Controles com tamanho touch-friendly
+- Barra de progresso fácil de arrastar
+- Volume pode ser ocultado em mobile (usar volume do device)
 
-Incluir `subscription_expires_at` em todos os locais onde o subscriber é criado ou atualizado:
+### Gamificação
 
-- Renovação de assinatura ativa (linha ~70)
-- Reativação de assinatura cancelada (linha ~93)
-- Criação de novo subscriber (linha ~127)
-
-### Lógica de Funcionamento
-
-| Evento | Ação com subscription_expires_at |
-|--------|----------------------------------|
-| PURCHASE_COMPLETE | Salva date_next_charge como subscription_expires_at |
-| PURCHASE_APPROVED | Salva date_next_charge como subscription_expires_at |
-| Renovação (status active) | Atualiza subscription_expires_at com nova data |
-| SUBSCRIPTION_CANCELLATION | Mantém a data atual (usuário tem acesso até expirar) |
-
-### Uso Futuro
-
-Com esta coluna, você poderá:
-- Exibir ao usuário quando sua assinatura expira
-- Implementar lógica de bloqueio automático após expiração
-- Enviar lembretes antes da renovação
-- Verificar status real de acesso (mesmo após cancelamento, usuário tem acesso até a data de expiração)
-
-### Atualizar Registro Existente
-
-Após implementar, podemos atualizar o registro do `direitaquevence@hotmail.com` com a data de expiração correta baseada na compra de hoje.
+Mantém a integração existente com `useUserProgress`:
+- Registra atividade `music_listened` ao iniciar uma música
+- Evita registrar múltiplas vezes a mesma música na mesma sessão
 
