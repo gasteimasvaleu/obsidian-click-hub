@@ -139,4 +139,14 @@ All colors MUST be HSL.
   .btn-hover-scale:hover {
     transform: scale(1.05);
   }
+
+  /* Soundwave animation for playing tracks */
+  @keyframes soundwave {
+    0%, 100% {
+      transform: scaleY(0.5);
+    }
+    50% {
+      transform: scaleY(1);
+    }
+  }
 }
