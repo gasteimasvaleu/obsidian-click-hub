@@ -192,7 +192,7 @@ serve(async (req: Request): Promise<Response> => {
 });
 
 async function sendSignupEmail(email: string, name: string, token: string): Promise<void> {
-  const appUrl = Deno.env.get("APP_URL") || "https://obsidian-click-hub.lovable.app";
+  const appUrl = "https://app.bibliatoonkids.com";
   const signupUrl = `${appUrl}/cadastro?token=${token}`;
 
   try {
