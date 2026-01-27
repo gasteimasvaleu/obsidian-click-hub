@@ -1,37 +1,42 @@
 
 
-## Atualizar URL do Email de Cadastro
+## Melhorar Template do Email com Link Clicável de Fallback
 
-### Mudança Necessária
+### Situação Atual
 
-Atualizar a URL base na função `sendSignupEmail` para apontar para o domínio próprio da aplicação.
+O template de email já possui um texto de fallback (linhas 240-243), mas o link está apenas como texto estático dentro de um `<span>`, o que significa que o usuário precisa copiar e colar manualmente no navegador.
+
+### Melhoria Proposta
+
+Converter o link de fallback de texto estático para um link clicável (`<a href>`), facilitando para usuários cujos clientes de email não renderizam o botão corretamente.
 
 ### Alteração
 
 **Arquivo:** `supabase/functions/hotmart-webhook/index.ts`
 
-| Campo | Valor Atual | Novo Valor |
-|-------|-------------|------------|
-| URL Base | `https://obsidian-click-hub.lovable.app` | `https://app.bibliatoonkids.com` |
-
-### Código
-
-Linha 195 será alterada de:
-```typescript
-const appUrl = Deno.env.get("APP_URL") || "https://obsidian-click-hub.lovable.app";
+**De (linhas 240-243):**
+```html
+<p style="color: #64748b; font-size: 12px; text-align: center;">
+  Caso o botão não funcione, copie e cole este link no navegador:<br>
+  <span style="color: #a855f7; word-break: break-all;">${signupUrl}</span>
+</p>
 ```
 
-Para:
-```typescript
-const appUrl = "https://app.bibliatoonkids.com";
+**Para:**
+```html
+<p style="color: #64748b; font-size: 12px; text-align: center;">
+  Caso o botão não funcione, clique ou copie e cole este link no navegador:<br>
+  <a href="${signupUrl}" style="color: #a855f7; word-break: break-all; text-decoration: underline;">${signupUrl}</a>
+</p>
 ```
 
 ### Resultado
 
-O link no email de cadastro direcionará para:
-```
-https://app.bibliatoonkids.com/cadastro?token=xxxxx
-```
+| Antes | Depois |
+|-------|--------|
+| Texto estático (precisa copiar/colar) | Link clicável + opção de copiar/colar |
 
-Isso garante que os novos assinantes serão redirecionados para o domínio correto da aplicação ao clicar no botão "Completar Cadastro".
+Os usuários agora terão duas opções para completar o cadastro:
+1. **Botão principal** - "Completar Cadastro" 
+2. **Link de fallback clicável** - para clientes de email que não renderizam botões
 
