@@ -1,85 +1,74 @@
 
 
-## Visualizador de Ondas Sonoras / Equalizer Animado
+## Configuração de Acesso Admin e Cadastro de Usuários
 
-### Objetivo
+### Status Atual
 
-Adicionar um visualizador de ondas sonoras animado no player de música que reage ao estado de reprodução, criando uma experiência visual mais imersiva e futurista.
+✅ **Você já é admin!** Encontrei seu registro na tabela `user_roles`:
+- Email: caiorobbb@gmail.com
+- User ID: b4e481e6-172e-4874-aba7-4fe54727e947
+- Role: admin
 
-### Abordagem
+### Mudanças a Implementar
 
-Implementar um **equalizer visual com barras animadas** que:
-- Aparece quando a música está tocando
-- Cada barra oscila em velocidades diferentes para simular frequências de áudio
-- Usa a cor neon verde primária do tema para manter a consistência visual
+#### 1. Adicionar Link Admin na Navbar Superior
 
-### Arquitetura
+**Arquivo:** `src/components/FuturisticNavbar.tsx`
+
+Adicionar:
+- Importar o hook `isAdmin` do AuthContext
+- Importar ícone `Settings` do lucide-react
+- Exibir link para `/admin` apenas quando o usuário for admin
 
 ```text
-┌─────────────────────────────────────────┐
-│           Audio Player                  │
-│  ┌─────────────────────────────────┐   │
-│  │  [Ícone] Título & Descrição [X] │   │
-│  │  ┌───────────────────────────┐  │   │
-│  │  │   ▐█▐ █▐ ▐█ █▐ ▐█▐ █ ▐█   │  │   │ ← Novo: Visualizador
-│  │  └───────────────────────────┘  │   │
-│  │  00:00 / 03:45                  │   │
-│  └─────────────────────────────────┘   │
-│  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  │ ← Progress Bar
-│  [🔀]   [⏮] [▶/⏸] [⏭]   [🔁]         │
-└─────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────┐
+│  BíbliaToonKIDS    [👤] [⚙️Admin] [🚪] [ℹ️]           │
+│                         ↑                              │
+│                    Novo ícone (só para admins)         │
+└────────────────────────────────────────────────────────┘
 ```
 
-### Mudanças Técnicas
+#### 2. Modificar Página de Cadastro para Admins
 
-**1. Novo Componente: `src/components/audiofy/AudioEqualizer.tsx`**
+**Arquivo:** `src/pages/Cadastro.tsx`
 
-Criar componente reutilizável do equalizer com:
-- 5-7 barras verticais animadas
-- Animações CSS com delays diferentes para cada barra
-- Props para controlar estado (ativo/inativo)
-- Estilo que combina com o tema futurista
+Adicionar modo de cadastro manual para admins:
+- Verificar se o usuário está logado e é admin
+- Se for admin sem token: exibir formulário completo para cadastrar novos usuários
+- Se tiver token: manter fluxo atual de validação
+- Se não for admin e sem token: exibir erro de link inválido
 
-**2. Atualizar CSS: `src/index.css`**
-
-Adicionar animações do equalizer:
-- Keyframes para múltiplas barras com velocidades variadas
-- Classes para barras individuais com delays diferentes
-- Efeito de glow neon nas barras
-
-**3. Integrar no AudioPlayer: `src/components/audiofy/AudioPlayer.tsx`**
-
-- Importar o novo componente AudioEqualizer
-- Adicionar o visualizador entre a seção de info e o tempo de reprodução
-- Passar o estado `isPlaying` para controlar a animação
-
-### Detalhes da Implementação
-
-**AudioEqualizer.tsx:**
-```tsx
-// 7 barras com alturas e delays variados
-// Animação suave que simula frequências de áudio
-// Verde neon (#00FF66) com efeito glow
-// Pausa a animação quando não está tocando
+**Novo Fluxo:**
+```text
+Usuário acessa /cadastro
+        │
+        ├── Com token? → Fluxo normal (validar token + completar cadastro)
+        │
+        └── Sem token?
+                │
+                ├── É admin logado? → Formulário de cadastro manual
+                │                     (email + nome + telefone + senha)
+                │
+                └── Não é admin → Exibir "Link Inválido"
 ```
 
-**Animações CSS:**
-- `equalizer-bar-1` a `equalizer-bar-7`: velocidades de 0.3s a 0.6s
-- Cada barra com `animation-delay` diferente
-- `transform-origin: bottom` para crescer de baixo para cima
+### Detalhes Técnicos
 
-**Posicionamento:**
-- Centralizado horizontalmente no player
-- Altura de 20-24px
-- Largura de cada barra: 3-4px
-- Espaçamento entre barras: 2-3px
-- Cantos arredondados
+**FuturisticNavbar.tsx:**
+- Adicionar `isAdmin` ao destructuring do `useAuth()`
+- Adicionar `Settings` aos imports do lucide-react
+- Renderizar ícone de admin entre o perfil e logout quando `isAdmin === true`
 
-### Resultado Esperado
+**Cadastro.tsx:**
+- Importar `useAuth` do AuthContext
+- Criar novo estado `isAdminMode` para diferenciar os modos
+- Verificar no `useEffect`: se não tem token + usuário logado + é admin → ativar modo admin
+- Criar novo formulário de cadastro completo para admins com campo de email editável
+- Criar função `handleAdminSubmit` que usa `supabase.auth.admin.createUser` ou edge function
 
-Quando uma música está tocando:
-- 7 barras verdes neon oscilam em ritmos diferentes
-- Efeito visual que simula um equalizador de áudio real
-- As barras pausam quando a música é pausada
-- Visual clean e futurista que combina com o design existente
+### Segurança
+
+- O acesso ao cadastro manual continua protegido pela verificação `isAdmin` do AuthContext
+- A criação de usuário via admin usará uma edge function com validação de role
+- Não há exposição de funcionalidades admin para usuários normais
 
