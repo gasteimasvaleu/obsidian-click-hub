@@ -14,7 +14,7 @@ import {
   Music
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-
+import { AudioEqualizer } from "./AudioEqualizer";
 export interface Track {
   id: string;
   title: string;
@@ -259,10 +259,15 @@ export const AudioPlayer = ({
               </button>
             )}
           </div>
-          <div className="flex items-center justify-end gap-2 text-xs text-muted-foreground">
-            <span>{formatTime(currentTime)}</span>
-            <span>/</span>
-            <span>{formatTime(duration)}</span>
+          
+          {/* Equalizer Visualizer */}
+          <div className="flex items-center justify-between">
+            <AudioEqualizer isPlaying={isPlaying} />
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <span>{formatTime(currentTime)}</span>
+              <span>/</span>
+              <span>{formatTime(duration)}</span>
+            </div>
           </div>
         </div>
 

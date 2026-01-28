@@ -149,4 +149,20 @@ All colors MUST be HSL.
       transform: scaleY(1);
     }
   }
+
+  /* Equalizer bar animation */
+  @keyframes equalizer {
+    0%, 100% {
+      height: 4px;
+    }
+    50% {
+      height: 20px;
+    }
+  }
+
+  .equalizer-bar {
+    animation-name: equalizer;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+  }
 }
