@@ -1,74 +1,44 @@
 
 
-## Configuração de Acesso Admin e Cadastro de Usuários
-
-### Status Atual
-
-✅ **Você já é admin!** Encontrei seu registro na tabela `user_roles`:
-- Email: caiorobbb@gmail.com
-- User ID: b4e481e6-172e-4874-aba7-4fe54727e947
-- Role: admin
+## Renomear Audiofy para Bíbliafy
 
 ### Mudanças a Implementar
 
-#### 1. Adicionar Link Admin na Navbar Superior
+#### 1. Título da Página Audiofy
 
-**Arquivo:** `src/components/FuturisticNavbar.tsx`
+**Arquivo:** `src/pages/Audiofy.tsx`  
+**Linha:** 127
 
-Adicionar:
-- Importar o hook `isAdmin` do AuthContext
-- Importar ícone `Settings` do lucide-react
-- Exibir link para `/admin` apenas quando o usuário for admin
-
-```text
-┌────────────────────────────────────────────────────────┐
-│  BíbliaToonKIDS    [👤] [⚙️Admin] [🚪] [ℹ️]           │
-│                         ↑                              │
-│                    Novo ícone (só para admins)         │
-└────────────────────────────────────────────────────────┘
+**De:**
+```tsx
+Audiofy
 ```
 
-#### 2. Modificar Página de Cadastro para Admins
-
-**Arquivo:** `src/pages/Cadastro.tsx`
-
-Adicionar modo de cadastro manual para admins:
-- Verificar se o usuário está logado e é admin
-- Se for admin sem token: exibir formulário completo para cadastrar novos usuários
-- Se tiver token: manter fluxo atual de validação
-- Se não for admin e sem token: exibir erro de link inválido
-
-**Novo Fluxo:**
-```text
-Usuário acessa /cadastro
-        │
-        ├── Com token? → Fluxo normal (validar token + completar cadastro)
-        │
-        └── Sem token?
-                │
-                ├── É admin logado? → Formulário de cadastro manual
-                │                     (email + nome + telefone + senha)
-                │
-                └── Não é admin → Exibir "Link Inválido"
+**Para:**
+```tsx
+Bíbliafy
 ```
 
-### Detalhes Técnicos
+---
 
-**FuturisticNavbar.tsx:**
-- Adicionar `isAdmin` ao destructuring do `useAuth()`
-- Adicionar `Settings` aos imports do lucide-react
-- Renderizar ícone de admin entre o perfil e logout quando `isAdmin === true`
+#### 2. Menu Inferior (Tubelight NavBar)
 
-**Cadastro.tsx:**
-- Importar `useAuth` do AuthContext
-- Criar novo estado `isAdminMode` para diferenciar os modos
-- Verificar no `useEffect`: se não tem token + usuário logado + é admin → ativar modo admin
-- Criar novo formulário de cadastro completo para admins com campo de email editável
-- Criar função `handleAdminSubmit` que usa `supabase.auth.admin.createUser` ou edge function
+**Arquivo:** `src/App.tsx`  
+**Linha:** 58
 
-### Segurança
+**De:**
+```tsx
+{ name: 'Audiofy', url: '/audiofy', icon: Music },
+```
 
-- O acesso ao cadastro manual continua protegido pela verificação `isAdmin` do AuthContext
-- A criação de usuário via admin usará uma edge function com validação de role
-- Não há exposição de funcionalidades admin para usuários normais
+**Para:**
+```tsx
+{ name: 'Bíbliafy', url: '/audiofy', icon: Music },
+```
+
+### Resultado
+
+- O título na página de músicas mudará de "Audiofy" para "Bíbliafy"
+- O item no menu inferior também exibirá "Bíbliafy" ao invés de "Audiofy"
+- A URL `/audiofy` permanece a mesma (apenas o nome visual muda)
 
