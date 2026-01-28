@@ -6,9 +6,10 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
-import { Loader2, CheckCircle, XCircle, AlertTriangle, Mail } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
+import { Loader2, CheckCircle, XCircle, AlertTriangle, Mail, ShieldCheck } from 'lucide-react';
 
-type TokenStatus = 'loading' | 'valid' | 'invalid' | 'expired' | 'success';
+type TokenStatus = 'loading' | 'valid' | 'invalid' | 'expired' | 'success' | 'admin-mode';
 
 interface SubscriberData {
   email: string;
@@ -19,6 +20,7 @@ interface SubscriberData {
 const Cadastro = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const { user, isAdmin, loading: authLoading } = useAuth();
   const [tokenStatus, setTokenStatus] = useState<TokenStatus>('loading');
   const [subscriberData, setSubscriberData] = useState<SubscriberData | null>(null);
   const [expiredEmail, setExpiredEmail] = useState<string>('');
@@ -27,13 +29,21 @@ const Cadastro = () => {
   const token = searchParams.get('token');
 
   useEffect(() => {
-    if (!token) {
-      setTokenStatus('invalid');
+    if (authLoading) return;
+
+    // If there's a token, use the normal flow
+    if (token) {
+      validateToken(token);
       return;
     }
 
-    validateToken(token);
-  }, [token]);
+    // No token - check if admin
+    if (user && isAdmin) {
+      setTokenStatus('admin-mode');
+    } else {
+      setTokenStatus('invalid');
+    }
+  }, [token, user, isAdmin, authLoading]);
 
   const validateToken = async (token: string) => {
     try {
@@ -55,6 +65,51 @@ const Cadastro = () => {
     } catch (error) {
       console.error('Error validating token:', error);
       setTokenStatus('invalid');
+    }
+  };
+
+  const handleAdminSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    const formData = new FormData(e.currentTarget);
+    const email = formData.get('email') as string;
+    const fullName = formData.get('fullName') as string;
+    const phone = formData.get('phone') as string;
+    const password = formData.get('password') as string;
+    const confirmPassword = formData.get('confirmPassword') as string;
+
+    if (password !== confirmPassword) {
+      toast.error('As senhas não coincidem');
+      setIsLoading(false);
+      return;
+    }
+
+    if (password.length < 6) {
+      toast.error('A senha deve ter pelo menos 6 caracteres');
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      const { data, error } = await supabase.functions.invoke('admin-create-user', {
+        body: { email, password, fullName, phone },
+      });
+
+      if (error) throw error;
+
+      if (data.success) {
+        toast.success('Usuário criado com sucesso!');
+        // Reset form
+        (e.target as HTMLFormElement).reset();
+      } else {
+        toast.error(data.error || 'Erro ao criar usuário');
+      }
+    } catch (error: any) {
+      console.error('Error creating user:', error);
+      toast.error(error.message || 'Erro ao criar usuário');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -114,8 +169,94 @@ const Cadastro = () => {
         return (
           <div className="text-center py-8">
             <Loader2 className="w-12 h-12 animate-spin text-primary mx-auto mb-4" />
-            <p className="text-muted-foreground">Validando seu link...</p>
+            <p className="text-muted-foreground">Validando...</p>
           </div>
+        );
+
+      case 'admin-mode':
+        return (
+          <form onSubmit={handleAdminSubmit} className="space-y-4">
+            <div className="bg-primary/10 border border-primary/30 rounded-lg p-3">
+              <p className="text-primary text-sm flex items-start gap-2">
+                <ShieldCheck className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                <span>
+                  Modo Admin: Você pode cadastrar novos usuários manualmente.
+                </span>
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                placeholder="email@exemplo.com"
+                required
+                disabled={isLoading}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="fullName">Nome Completo</Label>
+              <Input
+                id="fullName"
+                name="fullName"
+                type="text"
+                placeholder="Nome do usuário"
+                required
+                disabled={isLoading}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="phone">Telefone (opcional)</Label>
+              <Input
+                id="phone"
+                name="phone"
+                type="tel"
+                placeholder="(11) 99999-9999"
+                disabled={isLoading}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="password">Senha</Label>
+              <Input
+                id="password"
+                name="password"
+                type="password"
+                placeholder="Mínimo 6 caracteres"
+                required
+                minLength={6}
+                disabled={isLoading}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="confirmPassword">Confirmar Senha</Label>
+              <Input
+                id="confirmPassword"
+                name="confirmPassword"
+                type="password"
+                placeholder="Confirme a senha"
+                required
+                minLength={6}
+                disabled={isLoading}
+              />
+            </div>
+
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Criando usuário...
+                </>
+              ) : (
+                'Criar Usuário'
+              )}
+            </Button>
+          </form>
         );
 
       case 'invalid':
@@ -255,7 +396,7 @@ const Cadastro = () => {
       <Card className="w-full max-w-md glass border-primary/20">
         <CardHeader className="text-center">
           <CardTitle className="text-3xl font-bold bg-gradient-to-r from-primary via-primary-glow to-primary bg-clip-text text-transparent">
-            {tokenStatus === 'valid' ? 'Complete seu Cadastro' : 'Cadastro'}
+            {tokenStatus === 'valid' ? 'Complete seu Cadastro' : tokenStatus === 'admin-mode' ? 'Cadastrar Usuário' : 'Cadastro'}
           </CardTitle>
           {tokenStatus === 'valid' && (
             <CardDescription className="text-muted-foreground">
