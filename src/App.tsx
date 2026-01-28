@@ -55,7 +55,7 @@ const queryClient = new QueryClient();
 const navItems = [
   { name: 'Início', url: '/', icon: Home },
   { name: 'Orações', url: '/oracoes', icon: BookHeart },
-  { name: 'Audiofy', url: '/audiofy', icon: Music },
+  { name: 'Bíbliafy', url: '/audiofy', icon: Music },
   { name: 'Cursos', url: '/plataforma', icon: GraduationCap },
   { name: 'Guia', url: '/guia-pais', icon: Users },
   { name: 'Games', url: '/games', icon: Gamepad2 }

@@ -124,7 +124,7 @@ const Audiofy = () => {
           
           <GlassCard className="max-w-2xl mx-auto text-center w-full">
             <h1 className="text-3xl font-bold mb-6 bg-gradient-to-r from-primary via-primary to-primary/60 bg-clip-text text-transparent">
-              Audiofy
+              Bíbliafy
             </h1>
             <p className="text-foreground/80 mb-8 text-lg">
               Músicas cristãs para crianças
