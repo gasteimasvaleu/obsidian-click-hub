@@ -41,6 +41,7 @@ All colors MUST be HSL.
     --glass-bg: rgba(255, 255, 255, 0.05);
     --glass-border: rgba(255, 255, 255, 0.1);
     --neon-glow: rgba(0, 255, 102, 0.4);
+    --neon-glow-purple: rgba(180, 50, 255, 0.4);
     
     --radius: 1rem;
 
@@ -128,7 +129,7 @@ All colors MUST be HSL.
   }
   
   .neon-glow-strong {
-    box-shadow: 0 8px 24px var(--neon-glow);
+    box-shadow: 0 8px 24px var(--neon-glow-purple);
   }
   
   /* Button hover animation */
