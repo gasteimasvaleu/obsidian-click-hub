@@ -1,112 +1,63 @@
 
 
-## Implementação: Devocional Diário via WhatsApp
+## Corrigir Erro de Logout "Auth Missing Session"
 
-Os secrets da Z-API já estão configurados. Agora vou implementar todos os componentes do sistema.
+### Problema Identificado
 
-### 1. Migração do Banco de Dados
+A sessão armazenada no navegador foi invalidada no servidor (provavelmente expirou ou foi encerrada em outro dispositivo). Quando o Supabase tenta fazer logout, não encontra a sessão no servidor e retorna erro 403.
 
-Adicionar colunas na tabela `subscribers`:
+### Solucao
 
-```sql
-ALTER TABLE subscribers 
-ADD COLUMN IF NOT EXISTS whatsapp_optin BOOLEAN DEFAULT false,
-ADD COLUMN IF NOT EXISTS whatsapp_optin_at TIMESTAMP WITH TIME ZONE;
+Modificar a funcao `signOut` para lidar com este cenario:
+1. Tentar fazer logout normal
+2. Se houver erro de sessao nao encontrada, limpar o estado local de qualquer forma
+3. Garantir que o usuario seja deslogado da interface mesmo quando o servidor ja nao reconhece a sessao
+
+### Alteracoes Necessarias
+
+**Arquivo: `src/contexts/AuthContext.tsx`**
+
+Atualizar a funcao `signOut` (linhas 142-149):
+
+```typescript
+const signOut = async () => {
+  try {
+    const { error } = await supabase.auth.signOut();
+    
+    // Mesmo se houver erro (como session_not_found), limpar estado local
+    setSession(null);
+    setUser(null);
+    setIsAdmin(false);
+    
+    if (error) {
+      // Se for erro de sessao nao encontrada, apenas logar
+      // O logout local ja foi feito
+      console.log('Logout server-side falhou (sessao provavelmente ja expirada):', error.message);
+    }
+    
+    toast.success('Logout realizado com sucesso');
+  } catch (err) {
+    // Fallback: limpar estado local mesmo em caso de excecao
+    setSession(null);
+    setUser(null);
+    setIsAdmin(false);
+    localStorage.removeItem('sb-fnksvazibtekphseknob-auth-token');
+    toast.success('Logout realizado com sucesso');
+  }
+};
 ```
 
-### 2. Edge Functions
+### Por que Funciona
 
-**2.1. `supabase/functions/send-whatsapp/index.ts`**
+- O Supabase armazena a sessao no localStorage
+- Quando a sessao do servidor expira, o cliente ainda tem os dados locais
+- A solucao limpa o estado React E o localStorage, independente do que o servidor responde
+- O usuario e redirecionado para login normalmente
 
-Função utilitária para enviar mensagens via Z-API:
-- Recebe `phone` e `message`
-- Formata o número (adiciona 55 se necessário)
-- Envia para a API da Z-API
-- Retorna sucesso/erro
+### Teste
 
-**2.2. `supabase/functions/send-daily-devotional-whatsapp/index.ts`**
-
-Função principal chamada pelo cron:
-- Busca o devocional do dia
-- Busca assinantes com `whatsapp_optin = true` e `subscription_status = 'active'`
-- Formata a mensagem com tema, versículo, reflexão e oração
-- Envia para cada assinante com delay de 1.5s (rate limiting)
-- Retorna estatísticas de envio
-
-**2.3. Atualizar `supabase/config.toml`**
-
-```toml
-[functions.send-whatsapp]
-verify_jwt = true
-
-[functions.send-daily-devotional-whatsapp]
-verify_jwt = false
-```
-
-### 3. Documentação do CRON
-
-**`docs/cron-whatsapp-setup.sql`**
-
-Instruções para configurar o cron job no Supabase:
-- Executar às 6h de Brasília (9h UTC)
-- Comandos para monitorar e gerenciar o job
-
-### 4. Componente de Opt-in
-
-**`src/components/profile/WhatsAppOptinSection.tsx`**
-
-Card na página de perfil com:
-- Switch para ativar/desativar
-- Campo para editar número de telefone
-- Validação de número brasileiro
-- Feedback visual do status
-
-### 5. Atualização da Página de Perfil
-
-**`src/pages/Profile.tsx`**
-
-- Importar `WhatsAppOptinSection`
-- Adicionar abaixo de `AppearanceSection`
-
-### Formato da Mensagem WhatsApp
-
-```
-📿 *DEVOCIONAL DIÁRIO*
-📅 30 de Janeiro de 2026
-
-✨ *{tema}*
-
-━━━━━━━━━━━━━━━━━━━━
-📖 *VERSÍCULO DO DIA*
-{livro} {capitulo}:{versiculo}
-
-_{texto_versiculo}_
-
-━━━━━━━━━━━━━━━━━━━━
-💭 *REFLEXÃO*
-
-{reflexao}
-
-━━━━━━━━━━━━━━━━━━━━
-🙏 *ORAÇÃO*
-
-{oracao}
-
-━━━━━━━━━━━━━━━━━━━━
-
-👉 Leia o devocional completo no app:
-https://obsidian-click-hub.lovable.app/devocional
-```
-
-### Arquivos a Criar/Modificar
-
-| Arquivo | Ação |
-|---------|------|
-| `subscribers` (banco) | Adicionar colunas whatsapp_optin |
-| `supabase/functions/send-whatsapp/index.ts` | Criar |
-| `supabase/functions/send-daily-devotional-whatsapp/index.ts` | Criar |
-| `supabase/config.toml` | Atualizar |
-| `docs/cron-whatsapp-setup.sql` | Criar |
-| `src/components/profile/WhatsAppOptinSection.tsx` | Criar |
-| `src/pages/Profile.tsx` | Atualizar |
+Apos a implementacao:
+1. Ir para a pagina de perfil
+2. Clicar em logout (botao na navbar)
+3. Verificar se e redirecionado para /login sem erros
 
