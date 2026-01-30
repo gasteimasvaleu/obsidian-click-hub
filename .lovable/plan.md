@@ -1,96 +1,90 @@
 
 
-## Adicionar Switch para Escolher Cor das Sombras dos Cards
+## Melhorar Layout da Seção de Aparência no Mobile
 
-### Visão Geral
+### Problema Atual
 
-Adicionar um botão switch na página de Perfil que permite ao usuário escolher entre sombras **Roxo Neon** (atual) ou **Verde Limão** (original). A preferência será salva no `localStorage` para persistir entre sessões.
+No mobile, os elementos estão lado a lado (`flex items-center justify-between`) o que deixa o conteúdo apertado. O switch com os labels fica muito comprimido.
 
-### Arquitetura da Solução
+### Solução Proposta
+
+Reorganizar o layout para:
+1. **Texto em cima** - Título e descrição ocupando toda a largura
+2. **Botões embaixo** - Dois botões lado a lado ocupando a mesma largura
+3. **Trocar Switch por Botões** - Mais fácil de clicar no mobile
+
+### Layout Visual
 
 ```text
-┌─────────────────────────────────────────────────────────────┐
-│  1. Criar Context para gerenciar preferência de tema        │
-│     ThemePreferencesContext                                 │
-├─────────────────────────────────────────────────────────────┤
-│  2. Adicionar classes CSS condicionais                      │
-│     .neon-glow-strong-green / .neon-glow-strong-purple      │
-├─────────────────────────────────────────────────────────────┤
-│  3. Atualizar GlassCard para usar contexto                  │
-│     Aplicar classe baseada na preferência                   │
-├─────────────────────────────────────────────────────────────┤
-│  4. Adicionar Switch na página de Perfil                    │
-│     Seção "Aparência" com toggle                            │
-└─────────────────────────────────────────────────────────────┘
+Mobile:
+┌─────────────────────────────────────┐
+│  🎨 Aparência                       │
+│  ───────────────────────────────────│
+│  Cor das sombras dos cards          │
+│  Escolha entre verde limão ou roxo  │
+│                                     │
+│  ┌───────────────┐ ┌───────────────┐│
+│  │   🟢 Verde    │ │   🟣 Roxo    ││
+│  └───────────────┘ └───────────────┘│
+└─────────────────────────────────────┘
+
+Desktop (mantém similar mas com mais espaço):
+┌─────────────────────────────────────────────────┐
+│  🎨 Aparência                                   │
+│  ─────────────────────────────────────────────  │
+│  Cor das sombras dos cards                      │
+│  Escolha entre verde limão ou roxo neon         │
+│                                                 │
+│  ┌─────────────────┐  ┌─────────────────┐       │
+│  │    🟢 Verde     │  │    🟣 Roxo      │       │
+│  └─────────────────┘  └─────────────────┘       │
+└─────────────────────────────────────────────────┘
 ```
 
 ### Mudanças Técnicas
 
-#### 1. Criar Context de Preferências de Tema
+**Arquivo:** `src/components/profile/AppearanceSection.tsx`
 
-**Novo arquivo:** `src/contexts/ThemePreferencesContext.tsx`
+1. **Remover Switch** - Substituir por dois botões
+2. **Layout Vertical** - Trocar `flex items-center justify-between` por `flex flex-col`
+3. **Grid para Botões** - Usar `grid grid-cols-2 gap-3` para os botões
+4. **Estilo dos Botões**:
+   - Botão ativo: fundo colorido com borda destacada
+   - Botão inativo: fundo sutil com borda normal
+   - Cores: Verde usa `border-primary` e `bg-primary/20`, Roxo usa `border-purple-500` e `bg-purple-500/20`
 
-Criar um contexto React que:
-- Gerencia a preferência de cor do glow (`purple` ou `green`)
-- Salva/carrega do `localStorage` com chave `neon-glow-color`
-- Expõe função `setGlowColor` para atualizar
+### Código Resultante
 
-#### 2. Atualizar CSS Global
-
-**Arquivo:** `src/index.css`
-
-Adicionar classes separadas para cada cor de glow:
-
-```css
-.neon-glow-strong-purple {
-  box-shadow: 0 8px 24px var(--neon-glow-purple);
-}
-
-.neon-glow-strong-green {
-  box-shadow: 0 8px 24px var(--neon-glow);
-}
+```tsx
+<CardContent>
+  <div className="flex flex-col gap-4">
+    <div className="flex flex-col">
+      <span className="font-medium text-foreground">Cor das sombras dos cards</span>
+      <span className="text-sm text-muted-foreground">
+        Escolha entre verde limão ou roxo neon
+      </span>
+    </div>
+    <div className="grid grid-cols-2 gap-3">
+      <Button
+        variant="outline"
+        onClick={() => setGlowColor('green')}
+        className={/* estilos condicionais para verde */}
+      >
+        🟢 Verde
+      </Button>
+      <Button
+        variant="outline"
+        onClick={() => setGlowColor('purple')}
+        className={/* estilos condicionais para roxo */}
+      >
+        🟣 Roxo
+      </Button>
+    </div>
+  </div>
+</CardContent>
 ```
 
-#### 3. Atualizar GlassCard
+### Arquivos a Modificar
 
-**Arquivo:** `src/components/GlassCard.tsx`
-
-- Importar e usar o contexto de preferências
-- Aplicar classe dinâmica baseada na preferência (`neon-glow-strong-purple` ou `neon-glow-strong-green`)
-- Atualizar hover shadow dinamicamente
-
-#### 4. Adicionar Switch na Página de Perfil
-
-**Arquivo:** `src/pages/Profile.tsx`
-
-Adicionar uma nova seção "Aparência" com:
-- Label explicativo: "Cor das sombras dos cards"
-- Switch com labels "Verde" / "Roxo"
-- Ícone de paleta de cores
-
-#### 5. Envolver App com Provider
-
-**Arquivo:** `src/App.tsx`
-
-Adicionar o `ThemePreferencesProvider` envolvendo a aplicação.
-
-### Resultado Visual
-
-Na página de Perfil, o usuário verá:
-
-```text
-┌────────────────────────────────────────────┐
-│  ⚙️ Aparência                              │
-│  ─────────────────────────────────────────  │
-│  Cor das sombras     🟢 Verde  ━━○  Roxo 🟣 │
-└────────────────────────────────────────────┘
-```
-
-### Arquivos a Criar/Modificar
-
-1. **CRIAR:** `src/contexts/ThemePreferencesContext.tsx` - Contexto de preferências
-2. **MODIFICAR:** `src/index.css` - Classes CSS separadas
-3. **MODIFICAR:** `src/components/GlassCard.tsx` - Usar contexto para classe dinâmica
-4. **MODIFICAR:** `src/pages/Profile.tsx` - Adicionar seção com Switch
-5. **MODIFICAR:** `src/App.tsx` - Adicionar Provider
+1. `src/components/profile/AppearanceSection.tsx` - Refatorar layout e trocar switch por botões
 
