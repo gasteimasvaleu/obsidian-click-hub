@@ -1,101 +1,76 @@
 
 
-## Devocional Diário via WhatsApp - Plano de Implementação
+## Implementação: Devocional Diário via WhatsApp
 
-### Visao Geral
+Os secrets da Z-API já estão configurados. Agora vou implementar todos os componentes do sistema.
 
-Implementar o envio automático do devocional diário para assinantes via WhatsApp usando a Z-API. O sistema enviará mensagens todas as manhãs às 6h para usuários que optaram por receber.
+### 1. Migração do Banco de Dados
 
-### Arquitetura da Solucao
-
-```text
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                        FLUXO DE ENVIO DIÁRIO                                │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                             │
-│  ┌──────────────┐     ┌────────────────────┐     ┌───────────────────┐     │
-│  │  pg_cron     │────>│ send-daily-        │────>│ Z-API             │     │
-│  │  (6h diário) │     │ devotional-whatsapp│     │ /send-text        │     │
-│  └──────────────┘     └────────────────────┘     └───────────────────┘     │
-│                              │                           │                  │
-│                              ▼                           ▼                  │
-│                       ┌─────────────────┐        ┌──────────────────┐      │
-│                       │ daily_devotionals│        │  WhatsApp Users  │      │
-│                       │ (devocional hoje)│        │  (assinantes)    │      │
-│                       └─────────────────┘        └──────────────────┘      │
-│                                                                             │
-└─────────────────────────────────────────────────────────────────────────────┘
-
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                        FLUXO DE OPT-IN/OPT-OUT                              │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                             │
-│  ┌──────────────┐     ┌────────────────────┐     ┌───────────────────┐     │
-│  │  Pagina de   │────>│ subscribers        │     │ Toggle switch     │     │
-│  │  Perfil      │     │ whatsapp_optin     │<────│ "Receber no Zap"  │     │
-│  └──────────────┘     └────────────────────┘     └───────────────────┘     │
-│                                                                             │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
-
-### Detalhes Tecnicos
-
-#### 1. Secrets Necessarios
-
-Adicionar 3 novos secrets no Supabase:
-
-| Secret | Descricao |
-|--------|-----------|
-| `ZAPI_INSTANCE` | ID da instância da Z-API (ex: `123456`) |
-| `ZAPI_TOKEN` | Token da instância Z-API |
-| `ZAPI_CLIENT_TOKEN` | Token de segurança da conta Z-API |
-
-#### 2. Migracao do Banco de Dados
-
-**Adicionar coluna `whatsapp_optin` na tabela `subscribers`:**
+Adicionar colunas na tabela `subscribers`:
 
 ```sql
 ALTER TABLE subscribers 
-ADD COLUMN whatsapp_optin BOOLEAN DEFAULT false,
-ADD COLUMN whatsapp_optin_at TIMESTAMP WITH TIME ZONE;
+ADD COLUMN IF NOT EXISTS whatsapp_optin BOOLEAN DEFAULT false,
+ADD COLUMN IF NOT EXISTS whatsapp_optin_at TIMESTAMP WITH TIME ZONE;
 ```
 
-Essa coluna indica se o usuário deseja receber mensagens no WhatsApp.
+### 2. Edge Functions
 
-#### 3. Edge Function: `send-whatsapp`
+**2.1. `supabase/functions/send-whatsapp/index.ts`**
 
-**Novo arquivo:** `supabase/functions/send-whatsapp/index.ts`
+Função utilitária para enviar mensagens via Z-API:
+- Recebe `phone` e `message`
+- Formata o número (adiciona 55 se necessário)
+- Envia para a API da Z-API
+- Retorna sucesso/erro
 
-Funcao utilitaria para enviar mensagens via Z-API:
+**2.2. `supabase/functions/send-daily-devotional-whatsapp/index.ts`**
 
-```typescript
-// Estrutura basica:
-// - Recebe: phone, message
-// - Envia para: https://api.z-api.io/instances/{INSTANCE}/token/{TOKEN}/send-text
-// - Headers: Client-Token, Content-Type: application/json
-// - Body: { phone, message }
+Função principal chamada pelo cron:
+- Busca o devocional do dia
+- Busca assinantes com `whatsapp_optin = true` e `subscription_status = 'active'`
+- Formata a mensagem com tema, versículo, reflexão e oração
+- Envia para cada assinante com delay de 1.5s (rate limiting)
+- Retorna estatísticas de envio
+
+**2.3. Atualizar `supabase/config.toml`**
+
+```toml
+[functions.send-whatsapp]
+verify_jwt = true
+
+[functions.send-daily-devotional-whatsapp]
+verify_jwt = false
 ```
 
-#### 4. Edge Function: `send-daily-devotional-whatsapp`
+### 3. Documentação do CRON
 
-**Novo arquivo:** `supabase/functions/send-daily-devotional-whatsapp/index.ts`
+**`docs/cron-whatsapp-setup.sql`**
 
-Funcao principal que sera chamada pelo cron:
+Instruções para configurar o cron job no Supabase:
+- Executar às 6h de Brasília (9h UTC)
+- Comandos para monitorar e gerenciar o job
 
-```typescript
-// Fluxo:
-// 1. Buscar devocional do dia na tabela daily_devotionals
-// 2. Buscar assinantes ativos com whatsapp_optin = true
-// 3. Para cada assinante:
-//    - Formatar mensagem do devocional
-//    - Enviar via send-whatsapp
-//    - Log de sucesso/erro
-// 4. Retornar estatisticas de envio
+### 4. Componente de Opt-in
+
+**`src/components/profile/WhatsAppOptinSection.tsx`**
+
+Card na página de perfil com:
+- Switch para ativar/desativar
+- Campo para editar número de telefone
+- Validação de número brasileiro
+- Feedback visual do status
+
+### 5. Atualização da Página de Perfil
+
+**`src/pages/Profile.tsx`**
+
+- Importar `WhatsAppOptinSection`
+- Adicionar abaixo de `AppearanceSection`
+
+### Formato da Mensagem WhatsApp
+
 ```
-
-**Formato da Mensagem:**
-
-```text
 📿 *DEVOCIONAL DIÁRIO*
 📅 30 de Janeiro de 2026
 
@@ -110,7 +85,7 @@ _{texto_versiculo}_
 ━━━━━━━━━━━━━━━━━━━━
 💭 *REFLEXÃO*
 
-{reflexao_resumida}
+{reflexao}
 
 ━━━━━━━━━━━━━━━━━━━━
 🙏 *ORAÇÃO*
@@ -120,98 +95,18 @@ _{texto_versiculo}_
 ━━━━━━━━━━━━━━━━━━━━
 
 👉 Leia o devocional completo no app:
-https://app.bibliatoonkids.com/devocional
+https://obsidian-click-hub.lovable.app/devocional
 ```
 
-#### 5. Configuracao do CRON Job
+### Arquivos a Criar/Modificar
 
-**Arquivo SQL para configurar o cron:**
-
-```sql
--- Executar todo dia as 6h (horario de Brasilia = 9h UTC)
-SELECT cron.schedule(
-  'send-devotional-whatsapp',
-  '0 9 * * *',  -- 9h UTC = 6h BRT
-  $$
-  SELECT net.http_post(
-    url:='https://fnksvazibtekphseknob.supabase.co/functions/v1/send-daily-devotional-whatsapp',
-    headers:='{"Content-Type": "application/json", "Authorization": "Bearer {ANON_KEY}"}'::jsonb,
-    body:='{}'::jsonb
-  );
-  $$
-);
-```
-
-#### 6. Interface de Opt-in no Perfil
-
-**Novo componente:** `src/components/profile/WhatsAppOptinSection.tsx`
-
-Card na pagina de Perfil com:
-- Switch para ativar/desativar recebimento
-- Campo para confirmar/editar numero de telefone
-- Texto explicativo sobre o horario de envio
-
-**Visual:**
-
-```text
-┌────────────────────────────────────────────────────────────────┐
-│  📱 Devocional no WhatsApp                                     │
-│  ──────────────────────────────────────────────────────────────│
-│                                                                │
-│  Receba o devocional diário no seu WhatsApp às 6h da manhã    │
-│                                                                │
-│  Número: +55 (11) 99999-9999  [Editar]                        │
-│                                                                │
-│  ┌─────────────────────────────────────────────────────────┐  │
-│  │  ○ Desativado          ●━━━━━━━━● Ativado              │  │
-│  └─────────────────────────────────────────────────────────┘  │
-│                                                                │
-│  ⚠️ Certifique-se de que o numero esta no WhatsApp             │
-└────────────────────────────────────────────────────────────────┘
-```
-
-#### 7. Atualizacoes na Pagina de Perfil
-
-**Arquivo:** `src/pages/Profile.tsx`
-
-- Importar e adicionar o novo componente `WhatsAppOptinSection`
-- Posicionar abaixo da secao de Aparencia
-
-### Arquivos a Criar
-
-1. **Secret Z-API** - `ZAPI_INSTANCE`, `ZAPI_TOKEN`, `ZAPI_CLIENT_TOKEN`
-2. **Migracao** - Adicionar coluna `whatsapp_optin` na tabela `subscribers`
-3. **`supabase/functions/send-whatsapp/index.ts`** - Funcao utilitaria para enviar mensagens
-4. **`supabase/functions/send-daily-devotional-whatsapp/index.ts`** - Funcao principal do cron
-5. **`supabase/config.toml`** - Adicionar configuracoes das novas funcoes
-6. **`docs/cron-whatsapp-setup.sql`** - Documentacao para configurar o cron
-7. **`src/components/profile/WhatsAppOptinSection.tsx`** - Componente de opt-in
-8. **`src/pages/Profile.tsx`** - Adicionar secao de WhatsApp
-
-### Fluxo Completo
-
-1. **Usuario ativa opt-in**
-   - Acessa Perfil > Devocional no WhatsApp
-   - Confirma numero de telefone
-   - Ativa o switch
-   - Sistema salva `whatsapp_optin = true` em `subscribers`
-
-2. **Cron diario (6h)**
-   - pg_cron dispara a funcao `send-daily-devotional-whatsapp`
-   - Funcao busca devocional do dia
-   - Funcao busca assinantes com opt-in ativo
-   - Para cada assinante, envia mensagem formatada via Z-API
-
-3. **Usuario desativa opt-in**
-   - Desativa o switch no Perfil
-   - Sistema salva `whatsapp_optin = false`
-   - Proximo cron nao envia mais para esse usuario
-
-### Consideracoes Importantes
-
-- **Rate Limit Z-API:** A Z-API tem limites de envio. Recomenda-se adicionar um delay de 1-2 segundos entre cada mensagem para evitar bloqueios
-- **Formato do Telefone:** Deve ser salvo sem formatacao, apenas numeros (ex: `5511999999999`)
-- **Horario:** O cron usa UTC, entao 6h de Brasilia = 9h UTC
-- **Fallback:** Se o devocional do dia nao existir, o cron nao faz nada (evita erros)
-- **Logs:** Importante adicionar logs detalhados para debug
+| Arquivo | Ação |
+|---------|------|
+| `subscribers` (banco) | Adicionar colunas whatsapp_optin |
+| `supabase/functions/send-whatsapp/index.ts` | Criar |
+| `supabase/functions/send-daily-devotional-whatsapp/index.ts` | Criar |
+| `supabase/config.toml` | Atualizar |
+| `docs/cron-whatsapp-setup.sql` | Criar |
+| `src/components/profile/WhatsAppOptinSection.tsx` | Criar |
+| `src/pages/Profile.tsx` | Atualizar |
 
