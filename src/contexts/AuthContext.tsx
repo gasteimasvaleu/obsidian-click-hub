@@ -140,10 +140,27 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const signOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      toast.error(error.message);
-    } else {
+    try {
+      const { error } = await supabase.auth.signOut();
+      
+      // Mesmo se houver erro (como session_not_found), limpar estado local
+      setSession(null);
+      setUser(null);
+      setIsAdmin(false);
+      
+      if (error) {
+        // Se for erro de sessão não encontrada, apenas logar
+        // O logout local já foi feito
+        console.log('Logout server-side falhou (sessão provavelmente já expirada):', error.message);
+      }
+      
+      toast.success('Logout realizado com sucesso');
+    } catch (err) {
+      // Fallback: limpar estado local mesmo em caso de exceção
+      setSession(null);
+      setUser(null);
+      setIsAdmin(false);
+      localStorage.removeItem('sb-fnksvazibtekphseknob-auth-token');
       toast.success('Logout realizado com sucesso');
     }
   };
