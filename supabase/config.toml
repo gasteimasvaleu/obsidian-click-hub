@@ -23,3 +23,9 @@ verify_jwt = false
 
 [functions.complete-signup]
 verify_jwt = false
+
+[functions.send-whatsapp]
+verify_jwt = true
+
+[functions.send-daily-devotional-whatsapp]
+verify_jwt = false
