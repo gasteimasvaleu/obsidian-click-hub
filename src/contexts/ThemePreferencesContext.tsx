@@ -7,15 +7,23 @@ interface ThemePreferencesContextType {
   setGlowColor: (color: GlowColor) => void;
 }
 
-const ThemePreferencesContext = createContext<ThemePreferencesContextType | undefined>(undefined);
-
 const STORAGE_KEY = 'neon-glow-color';
 
+const getStoredGlowColor = (): GlowColor => {
+  if (typeof window === 'undefined') return 'purple';
+  const stored = localStorage.getItem(STORAGE_KEY);
+  return (stored === 'green' || stored === 'purple') ? stored : 'purple';
+};
+
+const defaultContext: ThemePreferencesContextType = {
+  glowColor: getStoredGlowColor(),
+  setGlowColor: () => {},
+};
+
+const ThemePreferencesContext = createContext<ThemePreferencesContextType>(defaultContext);
+
 export const ThemePreferencesProvider = ({ children }: { children: ReactNode }) => {
-  const [glowColor, setGlowColorState] = useState<GlowColor>(() => {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    return (stored === 'green' || stored === 'purple') ? stored : 'purple';
-  });
+  const [glowColor, setGlowColorState] = useState<GlowColor>(getStoredGlowColor);
 
   const setGlowColor = (color: GlowColor) => {
     setGlowColorState(color);
@@ -34,9 +42,5 @@ export const ThemePreferencesProvider = ({ children }: { children: ReactNode }) 
 };
 
 export const useThemePreferences = () => {
-  const context = useContext(ThemePreferencesContext);
-  if (context === undefined) {
-    throw new Error('useThemePreferences must be used within a ThemePreferencesProvider');
-  }
-  return context;
+  return useContext(ThemePreferencesContext);
 };
