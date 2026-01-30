@@ -12,6 +12,7 @@ import { useEffect, useState } from 'react';
 import { AvatarUpload } from '@/components/profile/AvatarUpload';
 import { DevotionalHistoryTab } from '@/components/profile/DevotionalHistoryTab';
 import { VerseNotesTab } from '@/components/profile/VerseNotesTab';
+import { AppearanceSection } from '@/components/profile/AppearanceSection';
 import { supabase } from '@/integrations/supabase/client';
 
 const Profile = () => {
@@ -135,6 +136,8 @@ const Profile = () => {
             </div>
           </CardContent>
         </Card>
+
+        <AppearanceSection />
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           <Card className="glass border-primary/20">

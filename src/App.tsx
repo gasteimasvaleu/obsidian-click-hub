@@ -8,6 +8,7 @@ import { Home, Package, BookOpen, Heart, Gamepad2, Users, MessageCircle, Graduat
 import { NavBar } from "@/components/ui/tubelight-navbar";
 import { SplashScreen } from "./components/SplashScreen";
 import { AuthProvider } from "./contexts/AuthContext";
+import { ThemePreferencesProvider } from "./contexts/ThemePreferencesContext";
 import Index from "./pages/Index";
 import Oracoes from "./pages/Oracoes";
 import Audiofy from "./pages/Audiofy";
@@ -90,8 +91,9 @@ const App = () => {
   // Show main app after splash
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <TooltipProvider>
+      <ThemePreferencesProvider>
+        <AuthProvider>
+          <TooltipProvider>
           <Toaster />
           <Sonner />
           <BrowserRouter>
@@ -135,10 +137,11 @@ const App = () => {
               <Route path="/external-login" element={<ExternalFrame url="https://bibliatoonkids.themembers.com.br/login" title="Login - Biblia Toon Kids" />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
-            <NavBar items={navItems} />
-          </BrowserRouter>
-        </TooltipProvider>
-      </AuthProvider>
+              <NavBar items={navItems} />
+            </BrowserRouter>
+          </TooltipProvider>
+        </AuthProvider>
+      </ThemePreferencesProvider>
     </QueryClientProvider>
   );
 };
