@@ -1,66 +1,96 @@
 
 
-## Adicionar Roxo Neon nas Sombras dos Cards
+## Adicionar Switch para Escolher Cor das Sombras dos Cards
 
-### Conceito
+### Visão Geral
 
-Manter a identidade visual atual (verde neon nos menus, botões e elementos interativos) e adicionar um toque de roxo neon nas sombras dos cards, criando uma combinação futurista elegante.
+Adicionar um botão switch na página de Perfil que permite ao usuário escolher entre sombras **Roxo Neon** (atual) ou **Verde Limão** (original). A preferência será salva no `localStorage` para persistir entre sessões.
 
-### Cor Roxo Neon
+### Arquitetura da Solução
 
-Baseado no screenshot que você enviou, vou usar um roxo/magenta neon:
-- **HSL**: `280 100% 65%` (roxo vibrante)
-- **RGBA para glow**: `rgba(180, 50, 255, 0.4)`
+```text
+┌─────────────────────────────────────────────────────────────┐
+│  1. Criar Context para gerenciar preferência de tema        │
+│     ThemePreferencesContext                                 │
+├─────────────────────────────────────────────────────────────┤
+│  2. Adicionar classes CSS condicionais                      │
+│     .neon-glow-strong-green / .neon-glow-strong-purple      │
+├─────────────────────────────────────────────────────────────┤
+│  3. Atualizar GlassCard para usar contexto                  │
+│     Aplicar classe baseada na preferência                   │
+├─────────────────────────────────────────────────────────────┤
+│  4. Adicionar Switch na página de Perfil                    │
+│     Seção "Aparência" com toggle                            │
+└─────────────────────────────────────────────────────────────┘
+```
 
 ### Mudanças Técnicas
 
-#### 1. Atualizar Variáveis CSS
+#### 1. Criar Context de Preferências de Tema
+
+**Novo arquivo:** `src/contexts/ThemePreferencesContext.tsx`
+
+Criar um contexto React que:
+- Gerencia a preferência de cor do glow (`purple` ou `green`)
+- Salva/carrega do `localStorage` com chave `neon-glow-color`
+- Expõe função `setGlowColor` para atualizar
+
+#### 2. Atualizar CSS Global
 
 **Arquivo:** `src/index.css`
 
-Adicionar nova variável para o glow roxo dos cards:
+Adicionar classes separadas para cada cor de glow:
 
 ```css
---neon-glow: rgba(0, 255, 102, 0.4);        /* Verde - mantém para menus */
---neon-glow-purple: rgba(180, 50, 255, 0.4); /* Roxo - novo para cards */
-```
-
-#### 2. Atualizar Classe de Sombra dos Cards
-
-**Arquivo:** `src/index.css`
-
-Modificar `.neon-glow-strong` para usar roxo:
-
-```css
-.neon-glow-strong {
+.neon-glow-strong-purple {
   box-shadow: 0 8px 24px var(--neon-glow-purple);
+}
+
+.neon-glow-strong-green {
+  box-shadow: 0 8px 24px var(--neon-glow);
 }
 ```
 
-#### 3. Atualizar GlassCard Hover
+#### 3. Atualizar GlassCard
 
 **Arquivo:** `src/components/GlassCard.tsx`
 
-Mudar a sombra no hover de verde para roxo:
+- Importar e usar o contexto de preferências
+- Aplicar classe dinâmica baseada na preferência (`neon-glow-strong-purple` ou `neon-glow-strong-green`)
+- Atualizar hover shadow dinamicamente
 
-```tsx
-hover:shadow-[0_0_40px_rgba(180,50,255,0.3)]  /* Era verde, agora roxo */
-```
+#### 4. Adicionar Switch na Página de Perfil
+
+**Arquivo:** `src/pages/Profile.tsx`
+
+Adicionar uma nova seção "Aparência" com:
+- Label explicativo: "Cor das sombras dos cards"
+- Switch com labels "Verde" / "Roxo"
+- Ícone de paleta de cores
+
+#### 5. Envolver App com Provider
+
+**Arquivo:** `src/App.tsx`
+
+Adicionar o `ThemePreferencesProvider` envolvendo a aplicação.
 
 ### Resultado Visual
 
+Na página de Perfil, o usuário verá:
+
 ```text
 ┌────────────────────────────────────────────┐
-│  Menu inferior: Verde neon ✓               │
-│  Botões: Verde neon ✓                      │
-│  Ícones ativos: Verde neon ✓               │
-│  Sombras dos cards: Roxo neon (NOVO) ✨     │
-│  Glow no hover dos cards: Roxo neon (NOVO) │
+│  ⚙️ Aparência                              │
+│  ─────────────────────────────────────────  │
+│  Cor das sombras     🟢 Verde  ━━○  Roxo 🟣 │
 └────────────────────────────────────────────┘
 ```
 
-### Arquivos a Modificar
+### Arquivos a Criar/Modificar
 
-1. `src/index.css` - Adicionar variável roxo e atualizar `.neon-glow-strong`
-2. `src/components/GlassCard.tsx` - Atualizar cor do hover shadow
+1. **CRIAR:** `src/contexts/ThemePreferencesContext.tsx` - Contexto de preferências
+2. **MODIFICAR:** `src/index.css` - Classes CSS separadas
+3. **MODIFICAR:** `src/components/GlassCard.tsx` - Usar contexto para classe dinâmica
+4. **MODIFICAR:** `src/pages/Profile.tsx` - Adicionar seção com Switch
+5. **MODIFICAR:** `src/App.tsx` - Adicionar Provider
 
