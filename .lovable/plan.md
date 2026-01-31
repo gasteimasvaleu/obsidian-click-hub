@@ -1,64 +1,85 @@
 
 
-## Adicionar Mensagem Motivacional ao WhatsApp
+## Corrigir Cache de Imagens no PWA
 
-### Objetivo
+### Problema Identificado
 
-Incluir uma mensagem motivacional inspiradora após o devocional diário enviado via WhatsApp, tornando o conteúdo mais completo e edificante.
+As imagens do Supabase Storage estão aparecendo pela metade porque:
+1. Não existe regra de cache específica para imagens do Supabase
+2. Imagens grandes podem ter download interrompido
+3. O navegador/PWA pode exibir imagens parcialmente baixadas
 
-### Estrutura da Mensagem Atualizada
+### Solução
 
-A mensagem ficará organizada assim:
+Adicionar regra de cache `StaleWhileRevalidate` para imagens do Supabase Storage no Service Worker.
 
-1. **Cabeçalho** - Devocional Diário + Data
-2. **Tema do dia**
-3. **Versículo** - Referência + Texto
-4. **Reflexão**
-5. **Oração**
-6. **Mensagem Motivacional** (NOVA)
-7. **Link do app**
+### Estrutura do Cache Atual vs Proposta
 
-### Mensagem Motivacional a ser Adicionada
+```text
+ATUAL:
++---------------------------+----------------+
+| Tipo de Conteúdo          | Estratégia     |
++---------------------------+----------------+
+| Google Fonts              | CacheFirst     |
+| Vídeos locais             | CacheFirst     |
+| Vídeos Supabase           | CacheFirst     |
+| API Supabase              | NetworkFirst   |
+| Imagens Supabase          | (SEM CACHE!)   |
++---------------------------+----------------+
 
-```
-🌟 *MENSAGEM DE HOJE* 🌟
-
-Bom dia, amigo(a)! Hoje quero te lembrar de algo poderoso:
-
-1. 🙏 Confie em Deus como sua fonte de esperança.
-2. 😊 Permita que Ele encha seu coração de alegria.
-3. 🕊️ Receba Sua paz que acalma qualquer tempestade.
-4. 💪 Deixe o Espírito Santo renovar suas forças a cada instante.
-
-Quando você deposita sua confiança em Deus, algo maravilhoso acontece:
-
-➡️ Sua alegria cresce mesmo em dias difíceis.
-➡️ Sua paz interior afasta a ansiedade e o medo.
-➡️ Você começa a transbordar esperança e pode inspirar quem está ao seu lado!
-
-Hoje, reserve um momento para fechar os olhos, respirar fundo e dizer:
-
-_"Senhor, eu confio em Ti. Enche-me de alegria, paz e esperança!"_
-
-Que essa oração simples traga luz ao seu dia e faça seu coração vibrar de fé. Lembre-se: você nunca está sozinho(a). O Deus da esperança caminha com você, fortalecendo seus passos e enchendo sua vida de motivos para sorrir!
-
-Tenha um dia abençoado! 🙌✨
-
-━━━━━━━━━━━━━━━━━━━━
-
-💌 Compartilhe com alguém que precisa de um sopro de esperança hoje!
+PROPOSTO:
++---------------------------+-------------------+
+| Tipo de Conteúdo          | Estratégia        |
++---------------------------+-------------------+
+| Google Fonts              | CacheFirst        |
+| Vídeos locais             | CacheFirst        |
+| Vídeos Supabase           | CacheFirst        |
+| API Supabase              | NetworkFirst      |
+| Imagens Supabase          | StaleWhileRevalid.|  <-- NOVO
++---------------------------+-------------------+
 ```
 
 ### Alteração Técnica
 
-**Arquivo:** `supabase/functions/send-daily-devotional-whatsapp/index.ts`
+**Arquivo:** `vite.config.ts`
 
-Modificar a função `formatDevotionalMessage` para incluir a mensagem motivacional entre a oração e o link do app.
+Adicionar nova regra de `runtimeCaching` para imagens do Supabase Storage:
 
-### Considerações
+```typescript
+{
+  urlPattern: /^https:\/\/.*\.supabase\.co\/storage\/.*\.(?:png|jpg|jpeg|webp|gif|svg)/i,
+  handler: 'StaleWhileRevalidate',
+  options: {
+    cacheName: 'supabase-images-cache',
+    expiration: {
+      maxEntries: 100,
+      maxAgeSeconds: 60 * 60 * 24 * 30 // 30 dias
+    },
+    cacheableResponse: {
+      statuses: [0, 200]
+    }
+  }
+}
+```
 
-- A mensagem motivacional é fixa/estática (sempre a mesma)
-- Será adicionada como uma nova seção após a oração
-- Mantém a formatação consistente com o resto da mensagem (emojis, separadores, negrito)
-- Futuramente, poderia ser expandido para ter várias mensagens motivacionais rotativas
+### Por que StaleWhileRevalidate?
+
+- **CacheFirst**: Pode servir imagens desatualizadas se o admin trocar um banner
+- **NetworkFirst**: Lento em conexões ruins, causa o problema atual
+- **StaleWhileRevalidate**: Serve imagem cacheada instantaneamente E atualiza em background - melhor dos dois mundos
+
+### Benefícios
+
+1. Imagens carregam instantaneamente do cache
+2. Atualizações são baixadas em background
+3. Evita downloads incompletos sendo exibidos
+4. Melhora significativa na experiência offline
+5. Imagens do admin (thumbnails, banners) funcionam corretamente
+
+### Comportamento Esperado Após a Correção
+
+- Primeira visita: imagem baixa da rede normalmente
+- Visitas seguintes: imagem aparece instantaneamente do cache
+- Se a imagem foi atualizada no servidor: atualiza em background para próxima visita
+- Offline: imagens já visitadas funcionam perfeitamente
 
