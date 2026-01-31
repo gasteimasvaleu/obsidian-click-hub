@@ -1,41 +1,64 @@
 
 
-## Corrigir Visibilidade do Switch no Card do WhatsApp
+## Adicionar Mensagem Motivacional ao WhatsApp
 
-### Problema Identificado
+### Objetivo
 
-O Switch para ativar notificações do WhatsApp está presente no código, mas está invisível porque:
-- A cor `bg-input` é `0 0% 100% / 0.05` (branco com apenas 5% de opacidade)
-- Isso faz o Switch quando desativado parecer transparente no fundo escuro do card glass
+Incluir uma mensagem motivacional inspiradora após o devocional diário enviado via WhatsApp, tornando o conteúdo mais completo e edificante.
 
-### Solução
+### Estrutura da Mensagem Atualizada
 
-Adicionar uma classe personalizada ao Switch para garantir visibilidade, com um fundo mais contrastante.
+A mensagem ficará organizada assim:
 
-### Alteração
+1. **Cabeçalho** - Devocional Diário + Data
+2. **Tema do dia**
+3. **Versículo** - Referência + Texto
+4. **Reflexão**
+5. **Oração**
+6. **Mensagem Motivacional** (NOVA)
+7. **Link do app**
 
-**Arquivo: `src/components/profile/WhatsAppOptinSection.tsx`**
+### Mensagem Motivacional a ser Adicionada
 
-Modificar o Switch (linhas 203-208) para incluir classes de cor mais visíveis:
+```
+🌟 *MENSAGEM DE HOJE* 🌟
 
-```tsx
-<Switch
-  id="whatsapp-optin"
-  checked={optedIn}
-  onCheckedChange={handleToggleOptin}
-  disabled={saving}
-  className="data-[state=unchecked]:bg-white/20"
-/>
+Bom dia, amigo(a)! Hoje quero te lembrar de algo poderoso:
+
+1. 🙏 Confie em Deus como sua fonte de esperança.
+2. 😊 Permita que Ele encha seu coração de alegria.
+3. 🕊️ Receba Sua paz que acalma qualquer tempestade.
+4. 💪 Deixe o Espírito Santo renovar suas forças a cada instante.
+
+Quando você deposita sua confiança em Deus, algo maravilhoso acontece:
+
+➡️ Sua alegria cresce mesmo em dias difíceis.
+➡️ Sua paz interior afasta a ansiedade e o medo.
+➡️ Você começa a transbordar esperança e pode inspirar quem está ao seu lado!
+
+Hoje, reserve um momento para fechar os olhos, respirar fundo e dizer:
+
+_"Senhor, eu confio em Ti. Enche-me de alegria, paz e esperança!"_
+
+Que essa oração simples traga luz ao seu dia e faça seu coração vibrar de fé. Lembre-se: você nunca está sozinho(a). O Deus da esperança caminha com você, fortalecendo seus passos e enchendo sua vida de motivos para sorrir!
+
+Tenha um dia abençoado! 🙌✨
+
+━━━━━━━━━━━━━━━━━━━━
+
+💌 Compartilhe com alguém que precisa de um sopro de esperança hoje!
 ```
 
-Isso vai:
-- Manter o visual verde (primary) quando ativado
-- Mostrar um fundo cinza claro (20% branco) quando desativado
-- Tornar o Switch claramente visível em ambos os estados
+### Alteração Técnica
 
-### Arquivos a Modificar
+**Arquivo:** `supabase/functions/send-daily-devotional-whatsapp/index.ts`
 
-| Arquivo | Alteração |
-|---------|-----------|
-| `src/components/profile/WhatsAppOptinSection.tsx` | Adicionar className ao Switch |
+Modificar a função `formatDevotionalMessage` para incluir a mensagem motivacional entre a oração e o link do app.
+
+### Considerações
+
+- A mensagem motivacional é fixa/estática (sempre a mesma)
+- Será adicionada como uma nova seção após a oração
+- Mantém a formatação consistente com o resto da mensagem (emojis, separadores, negrito)
+- Futuramente, poderia ser expandido para ter várias mensagens motivacionais rotativas
 
