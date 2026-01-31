@@ -68,6 +68,21 @@ export default defineConfig(({ mode }) => ({
           }
         }
       },
+      // Cache para imagens do Supabase Storage
+      {
+        urlPattern: /^https:\/\/.*\.supabase\.co\/storage\/.*\.(?:png|jpg|jpeg|webp|gif|svg)/i,
+        handler: 'StaleWhileRevalidate',
+        options: {
+          cacheName: 'supabase-images-cache',
+          expiration: {
+            maxEntries: 100,
+            maxAgeSeconds: 60 * 60 * 24 * 30 // 30 dias
+          },
+          cacheableResponse: {
+            statuses: [0, 200]
+          }
+        }
+      },
       // Supabase API cache (excluindo storage)
       {
         urlPattern: /^https:\/\/.*\.supabase\.co\/(?!storage\/).*/i,
