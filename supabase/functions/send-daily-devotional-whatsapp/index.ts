@@ -69,6 +69,35 @@ ${devotional.prayer}
 
 ━━━━━━━━━━━━━━━━━━━━
 
+🌟 *MENSAGEM DE HOJE* 🌟
+
+Bom dia, amigo(a)! Hoje quero te lembrar de algo poderoso:
+
+1. 🙏 Confie em Deus como sua fonte de esperança.
+2. 😊 Permita que Ele encha seu coração de alegria.
+3. 🕊️ Receba Sua paz que acalma qualquer tempestade.
+4. 💪 Deixe o Espírito Santo renovar suas forças a cada instante.
+
+Quando você deposita sua confiança em Deus, algo maravilhoso acontece:
+
+➡️ Sua alegria cresce mesmo em dias difíceis.
+➡️ Sua paz interior afasta a ansiedade e o medo.
+➡️ Você começa a transbordar esperança e pode inspirar quem está ao seu lado!
+
+Hoje, reserve um momento para fechar os olhos, respirar fundo e dizer:
+
+_"Senhor, eu confio em Ti. Enche-me de alegria, paz e esperança!"_
+
+Que essa oração simples traga luz ao seu dia e faça seu coração vibrar de fé. Lembre-se: você nunca está sozinho(a). O Deus da esperança caminha com você, fortalecendo seus passos e enchendo sua vida de motivos para sorrir!
+
+Tenha um dia abençoado! 🙌✨
+
+━━━━━━━━━━━━━━━━━━━━
+
+💌 Compartilhe com alguém que precisa de um sopro de esperança hoje!
+
+━━━━━━━━━━━━━━━━━━━━
+
 👉 Leia o devocional completo no app:
 https://obsidian-click-hub.lovable.app/devocional`;
 }
