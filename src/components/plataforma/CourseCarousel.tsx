@@ -53,7 +53,7 @@ export function CourseCarousel({
       <Carousel
         opts={{
           align: "start",
-          loop: items.length > 3,
+          loop: items.length > 2,
         }}
         className="w-full"
       >
@@ -90,7 +90,7 @@ export function CourseCarousel({
             </CarouselItem>
           ))}
         </CarouselContent>
-      {items.length > 3 && (
+      {items.length > 1 && (
           <>
             <CarouselPrevious className="flex left-1 md:-left-4" />
             <CarouselNext className="flex right-1 md:-right-4" />
