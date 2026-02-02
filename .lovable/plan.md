@@ -1,85 +1,70 @@
 
 
-## Corrigir Cache de Imagens no PWA
+## Adicionar Setas de Navegação nos Carrosséis Mobile
 
 ### Problema Identificado
 
-As imagens do Supabase Storage estão aparecendo pela metade porque:
-1. Não existe regra de cache específica para imagens do Supabase
-2. Imagens grandes podem ter download interrompido
-3. O navegador/PWA pode exibir imagens parcialmente baixadas
+As setas de navegação (anterior/próximo) não aparecem em alguns carrosséis no mobile porque a condição atual (`items.length > 3`) não considera que:
+- No mobile: cabem apenas **2 itens** na tela (basis-1/2)
+- No desktop: cabem **5 itens** na tela (basis-1/5)
+
+Carrosséis como "Aprendendo a Rezar", "Clube dos Pequenos", "Animes", "Bíblia Falada" podem ter poucos módulos, fazendo as setas não aparecerem.
 
 ### Solução
 
-Adicionar regra de cache `StaleWhileRevalidate` para imagens do Supabase Storage no Service Worker.
-
-### Estrutura do Cache Atual vs Proposta
-
-```text
-ATUAL:
-+---------------------------+----------------+
-| Tipo de Conteúdo          | Estratégia     |
-+---------------------------+----------------+
-| Google Fonts              | CacheFirst     |
-| Vídeos locais             | CacheFirst     |
-| Vídeos Supabase           | CacheFirst     |
-| API Supabase              | NetworkFirst   |
-| Imagens Supabase          | (SEM CACHE!)   |
-+---------------------------+----------------+
-
-PROPOSTO:
-+---------------------------+-------------------+
-| Tipo de Conteúdo          | Estratégia        |
-+---------------------------+-------------------+
-| Google Fonts              | CacheFirst        |
-| Vídeos locais             | CacheFirst        |
-| Vídeos Supabase           | CacheFirst        |
-| API Supabase              | NetworkFirst      |
-| Imagens Supabase          | StaleWhileRevalid.|  <-- NOVO
-+---------------------------+-------------------+
-```
+Alterar a lógica para sempre mostrar as setas quando houver **2 ou mais itens**, já que no mobile 2 itens já ultrapassam a tela.
 
 ### Alteração Técnica
 
-**Arquivo:** `vite.config.ts`
+**Arquivo:** `src/components/plataforma/CourseCarousel.tsx`
 
-Adicionar nova regra de `runtimeCaching` para imagens do Supabase Storage:
-
-```typescript
-{
-  urlPattern: /^https:\/\/.*\.supabase\.co\/storage\/.*\.(?:png|jpg|jpeg|webp|gif|svg)/i,
-  handler: 'StaleWhileRevalidate',
-  options: {
-    cacheName: 'supabase-images-cache',
-    expiration: {
-      maxEntries: 100,
-      maxAgeSeconds: 60 * 60 * 24 * 30 // 30 dias
-    },
-    cacheableResponse: {
-      statuses: [0, 200]
-    }
-  }
-}
+**Antes:**
+```tsx
+{items.length > 3 && (
+  <>
+    <CarouselPrevious className="flex left-1 md:-left-4" />
+    <CarouselNext className="flex right-1 md:-right-4" />
+  </>
+)}
 ```
 
-### Por que StaleWhileRevalidate?
+**Depois:**
+```tsx
+{items.length > 1 && (
+  <>
+    <CarouselPrevious className="flex left-1 md:-left-4" />
+    <CarouselNext className="flex right-1 md:-right-4" />
+  </>
+)}
+```
 
-- **CacheFirst**: Pode servir imagens desatualizadas se o admin trocar um banner
-- **NetworkFirst**: Lento em conexões ruins, causa o problema atual
-- **StaleWhileRevalidate**: Serve imagem cacheada instantaneamente E atualiza em background - melhor dos dois mundos
+### Lógica Complementar
 
-### Benefícios
+Também ajustar a opção de `loop` do Embla Carousel para ser consistente:
 
-1. Imagens carregam instantaneamente do cache
-2. Atualizações são baixadas em background
-3. Evita downloads incompletos sendo exibidos
-4. Melhora significativa na experiência offline
-5. Imagens do admin (thumbnails, banners) funcionam corretamente
+**Antes:**
+```tsx
+opts={{
+  align: "start",
+  loop: items.length > 3,
+}}
+```
 
-### Comportamento Esperado Após a Correção
+**Depois:**
+```tsx
+opts={{
+  align: "start",
+  loop: items.length > 2,
+}}
+```
 
-- Primeira visita: imagem baixa da rede normalmente
-- Visitas seguintes: imagem aparece instantaneamente do cache
-- Se a imagem foi atualizada no servidor: atualiza em background para próxima visita
-- Offline: imagens já visitadas funcionam perfeitamente
+### Comportamento Após a Correção
+
+| Qtd de Itens | Mobile (2 visíveis) | Desktop (5 visíveis) |
+|--------------|---------------------|----------------------|
+| 1 item       | Sem setas           | Sem setas            |
+| 2 itens      | Com setas           | Com setas (disabled) |
+| 3+ itens     | Com setas           | Com setas            |
+
+As setas ficam automaticamente desabilitadas quando não há mais conteúdo para scrollar (comportamento nativo do Embla via `canScrollPrev`/`canScrollNext`).
 
