@@ -2,40 +2,48 @@
 -- CONFIGURAÇÃO DE CRON JOB PARA GERAÇÃO AUTOMÁTICA DE DEVOCIONAIS
 -- ================================================================
 -- 
--- Este arquivo contém o SQL para configurar um job CRON que gera
--- automaticamente um devocional por dia à meia-noite.
+-- Este script configura um cron job para gerar automaticamente
+-- o devocional do dia às 5:30 BRT (8:30 UTC), garantindo que o
+-- conteúdo esteja pronto ANTES do envio via WhatsApp (6:00 BRT).
 --
--- IMPORTANTE: Esta é uma configuração OPCIONAL
--- Os devocionais já são gerados automaticamente quando os usuários
--- acessam a página /devocional
+-- IMPORTANTE: Execute este SQL no SQL Editor do Supabase:
+-- Dashboard > SQL Editor > New query
 --
 -- ================================================================
 
 -- PASSO 1: Habilitar as extensões necessárias
--- Execute isso no SQL Editor do Supabase apenas uma vez:
-
--- Habilitar pg_cron (para agendar jobs)
 CREATE EXTENSION IF NOT EXISTS pg_cron;
-
--- Habilitar pg_net (para fazer requisições HTTP)
 CREATE EXTENSION IF NOT EXISTS pg_net;
 
-
--- PASSO 2: Criar o job CRON
--- ATENÇÃO: Substitua YOUR_ANON_KEY pela chave anon do seu projeto
--- Você pode encontrar a chave em: Project Settings > API
-
+-- PASSO 2: Criar o cron job para gerar devocional às 5:30 BRT (8:30 UTC)
 SELECT cron.schedule(
-  'generate-daily-devotional',    -- Nome do job
-  '0 0 * * *',                     -- Executar à meia-noite todo dia (00:00)
+  'generate-daily-devotional',
+  '30 8 * * *',  -- 8:30 UTC = 5:30 BRT
   $$
   SELECT net.http_post(
-    url:='https://fnksvazibtekphseknob.supabase.co/functions/v1/generate-devotional',
-    headers:='{"Content-Type": "application/json", "Authorization": "Bearer YOUR_ANON_KEY"}'::jsonb,
-    body:='{"count": 1}'::jsonb
-  ) as request_id;
+    url := 'https://fnksvazibtekphseknob.supabase.co/functions/v1/generate-devotional',
+    headers := '{"Content-Type": "application/json", "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZua3N2YXppYnRla3Boc2Vrbm9iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ0NzU2NjUsImV4cCI6MjA3MDA1MTY2NX0.ZB0sXojOg27f-BE4DzMj-pydHWhijURPoUIkNRi5Of4"}'::jsonb,
+    body := '{"count": 1}'::jsonb
+  ) AS request_id;
   $$
 );
+
+
+-- ================================================================
+-- CRONOGRAMA DE EXECUÇÃO DOS JOBS
+-- ================================================================
+--
+-- +----------------------------+------------+-------------+
+-- | Job                        | UTC        | Brasília    |
+-- +----------------------------+------------+-------------+
+-- | generate-daily-devotional  | 08:30 UTC  | 05:30 BRT   |
+-- | send-daily-devotional-wpp  | 09:00 UTC  | 06:00 BRT   |
+-- +----------------------------+------------+-------------+
+--
+-- O devocional é gerado 30 minutos antes do envio do WhatsApp,
+-- garantindo que o conteúdo já esteja no banco de dados.
+--
+-- ================================================================
 
 
 -- ================================================================
@@ -43,12 +51,12 @@ SELECT cron.schedule(
 -- ================================================================
 
 -- Ver todos os jobs agendados:
-SELECT * FROM cron.job;
+-- SELECT * FROM cron.job;
 
 -- Ver histórico de execuções:
-SELECT * FROM cron.job_run_details 
-ORDER BY start_time DESC 
-LIMIT 10;
+-- SELECT * FROM cron.job_run_details 
+-- ORDER BY start_time DESC 
+-- LIMIT 20;
 
 -- Desabilitar o job (se necessário):
 -- UPDATE cron.job SET active = FALSE WHERE jobname = 'generate-daily-devotional';
@@ -59,23 +67,12 @@ LIMIT 10;
 -- Deletar o job permanentemente:
 -- SELECT cron.unschedule('generate-daily-devotional');
 
-
--- ================================================================
--- ALTERNATIVAS DE HORÁRIO
--- ================================================================
--- 
--- Se quiser mudar o horário de execução, use um dos exemplos abaixo:
--- 
--- A cada hora: '0 * * * *'
--- A cada 6 horas: '0 */6 * * *'
--- Às 6h da manhã: '0 6 * * *'
--- Às 23h: '0 23 * * *'
--- De segunda a sexta às 8h: '0 8 * * 1-5'
---
--- Formato: minuto hora dia-do-mês mês dia-da-semana
--- Mais info: https://crontab.guru/
---
--- ================================================================
+-- Testar manualmente a geração:
+-- SELECT net.http_post(
+--   url := 'https://fnksvazibtekphseknob.supabase.co/functions/v1/generate-devotional',
+--   headers := '{"Content-Type": "application/json", "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZua3N2YXppYnRla3Boc2Vrbm9iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ0NzU2NjUsImV4cCI6MjA3MDA1MTY2NX0.ZB0sXojOg27f-BE4DzMj-pydHWhijURPoUIkNRi5Of4"}'::jsonb,
+--   body := '{"count": 1}'::jsonb
+-- );
 
 
 -- ================================================================
@@ -84,21 +81,18 @@ LIMIT 10;
 --
 -- 1. CUSTO: Cada devocional custa ~$0.02 em créditos Lovable AI
 --    - 1 por dia = ~$0.60/mês
---    - Certifique-se de ter créditos suficientes
 --
--- 2. DEPENDÊNCIAS: 
+-- 2. IDEMPOTÊNCIA: A função verifica se o devocional já existe
+--    antes de gerar um novo. Executar múltiplas vezes é seguro.
+--
+-- 3. DEPENDÊNCIAS: 
 --    - A Bíblia ACF deve estar importada (66 livros)
 --    - A função get_random_verse() deve existir
 --    - O edge function generate-devotional deve estar deployado
+--    - O secret LOVABLE_API_KEY deve estar configurado
 --
--- 3. MONITORAMENTO:
---    - Verifique os logs do edge function regularmente
---    - Monitore o histórico de execução do CRON
---    - Acompanhe o saldo de créditos da Lovable AI
---
--- 4. ALTERNATIVA:
---    - Se preferir não usar CRON, os devocionais são gerados 
---      automaticamente quando usuários acessam /devocional
---    - Admins também podem gerar em lote pelo dashboard
+-- 4. MONITORAMENTO:
+--    - Logs: Dashboard > Edge Functions > generate-devotional > Logs
+--    - Histórico do cron: SELECT * FROM cron.job_run_details
 --
 -- ================================================================
