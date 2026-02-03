@@ -1,70 +1,81 @@
 
 
-## Adicionar Setas de Navegação nos Carrosséis Mobile
+## Criar Cron Job para Geração Automática do Devocional às 5:30 BRT
 
-### Problema Identificado
+### Objetivo
 
-As setas de navegação (anterior/próximo) não aparecem em alguns carrosséis no mobile porque a condição atual (`items.length > 3`) não considera que:
-- No mobile: cabem apenas **2 itens** na tela (basis-1/2)
-- No desktop: cabem **5 itens** na tela (basis-1/5)
+Criar um **segundo cron job** no Supabase que gera o devocional do dia às 5:30 da manhã, garantindo que o devocional esteja pronto no banco de dados **antes** do cron de envio do WhatsApp (6:00 BRT).
 
-Carrosséis como "Aprendendo a Rezar", "Clube dos Pequenos", "Animes", "Bíblia Falada" podem ter poucos módulos, fazendo as setas não aparecerem.
+### Cronograma de Execução
 
-### Solução
-
-Alterar a lógica para sempre mostrar as setas quando houver **2 ou mais itens**, já que no mobile 2 itens já ultrapassam a tela.
-
-### Alteração Técnica
-
-**Arquivo:** `src/components/plataforma/CourseCarousel.tsx`
-
-**Antes:**
-```tsx
-{items.length > 3 && (
-  <>
-    <CarouselPrevious className="flex left-1 md:-left-4" />
-    <CarouselNext className="flex right-1 md:-right-4" />
-  </>
-)}
+```text
+05:30 BRT (08:30 UTC) ──► Gerar devocional via IA
+           │
+           ▼
+    [Devocional salvo no banco]
+           │
+           ▼
+06:00 BRT (09:00 UTC) ──► Enviar WhatsApp (devocional já existe!)
 ```
 
-**Depois:**
-```tsx
-{items.length > 1 && (
-  <>
-    <CarouselPrevious className="flex left-1 md:-left-4" />
-    <CarouselNext className="flex right-1 md:-right-4" />
-  </>
-)}
+### Ação Necessária
+
+Atualizar o arquivo `docs/cron-devotional-setup.sql` com o SQL correto e horário atualizado para você executar no Supabase.
+
+### SQL do Novo Cron Job
+
+```sql
+-- Habilitar extensões (se necessário)
+CREATE EXTENSION IF NOT EXISTS pg_cron;
+CREATE EXTENSION IF NOT EXISTS pg_net;
+
+-- Criar cron job para gerar devocional às 5:30 BRT (8:30 UTC)
+SELECT cron.schedule(
+  'generate-daily-devotional',
+  '30 8 * * *',
+  $$
+  SELECT net.http_post(
+    url := 'https://fnksvazibtekphseknob.supabase.co/functions/v1/generate-devotional',
+    headers := '{"Content-Type": "application/json", "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZua3N2YXppYnRla3Boc2Vrbm9iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ0NzU2NjUsImV4cCI6MjA3MDA1MTY2NX0.ZB0sXojOg27f-BE4DzMj-pydHWhijURPoUIkNRi5Of4"}'::jsonb,
+    body := '{"count": 1}'::jsonb
+  ) AS request_id;
+  $$
+);
 ```
 
-### Lógica Complementar
+### Resultado Final: Dois Cron Jobs
 
-Também ajustar a opção de `loop` do Embla Carousel para ser consistente:
-
-**Antes:**
-```tsx
-opts={{
-  align: "start",
-  loop: items.length > 3,
-}}
+```text
++----------------------------+------------+-------------+
+| Job                        | UTC        | Brasília    |
++----------------------------+------------+-------------+
+| generate-daily-devotional  | 08:30 UTC  | 05:30 BRT   |
+| send-daily-devotional-wpp  | 09:00 UTC  | 06:00 BRT   |
++----------------------------+------------+-------------+
 ```
 
-**Depois:**
-```tsx
-opts={{
-  align: "start",
-  loop: items.length > 2,
-}}
+### Alteração no Código
+
+Vou atualizar o arquivo `docs/cron-devotional-setup.sql` com:
+- Horário correto: 8:30 UTC (5:30 BRT)
+- Chave anon já preenchida
+- Instruções claras de como executar
+
+### Segurança
+
+A função `generate-devotional` já possui verificação de idempotência - se o devocional do dia já existir, ela simplesmente pula a geração:
+
+```typescript
+// Verificar se já existe devocional para esta data
+const { data: existing } = await supabaseClient
+  .from('daily_devotionals')
+  .select('id')
+  .eq('devotional_date', dateStr)
+  .maybeSingle();
+
+if (existing) {
+  console.log(`Devocional já existe para ${dateStr}, pulando...`);
+  continue;
+}
 ```
-
-### Comportamento Após a Correção
-
-| Qtd de Itens | Mobile (2 visíveis) | Desktop (5 visíveis) |
-|--------------|---------------------|----------------------|
-| 1 item       | Sem setas           | Sem setas            |
-| 2 itens      | Com setas           | Com setas (disabled) |
-| 3+ itens     | Com setas           | Com setas            |
-
-As setas ficam automaticamente desabilitadas quando não há mais conteúdo para scrollar (comportamento nativo do Embla via `canScrollPrev`/`canScrollNext`).
 
