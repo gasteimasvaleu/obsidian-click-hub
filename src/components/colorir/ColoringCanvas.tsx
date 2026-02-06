@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import type { useColoringCanvas } from '@/hooks/useColoringCanvas';
 
 interface ColoringCanvasProps {
@@ -8,9 +8,11 @@ interface ColoringCanvasProps {
 
 export const ColoringCanvas = ({ canvas, imageUrl }: ColoringCanvasProps) => {
   const { canvasRef, startDrawing, draw, stopDrawing, loadImage, tool } = canvas;
+  const hasLoaded = useRef(false);
 
   useEffect(() => {
-    if (imageUrl) {
+    if (imageUrl && !hasLoaded.current) {
+      hasLoaded.current = true;
       loadImage(imageUrl);
     }
   }, [imageUrl, loadImage]);

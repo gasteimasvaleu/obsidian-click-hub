@@ -11,10 +11,20 @@ export const useColoringCanvas = () => {
   const [tool, setTool] = useState<Tool>('brush');
   const [color, setColor] = useState('#FF0000');
   const [brushSize, setBrushSize] = useState(8);
-  const [isDrawing, setIsDrawing] = useState(false);
-  const [history, setHistory] = useState<HistoryEntry[]>([]);
-  const [historyIndex, setHistoryIndex] = useState(-1);
   const lastPoint = useRef<{ x: number; y: number } | null>(null);
+
+  // Refs for mutable values used inside stable callbacks
+  const isDrawingRef = useRef(false);
+  const historyRef = useRef<HistoryEntry[]>([]);
+  const historyIndexRef = useRef(-1);
+  const colorRef = useRef(color);
+  const toolRef = useRef<Tool>(tool);
+  const brushSizeRef = useRef(brushSize);
+
+  // Sync state → refs
+  useEffect(() => { colorRef.current = color; }, [color]);
+  useEffect(() => { toolRef.current = tool; }, [tool]);
+  useEffect(() => { brushSizeRef.current = brushSize; }, [brushSize]);
 
   const getCanvasPoint = useCallback((e: React.MouseEvent | React.TouchEvent) => {
     const canvas = canvasRef.current;
@@ -45,39 +55,38 @@ export const useColoringCanvas = () => {
     if (!ctx) return;
 
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    const newHistory = history.slice(0, historyIndex + 1);
+    const newHistory = historyRef.current.slice(0, historyIndexRef.current + 1);
     newHistory.push({ imageData });
-    
-    // Keep max 30 history entries
+
     if (newHistory.length > 30) newHistory.shift();
-    
-    setHistory(newHistory);
-    setHistoryIndex(newHistory.length - 1);
-  }, [history, historyIndex]);
+
+    historyRef.current = newHistory;
+    historyIndexRef.current = newHistory.length - 1;
+  }, []);
 
   const undo = useCallback(() => {
-    if (historyIndex <= 0) return;
+    if (historyIndexRef.current <= 0) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const newIndex = historyIndex - 1;
-    ctx.putImageData(history[newIndex].imageData, 0, 0);
-    setHistoryIndex(newIndex);
-  }, [history, historyIndex]);
+    const newIndex = historyIndexRef.current - 1;
+    ctx.putImageData(historyRef.current[newIndex].imageData, 0, 0);
+    historyIndexRef.current = newIndex;
+  }, []);
 
   const redo = useCallback(() => {
-    if (historyIndex >= history.length - 1) return;
+    if (historyIndexRef.current >= historyRef.current.length - 1) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const newIndex = historyIndex + 1;
-    ctx.putImageData(history[newIndex].imageData, 0, 0);
-    setHistoryIndex(newIndex);
-  }, [history, historyIndex]);
+    const newIndex = historyIndexRef.current + 1;
+    ctx.putImageData(historyRef.current[newIndex].imageData, 0, 0);
+    historyIndexRef.current = newIndex;
+  }, []);
 
   const floodFill = useCallback((startX: number, startY: number, fillColor: string) => {
     const canvas = canvasRef.current;
@@ -90,7 +99,6 @@ export const useColoringCanvas = () => {
     const width = canvas.width;
     const height = canvas.height;
 
-    // Parse fill color
     const tempCanvas = document.createElement('canvas');
     tempCanvas.width = 1;
     tempCanvas.height = 1;
@@ -107,7 +115,6 @@ export const useColoringCanvas = () => {
     const startB = data[startIdx + 2];
     const startA = data[startIdx + 3];
 
-    // Don't fill if same color
     if (startR === fillRgb[0] && startG === fillRgb[1] && startB === fillRgb[2] && startA === fillRgb[3]) return;
 
     const tolerance = 32;
@@ -147,12 +154,16 @@ export const useColoringCanvas = () => {
     const point = getCanvasPoint(e);
     if (!point) return;
 
-    if (tool === 'fill') {
-      floodFill(point.x, point.y, color);
+    const currentTool = toolRef.current;
+    const currentColor = colorRef.current;
+    const currentBrushSize = brushSizeRef.current;
+
+    if (currentTool === 'fill') {
+      floodFill(point.x, point.y, currentColor);
       return;
     }
 
-    setIsDrawing(true);
+    isDrawingRef.current = true;
     lastPoint.current = point;
 
     const canvas = canvasRef.current;
@@ -161,14 +172,14 @@ export const useColoringCanvas = () => {
     if (!ctx) return;
 
     ctx.beginPath();
-    ctx.arc(point.x, point.y, (tool === 'eraser' ? brushSize * 2 : brushSize) / 2, 0, Math.PI * 2);
-    ctx.fillStyle = tool === 'eraser' ? '#FFFFFF' : color;
+    ctx.arc(point.x, point.y, (currentTool === 'eraser' ? currentBrushSize * 2 : currentBrushSize) / 2, 0, Math.PI * 2);
+    ctx.fillStyle = currentTool === 'eraser' ? '#FFFFFF' : currentColor;
     ctx.fill();
-  }, [tool, color, brushSize, getCanvasPoint, floodFill]);
+  }, [getCanvasPoint, floodFill]);
 
   const draw = useCallback((e: React.MouseEvent | React.TouchEvent) => {
     e.preventDefault();
-    if (!isDrawing || !lastPoint.current) return;
+    if (!isDrawingRef.current || !lastPoint.current) return;
 
     const point = getCanvasPoint(e);
     if (!point) return;
@@ -178,25 +189,29 @@ export const useColoringCanvas = () => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    const currentTool = toolRef.current;
+    const currentColor = colorRef.current;
+    const currentBrushSize = brushSizeRef.current;
+
     ctx.beginPath();
     ctx.moveTo(lastPoint.current.x, lastPoint.current.y);
     ctx.lineTo(point.x, point.y);
-    ctx.strokeStyle = tool === 'eraser' ? '#FFFFFF' : color;
-    ctx.lineWidth = tool === 'eraser' ? brushSize * 2 : brushSize;
+    ctx.strokeStyle = currentTool === 'eraser' ? '#FFFFFF' : currentColor;
+    ctx.lineWidth = currentTool === 'eraser' ? currentBrushSize * 2 : currentBrushSize;
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
     ctx.stroke();
 
     lastPoint.current = point;
-  }, [isDrawing, tool, color, brushSize, getCanvasPoint]);
+  }, [getCanvasPoint]);
 
   const stopDrawing = useCallback(() => {
-    if (isDrawing) {
-      setIsDrawing(false);
+    if (isDrawingRef.current) {
+      isDrawingRef.current = false;
       lastPoint.current = null;
       saveToHistory();
     }
-  }, [isDrawing, saveToHistory]);
+  }, [saveToHistory]);
 
   const loadImage = useCallback((imageUrl: string) => {
     const canvas = canvasRef.current;
@@ -226,8 +241,8 @@ export const useColoringCanvas = () => {
     });
   }, []);
 
-  const canUndo = historyIndex > 0;
-  const canRedo = historyIndex < history.length - 1;
+  const canUndo = historyIndexRef.current > 0;
+  const canRedo = historyIndexRef.current < historyRef.current.length - 1;
 
   return {
     canvasRef,
