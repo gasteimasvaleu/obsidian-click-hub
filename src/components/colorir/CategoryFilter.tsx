@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { Palette, BookOpen, Cross, PawPrint, Sparkles } from 'lucide-react';
+import { Palette, BookOpen, Cross, Sparkles } from 'lucide-react';
 
 interface CategoryFilterProps {
   selected: string;
@@ -8,10 +8,9 @@ interface CategoryFilterProps {
 
 const categories = [
   { value: 'all', label: 'Todos', icon: Palette },
-  { value: 'antigo_testamento', label: 'Antigo Test.', icon: BookOpen },
-  { value: 'novo_testamento', label: 'Novo Test.', icon: Cross },
-  { value: 'personagens', label: 'Personagens', icon: Sparkles },
-  { value: 'animais', label: 'Animais', icon: PawPrint },
+  { value: 'contos', label: 'Contos', icon: BookOpen },
+  { value: 'parabolas', label: 'Parábolas', icon: Sparkles },
+  { value: 'personagens', label: 'Personagens', icon: Cross },
 ];
 
 export const CategoryFilter = ({ selected, onChange }: CategoryFilterProps) => {
