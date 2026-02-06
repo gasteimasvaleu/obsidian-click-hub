@@ -11,6 +11,7 @@ interface MediaUploaderProps {
   label: string;
   accept: "image" | "video" | "document";
   folder: string;
+  bucket?: string;
   currentUrl?: string;
   onUploadSuccess: (url: string) => void;
   onRemove?: () => void;
@@ -24,6 +25,7 @@ export function MediaUploader({
   label,
   accept,
   folder,
+  bucket = "plataforma",
   currentUrl,
   onUploadSuccess,
   onRemove,
@@ -75,7 +77,7 @@ export function MediaUploader({
 
     const result = await uploadMedia({
       file,
-      bucket: "plataforma",
+      bucket,
       folder,
       maxSizeMB,
       acceptedTypes,
@@ -93,7 +95,7 @@ export function MediaUploader({
     }
 
     setUploading(false);
-  }, [accept, folder, maxSizeMB, acceptedTypes, onUploadSuccess]);
+  }, [accept, bucket, folder, maxSizeMB, acceptedTypes, onUploadSuccess]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -105,7 +107,7 @@ export function MediaUploader({
   const handleRemove = async () => {
     // Delete from storage if there's a saved URL
     if (currentUrl) {
-      await deleteMedia("plataforma", currentUrl);
+      await deleteMedia(bucket, currentUrl);
     }
     // Clear local preview
     setPreview(null);

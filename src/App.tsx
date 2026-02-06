@@ -50,6 +50,7 @@ import MaterialsManager from "./pages/admin/plataforma/MaterialsManager";
 import PlatformSettingsManager from "./pages/admin/plataforma/PlatformSettingsManager";
 import CarouselsManager from "./pages/admin/plataforma/CarouselsManager";
 import PrayersManager from "./pages/admin/PrayersManager";
+import ColoringManager from "./pages/admin/ColoringManager";
 
 // Colorir pages
 import ColorirPage from "./pages/colorir/ColorirPage";
@@ -141,6 +142,7 @@ const App = () => {
               <Route path="/admin/plataforma/configuracoes" element={<ProtectedRoute requireAdmin><PlatformSettingsManager /></ProtectedRoute>} />
               <Route path="/admin/plataforma/carrosseis" element={<ProtectedRoute requireAdmin><CarouselsManager /></ProtectedRoute>} />
               <Route path="/admin/oracoes" element={<ProtectedRoute requireAdmin><PrayersManager /></ProtectedRoute>} />
+              <Route path="/admin/colorir" element={<ProtectedRoute requireAdmin><ColoringManager /></ProtectedRoute>} />
               <Route path="/admin/plataforma/cursos" element={<ProtectedRoute requireAdmin><CoursesManager /></ProtectedRoute>} />
               <Route path="/admin/plataforma/modulos" element={<ProtectedRoute requireAdmin><ModulesManager /></ProtectedRoute>} />
               <Route path="/admin/plataforma/aulas" element={<ProtectedRoute requireAdmin><LessonsManager /></ProtectedRoute>} />
