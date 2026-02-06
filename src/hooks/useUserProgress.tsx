@@ -159,6 +159,10 @@ export const useUserProgress = () => {
     if (updatedProgress.games_completed === 10) newBadges.push('games_10');
     if (updatedProgress.ebooks_read === 1) newBadges.push('first_ebook');
     if (updatedProgress.ebooks_read === 5) newBadges.push('ebooks_5');
+    if (updatedProgress.coloring_completed === 1) newBadges.push('first_coloring');
+    if (updatedProgress.coloring_completed === 5) newBadges.push('coloring_5');
+    if (updatedProgress.coloring_completed === 10) newBadges.push('coloring_10');
+    if (updatedProgress.coloring_completed === 25) newBadges.push('coloring_master');
     if (updatedProgress.level === 5) newBadges.push('level_5');
     if (updatedProgress.level === 10) newBadges.push('level_10');
 
@@ -226,6 +230,10 @@ const getBadgeName = (badgeType: string): string => {
     games_10: '10 Jogos Completos',
     first_ebook: 'Primeira Música',
     ebooks_5: '5 Músicas Ouvidas',
+    first_coloring: 'Primeiro Desenho Colorido',
+    coloring_5: '5 Desenhos Coloridos',
+    coloring_10: '10 Desenhos Coloridos',
+    coloring_master: 'Mestre Artista (25)',
     level_5: 'Nível 5',
     level_10: 'Nível 10',
   };

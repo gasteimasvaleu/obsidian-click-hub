@@ -114,6 +114,42 @@ export type Database = {
           },
         ]
       }
+      coloring_drawings: {
+        Row: {
+          available: boolean
+          category: string
+          created_at: string
+          description: string | null
+          difficulty: string
+          display_order: number
+          id: string
+          image_url: string
+          title: string
+        }
+        Insert: {
+          available?: boolean
+          category?: string
+          created_at?: string
+          description?: string | null
+          difficulty?: string
+          display_order?: number
+          id?: string
+          image_url: string
+          title: string
+        }
+        Update: {
+          available?: boolean
+          category?: string
+          created_at?: string
+          description?: string | null
+          difficulty?: string
+          display_order?: number
+          id?: string
+          image_url?: string
+          title?: string
+        }
+        Relationships: []
+      }
       course_modules: {
         Row: {
           available: boolean | null
@@ -782,6 +818,54 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "user_badges_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_coloring_creations: {
+        Row: {
+          colored_image_url: string
+          created_at: string
+          drawing_id: string | null
+          id: string
+          is_from_photo: boolean
+          original_image_url: string
+          title: string
+          user_id: string
+        }
+        Insert: {
+          colored_image_url: string
+          created_at?: string
+          drawing_id?: string | null
+          id?: string
+          is_from_photo?: boolean
+          original_image_url: string
+          title?: string
+          user_id: string
+        }
+        Update: {
+          colored_image_url?: string
+          created_at?: string
+          drawing_id?: string | null
+          id?: string
+          is_from_photo?: boolean
+          original_image_url?: string
+          title?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_coloring_creations_drawing_id_fkey"
+            columns: ["drawing_id"]
+            isOneToOne: false
+            referencedRelation: "coloring_drawings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_coloring_creations_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
