@@ -242,7 +242,7 @@ export const useColoringCanvas = () => {
   }, []);
 
   const canUndo = historyIndexRef.current > 0;
-  const canRedo = historyIndexRef.current < historyRef.current.length - 1;
+  const canRedo = historyIndexRef.current < (historyRef.current?.length ?? 0) - 1;
 
   return {
     canvasRef,
