@@ -56,14 +56,16 @@ const ColorirPage = () => {
       <main className="container mx-auto px-4 pt-16">
         {/* Hero */}
         <div className="flex justify-center mb-6 animate-fade-in">
-          <GlassCard className="w-full max-w-3xl text-center">
-            <div className="p-4 rounded-full bg-gradient-to-br from-orange-500 to-yellow-500 w-fit mx-auto mb-4">
-              <Palette size={40} className="text-white" />
-            </div>
-            <h1 className="text-3xl md:text-4xl font-bold mb-2 bg-gradient-to-r from-orange-400 to-yellow-400 bg-clip-text text-transparent">
-              Colorir Bíblico
-            </h1>
-            <p className="text-foreground/80">Solte a criatividade colorindo desenhos bíblicos! 🎨</p>
+          <GlassCard className="w-full max-w-3xl p-0 overflow-hidden">
+            <video
+              src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/colorir%20novo.mp4"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              className="w-full h-auto rounded-2xl"
+            />
           </GlassCard>
         </div>
 
