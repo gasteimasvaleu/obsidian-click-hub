@@ -138,7 +138,7 @@ const ColoringEditorPage = () => {
       </div>
 
       {/* Controls */}
-      <div className="p-3 space-y-3 border-t border-border bg-background/80 backdrop-blur">
+      <div className="p-3 pb-28 space-y-3 border-t border-border bg-background/80 backdrop-blur">
         <BrushSizeSlider size={canvas.brushSize} onChange={canvas.setBrushSize} />
         <ToolBar
           tool={canvas.tool}
