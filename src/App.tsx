@@ -4,7 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Home, Package, BookOpen, Heart, Gamepad2, Users, MessageCircle, GraduationCap, BookHeart, Music } from "lucide-react";
+import { Home, Package, BookOpen, Heart, Gamepad2, Users, MessageCircle, GraduationCap, BookHeart, Music, Palette } from "lucide-react";
 import { NavBar } from "@/components/ui/tubelight-navbar";
 import { SplashScreen } from "./components/SplashScreen";
 import { AuthProvider } from "./contexts/AuthContext";
@@ -51,6 +51,12 @@ import PlatformSettingsManager from "./pages/admin/plataforma/PlatformSettingsMa
 import CarouselsManager from "./pages/admin/plataforma/CarouselsManager";
 import PrayersManager from "./pages/admin/PrayersManager";
 
+// Colorir pages
+import ColorirPage from "./pages/colorir/ColorirPage";
+import ColoringEditorPage from "./pages/colorir/ColoringEditorPage";
+import PhotoTransformPage from "./pages/colorir/PhotoTransformPage";
+import MyCreationsPage from "./pages/colorir/MyCreationsPage";
+
 const queryClient = new QueryClient();
 
 const navItems = [
@@ -58,7 +64,7 @@ const navItems = [
   { name: 'Orações', url: '/oracoes', icon: BookHeart },
   { name: 'Bíbliafy', url: '/audiofy', icon: Music },
   { name: 'Cursos', url: '/plataforma', icon: GraduationCap },
-  { name: 'Guia', url: '/guia-pais', icon: Users },
+  { name: 'Colorir', url: '/colorir', icon: Palette },
   { name: 'Games', url: '/games', icon: Gamepad2 }
 ];
 
@@ -118,6 +124,11 @@ const App = () => {
               <Route path="/login" element={<Login />} />
               <Route path="/cadastro" element={<Cadastro />} />
               <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+              <Route path="/colorir" element={<ProtectedRoute><ColorirPage /></ProtectedRoute>} />
+              <Route path="/colorir/editor/photo" element={<ProtectedRoute><ColoringEditorPage /></ProtectedRoute>} />
+              <Route path="/colorir/editor/:drawingId" element={<ProtectedRoute><ColoringEditorPage /></ProtectedRoute>} />
+              <Route path="/colorir/transformar" element={<ProtectedRoute><PhotoTransformPage /></ProtectedRoute>} />
+              <Route path="/colorir/minhas-criacoes" element={<ProtectedRoute><MyCreationsPage /></ProtectedRoute>} />
               <Route path="/plataforma" element={<ProtectedRoute><PlataformaPage /></ProtectedRoute>} />
               <Route path="/plataforma/curso/:courseId" element={<ProtectedRoute><CoursePage /></ProtectedRoute>} />
               <Route path="/plataforma/modulo/:moduleId" element={<ProtectedRoute><ModulePage /></ProtectedRoute>} />

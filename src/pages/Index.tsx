@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { GlassCard } from "@/components/GlassCard";
 import { FuturisticNavbar } from "@/components/FuturisticNavbar";
-import { Users, Music, MessageCircle, Gamepad2, UserCircle, Package, Book, Heart, HandHeart } from "lucide-react";
+import { Users, Music, MessageCircle, Gamepad2, UserCircle, Package, Book, Heart, HandHeart, Palette } from "lucide-react";
 import { useState, useEffect } from "react";
 import { PWAInstallModal } from "@/components/PWAInstallModal";
 import { usePWAInstall } from "@/hooks/usePWAInstall";
@@ -73,6 +73,7 @@ const Index = () => {
   const navigationActions = [
     { title: "Orações", icon: HandHeart, action: () => navigate('/oracoes'), gradient: "from-blue-500 to-cyan-500" },
     { title: "Audiofy", icon: Music, action: () => navigate('/audiofy'), gradient: "from-green-500 to-emerald-500" },
+    { title: "Colorir", icon: Palette, action: () => navigate('/colorir'), gradient: "from-orange-500 to-yellow-500" },
     { title: "Amigo Divino", icon: Heart, action: () => navigate('/amigodivino'), gradient: "from-red-500 to-pink-500" },
     { title: "Guia para Pais", icon: Users, action: () => navigate('/guia-pais'), gradient: "from-yellow-500 to-orange-500" },
     { title: "Games", icon: Gamepad2, action: () => navigate('/games'), gradient: "from-purple-500 to-indigo-500" },
