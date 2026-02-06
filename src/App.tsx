@@ -65,7 +65,7 @@ const navItems = [
   { name: 'Orações', url: '/oracoes', icon: BookHeart },
   { name: 'Bíbliafy', url: '/audiofy', icon: Music },
   { name: 'Cursos', url: '/plataforma', icon: GraduationCap },
-  { name: 'Guia para Pais', url: '/guia-pais', icon: Users },
+  { name: 'Guia para Pais', url: '/guia-pais', icon: Users, shortName: 'Guia Pais' },
   { name: 'Games', url: '/games', icon: Gamepad2 }
 ];
 
