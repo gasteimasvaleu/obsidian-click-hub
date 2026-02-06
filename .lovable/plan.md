@@ -1,30 +1,42 @@
 
-
-# Atualizar categorias do filtro na pagina Colorir
+# Substituir hero card por video na pagina Colorir
 
 ## Alteracao
 
-**Arquivo:** `src/components/colorir/CategoryFilter.tsx`
+**Arquivo:** `src/pages/colorir/ColorirPage.tsx`
 
-Substituir as categorias atuais:
-- Todos, Antigo Test., Novo Test., Personagens, Animais
+Substituir o conteudo do GlassCard hero (icone, titulo e descricao) por um video com o mesmo estilo usado no SplashScreen e em outros banners do app.
 
-Pelas novas categorias:
-- Todos, Contos, Parabolas, Personagens
-
-### Detalhes tecnicos
-
-Atualizar o array `categories` no componente `CategoryFilter`:
-
-```typescript
-const categories = [
-  { value: 'all', label: 'Todos', icon: Palette },
-  { value: 'contos', label: 'Contos', icon: BookOpen },
-  { value: 'parabolas', label: 'Parabolas', icon: Sparkles },
-  { value: 'personagens', label: 'Personagens', icon: Cross },
-];
+### De (linhas 58-68):
+```tsx
+<div className="flex justify-center mb-6 animate-fade-in">
+  <GlassCard className="w-full max-w-3xl text-center">
+    <div className="p-4 rounded-full bg-gradient-to-br from-orange-500 to-yellow-500 w-fit mx-auto mb-4">
+      <Palette size={40} className="text-white" />
+    </div>
+    <h1 className="...">Colorir Biblico</h1>
+    <p className="...">Solte a criatividade...</p>
+  </GlassCard>
+</div>
 ```
 
-- Remover os imports nao utilizados (`PawPrint`)
-- Manter os icones existentes redistribuidos entre as novas categorias
+### Para:
+```tsx
+<div className="flex justify-center mb-6 animate-fade-in">
+  <GlassCard className="w-full max-w-3xl p-0 overflow-hidden">
+    <video
+      src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/colorir%20novo.mp4"
+      autoPlay
+      muted
+      loop
+      playsInline
+      preload="metadata"
+      className="w-full h-auto rounded-2xl"
+    />
+  </GlassCard>
+</div>
+```
 
+- O GlassCard recebe `p-0` para remover o padding interno e `overflow-hidden` para o video respeitar o border-radius
+- O video usa `autoPlay`, `muted`, `loop` e `playsInline` para reproduzir automaticamente sem som
+- O import do icone `Palette` sera mantido pois e usado em outras partes da mesma pagina (EmptyState e CategoryFilter)
