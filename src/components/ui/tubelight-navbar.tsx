@@ -8,6 +8,7 @@ interface NavItem {
   name: string
   url: string
   icon: LucideIcon
+  shortName?: string
 }
 
 interface NavBarProps {
@@ -76,7 +77,7 @@ export function NavBar({ items, className }: NavBarProps) {
                   "transition-all duration-200 overflow-hidden whitespace-nowrap",
                   isActive ? "inline max-w-[200px] opacity-100" : "hidden md:inline md:max-w-[200px] md:opacity-100"
                 )}>
-                  {item.name}
+                  {item.shortName || item.name}
                 </span>
               </span>
               {isActive && (
