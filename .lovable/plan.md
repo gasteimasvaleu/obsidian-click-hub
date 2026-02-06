@@ -1,42 +1,73 @@
 
-# Substituir hero card por video na pagina Colorir
+# Admin: Gerenciador de Desenhos para Colorir
 
-## Alteracao
+## Objetivo
 
-**Arquivo:** `src/pages/colorir/ColorirPage.tsx`
+Criar a pagina `/admin/colorir` para gerenciar os desenhos da galeria de colorir, seguindo o mesmo padrao visual e funcional das outras paginas admin (EbooksManager, GamesManager).
 
-Substituir o conteudo do GlassCard hero (icone, titulo e descricao) por um video com o mesmo estilo usado no SplashScreen e em outros banners do app.
+## Alteracoes
 
-### De (linhas 58-68):
-```tsx
-<div className="flex justify-center mb-6 animate-fade-in">
-  <GlassCard className="w-full max-w-3xl text-center">
-    <div className="p-4 rounded-full bg-gradient-to-br from-orange-500 to-yellow-500 w-fit mx-auto mb-4">
-      <Palette size={40} className="text-white" />
-    </div>
-    <h1 className="...">Colorir Biblico</h1>
-    <p className="...">Solte a criatividade...</p>
-  </GlassCard>
-</div>
-```
+### 1. Novo arquivo: `src/pages/admin/ColoringManager.tsx`
 
-### Para:
-```tsx
-<div className="flex justify-center mb-6 animate-fade-in">
-  <GlassCard className="w-full max-w-3xl p-0 overflow-hidden">
-    <video
-      src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/colorir%20novo.mp4"
-      autoPlay
-      muted
-      loop
-      playsInline
-      preload="metadata"
-      className="w-full h-auto rounded-2xl"
-    />
-  </GlassCard>
-</div>
-```
+Pagina admin completa com:
 
-- O GlassCard recebe `p-0` para remover o padding interno e `overflow-hidden` para o video respeitar o border-radius
-- O video usa `autoPlay`, `muted`, `loop` e `playsInline` para reproduzir automaticamente sem som
-- O import do icone `Palette` sera mantido pois e usado em outras partes da mesma pagina (EmptyState e CategoryFilter)
+- **Listagem** em tabela com colunas: Imagem (thumbnail), Titulo, Categoria, Dificuldade, Ordem, Status e Acoes
+- **Dialog de criacao** com campos:
+  - Titulo (texto, obrigatorio)
+  - Descricao (textarea, opcional)
+  - Categoria (select: Contos, Parabolas, Personagens)
+  - Dificuldade (select: Facil, Medio, Dificil)
+  - Ordem de exibicao (number)
+  - Upload da imagem (usando MediaUploader com bucket `criativos`, folder `colorir`)
+- **Dialog de edicao** com os mesmos campos, pre-preenchidos
+- **Acoes por item**: Visibilidade (toggle), Editar, Excluir
+- Usa `AdminLayout`, `ProtectedRoute`, e o mesmo padrao de estado/loading dos outros managers
+
+### 2. Arquivo editado: `src/App.tsx`
+
+- Importar `ColoringManager`
+- Adicionar rota: `<Route path="/admin/colorir" element={<ColoringManager />} />`
+
+### 3. Arquivo editado: `src/components/admin/AdminSidebar.tsx`
+
+- Adicionar `Palette` ao import de lucide-react
+- Adicionar item `{ name: 'Colorir', url: '/admin/colorir', icon: Palette }` no array `navItems`
+
+## Detalhes Tecnicos
+
+### Tabela utilizada: `coloring_drawings`
+
+Colunas relevantes:
+- `title` (text, obrigatorio)
+- `description` (text, opcional)
+- `image_url` (text, obrigatorio) -- URL da imagem no bucket `criativos`
+- `category` (text, default `personagens`) -- valores: `contos`, `parabolas`, `personagens`
+- `difficulty` (text, default `facil`) -- valores: `facil`, `medio`, `dificil`
+- `display_order` (integer, default 0)
+- `available` (boolean, default true)
+
+### RLS ja configurada
+
+A tabela ja tem policies:
+- `Admins can manage coloring drawings` (ALL) -- para admins
+- `Anyone can view available coloring drawings` (SELECT where available=true) -- para usuarios
+
+Nao e necessario nenhuma migracao de banco de dados.
+
+### Upload de imagens
+
+Usara o componente `MediaUploader` existente apontando para:
+- Bucket: `criativos`
+- Folder: `colorir`
+
+O bucket `criativos` ja tem RLS configurado para permitir upload por admins e leitura publica.
+
+### Padrao de codigo
+
+Seguira o mesmo padrao do `GamesManager.tsx`:
+- `useState` para lista, loading, dialog, form
+- `loadDrawings()` com `supabase.from('coloring_drawings').select('*').order('display_order')`
+- `handleSubmit` para criar novo desenho
+- `handleUpdate` para editar desenho existente
+- `toggleAvailability` para alternar visibilidade
+- `deleteDrawing` com confirmacao
