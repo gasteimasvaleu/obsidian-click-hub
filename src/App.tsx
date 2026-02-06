@@ -4,7 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Home, Package, BookOpen, Heart, Gamepad2, Users, MessageCircle, GraduationCap, BookHeart, Music, Palette } from "lucide-react";
+import { Home, Package, BookOpen, Heart, Gamepad2, Users, MessageCircle, GraduationCap, BookHeart, Music } from "lucide-react";
 import { NavBar } from "@/components/ui/tubelight-navbar";
 import { SplashScreen } from "./components/SplashScreen";
 import { AuthProvider } from "./contexts/AuthContext";
@@ -65,7 +65,7 @@ const navItems = [
   { name: 'Orações', url: '/oracoes', icon: BookHeart },
   { name: 'Bíbliafy', url: '/audiofy', icon: Music },
   { name: 'Cursos', url: '/plataforma', icon: GraduationCap },
-  { name: 'Colorir', url: '/colorir', icon: Palette },
+  { name: 'Amigo Divino', url: '/amigodivino', icon: MessageCircle },
   { name: 'Games', url: '/games', icon: Gamepad2 }
 ];
 
