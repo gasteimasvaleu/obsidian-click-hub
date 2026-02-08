@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { FuturisticNavbar } from "@/components/FuturisticNavbar";
+import { GlassCard } from "@/components/GlassCard";
 import { PostForm } from "@/components/comunidade/PostForm";
 import { PostCard } from "@/components/comunidade/PostCard";
 import { supabase } from "@/integrations/supabase/client";
@@ -56,7 +57,25 @@ const Comunidade = () => {
     <div className="min-h-screen bg-black relative flex flex-col pb-24">
       <FuturisticNavbar />
 
-      <div className="flex-1 px-4 pt-20 pb-8">
+      {/* Video Banner */}
+      <div className="flex justify-center w-full pt-16 pb-4 px-4">
+        <GlassCard className="w-full max-w-[500px] p-0 overflow-hidden">
+          <video 
+            src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/bannercomunidade.mp4"
+            className="w-full h-auto"
+            style={{ maxHeight: '300px' }}
+            autoPlay
+            muted
+            playsInline
+            onEnded={(e) => {
+              const video = e.currentTarget;
+              video.currentTime = 0;
+            }}
+          />
+        </GlassCard>
+      </div>
+
+      <div className="flex-1 px-4 pb-8">
         <div className="w-full max-w-2xl mx-auto space-y-4">
           {/* Header */}
           <div className="flex items-center gap-3 mb-2">
