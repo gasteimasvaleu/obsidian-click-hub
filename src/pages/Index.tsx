@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { GlassCard } from "@/components/GlassCard";
 import { FuturisticNavbar } from "@/components/FuturisticNavbar";
-import { Users, Music, MessageCircle, Gamepad2, UserCircle, Package, Book, Heart, HandHeart, Palette } from "lucide-react";
+import { Users, Music, MessageCircle, Gamepad2, UserCircle, Package, Book, Heart, HandHeart, Palette, MessagesSquare } from "lucide-react";
 import { useState, useEffect } from "react";
 import { PWAInstallModal } from "@/components/PWAInstallModal";
 import { usePWAInstall } from "@/hooks/usePWAInstall";
@@ -77,6 +77,7 @@ const Index = () => {
     { title: "Amigo Divino", icon: Heart, action: () => navigate('/amigodivino'), gradient: "from-red-500 to-pink-500" },
     { title: "Guia para Pais", icon: Users, action: () => navigate('/guia-pais'), gradient: "from-yellow-500 to-orange-500" },
     { title: "Games", icon: Gamepad2, action: () => navigate('/games'), gradient: "from-purple-500 to-indigo-500" },
+    { title: "Comunidade", icon: MessagesSquare, action: () => navigate('/comunidade'), gradient: "from-emerald-500 to-teal-500" },
     { title: "Meu Perfil", icon: UserCircle, action: () => navigate('/profile'), gradient: "from-teal-500 to-blue-500" }
   ];
   return (
