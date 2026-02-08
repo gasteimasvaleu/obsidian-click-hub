@@ -52,6 +52,9 @@ import CarouselsManager from "./pages/admin/plataforma/CarouselsManager";
 import PrayersManager from "./pages/admin/PrayersManager";
 import ColoringManager from "./pages/admin/ColoringManager";
 
+// Comunidade
+import Comunidade from "./pages/Comunidade";
+
 // Colorir pages
 import ColorirPage from "./pages/colorir/ColorirPage";
 import ColoringEditorPage from "./pages/colorir/ColoringEditorPage";
@@ -125,6 +128,7 @@ const App = () => {
               <Route path="/login" element={<Login />} />
               <Route path="/cadastro" element={<Cadastro />} />
               <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+              <Route path="/comunidade" element={<ProtectedRoute><Comunidade /></ProtectedRoute>} />
               <Route path="/colorir" element={<ProtectedRoute><ColorirPage /></ProtectedRoute>} />
               <Route path="/colorir/editor/photo" element={<ProtectedRoute><ColoringEditorPage /></ProtectedRoute>} />
               <Route path="/colorir/editor/:drawingId" element={<ProtectedRoute><ColoringEditorPage /></ProtectedRoute>} />
