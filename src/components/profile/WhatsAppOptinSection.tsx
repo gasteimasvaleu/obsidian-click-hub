@@ -110,6 +110,12 @@ export function WhatsAppOptinSection({ userId }: WhatsAppOptinSectionProps) {
     }
   };
 
+  const normalizePhone = (value: string): string => {
+    const cleaned = value.replace(/\D/g, '');
+    if (!cleaned) return '';
+    return cleaned.startsWith('55') ? cleaned : '55' + cleaned;
+  };
+
   const handleSavePhone = async () => {
     if (!validatePhone(phone)) {
       toast.error('Por favor, insira um número de telefone válido');
@@ -118,7 +124,7 @@ export function WhatsAppOptinSection({ userId }: WhatsAppOptinSectionProps) {
 
     setSaving(true);
     try {
-      const cleanedPhone = phone.replace(/\D/g, '');
+      const cleanedPhone = normalizePhone(phone);
       
       const { error } = await supabase
         .from('subscribers')
@@ -212,7 +218,8 @@ export function WhatsAppOptinSection({ userId }: WhatsAppOptinSectionProps) {
 
         <div className="space-y-2">
           <Label htmlFor="phone">Número do WhatsApp</Label>
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center">
+            <span className="text-sm font-medium text-muted-foreground whitespace-nowrap">+55</span>
             <Input
               id="phone"
               type="tel"
