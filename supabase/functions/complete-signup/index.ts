@@ -6,6 +6,12 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+function normalizePhone(phone: string): string {
+  const cleaned = phone.replace(/\D/g, '');
+  if (!cleaned) return '';
+  return cleaned.startsWith('55') ? cleaned : '55' + cleaned;
+}
+
 interface ValidateTokenRequest {
   action: "validate";
   token: string;
@@ -158,7 +164,7 @@ serve(async (req: Request): Promise<Response> => {
         .update({
           user_id: authData.user.id,
           full_name: body.fullName || subscriber.full_name,
-          phone: body.phone || subscriber.phone,
+          phone: normalizePhone(body.phone || subscriber.phone || ''),
           subscription_status: "active",
           signup_token: null,
           signup_token_expires_at: null,

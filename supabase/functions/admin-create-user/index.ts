@@ -1,5 +1,11 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
+function normalizePhone(phone: string): string {
+  const cleaned = phone.replace(/\D/g, '');
+  if (!cleaned) return '';
+  return cleaned.startsWith('55') ? cleaned : '55' + cleaned;
+}
+
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
@@ -101,7 +107,7 @@ Deno.serve(async (req) => {
       .upsert({
         email: email.toLowerCase(),
         full_name: fullName,
-        phone: phone,
+        phone: phone ? normalizePhone(phone) : null,
         user_id: newUser.user.id,
         subscription_status: 'active',
       }, {

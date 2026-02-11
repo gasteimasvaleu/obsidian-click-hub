@@ -31,6 +31,12 @@ interface HotmartWebhookPayload {
   };
 }
 
+function normalizePhone(phone: string): string {
+  const cleaned = phone.replace(/\D/g, '');
+  if (!cleaned) return '';
+  return cleaned.startsWith('55') ? cleaned : '55' + cleaned;
+}
+
 function generateToken(): string {
   const array = new Uint8Array(32);
   crypto.getRandomValues(array);
@@ -101,7 +107,7 @@ serve(async (req: Request): Promise<Response> => {
           .from("subscribers")
           .update({
             full_name: buyer.name,
-            phone: buyer.phone || null,
+            phone: buyer.phone ? normalizePhone(buyer.phone) : null,
             hotmart_transaction_id: purchase.transaction,
             hotmart_product_id: String(product.id),
             hotmart_offer_id: purchase.offer?.code || null,
@@ -137,7 +143,7 @@ serve(async (req: Request): Promise<Response> => {
         .insert({
           email: buyer.email,
           full_name: buyer.name,
-          phone: buyer.phone || null,
+          phone: buyer.phone ? normalizePhone(buyer.phone) : null,
           hotmart_transaction_id: purchase.transaction,
           hotmart_product_id: String(product.id),
           hotmart_offer_id: purchase.offer?.code || null,
