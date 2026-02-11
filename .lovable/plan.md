@@ -1,133 +1,70 @@
 
-# Adicionar mais orações robustas ao Livrinho de Orações
 
-## Situacao atual (112 orações)
+# Padronizar telefone com +55 automaticamente
 
-As categorias com menos orações e que mais precisam de reforço:
+## Problema
+O telefone e salvo no banco sem o codigo do pais. Dependendo de onde o usuario cadastra, o formato varia (com ou sem 55).
 
-| Categoria | Qtd atual | Orações a adicionar |
-|-----------|-----------|-------------------|
-| Misericórdia | 3 | +4 |
-| Eucarística | 4 | +4 |
-| Penitência | 4 | +3 |
-| Vocação | 4 | +3 |
-| Espírito Santo | 5 | +3 |
-| Proteção | 5 | +3 |
-| Refeição | 5 | +2 |
-| Sacramentos | 5 | +3 |
-| Manhã | 6 | +2 |
-| Noite | 6 | +2 |
-| Gratidão | 7 | +2 |
-| Amigos | 7 | +1 |
-| Família | 8 | +2 |
-| Santos | 8 | +3 |
-| Escola | 8 | +1 |
-| Essencial | 8 | +2 |
-| Saúde | 7 | +2 |
-| Mariana | 12 | +2 |
+## Pontos de salvamento identificados
 
-**Total: ~42 novas orações**, levando o livrinho de 112 para ~154 orações.
+Existem 4 locais onde o telefone e salvo na tabela `subscribers`:
 
-## Orações planejadas por categoria
+| Local | Arquivo |
+|-------|---------|
+| WhatsApp opt-in (perfil) | `src/components/profile/WhatsAppOptinSection.tsx` |
+| Cadastro via token | `supabase/functions/complete-signup/index.ts` |
+| Cadastro admin | `supabase/functions/admin-create-user/index.ts` |
+| Webhook Hotmart | `supabase/functions/hotmart-webhook/index.ts` |
 
-### Misericórdia (+4)
-- Oração das Chagas de Jesus
-- Novena da Misericórdia (Resumo)
-- Oração de Abandono à Misericórdia
-- Oração pelo Perdão dos Pecados do Mundo
+## Solucao
 
-### Eucarística (+4)
-- Tantum Ergo
-- O Salutaris Hostia
-- Visita ao Santíssimo Sacramento
-- Oração de Reparação Eucarística
+Adicionar uma funcao de normalizacao em cada ponto que limpa o telefone e adiciona o prefixo `55` antes de salvar:
 
-### Penitência (+3)
-- Salmo 130 (De Profundis)
-- Oração de Arrependimento
-- Oração antes da Confissão
+```text
+Entrada do usuario: (11) 99999-9999
+Limpo: 11999999999
+Normalizado: 5511999999999
+```
 
-### Vocação (+3)
-- Oração pelas Vocações Sacerdotais
-- Oração pela Vocação Religiosa
-- Oração pelo Discernimento Vocacional
+### Logica de normalizacao
 
-### Espírito Santo (+3)
-- Oração pelos Frutos do Espírito Santo
-- Novena ao Espírito Santo (Oração)
-- Oração de Pentecostes
+```
+1. Remover todos os caracteres nao numericos
+2. Se comecar com "+55", remover o "+"
+3. Se NAO comecar com "55", adicionar "55" no inicio
+4. Resultado final: apenas digitos, sempre comecando com 55
+```
 
-### Proteção (+3)
-- Oração a São Rafael Arcanjo
-- Oração a São Gabriel Arcanjo
-- Oração de Proteção da Família
+## Arquivos a modificar
 
-### Refeição (+2)
-- Bênção da Mesa em Família
-- Oração de Gratidão pelo Pão de Cada Dia
+### 1. WhatsAppOptinSection.tsx
+- Na funcao `handleSavePhone`, apos limpar o telefone, verificar se comeca com `55` e adicionar se necessario
 
-### Sacramentos (+3)
-- Oração de Preparação para a Confissão
-- Oração pelo Sacramento do Matrimônio
-- Oração pela Unção dos Enfermos
+### 2. complete-signup/index.ts
+- Antes de salvar o `phone` no update do subscriber, normalizar com prefixo `55`
 
-### Manhã (+2)
-- Oração de Entrega do Dia a Deus
-- Preces Matinais de São Francisco
+### 3. admin-create-user/index.ts
+- Antes de salvar no `subscribers.upsert`, normalizar o phone
 
-### Noite (+2)
-- Oração de São João Bosco para a Noite
-- Oração de Proteção Noturna
+### 4. hotmart-webhook/index.ts
+- Ao receber `buyer.phone` do webhook, normalizar antes de salvar (tanto no insert quanto no update)
 
-### Gratidão (+2)
-- Oração de Gratidão pelo Perdão
-- Oração de Gratidão pela Eucaristia
+### 5. Indicacao visual no frontend
+- Adicionar texto "+55" fixo ao lado do campo de telefone no `WhatsAppOptinSection` para o usuario saber que o codigo ja e adicionado automaticamente
 
-### Amigos (+1)
-- Oração para Ser um Bom Amigo
+## Detalhes tecnicos
 
-### Família (+2)
-- Oração pela Proteção do Lar
-- Oração pelos Filhos
+Nos edge functions (Deno), criar uma funcao helper inline:
 
-### Santos (+3)
-- Oração a Santo Antônio
-- Oração a Santa Teresinha
-- Oração a São Padre Pio
+```typescript
+function normalizePhone(phone: string): string {
+  const cleaned = phone.replace(/\D/g, '');
+  if (!cleaned) return '';
+  return cleaned.startsWith('55') ? cleaned : '55' + cleaned;
+}
+```
 
-### Escola (+1)
-- Oração pela Formatura
+No frontend (React), aplicar a mesma logica antes do `supabase.update()`.
 
-### Essencial (+2)
-- Oração do Senhor (versão completa com reflexão)
-- Ladainha de Todos os Santos (resumida)
+Nenhuma mudanca no banco de dados e necessaria.
 
-### Saúde (+2)
-- Oração a São Camilo de Léllis
-- Oração pela Cura Interior
-
-### Mariana (+2)
-- Ladainha de Nossa Senhora
-- Oração da Medalha Milagrosa
-
-## Implementacao
-
-### Passo unico
-
-Executar um INSERT em massa na tabela `prayers` com as ~42 novas orações, cada uma contendo:
-- `title`: nome da oração
-- `content`: texto completo e robusto da oração (orações tradicionais com texto fiel; orações infantis com linguagem acessível)
-- `category`: categoria existente correspondente
-- `icon_name`: ícone da categoria (seguindo o padrão já usado)
-- `display_order`: sequencial após as orações existentes na categoria
-- `available`: true
-
-### Nenhum arquivo de codigo sera alterado
-
-Todas as categorias e componentes já existem. As novas orações aparecerão automaticamente no app após a inserção no banco.
-
-### Qualidade do conteudo
-
-- Orações tradicionais (Tantum Ergo, De Profundis, etc.) terão o texto original em português
-- Orações infantis/cotidianas terão linguagem simples e acolhedora
-- Todas respeitarão a doutrina católica
