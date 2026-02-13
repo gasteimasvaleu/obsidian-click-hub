@@ -97,13 +97,18 @@ All colors MUST be HSL.
   }
 
   html, body {
-    overflow-x: hidden;
-    max-width: 100vw;
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+    height: 100%;
   }
 
   #root {
+    overflow-y: auto;
     overflow-x: hidden;
+    height: 100%;
     max-width: 100vw;
+    -webkit-overflow-scrolling: touch;
   }
 }
 
