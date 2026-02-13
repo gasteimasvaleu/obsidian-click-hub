@@ -1,70 +1,48 @@
 
-
-# Padronizar telefone com +55 automaticamente
+# Corrigir navbar atrás da status bar do iOS
 
 ## Problema
-O telefone e salvo no banco sem o codigo do pais. Dependendo de onde o usuario cadastra, o formato varia (com ou sem 55).
-
-## Pontos de salvamento identificados
-
-Existem 4 locais onde o telefone e salvo na tabela `subscribers`:
-
-| Local | Arquivo |
-|-------|---------|
-| WhatsApp opt-in (perfil) | `src/components/profile/WhatsAppOptinSection.tsx` |
-| Cadastro via token | `supabase/functions/complete-signup/index.ts` |
-| Cadastro admin | `supabase/functions/admin-create-user/index.ts` |
-| Webhook Hotmart | `supabase/functions/hotmart-webhook/index.ts` |
+A navbar superior ("BibliaToonKIDS" + icones) usa `fixed top-0`, ficando por baixo do relogio, sinal e bateria do iPhone. O conteudo se sobrepoem.
 
 ## Solucao
 
-Adicionar uma funcao de normalizacao em cada ponto que limpa o telefone e adiciona o prefixo `55` antes de salvar:
+Duas mudancas simples:
 
-```text
-Entrada do usuario: (11) 99999-9999
-Limpo: 11999999999
-Normalizado: 5511999999999
-```
-
-### Logica de normalizacao
+### 1. `index.html` -- Habilitar viewport-fit=cover
+Adicionar `viewport-fit=cover` na meta tag viewport. Isso faz o app ocupar toda a tela e disponibiliza os valores de safe area via CSS.
 
 ```
-1. Remover todos os caracteres nao numericos
-2. Se comecar com "+55", remover o "+"
-3. Se NAO comecar com "55", adicionar "55" no inicio
-4. Resultado final: apenas digitos, sempre comecando com 55
+Antes:  width=device-width, initial-scale=1.0
+Depois: width=device-width, initial-scale=1.0, viewport-fit=cover
 ```
 
-## Arquivos a modificar
+### 2. `src/components/FuturisticNavbar.tsx` -- Respeitar safe area no topo
+Adicionar `padding-top: env(safe-area-inset-top)` inline na nav, empurrando o conteudo para baixo da status bar do iOS.
 
-### 1. WhatsAppOptinSection.tsx
-- Na funcao `handleSavePhone`, apos limpar o telefone, verificar se comeca com `55` e adicionar se necessario
+### 3. `src/index.css` -- Travar overflow do app
+Adicionar `overflow: hidden` e `position: fixed` no `html` e `body`, e permitir scroll apenas no `#root`. Isso evita que o conteudo "estoure" a tela horizontalmente ou verticalmente no app nativo.
 
-### 2. complete-signup/index.ts
-- Antes de salvar o `phone` no update do subscriber, normalizar com prefixo `55`
+```css
+html, body {
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+}
 
-### 3. admin-create-user/index.ts
-- Antes de salvar no `subscribers.upsert`, normalizar o phone
-
-### 4. hotmart-webhook/index.ts
-- Ao receber `buyer.phone` do webhook, normalizar antes de salvar (tanto no insert quanto no update)
-
-### 5. Indicacao visual no frontend
-- Adicionar texto "+55" fixo ao lado do campo de telefone no `WhatsAppOptinSection` para o usuario saber que o codigo ja e adicionado automaticamente
-
-## Detalhes tecnicos
-
-Nos edge functions (Deno), criar uma funcao helper inline:
-
-```typescript
-function normalizePhone(phone: string): string {
-  const cleaned = phone.replace(/\D/g, '');
-  if (!cleaned) return '';
-  return cleaned.startsWith('55') ? cleaned : '55' + cleaned;
+#root {
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 100%;
+  -webkit-overflow-scrolling: touch;
 }
 ```
 
-No frontend (React), aplicar a mesma logica antes do `supabase.update()`.
+## O que NAO muda
+- Bottom navbar (tubelight) -- voce disse que esta OK
+- Splash screen -- sem alteracao
+- Admin header -- so afeta o app nativo e o admin nao e acessado pelo app
 
-Nenhuma mudanca no banco de dados e necessaria.
-
+## Observacao
+- `env(safe-area-inset-top)` e ignorado em browsers normais sem notch, entao nao quebra a versao web
+- Apos implementar, sera necessario rodar `npx cap sync` e rebuildar o app para testar no dispositivo
