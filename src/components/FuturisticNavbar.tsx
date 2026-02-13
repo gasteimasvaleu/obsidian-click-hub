@@ -10,7 +10,7 @@ export const FuturisticNavbar = () => {
   };
   
   return (
-    <nav className="navbar-glass fixed top-0 left-0 right-0 z-50 p-4">
+    <nav className="navbar-glass fixed top-0 left-0 right-0 z-50 p-4" style={{ paddingTop: 'calc(env(safe-area-inset-top) + 1rem)' }}>
       <div className="flex justify-between items-center">
         <h1 className="text-primary font-bold text-lg hover:animate-glow transition-all duration-300">
           BíbliaToonKIDS
