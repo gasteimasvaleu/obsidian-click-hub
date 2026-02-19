@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { toast } from 'sonner';
 import { ExternalLink } from 'lucide-react';
 
-const HOTMART_URL = "https://google.com";
+const HOTMART_URL = "https://pay.hotmart.com/L103253261E";
 
 const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
