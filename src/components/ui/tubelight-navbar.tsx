@@ -45,7 +45,7 @@ export function NavBar({ items, className }: NavBarProps) {
         className,
       )}
     >
-      <div className="flex items-center gap-1.5 md:gap-3 glass border border-primary/20 backdrop-blur-lg py-2 px-2 rounded-2xl shadow-lg">
+      <div className="flex items-center gap-1.5 md:gap-3 glass border border-primary/20 backdrop-blur-lg py-2 px-2 rounded-2xl shadow-lg" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
         {items.map((item) => {
           const Icon = item.icon
           const isActive = activeTab === item.name

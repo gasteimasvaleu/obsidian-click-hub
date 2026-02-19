@@ -96,7 +96,13 @@ All colors MUST be HSL.
     background: #000000;
   }
 
-  html, body {
+  html {
+    overflow-x: hidden;
+    max-width: 100vw;
+    background: #000000;
+  }
+
+  body {
     overflow-x: hidden;
     max-width: 100vw;
   }
@@ -118,9 +124,10 @@ All colors MUST be HSL.
   
   /* Navbar glass effect */
   .navbar-glass {
-    background: rgba(0, 0, 0, 0.4);
+    background: rgba(0, 0, 0, 0.85);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
+    padding-top: env(safe-area-inset-top, 0px);
   }
   
   /* Neon glow effects */
