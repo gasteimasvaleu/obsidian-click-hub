@@ -1,5 +1,6 @@
 
-# Alterar URL do Botão "Assine Agora" para Teste
+
+# Restaurar URL do Botão "Assine Agora"
 
 ## Mudança
 
@@ -7,12 +8,11 @@
 
 **De:**
 ```typescript
-const HOTMART_URL = "https://pay.hotmart.com/L103253261E";
+const HOTMART_URL = "https://google.com";
 ```
 
 **Para:**
 ```typescript
-const HOTMART_URL = "https://google.com";
+const HOTMART_URL = "https://pay.hotmart.com/L103253261E";
 ```
 
-Apenas essa constante precisa ser alterada. O botão já referencia `HOTMART_URL` corretamente.
