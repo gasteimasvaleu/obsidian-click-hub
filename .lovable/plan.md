@@ -1,18 +1,18 @@
 
-# Problema Identificado
+# Alterar URL do Botão "Assine Agora" para Teste
 
-As tentativas anteriores de editar o arquivo `src/pages/Login.tsx` não foram persistidas corretamente. O arquivo atual ainda contém o valor antigo:
+## Mudança
 
-```typescript
-const HOTMART_URL = "https://pay.hotmart.com/seu-produto"; // TODO: Substituir pela URL real
-```
+**Arquivo:** `src/pages/Login.tsx` — linha 11
 
-## Correção
-
-Substituir a linha 11 do arquivo `src/pages/Login.tsx` pela URL real:
-
+**De:**
 ```typescript
 const HOTMART_URL = "https://pay.hotmart.com/L103253261E";
 ```
 
-Apenas essa linha precisa mudar. O botão "Assine Agora" já usa a constante `HOTMART_URL` corretamente via `href={HOTMART_URL}` na linha 94.
+**Para:**
+```typescript
+const HOTMART_URL = "https://google.com";
+```
+
+Apenas essa constante precisa ser alterada. O botão já referencia `HOTMART_URL` corretamente.
