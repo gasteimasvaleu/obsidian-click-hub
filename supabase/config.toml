@@ -1,0 +1,31 @@
+project_id = "fnksvazibtekphseknob"
+
+[functions.photo-transform]
+verify_jwt = false
+
+[functions.generate-game-content]
+verify_jwt = true
+
+[functions.generate-parents-guide]
+verify_jwt = false
+
+[functions.generate-devotional]
+verify_jwt = false
+
+[functions.import-bible-data]
+verify_jwt = true
+
+[functions.generate-verse-comment]
+verify_jwt = false
+
+[functions.hotmart-webhook]
+verify_jwt = false
+
+[functions.complete-signup]
+verify_jwt = false
+
+[functions.send-whatsapp]
+verify_jwt = true
+
+[functions.send-daily-devotional-whatsapp]
+verify_jwt = false

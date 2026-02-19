@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">BíbliaToon KIDS</string>
+    <string name="title_activity_main">BíbliaToon KIDS</string>
+    <string name="package_name">com.caio.bibliatoonkids</string>
+    <string name="custom_url_scheme">com.caio.bibliatoonkids</string>
+</resources>
