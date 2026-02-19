@@ -2,48 +2,19 @@ import { useNavigate } from "react-router-dom";
 import { GlassCard } from "@/components/GlassCard";
 import { FuturisticNavbar } from "@/components/FuturisticNavbar";
 import { Users, Music, MessageCircle, Gamepad2, UserCircle, Package, Book, Heart, HandHeart, Palette, MessagesSquare } from "lucide-react";
-import { useState, useEffect } from "react";
-import { PWAInstallModal } from "@/components/PWAInstallModal";
-import { usePWAInstall } from "@/hooks/usePWAInstall";
-// Cache refresh fix
+import { useEffect } from "react";
 
 const Index = () => {
   const navigate = useNavigate();
-  const [showPWAModal, setShowPWAModal] = useState(false);
-  const { isInstallable, shouldShowModal, installPWA, markModalAsSeen } = usePWAInstall();
 
   // Check if user returned from external login
   useEffect(() => {
     const returnUrl = localStorage.getItem('returnUrl');
     if (returnUrl) {
-      // Clear the stored data
       localStorage.removeItem('returnUrl');
       localStorage.removeItem('appState');
     }
   }, []);
-
-  // Show PWA install modal after user lands on Index (already logged in)
-  useEffect(() => {
-    // Small delay to let page render first
-    const timer = setTimeout(() => {
-      if (shouldShowModal) {
-        setShowPWAModal(true);
-      }
-    }, 1000);
-    
-    return () => clearTimeout(timer);
-  }, [shouldShowModal]);
-
-  const handlePWAInstall = () => {
-    installPWA();
-    setShowPWAModal(false);
-    markModalAsSeen();
-  };
-
-  const handlePWAClose = () => {
-    setShowPWAModal(false);
-    markModalAsSeen();
-  };
 
   // Card principal
   const mainAction = {
@@ -169,13 +140,6 @@ const Index = () => {
         </div>
       </div>
       
-      {/* PWA Install Modal */}
-      <PWAInstallModal 
-        isOpen={showPWAModal}
-        onClose={handlePWAClose}
-        onInstall={handlePWAInstall}
-        isInstallable={isInstallable}
-      />
     </div>
   );
 };
