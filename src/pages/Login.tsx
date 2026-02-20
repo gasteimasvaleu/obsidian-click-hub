@@ -79,30 +79,6 @@ const Login = () => {
             </Button>
           </form>
 
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t border-muted" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-card px-2 text-muted-foreground">
-                Ainda não tem conta?
-              </span>
-            </div>
-          </div>
-
-          <a
-            href={HOTMART_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-md bg-gradient-to-r from-green-600 to-green-500 text-white font-semibold hover:from-green-500 hover:to-green-400 transition-all"
-          >
-            Assine Agora
-            <ExternalLink className="w-4 h-4" />
-          </a>
-
-          <p className="text-center text-xs text-muted-foreground">
-            Após a compra, você receberá um email para completar seu cadastro.
-          </p>
         </CardContent>
       </Card>
     </div>
