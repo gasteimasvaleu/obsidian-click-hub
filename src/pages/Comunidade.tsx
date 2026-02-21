@@ -6,7 +6,8 @@ import { PostCard } from "@/components/comunidade/PostCard";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useQuery } from "@tanstack/react-query";
-import { Loader2, MessagesSquare } from "lucide-react";
+import { MessagesSquare } from "lucide-react";
+import { PostCardSkeleton } from "@/components/skeletons/PostCardSkeleton";
 import { Button } from "@/components/ui/button";
 
 const PAGE_SIZE = 10;
@@ -90,8 +91,8 @@ const Comunidade = () => {
 
           {/* Feed */}
           {postsLoading && posts.length === 0 ? (
-            <div className="flex justify-center py-12">
-              <Loader2 size={32} className="animate-spin text-white/40" />
+            <div className="space-y-4">
+              {[1, 2, 3].map((i) => <PostCardSkeleton key={i} />)}
             </div>
           ) : posts.length === 0 ? (
             <div className="text-center py-12">

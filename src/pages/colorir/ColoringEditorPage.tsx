@@ -10,6 +10,7 @@ import { BrushSizeSlider } from '@/components/colorir/BrushSizeSlider';
 import { GlassCard } from '@/components/GlassCard';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Save, Loader2 } from 'lucide-react';
+import { ColoringEditorSkeleton } from '@/components/skeletons/ColoringEditorSkeleton';
 import { toast } from 'sonner';
 import { useUserProgress } from '@/hooks/useUserProgress';
 import { fireCompleteConfetti } from '@/lib/confetti';
@@ -108,11 +109,7 @@ const ColoringEditorPage = () => {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <Loader2 size={32} className="animate-spin text-primary" />
-      </div>
-    );
+    return <ColoringEditorSkeleton />;
   }
 
   return (

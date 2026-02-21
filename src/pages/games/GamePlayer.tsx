@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { FuturisticNavbar } from "@/components/FuturisticNavbar";
 import { GlassCard } from "@/components/GlassCard";
 import { Button } from "@/components/ui/button";
+import { GamePlayerSkeleton } from "@/components/skeletons/GamePlayerSkeleton";
 import QuizPlayer from "./QuizPlayer";
 import MemoryPlayer from "./MemoryPlayer";
 import WordSearchPlayer from "./WordSearchPlayer";
@@ -42,16 +43,7 @@ export default function GamePlayer() {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-b from-background to-background/80">
-        <FuturisticNavbar />
-        <div className="container mx-auto px-4 pt-24 pb-12">
-          <div className="flex justify-center items-center min-h-[60vh]">
-            <div className="animate-pulse text-primary text-xl">Carregando jogo...</div>
-          </div>
-        </div>
-      </div>
-    );
+    return <GamePlayerSkeleton />;
   }
 
   if (error) {

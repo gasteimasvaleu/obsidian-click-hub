@@ -37,6 +37,7 @@ import NotFound from "./pages/NotFound";
 import { ExternalFrame } from "./components/ExternalFrame";
 import { ChatInterface } from "./components/ChatInterface";
 import { ProtectedRoute } from "./components/admin/ProtectedRoute";
+import { AnimatedRoutes } from "./components/AnimatedRoutes";
 
 // Plataforma pages
 import PlataformaPage from "./pages/plataforma/PlataformaPage";
@@ -107,53 +108,55 @@ const App = () => {
           <Toaster />
           <Sonner />
           <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
-              <Route path="/oracoes" element={<ProtectedRoute><Oracoes /></ProtectedRoute>} />
-              <Route path="/audiofy" element={<ProtectedRoute><Audiofy /></ProtectedRoute>} />
-              <Route path="/amigodivino" element={<ProtectedRoute><AmigoDivino /></ProtectedRoute>} />
-              <Route path="/amigodivino/chat" element={<ProtectedRoute><ChatInterface /></ProtectedRoute>} />
-              <Route path="/sobre" element={<ProtectedRoute><Sobre /></ProtectedRoute>} />
-              <Route path="/guia-pais" element={<ProtectedRoute><GuiaPais /></ProtectedRoute>} />
-              <Route path="/games" element={<ProtectedRoute><Games /></ProtectedRoute>} />
-              <Route path="/games/:id/play" element={<ProtectedRoute><GamePlayer /></ProtectedRoute>} />
-              <Route path="/games/:gameId/memory" element={<ProtectedRoute><MemoryPlayer /></ProtectedRoute>} />
-              <Route path="/games/:gameId/wordsearch" element={<ProtectedRoute><WordSearchPlayer /></ProtectedRoute>} />
-              <Route path="/games/:gameId/quiz" element={<ProtectedRoute><QuizPlayer /></ProtectedRoute>} />
-              <Route path="/games/:gameId/puzzle" element={<ProtectedRoute><PuzzlePlayer /></ProtectedRoute>} />
-              <Route path="/biblia" element={<ProtectedRoute><BibliaPage /></ProtectedRoute>} />
-              <Route path="/biblia/:bookId" element={<ProtectedRoute><BookChaptersPage /></ProtectedRoute>} />
-              <Route path="/biblia/:bookId/:chapterNumber" element={<ProtectedRoute><ChapterReaderPage /></ProtectedRoute>} />
-              <Route path="/devocional" element={<ProtectedRoute><DailyDevotionalPage /></ProtectedRoute>} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/cadastro" element={<Cadastro />} />
-              <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-              <Route path="/comunidade" element={<ProtectedRoute><Comunidade /></ProtectedRoute>} />
-              <Route path="/colorir" element={<ProtectedRoute><ColorirPage /></ProtectedRoute>} />
-              <Route path="/colorir/editor/photo" element={<ProtectedRoute><ColoringEditorPage /></ProtectedRoute>} />
-              <Route path="/colorir/editor/:drawingId" element={<ProtectedRoute><ColoringEditorPage /></ProtectedRoute>} />
-              <Route path="/colorir/transformar" element={<ProtectedRoute><PhotoTransformPage /></ProtectedRoute>} />
-              <Route path="/colorir/minhas-criacoes" element={<ProtectedRoute><MyCreationsPage /></ProtectedRoute>} />
-              <Route path="/plataforma" element={<ProtectedRoute><PlataformaPage /></ProtectedRoute>} />
-              <Route path="/plataforma/curso/:courseId" element={<ProtectedRoute><CoursePage /></ProtectedRoute>} />
-              <Route path="/plataforma/modulo/:moduleId" element={<ProtectedRoute><ModulePage /></ProtectedRoute>} />
-              <Route path="/plataforma/aula/:lessonId" element={<ProtectedRoute><LessonPage /></ProtectedRoute>} />
-              <Route path="/admin" element={<ProtectedRoute requireAdmin><Dashboard /></ProtectedRoute>} />
-              <Route path="/admin/ebooks" element={<ProtectedRoute requireAdmin><EbooksManager /></ProtectedRoute>} />
-              <Route path="/admin/games" element={<ProtectedRoute requireAdmin><GamesManager /></ProtectedRoute>} />
-              <Route path="/admin/games/generate" element={<ProtectedRoute requireAdmin><GameGenerator /></ProtectedRoute>} />
-              <Route path="/admin/devocionais" element={<ProtectedRoute requireAdmin><DevotionalsManager /></ProtectedRoute>} />
-              <Route path="/admin/plataforma/configuracoes" element={<ProtectedRoute requireAdmin><PlatformSettingsManager /></ProtectedRoute>} />
-              <Route path="/admin/plataforma/carrosseis" element={<ProtectedRoute requireAdmin><CarouselsManager /></ProtectedRoute>} />
-              <Route path="/admin/oracoes" element={<ProtectedRoute requireAdmin><PrayersManager /></ProtectedRoute>} />
-              <Route path="/admin/colorir" element={<ProtectedRoute requireAdmin><ColoringManager /></ProtectedRoute>} />
-              <Route path="/admin/plataforma/cursos" element={<ProtectedRoute requireAdmin><CoursesManager /></ProtectedRoute>} />
-              <Route path="/admin/plataforma/modulos" element={<ProtectedRoute requireAdmin><ModulesManager /></ProtectedRoute>} />
-              <Route path="/admin/plataforma/aulas" element={<ProtectedRoute requireAdmin><LessonsManager /></ProtectedRoute>} />
-              <Route path="/admin/plataforma/materiais" element={<ProtectedRoute requireAdmin><MaterialsManager /></ProtectedRoute>} />
-              <Route path="/external-login" element={<ExternalFrame url="https://bibliatoonkids.themembers.com.br/login" title="Login - Biblia Toon Kids" />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+            <AnimatedRoutes>
+              <Routes>
+                <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
+                <Route path="/oracoes" element={<ProtectedRoute><Oracoes /></ProtectedRoute>} />
+                <Route path="/audiofy" element={<ProtectedRoute><Audiofy /></ProtectedRoute>} />
+                <Route path="/amigodivino" element={<ProtectedRoute><AmigoDivino /></ProtectedRoute>} />
+                <Route path="/amigodivino/chat" element={<ProtectedRoute><ChatInterface /></ProtectedRoute>} />
+                <Route path="/sobre" element={<ProtectedRoute><Sobre /></ProtectedRoute>} />
+                <Route path="/guia-pais" element={<ProtectedRoute><GuiaPais /></ProtectedRoute>} />
+                <Route path="/games" element={<ProtectedRoute><Games /></ProtectedRoute>} />
+                <Route path="/games/:id/play" element={<ProtectedRoute><GamePlayer /></ProtectedRoute>} />
+                <Route path="/games/:gameId/memory" element={<ProtectedRoute><MemoryPlayer /></ProtectedRoute>} />
+                <Route path="/games/:gameId/wordsearch" element={<ProtectedRoute><WordSearchPlayer /></ProtectedRoute>} />
+                <Route path="/games/:gameId/quiz" element={<ProtectedRoute><QuizPlayer /></ProtectedRoute>} />
+                <Route path="/games/:gameId/puzzle" element={<ProtectedRoute><PuzzlePlayer /></ProtectedRoute>} />
+                <Route path="/biblia" element={<ProtectedRoute><BibliaPage /></ProtectedRoute>} />
+                <Route path="/biblia/:bookId" element={<ProtectedRoute><BookChaptersPage /></ProtectedRoute>} />
+                <Route path="/biblia/:bookId/:chapterNumber" element={<ProtectedRoute><ChapterReaderPage /></ProtectedRoute>} />
+                <Route path="/devocional" element={<ProtectedRoute><DailyDevotionalPage /></ProtectedRoute>} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/cadastro" element={<Cadastro />} />
+                <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+                <Route path="/comunidade" element={<ProtectedRoute><Comunidade /></ProtectedRoute>} />
+                <Route path="/colorir" element={<ProtectedRoute><ColorirPage /></ProtectedRoute>} />
+                <Route path="/colorir/editor/photo" element={<ProtectedRoute><ColoringEditorPage /></ProtectedRoute>} />
+                <Route path="/colorir/editor/:drawingId" element={<ProtectedRoute><ColoringEditorPage /></ProtectedRoute>} />
+                <Route path="/colorir/transformar" element={<ProtectedRoute><PhotoTransformPage /></ProtectedRoute>} />
+                <Route path="/colorir/minhas-criacoes" element={<ProtectedRoute><MyCreationsPage /></ProtectedRoute>} />
+                <Route path="/plataforma" element={<ProtectedRoute><PlataformaPage /></ProtectedRoute>} />
+                <Route path="/plataforma/curso/:courseId" element={<ProtectedRoute><CoursePage /></ProtectedRoute>} />
+                <Route path="/plataforma/modulo/:moduleId" element={<ProtectedRoute><ModulePage /></ProtectedRoute>} />
+                <Route path="/plataforma/aula/:lessonId" element={<ProtectedRoute><LessonPage /></ProtectedRoute>} />
+                <Route path="/admin" element={<ProtectedRoute requireAdmin><Dashboard /></ProtectedRoute>} />
+                <Route path="/admin/ebooks" element={<ProtectedRoute requireAdmin><EbooksManager /></ProtectedRoute>} />
+                <Route path="/admin/games" element={<ProtectedRoute requireAdmin><GamesManager /></ProtectedRoute>} />
+                <Route path="/admin/games/generate" element={<ProtectedRoute requireAdmin><GameGenerator /></ProtectedRoute>} />
+                <Route path="/admin/devocionais" element={<ProtectedRoute requireAdmin><DevotionalsManager /></ProtectedRoute>} />
+                <Route path="/admin/plataforma/configuracoes" element={<ProtectedRoute requireAdmin><PlatformSettingsManager /></ProtectedRoute>} />
+                <Route path="/admin/plataforma/carrosseis" element={<ProtectedRoute requireAdmin><CarouselsManager /></ProtectedRoute>} />
+                <Route path="/admin/oracoes" element={<ProtectedRoute requireAdmin><PrayersManager /></ProtectedRoute>} />
+                <Route path="/admin/colorir" element={<ProtectedRoute requireAdmin><ColoringManager /></ProtectedRoute>} />
+                <Route path="/admin/plataforma/cursos" element={<ProtectedRoute requireAdmin><CoursesManager /></ProtectedRoute>} />
+                <Route path="/admin/plataforma/modulos" element={<ProtectedRoute requireAdmin><ModulesManager /></ProtectedRoute>} />
+                <Route path="/admin/plataforma/aulas" element={<ProtectedRoute requireAdmin><LessonsManager /></ProtectedRoute>} />
+                <Route path="/admin/plataforma/materiais" element={<ProtectedRoute requireAdmin><MaterialsManager /></ProtectedRoute>} />
+                <Route path="/external-login" element={<ExternalFrame url="https://bibliatoonkids.themembers.com.br/login" title="Login - Biblia Toon Kids" />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </AnimatedRoutes>
               <NavBar items={navItems} />
             </BrowserRouter>
           </TooltipProvider>
