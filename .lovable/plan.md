@@ -1,57 +1,56 @@
 
 
-# Corrigir areas cinzas nas safe areas do iOS (status bar e home indicator)
+# Transicoes de Pagina Animadas + Skeleton Loading Padronizado
 
-## Problema
+## 1. Transicoes de Pagina Animadas
 
-As areas cinzas que aparecem acima da navbar e abaixo do menu tubelight sao as **safe areas do iOS** -- a area da barra de status (hora, bateria) e a area do home indicator. O WebView do Capacitor esta mostrando essas areas com cor cinza/transparente em vez de preto.
+Criar um componente `AnimatedRoutes` que usa `framer-motion` (`AnimatePresence` + `motion.div`) para animar a transicao entre rotas com fade + slide sutil (~200ms).
 
-## Causa
+### Arquivos
 
-Tres fatores contribuem para isso:
+| Arquivo | Acao |
+|---------|------|
+| `src/components/AnimatedRoutes.tsx` | Criar: componente que usa `useLocation` + `AnimatePresence` + `motion.div` para envolver todas as `<Routes>` |
+| `src/App.tsx` | Editar: extrair o bloco de `<Routes>` para dentro de `<AnimatedRoutes>` |
 
-1. O `theme-color` no HTML esta como `#00ff00` (verde), que influencia a cor dessas areas
-2. O `apple-mobile-web-app-status-bar-style` esta como `black-translucent`, que deixa a area translucida (cinza)
-3. O elemento `html` nao tem `background-color` definido -- apenas o `body` tem `#000000`. As safe areas podem mostrar o fundo do `html`
-4. O `capacitor.config.ts` nao define `backgroundColor` para o iOS, entao o WebView usa o padrao (branco/cinza)
+### Abordagem
+- Usar `useLocation()` como key do `motion.div` para que o framer-motion detecte a mudanca de rota
+- Animacao: fade-in com leve translateY (de 8px para 0) na entrada, duracao ~200ms
+- Nao animar a saida (exit) para evitar flash/sobreposicao -- apenas entrada suave
 
-## Solucao
+---
 
-### 1. `index.html` -- Meta tags
+## 2. Skeleton Loading Padronizado
 
-- Mudar `theme-color` de `#00ff00` para `#000000`
-- Mudar `apple-mobile-web-app-status-bar-style` de `black-translucent` para `black`
+Substituir spinners `Loader2` e textos "Carregando..." por skeletons que simulam o layout final da pagina.
 
-### 2. `src/index.css` -- Background do html
+### Novos componentes skeleton
 
-Adicionar `background: #000000;` ao seletor `html` existente:
+| Arquivo | Descricao |
+|---------|-----------|
+| `src/components/skeletons/DevotionalSkeleton.tsx` | Simula: video banner + card de tema + cards de secao (introducao, versiculo, reflexao) |
+| `src/components/skeletons/PostCardSkeleton.tsx` | Simula: avatar + nome + texto + barra de acoes de um post |
+| `src/components/skeletons/DrawingCardSkeleton.tsx` | Simula: imagem quadrada + titulo + botao (ja existe inline no ColorirPage, vou extrair) |
+| `src/components/skeletons/GamePlayerSkeleton.tsx` | Simula: area de jogo com placeholder |
+| `src/components/skeletons/ColoringEditorSkeleton.tsx` | Simula: header + canvas + toolbar |
 
-```css
-html {
-  overflow-x: hidden;
-  max-width: 100vw;
-  background: #000000;
-}
-```
+### Paginas editadas
 
-### 3. `capacitor.config.ts` -- Background nativo do WebView
+| Pagina | Mudanca |
+|--------|---------|
+| `src/pages/devocional/DailyDevotionalPage.tsx` | Substituir `Loader2` spinner pelo `DevotionalSkeleton` |
+| `src/pages/Comunidade.tsx` | Substituir `Loader2` spinner por 3x `PostCardSkeleton` |
+| `src/pages/games/GamePlayer.tsx` | Substituir texto "Carregando jogo..." por `GamePlayerSkeleton` |
+| `src/pages/colorir/ColoringEditorPage.tsx` | Substituir `Loader2` spinner por `ColoringEditorSkeleton` |
 
-Adicionar `backgroundColor: '#000000'` na configuracao iOS:
+Nota: `ColorirPage.tsx` ja tem skeleton inline -- vou manter como esta pois ja funciona bem.
 
-```typescript
-ios: {
-  contentInset: 'always',
-  backgroundColor: '#000000',
-},
-```
+---
 
 ## Resumo
 
-| Arquivo | Mudanca |
-|---------|---------|
-| `index.html` | theme-color para #000000, status-bar-style para "black" |
-| `src/index.css` | background: #000000 no html |
-| `capacitor.config.ts` | backgroundColor: '#000000' no iOS |
-
-Nota: a mudanca no `capacitor.config.ts` requer rebuild nativo (rodar `npx cap sync` e recompilar no Xcode). As outras mudancas via web (index.html e CSS) serao aplicadas pelo Live Update automaticamente.
+- **5 novos arquivos** de skeleton + 1 novo `AnimatedRoutes`
+- **5 arquivos editados** (App.tsx + 4 paginas com loading)
+- Usa `framer-motion` ja instalado no projeto
+- Usa `Skeleton` de `@/components/ui/skeleton` ja existente
 
