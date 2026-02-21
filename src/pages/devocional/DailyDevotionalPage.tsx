@@ -6,7 +6,8 @@ import { GlassCard } from "@/components/GlassCard";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { FuturisticNavbar } from "@/components/FuturisticNavbar";
-import { CheckCircle2, Share2, FileDown, Loader2 } from "lucide-react";
+import { CheckCircle2, Share2, FileDown } from "lucide-react";
+import { DevotionalSkeleton } from "@/components/skeletons/DevotionalSkeleton";
 import { toast } from "sonner";
 import { format, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -357,20 +358,7 @@ ${devotional.prayer}
 
   // Loading state para geração
   if (isLoading || isGenerating || generateDevotionalMutation.isPending) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <FuturisticNavbar />
-        <div className="text-center">
-          <Loader2 className="animate-spin text-blue-400 mx-auto mb-4" size={48} />
-          <p className="text-foreground text-xl">
-            {isGenerating ? '✨ Gerando devocional do dia...' : 'Carregando...'}
-          </p>
-          <p className="text-muted-foreground text-sm mt-2">
-            Isso pode levar alguns segundos
-          </p>
-        </div>
-      </div>
-    );
+    return <DevotionalSkeleton />;
   }
 
   if (!devotional) {
