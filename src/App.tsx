@@ -37,7 +37,7 @@ import NotFound from "./pages/NotFound";
 import { ExternalFrame } from "./components/ExternalFrame";
 import { ChatInterface } from "./components/ChatInterface";
 import { ProtectedRoute } from "./components/admin/ProtectedRoute";
-import { AnimatedRoutes } from "./components/AnimatedRoutes";
+
 
 // Plataforma pages
 import PlataformaPage from "./pages/plataforma/PlataformaPage";
@@ -108,7 +108,6 @@ const App = () => {
           <Toaster />
           <Sonner />
           <BrowserRouter>
-            <AnimatedRoutes>
               <Routes>
                 <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
                 <Route path="/oracoes" element={<ProtectedRoute><Oracoes /></ProtectedRoute>} />
@@ -156,7 +155,7 @@ const App = () => {
                 <Route path="/external-login" element={<ExternalFrame url="https://bibliatoonkids.themembers.com.br/login" title="Login - Biblia Toon Kids" />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
-            </AnimatedRoutes>
+            
               <NavBar items={navItems} />
             </BrowserRouter>
           </TooltipProvider>
