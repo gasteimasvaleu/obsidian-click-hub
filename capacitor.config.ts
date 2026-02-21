@@ -6,6 +6,7 @@ const config: CapacitorConfig = {
   webDir: 'dist',
   ios: {
     contentInset: 'always',
+    backgroundColor: '#000000',
   },
   server: {
     hostname: 'app.bibliatoonkids.com',
