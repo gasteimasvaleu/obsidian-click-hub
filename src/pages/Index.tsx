@@ -67,7 +67,7 @@ const Index = () => {
             className="relative h-[100px] pl-[80px] pr-4 flex items-center overflow-visible cursor-pointer"
           >
             <img
-              src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/botaocursos.png"
+              src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/botaocursos2.png"
               alt="Acessar Cursos"
               className="absolute left-2 bottom-0 h-[130px] w-auto object-contain pointer-events-none"
             />
