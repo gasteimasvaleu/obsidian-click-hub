@@ -1,20 +1,22 @@
 
-# Ajustar fonte do titulo do devocional
 
-O titulo do tema do devocional usa `text-4xl font-bold` fixo (linha 402), mesmo padrao que acabamos de corrigir no Guia para Pais.
+# Ajustar fonte do titulo da Biblia
+
+O titulo "Biblia Interativa" em `src/pages/biblia/BibliaPage.tsx` (linha 108) usa `text-4xl font-bold` fixo, mesmo caso das paginas anteriores.
 
 ## Mudanca
 
-Em `src/pages/devocional/DailyDevotionalPage.tsx`, linha 402, trocar:
+Linha 108, trocar:
 
 ```
-text-4xl font-bold text-foreground mb-3
+text-4xl font-bold text-foreground mb-2
 ```
 
 por:
 
 ```
-text-3xl md:text-4xl font-bold text-foreground mb-3
+text-3xl md:text-4xl font-bold text-foreground mb-2
 ```
 
-Isso aplica o mesmo padrao responsivo do restante do site: menor no mobile, maior no desktop.
+Mesmo padrao responsivo aplicado no Guia para Pais e no Devocional.
+
