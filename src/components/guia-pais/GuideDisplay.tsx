@@ -22,7 +22,7 @@ export const GuideDisplay = ({ guide, formData, onNewGuide }: GuideDisplayProps)
   };
 
   return (
-    <div className="max-w-4xl mx-auto animate-fade-in space-y-6">
+    <div className="max-w-4xl mx-auto animate-fade-in space-y-6 overflow-hidden">
       {/* Header */}
       <div className="text-center space-y-4">
         <h1 className="text-4xl font-bold text-primary animate-glow">
