@@ -64,12 +64,13 @@ const Index = () => {
             hoverable
             pressable
             onClick={mainAction.action}
-            className="relative h-[100px] pl-[80px] pr-4 flex items-center overflow-visible cursor-pointer"
+            className="relative h-[100px] pl-[80px] pr-4 flex items-center cursor-pointer"
+            style={{ clipPath: 'inset(-50px -10px 0 -10px)' }}
           >
             <img
               src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/botaocursos2.png"
               alt="Acessar Cursos"
-              className="absolute left-2 bottom-2 h-[130px] w-auto object-contain pointer-events-none"
+              className="absolute left-2 bottom-0 h-[130px] w-auto object-contain pointer-events-none"
             />
             <span className="text-white font-bold text-base text-center w-full">{mainAction.title}</span>
           </GlassCard>
@@ -84,16 +85,17 @@ const Index = () => {
                   hoverable
                   pressable
                   onClick={action.action}
-                  className="relative h-[90px] pl-[65px] pr-3 flex items-center overflow-visible cursor-pointer"
+                  className="relative h-[90px] pl-[65px] pr-3 flex items-center cursor-pointer"
+                  style={{ clipPath: 'inset(-40px -10px 0 -10px)' }}
                 >
                   {action.image ? (
                     <img
                       src={action.image}
                       alt={action.title}
-                      className="absolute left-1 bottom-2 h-[110px] w-auto object-contain pointer-events-none"
+                      className="absolute left-1 bottom-0 h-[110px] w-auto object-contain pointer-events-none"
                     />
                   ) : (
-                    <div className="absolute left-1 bottom-2 h-[110px] w-[58px] flex items-end">
+                    <div className="absolute left-1 bottom-0 h-[110px] w-[58px] flex items-end">
                       <div className={`w-full h-[80px] rounded-xl bg-gradient-to-br ${action.gradient} flex items-center justify-center`}>
                         <Icon size={28} className="text-white" />
                       </div>
