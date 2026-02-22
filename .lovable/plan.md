@@ -1,38 +1,26 @@
 
 
-# Corrigir navbar atras da barra de status + reduzir espaco do video
+# Corrigir gap da navbar ao voltar do scroll no iOS
 
-## Problema 1: Navbar atras da barra de status
-A navbar usa `position: fixed`, entao ela ignora o `padding-top` do `body`. Ela precisa ter seu proprio padding para o safe-area do iOS.
-
-## Problema 2: Espaco entre navbar e video
-O container do video usa `pt-14` que cria espaco excessivo.
+## Problema
+No iOS Safari, ao rolar para baixo e voltar ao topo, o efeito de "rubber-band" (overscroll elastico) causa um deslocamento na navbar, criando um espaco visivel entre a barra de status e a navbar.
 
 ## Solucao
+Desabilitar o overscroll bounce no iOS adicionando `overscroll-behavior: none` nos elementos `html` e `body` no CSS. Isso elimina o efeito elastico que desloca a navbar.
 
-### Arquivo: `src/components/FuturisticNavbar.tsx` (linha 13)
-Adicionar padding-top com safe-area na navbar:
+## Detalhe tecnico
 
-De:
-```
-px-4 pt-2 pb-4
-```
-Para:
-```
-px-4 pb-4 pt-[max(0.5rem,env(safe-area-inset-top))]
+**Arquivo:** `src/index.css`
+
+1. No seletor `html` (aprox. linha 86), adicionar:
+```css
+overscroll-behavior: none;
 ```
 
-Isso faz a navbar respeitar o espaco da barra de status no iOS. Em dispositivos sem safe-area, usa 0.5rem como minimo.
+2. No primeiro seletor `body` (aprox. linha 81), adicionar:
+```css
+overscroll-behavior: none;
+```
 
-### Arquivo: `src/pages/Index.tsx` (linha 42)
-Reduzir o padding-top do container do video:
-
-De:
-```
-pt-14
-```
-Para:
-```
-pt-12
-```
+Isso impede o Safari de fazer o bounce elastico ao chegar no topo/fundo da pagina, mantendo a navbar sempre na posicao correta.
 
