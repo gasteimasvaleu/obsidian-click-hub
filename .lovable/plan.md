@@ -1,30 +1,38 @@
 
 
-# Fixar navbar no iOS durante scroll
+# Corrigir navbar atras da barra de status + reduzir espaco do video
 
-## Problema
-Em iPhones reais, ao fazer scroll para baixo, a navbar fixa "sobe" e fica atras da barra de status (bateria/hora). Ao voltar, ela desce para a posicao correta. Isso acontece em todas as paginas do app.
+## Problema 1: Navbar atras da barra de status
+A navbar usa `position: fixed`, entao ela ignora o `padding-top` do `body`. Ela precisa ter seu proprio padding para o safe-area do iOS.
 
-Esse e um bug conhecido do Safari no iOS: elementos com `position: fixed` podem "tremer" ou se deslocar durante o scroll elastico (rubber-band scrolling) do Safari.
+## Problema 2: Espaco entre navbar e video
+O container do video usa `pt-14` que cria espaco excessivo.
 
 ## Solucao
-Adicionar propriedades CSS que forcam a composicao por GPU na classe `.navbar-glass`, eliminando o jitter no iOS Safari.
 
-## Detalhe tecnico
+### Arquivo: `src/components/FuturisticNavbar.tsx` (linha 13)
+Adicionar padding-top com safe-area na navbar:
 
-**Arquivo:** `src/index.css`, linhas 130-134
-
-Adicionar duas propriedades a classe `.navbar-glass`:
-
-```css
-.navbar-glass {
-  background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  -webkit-transform: translateZ(0);
-  will-change: transform;
-}
+De:
+```
+px-4 pt-2 pb-4
+```
+Para:
+```
+px-4 pb-4 pt-[max(0.5rem,env(safe-area-inset-top))]
 ```
 
-Essas propriedades forcam o Safari a tratar a navbar como uma camada separada de composicao, evitando que ela se desloque durante o scroll elastico. Afeta todas as paginas que usam a navbar.
+Isso faz a navbar respeitar o espaco da barra de status no iOS. Em dispositivos sem safe-area, usa 0.5rem como minimo.
+
+### Arquivo: `src/pages/Index.tsx` (linha 42)
+Reduzir o padding-top do container do video:
+
+De:
+```
+pt-14
+```
+Para:
+```
+pt-12
+```
 
