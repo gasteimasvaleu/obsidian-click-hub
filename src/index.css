@@ -131,6 +131,8 @@ All colors MUST be HSL.
     background: rgba(0, 0, 0, 0.85);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
+    -webkit-transform: translateZ(0);
+    will-change: transform;
   }
   
   /* Neon glow effects */
