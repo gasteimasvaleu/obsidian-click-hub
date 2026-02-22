@@ -1,28 +1,25 @@
 
 
-# Ajustar grid de cards: remover clipPath e usar placeholders internos
+# Reduzir espaco entre navbar e video na home
 
-## O que muda:
+## Problema
+No iPhone real, ha um espaco excessivo entre a navbar fixa e o video de animacao. Isso acontece porque o container do video usa `pt-16` (64px) de padding superior para compensar a navbar fixa, mas no iPhone com a barra de status nativa, esse valor fica grande demais.
 
-1. **Card "Acessar Cursos"**: permanece como esta, com o efeito clipPath e a imagem saindo do card.
+## Solucao
+Reduzir o padding-top do container do video de `pt-16` para `pt-14` (56px). Isso diminui o espaco em 8px, mantendo a compensacao necessaria para a navbar fixa mas eliminando o excesso visual.
 
-2. **Grid de cards**: 
-   - Remover o `clipPath` e o posicionamento absoluto dos icones.
-   - Remover a `image` do card "Biblia Interativa" para que use o placeholder (icone com gradiente) igual aos outros.
-   - Ajustar o layout dos cards do grid para que o icone com gradiente fique **dentro** do card, ao lado do texto, sem sair dos limites.
-   - Reduzir o `pl` (padding-left) ja que o icone nao sai mais do card.
+## Detalhe tecnico
 
-## Detalhes tecnicos em `src/pages/Index.tsx`:
+**Arquivo:** `src/pages/Index.tsx`, linha 42
 
-**Linha 26** - Remover a propriedade `image` do item "Biblia Interativa":
+Alterar:
 ```
-{ title: "Biblia Interativa", icon: Book, action: () => navigate('/biblia'), gradient: "from-blue-500 to-indigo-600" },
+pt-16
+```
+Para:
+```
+pt-14
 ```
 
-**Linhas 83-107** - Simplificar os cards do grid:
-- Remover `style={{ clipPath: ... }}` 
-- Trocar layout para `flex items-center gap-3` com padding normal
-- Substituir o bloco condicional `action.image ? ... : ...` por apenas o icone placeholder dentro do card (sem posicionamento absoluto)
-- Icone placeholder: caixa com gradiente e icone, tamanho fixo (~48x48px), arredondado
+Isso afeta apenas o espaco acima do video na pagina inicial, sem impactar nenhum outro componente.
 
-O resultado sera cards com o icone colorido a esquerda e o texto a direita, tudo contido dentro dos limites do card.
