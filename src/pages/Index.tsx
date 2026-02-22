@@ -68,7 +68,7 @@ const Index = () => {
               style={{ clipPath: 'inset(-35px 0 0 0 round 0 0 1rem 1rem)' }}
             >
               <img
-                src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/botaocursos2.png"
+                src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/botaocursos3.png"
                 alt="Acessar Cursos"
                 className="absolute left-2 bottom-0 h-[130px] w-auto object-contain pointer-events-none z-10"
               />
