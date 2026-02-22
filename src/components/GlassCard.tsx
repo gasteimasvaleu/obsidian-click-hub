@@ -8,6 +8,7 @@ interface GlassCardProps {
   hoverable?: boolean;
   pressable?: boolean;
   onClick?: () => void;
+  style?: React.CSSProperties;
 }
 
 export const GlassCard = ({ 
@@ -15,7 +16,8 @@ export const GlassCard = ({
   className, 
   hoverable = false,
   pressable = false,
-  onClick 
+  onClick,
+  style 
 }: GlassCardProps) => {
   const { glowColor } = useThemePreferences();
   
@@ -27,6 +29,7 @@ export const GlassCard = ({
   return (
     <div 
       onClick={onClick}
+      style={style}
       className={cn(
         "glass rounded-2xl p-6",
         glowClass,
