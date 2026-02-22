@@ -165,7 +165,7 @@ export const ParentsGuideForm = ({
                 Quantos anos {formData.nome} tem?
               </h2>
               <div className="text-center">
-                <div className="text-6xl font-bold text-primary mb-6">
+                <div className="text-3xl font-bold text-primary mb-6">
                   {formData.idade} anos
                 </div>
                 <Slider
