@@ -65,7 +65,7 @@ const Index = () => {
               pressable
               onClick={mainAction.action}
               className="relative h-[100px] pl-[80px] pr-4 flex items-center cursor-pointer"
-              style={{ clipPath: 'inset(-50px 0 0 0 round 0 0 1rem 1rem)' }}
+              style={{ clipPath: 'inset(-35px 0 0 0 round 0 0 1rem 1rem)' }}
             >
               <img
                 src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/botaocursos2.png"
@@ -86,7 +86,7 @@ const Index = () => {
                     pressable
                     onClick={action.action}
                     className="relative h-[90px] pl-[65px] pr-3 flex items-center cursor-pointer"
-                    style={{ clipPath: 'inset(-40px 0 0 0 round 0 0 1rem 1rem)' }}
+                    style={{ clipPath: 'inset(-25px 0 0 0 round 0 0 1rem 1rem)' }}
                   >
                     {action.image ? (
                       <img
