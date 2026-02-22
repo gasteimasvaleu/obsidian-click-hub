@@ -60,52 +60,51 @@ const Index = () => {
         <div className="w-full max-w-4xl mx-auto space-y-6">
           
           {/* Card Principal - Full Width */}
-          <div className="relative">
-            <img
-              src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/botaocursos2.png"
-              alt="Acessar Cursos"
-              className="absolute left-2 bottom-0 h-[130px] w-auto object-contain pointer-events-none z-10"
-            />
-            <GlassCard
+          <GlassCard
               hoverable
               pressable
               onClick={mainAction.action}
-              className="relative h-[100px] overflow-hidden pl-[80px] pr-4 flex items-center cursor-pointer"
+              className="relative h-[100px] pl-[80px] pr-4 flex items-center cursor-pointer"
+              style={{ clipPath: 'inset(-50px -10px 0 -10px round 0 0 1rem 1rem)' }}
             >
+              <img
+                src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/botaocursos2.png"
+                alt="Acessar Cursos"
+                className="absolute left-2 bottom-0 h-[130px] w-auto object-contain pointer-events-none z-10"
+              />
               <span className="text-white font-bold text-base text-center w-full">{mainAction.title}</span>
             </GlassCard>
-          </div>
 
           {/* Grid de Cards - 2 Colunas */}
           <div className="grid grid-cols-2 gap-x-4 gap-y-6">
             {gridActions.map((action, index) => {
               const Icon = action.icon;
               return (
-                <div key={index} className="relative">
-                  {action.image ? (
-                    <img
-                      src={action.image}
-                      alt={action.title}
-                      className="absolute left-1 bottom-0 h-[110px] w-auto object-contain pointer-events-none z-10"
-                    />
-                  ) : (
-                    <div className="absolute left-1 bottom-0 h-[110px] w-[58px] flex items-end pointer-events-none z-10">
-                      <div className={`w-full h-[80px] rounded-xl bg-gradient-to-br ${action.gradient} flex items-center justify-center`}>
-                        <Icon size={28} className="text-white" />
-                      </div>
-                    </div>
-                  )}
-                  <GlassCard
+                <GlassCard
+                    key={index}
                     hoverable
                     pressable
                     onClick={action.action}
-                    className="relative h-[90px] overflow-hidden pl-[65px] pr-3 flex items-center cursor-pointer"
+                    className="relative h-[90px] pl-[65px] pr-3 flex items-center cursor-pointer"
+                    style={{ clipPath: 'inset(-40px -10px 0 -10px round 0 0 1rem 1rem)' }}
                   >
+                    {action.image ? (
+                      <img
+                        src={action.image}
+                        alt={action.title}
+                        className="absolute left-1 bottom-0 h-[110px] w-auto object-contain pointer-events-none z-10"
+                      />
+                    ) : (
+                      <div className="absolute left-1 bottom-0 h-[110px] w-[58px] flex items-end pointer-events-none z-10">
+                        <div className={`w-full h-[80px] rounded-xl bg-gradient-to-br ${action.gradient} flex items-center justify-center`}>
+                          <Icon size={28} className="text-white" />
+                        </div>
+                      </div>
+                    )}
                     <span className="text-white font-semibold text-sm leading-tight text-center w-full">
                       {action.title}
                     </span>
                   </GlassCard>
-                </div>
               );
             })}
           </div>
