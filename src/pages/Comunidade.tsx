@@ -83,7 +83,7 @@ const Comunidade = () => {
             <div className="p-2 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500">
               <MessagesSquare size={24} className="text-white" />
             </div>
-            <h1 className="text-white text-2xl font-bold">Comunidade</h1>
+            <h1 className="text-2xl font-bold bg-gradient-to-r from-primary via-primary to-primary/60 bg-clip-text text-transparent">Comunidade</h1>
           </div>
 
           {/* Post Form */}
