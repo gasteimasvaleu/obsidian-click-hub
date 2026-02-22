@@ -1,34 +1,56 @@
 
 
-# Trocar texto da Navbar por logo
+# Aplicar Gradiente Verde nos Titulos de Paginas Internas
 
-Substituir o texto "BibliaToonKIDS" no componente `FuturisticNavbar` pela imagem do logo.
+## Problema
+Varias paginas internas usam `text-foreground` (branco) nos titulos, enquanto as paginas principais ja usam o gradiente verde consistente (`bg-gradient-to-r from-primary via-primary to-primary/60 bg-clip-text text-transparent`).
 
-## Alteracao
+## Paginas que precisam do gradiente
 
-**Arquivo:** `src/components/FuturisticNavbar.tsx` (linha 19)
+| Pagina | Arquivo | Titulo atual |
+|--------|---------|-------------|
+| Livro (capitulos) | `src/pages/biblia/BookChaptersPage.tsx` | Nome do livro (ex: "Genesis") |
+| Leitor de capitulo | `src/pages/biblia/ChapterReaderPage.tsx` | "Genesis - Capitulo 1" |
+| Minhas Criacoes | `src/pages/colorir/MyCreationsPage.tsx` | "Minhas Criacoes" |
+| Transformar Foto | `src/pages/colorir/PhotoTransformPage.tsx` | "Transformar Foto" |
+| Quiz Player | `src/pages/games/QuizPlayer.tsx` | Titulo do jogo |
+| Guia para os Pais (resultado) | `src/components/guia-pais/GuideDisplay.tsx` | "Seu Guia Personalizado" |
 
+**Excluidos (conforme solicitado):** todas as paginas da plataforma e paginas admin.
+
+## Alteracoes
+
+### 1. BookChaptersPage.tsx (linha 45)
 Trocar:
-```tsx
-<h1 className="text-primary font-bold text-lg hover:animate-glow transition-all duration-300">
-  BíbliaToonKIDS
-</h1>
 ```
-
+text-3xl font-bold text-foreground
+```
 Por:
-```tsx
-<Link to="/">
-  <img 
-    src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/logonavbar.png"
-    alt="BíbliaToonKIDS"
-    className="h-8 w-auto hover:animate-glow transition-all duration-300"
-  />
-</Link>
+```
+text-3xl font-bold bg-gradient-to-r from-primary via-primary to-primary/60 bg-clip-text text-transparent
 ```
 
-- Altura fixada em `h-8` (32px) para caber na navbar
-- Largura automatica (`w-auto`) para manter proporcao
-- Logo clicavel, levando para a pagina inicial (`/`)
-- Mantido o efeito hover de glow
-- Nao requer novo build nativo, Appflow Live Updates resolve
+### 2. ChapterReaderPage.tsx (linha 86)
+Mesma troca no titulo do capitulo.
+
+### 3. MyCreationsPage.tsx (linha 86)
+Trocar `text-2xl font-bold mb-2 text-foreground` aplicando o gradiente.
+
+### 4. PhotoTransformPage.tsx (linha 34)
+Trocar `text-2xl font-bold mb-2 text-foreground` aplicando o gradiente.
+
+### 5. QuizPlayer.tsx (linha 247)
+Trocar `text-2xl font-bold text-foreground` no titulo do jogo aplicando o gradiente.
+
+### 6. GuideDisplay.tsx (linha 28)
+Trocar `text-primary animate-glow` por o gradiente verde (ja usa cor verde mas nao o gradiente consistente).
+
+## Detalhes tecnicos
+
+Classe padrao do gradiente usada nas paginas principais:
+```
+bg-gradient-to-r from-primary via-primary to-primary/60 bg-clip-text text-transparent
+```
+
+Sao 6 alteracoes simples de classe CSS, sem mudanca de estrutura. Nao requer novo build nativo.
 
