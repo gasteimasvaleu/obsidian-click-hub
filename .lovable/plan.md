@@ -1,14 +1,16 @@
 
 
-# Simplificar cards do Amigo Divino
+# Reduzir fonte "7 anos" no formulario Guia para Pais
 
-## Mudancas em `src/pages/AmigoDivino.tsx`
+## Problema
 
-1. **Remover** o card "Comunidade" (linhas 49-53)
-2. **Remover** o card "Recursos" (linhas 55-59)
-3. **Melhorar a descricao** do card "Orientacao Espiritual" (linha 45) para refletir melhor a funcao real do Amigo Divino -- um companheiro espiritual com quem a crianca pode conversar, tirar duvidas sobre a Biblia e receber palavras de encorajamento
+O texto que mostra a idade da crianca (ex: "7 anos") usa `text-6xl`, que e desproporcionalmente grande em relacao ao restante do formulario.
 
-## Resultado
+## Solucao
 
-A secao passara de 3 cards para apenas 1 card com uma descricao mais completa e fiel ao proposito da funcionalidade.
+Em `src/components/guia-pais/ParentsGuideForm.tsx`, linha 168, trocar `text-6xl` por `text-3xl` para manter destaque sem exagero.
+
+| Arquivo | Linha | De | Para |
+|---------|-------|----|------|
+| `src/components/guia-pais/ParentsGuideForm.tsx` | 168 | `text-6xl font-bold text-primary mb-6` | `text-3xl font-bold text-primary mb-6` |
 
