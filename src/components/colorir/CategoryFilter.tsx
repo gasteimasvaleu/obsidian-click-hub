@@ -15,7 +15,7 @@ const categories = [
 
 export const CategoryFilter = ({ selected, onChange }: CategoryFilterProps) => {
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="grid grid-cols-2 gap-2">
       {categories.map((cat) => {
         const Icon = cat.icon;
         const isActive = selected === cat.value;
@@ -25,7 +25,7 @@ export const CategoryFilter = ({ selected, onChange }: CategoryFilterProps) => {
             variant={isActive ? 'default' : 'outline'}
             size="sm"
             onClick={() => onChange(cat.value)}
-            className={`transition-all duration-300 active:scale-95 group ${
+            className={`w-full transition-all duration-300 active:scale-95 group ${
               isActive ? 'neon-glow shadow-lg shadow-primary/50' : 'hover:border-primary/50'
             }`}
           >
