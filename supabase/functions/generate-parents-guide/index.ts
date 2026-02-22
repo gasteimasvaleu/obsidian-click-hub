@@ -93,12 +93,13 @@ Gere um guia SUPER COMPLETO, prático e personalizado. Seja específico e use o 
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'google/gemini-2.5-flash',
+        model: 'google/gemini-3-flash-preview',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userPrompt }
         ],
         temperature: 0.7,
+        response_format: { type: "json_object" },
       }),
     });
 
@@ -128,14 +129,32 @@ Gere um guia SUPER COMPLETO, prático e personalizado. Seja específico e use o 
     
     console.log('Resposta da IA recebida, parseando JSON...');
 
-    // Extrair JSON da resposta (pode vir com markdown)
-    let jsonContent = content;
-    const jsonMatch = content.match(/```json\n([\s\S]*?)\n```/);
-    if (jsonMatch) {
-      jsonContent = jsonMatch[1];
+    // Extrair e limpar JSON da resposta
+    let jsonContent = content
+      .replace(/```json\s*/gi, '')
+      .replace(/```\s*/g, '')
+      .trim();
+
+    // Encontrar limites do JSON
+    const jsonStart = jsonContent.search(/[\{\[]/);
+    const jsonEnd = jsonContent.lastIndexOf(jsonStart !== -1 && jsonContent[jsonStart] === '[' ? ']' : '}');
+    if (jsonStart !== -1 && jsonEnd !== -1) {
+      jsonContent = jsonContent.substring(jsonStart, jsonEnd + 1);
     }
 
-    const guide = JSON.parse(jsonContent);
+    let guide;
+    try {
+      guide = JSON.parse(jsonContent);
+    } catch (parseError) {
+      console.error('JSON parse falhou, tentando limpeza:', parseError);
+      console.error('Conteúdo bruto (primeiros 500 chars):', jsonContent.substring(0, 500));
+      // Remover trailing commas e caracteres de controle
+      jsonContent = jsonContent
+        .replace(/,\s*}/g, '}')
+        .replace(/,\s*]/g, ']')
+        .replace(/[\x00-\x1F\x7F]/g, '');
+      guide = JSON.parse(jsonContent);
+    }
     
     console.log('Guia gerado com sucesso!');
 
