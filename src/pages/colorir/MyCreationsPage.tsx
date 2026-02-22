@@ -83,7 +83,7 @@ const MyCreationsPage = () => {
           <div className="p-4 rounded-full bg-gradient-to-br from-teal-500 to-blue-500 w-fit mx-auto mb-4">
             <FolderHeart size={32} className="text-white" />
           </div>
-          <h1 className="text-2xl font-bold mb-2 text-foreground">Minhas Criações</h1>
+          <h1 className="text-2xl font-bold mb-2 bg-gradient-to-r from-primary via-primary to-primary/60 bg-clip-text text-transparent">Minhas Criações</h1>
           <p className="text-muted-foreground text-sm">
             {loading ? 'Carregando...' : `${creations.length} criação(ões)`}
           </p>

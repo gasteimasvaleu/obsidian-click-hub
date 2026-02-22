@@ -244,7 +244,7 @@ const QuizPlayer = () => {
             </Button>
             
             <div className="flex items-center justify-between mb-4">
-              <h1 className="text-2xl font-bold text-foreground">{game.title}</h1>
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-primary via-primary to-primary/60 bg-clip-text text-transparent">{game.title}</h1>
               <Badge variant="outline" className="bg-primary/20 text-primary border-primary/40">
                 {game.difficulty}
               </Badge>
