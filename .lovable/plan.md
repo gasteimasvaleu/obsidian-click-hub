@@ -1,22 +1,20 @@
 
+# Ajustar fonte do titulo do devocional
 
-# Ajustar fonte do titulo do Guia
-
-O titulo "Seu Guia Personalizado" usa `text-4xl font-bold` fixo, enquanto o padrao do site e `text-3xl md:text-4xl font-bold` (menor em mobile, maior em desktop).
+O titulo do tema do devocional usa `text-4xl font-bold` fixo (linha 402), mesmo padrao que acabamos de corrigir no Guia para Pais.
 
 ## Mudanca
 
-Em `src/components/guia-pais/GuideDisplay.tsx`, linha 28, trocar:
+Em `src/pages/devocional/DailyDevotionalPage.tsx`, linha 402, trocar:
 
 ```
-text-4xl font-bold
+text-4xl font-bold text-foreground mb-3
 ```
 
 por:
 
 ```
-text-3xl md:text-4xl font-bold
+text-3xl md:text-4xl font-bold text-foreground mb-3
 ```
 
-Isso alinha o titulo com o padrao responsivo usado nas demais paginas (Games, Oracoes, Biblia, etc).
-
+Isso aplica o mesmo padrao responsivo do restante do site: menor no mobile, maior no desktop.
