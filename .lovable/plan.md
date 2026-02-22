@@ -1,21 +1,32 @@
 
-# Adicionar card de descricao na pagina Colorir
 
-A pagina Colorir nao possui o card com titulo e descricao abaixo do video, diferente das outras paginas (Biblia, Amigo Divino, etc.).
+# Padronizar cor dos titulos das secoes
 
-## Mudanca
+Os titulos das secoes devem seguir o padrao de gradiente verde usado em "Livrinho de Oracoes":
+`bg-gradient-to-r from-primary via-primary to-primary/60 bg-clip-text text-transparent`
 
-Em `src/pages/colorir/ColorirPage.tsx`, adicionar um GlassCard de descricao entre o video (linha 70) e os Action Cards (linha 72), seguindo o mesmo padrao da pagina da Biblia:
+## Titulos que ja estao corretos
+- Livrinho de Oracoes (Oracoes.tsx)
+- Jogos & Quizzes (Games.tsx)
+- Bibliafy (Audiofy.tsx)
+- Amigo Divino (AmigoDivino.tsx)
 
-```tsx
-<GlassCard className="max-w-3xl mx-auto mb-6 text-center animate-fade-in bg-gradient-to-br from-purple-500/10 to-pink-500/10 border-purple-400/30">
-  <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
-    Colorir Biblico
-  </h1>
-  <p className="text-muted-foreground text-base">
-    Pinte desenhos biblicos incriveis e solte sua criatividade!
-  </p>
-</GlassCard>
-```
+## Titulos que precisam ser corrigidos
 
-Usa gradiente roxo/rosa para combinar com a identidade visual da secao de colorir, e segue o padrao responsivo de fonte ja aplicado nas outras paginas.
+### 1. Colorir Biblico (src/pages/colorir/ColorirPage.tsx, linha 74)
+Trocar `text-foreground mb-2` por `bg-gradient-to-r from-primary via-primary to-primary/60 bg-clip-text text-transparent mb-2`
+
+### 2. Biblia Interativa (src/pages/biblia/BibliaPage.tsx, linha 108)
+Trocar `text-foreground mb-2` por `bg-gradient-to-r from-primary via-primary to-primary/60 bg-clip-text text-transparent mb-2`
+
+### 3. Devocional - titulo do tema (src/pages/devocional/DailyDevotionalPage.tsx, linha 402)
+Trocar `text-foreground mb-3` por `bg-gradient-to-r from-primary via-primary to-primary/60 bg-clip-text text-transparent mb-3`
+
+### 4. Comunidade (src/pages/Comunidade.tsx, linha 86)
+Trocar `text-white text-2xl font-bold` por `text-2xl font-bold bg-gradient-to-r from-primary via-primary to-primary/60 bg-clip-text text-transparent`
+
+## Fora do escopo
+- Pagina `/plataforma` (excluida conforme solicitado)
+- Pagina Sobre, NotFound, QuizPlayer (nao sao titulos de secao principal)
+- GuiaPais nao possui titulo h1 na pagina
+
