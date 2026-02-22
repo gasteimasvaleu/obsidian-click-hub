@@ -71,7 +71,7 @@ const Index = () => {
               alt="Acessar Cursos"
               className="absolute left-2 bottom-0 h-[130px] w-auto object-contain pointer-events-none"
             />
-            <span className="text-white font-bold text-base">{mainAction.title}</span>
+            <span className="text-white font-bold text-base text-center w-full">{mainAction.title}</span>
           </GlassCard>
 
           {/* Grid de Cards - 2 Colunas */}
@@ -91,7 +91,7 @@ const Index = () => {
                       <Icon size={28} className="text-white" />
                     </div>
                   </div>
-                  <span className="text-white font-semibold text-sm leading-tight">
+                  <span className="text-white font-semibold text-sm leading-tight text-center w-full">
                     {action.title}
                   </span>
                 </GlassCard>
