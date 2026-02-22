@@ -127,7 +127,7 @@ const Games = () => {
             {/* Game Type Filters */}
             <div>
               <h3 className="text-sm font-medium text-muted-foreground mb-3">Tipo de Jogo</h3>
-              <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
+              <div className="grid grid-cols-5 gap-1.5 sm:gap-2">
                 {gameTypes.map((type) => {
                   const IconComponent = type.icon;
                   const isActive = selectedType === type.value;
@@ -137,11 +137,11 @@ const Games = () => {
                       variant={isActive ? "default" : "outline"}
                       size="sm"
                       onClick={() => setSelectedType(type.value)}
-                      className={`transition-all duration-300 active:scale-95 group ${
+                      className={`transition-all duration-300 active:scale-95 group text-xs sm:text-sm ${
                         isActive ? "neon-glow shadow-lg shadow-primary/50" : "hover:border-primary/50"
                       }`}
                     >
-                      <IconComponent size={16} className="transition-transform duration-300 group-hover:rotate-12" />
+                      <IconComponent size={16} className="hidden sm:block transition-transform duration-300 group-hover:rotate-12" />
                       {type.label}
                     </Button>
                   );
