@@ -85,7 +85,7 @@ export const ParentsGuideForm = ({
   const progress = (currentStep / totalSteps) * 100;
 
   return (
-    <div className="max-w-2xl mx-auto animate-fade-in">
+    <div className="max-w-2xl mx-auto animate-fade-in overflow-hidden">
       {/* Header */}
       <GlassCard className="max-w-2xl mx-auto text-center mb-8">
         <h1 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-primary via-primary to-primary/60 bg-clip-text text-transparent">
@@ -106,7 +106,7 @@ export const ParentsGuideForm = ({
       </div>
 
       {/* Form Steps */}
-      <Card className="glass p-8 neon-glow">
+      <Card className="glass p-4 sm:p-8 neon-glow overflow-hidden">
         <div className="space-y-6">
           {/* Step 1: Nome */}
           {currentStep === 1 && (
@@ -132,7 +132,7 @@ export const ParentsGuideForm = ({
               <div className="grid grid-cols-2 gap-4">
                 <Card
                   className={cn(
-                    "p-6 cursor-pointer transition-all hover:scale-105",
+                    "p-6 cursor-pointer transition-all",
                     formData.sexo === 'masculino' && "border-primary border-2 bg-primary/10"
                   )}
                   onClick={() => updateFormData('sexo', 'masculino')}
@@ -144,7 +144,7 @@ export const ParentsGuideForm = ({
                 </Card>
                 <Card
                   className={cn(
-                    "p-6 cursor-pointer transition-all hover:scale-105",
+                    "p-6 cursor-pointer transition-all",
                     formData.sexo === 'feminino' && "border-primary border-2 bg-primary/10"
                   )}
                   onClick={() => updateFormData('sexo', 'feminino')}
@@ -247,7 +247,7 @@ export const ParentsGuideForm = ({
                   <Card
                     key={nivel.value}
                     className={cn(
-                      "p-4 cursor-pointer transition-all hover:scale-105",
+                      "p-4 cursor-pointer transition-all",
                       formData.nivelBiblico === nivel.value && "border-primary border-2 bg-primary/10"
                     )}
                     onClick={() => updateFormData('nivelBiblico', nivel.value)}
