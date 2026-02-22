@@ -1,25 +1,27 @@
 
 
-# Posicionar "Caça-palavras" e "Quebra-cabeça" na mesma linha
+# Ajustar filtros de tipo de jogo para caber em uma linha
 
 ## Problema
 
-Os botoes de filtro "Caça-palavras" e "Quebra-cabeça" podem estar quebrando em linhas separadas no mobile por serem os mais largos.
+Com `grid-cols-3`, os botoes "Caca-palavras" e "Quebra-cabeca" ficam na segunda linha sem estilo adequado e com texto cortado/sobreposto.
 
 ## Solucao
 
-Mudar o container dos botoes de tipo de jogo de `flex flex-wrap gap-2` para um grid responsivo que garanta que os dois ultimos botoes fiquem lado a lado. A abordagem mais simples e usar `grid grid-cols-2 sm:grid-cols-5 gap-2`, onde:
+Fazer todos os 5 botoes caberem em uma unica linha no mobile usando:
 
-- No mobile: 2 colunas, com os 5 botoes distribuidos em 3 linhas (Todos + Quiz, Memoria + Caca-palavras, Quebra-cabeca na ultima)
-- No desktop: 5 colunas, todos na mesma linha
-
-Alternativamente, podemos reduzir levemente o tamanho do texto dos botoes no mobile com `text-xs sm:text-sm` para que todos caibam melhor.
+- `grid grid-cols-5` (sempre 5 colunas, inclusive no mobile)
+- `gap-1.5` em vez de `gap-2` para economizar espaco
+- `text-xs` nos botoes no mobile para que o texto caiba
+- Esconder o icone no mobile para economizar mais espaco
 
 ## Mudanca
 
 | Arquivo | Alteracao |
 |---------|-----------|
-| `src/pages/Games.tsx` | Linha 130: trocar `flex flex-wrap gap-2` por `grid grid-cols-3 sm:grid-cols-5 gap-2` para que no mobile tenhamos 3 colunas (Todos, Quiz, Memoria na primeira linha e Caca-palavras + Quebra-cabeca na segunda) |
+| `src/pages/Games.tsx` | Linha 130: trocar `grid grid-cols-3 sm:grid-cols-5 gap-2` por `grid grid-cols-5 gap-1.5 sm:gap-2` |
+| `src/pages/Games.tsx` | Linha 140: adicionar `text-xs sm:text-sm` na className do Button |
+| `src/pages/Games.tsx` | Linha 144: esconder icone no mobile com `hidden sm:block` no IconComponent |
 
-Com 3 colunas no mobile, "Caca-palavras" e "Quebra-cabeca" ficarao lado a lado na segunda linha. Os botoes terao `w-full` implicito pelo grid.
+Com essas 3 mudancas, todos os 5 botoes ficarao em uma unica linha horizontal, mesmo em telas pequenas.
 
