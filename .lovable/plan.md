@@ -1,18 +1,14 @@
 
 
-# Botoes de dificuldade ocupando toda a linha
+# Simplificar cards do Amigo Divino
 
-## Problema
+## Mudancas em `src/pages/AmigoDivino.tsx`
 
-Os 4 botoes de dificuldade (Todas, Facil, Medio, Dificil) usam `flex flex-wrap gap-2` e nao ocupam toda a largura disponivel.
+1. **Remover** o card "Comunidade" (linhas 49-53)
+2. **Remover** o card "Recursos" (linhas 55-59)
+3. **Melhorar a descricao** do card "Orientacao Espiritual" (linha 45) para refletir melhor a funcao real do Amigo Divino -- um companheiro espiritual com quem a crianca pode conversar, tirar duvidas sobre a Biblia e receber palavras de encorajamento
 
-## Solucao
+## Resultado
 
-Trocar `flex flex-wrap gap-2` por `grid grid-cols-4 gap-2` na linha 178. Com 4 colunas, cada botao ocupa 1/4 da largura total, preenchendo toda a linha horizontal.
-
-## Mudanca
-
-| Arquivo | Alteracao |
-|---------|-----------|
-| `src/pages/Games.tsx` | Linha 178: trocar `flex flex-wrap gap-2` por `grid grid-cols-4 gap-2` |
+A secao passara de 3 cards para apenas 1 card com uma descricao mais completa e fiel ao proposito da funcionalidade.
 
