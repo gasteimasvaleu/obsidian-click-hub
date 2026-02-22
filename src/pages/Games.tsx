@@ -249,7 +249,7 @@ const Games = () => {
 
                     {/* Content */}
                     <div className="flex-grow">
-                      <h3 className="text-2xl font-bold mb-2 text-foreground">
+                      <h3 className="text-lg font-bold mb-2 text-foreground">
                         {game.title}
                       </h3>
                       <p className="text-muted-foreground mb-6">
