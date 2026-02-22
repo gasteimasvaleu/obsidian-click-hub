@@ -31,7 +31,7 @@ const PhotoTransformPage = () => {
           <div className="p-4 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 w-fit mx-auto mb-4">
             <Camera size={32} className="text-white" />
           </div>
-          <h1 className="text-2xl font-bold mb-2 text-foreground">Transformar Foto</h1>
+          <h1 className="text-2xl font-bold mb-2 bg-gradient-to-r from-primary via-primary to-primary/60 bg-clip-text text-transparent">Transformar Foto</h1>
           <p className="text-muted-foreground text-sm">
             A inteligência artificial vai transformar sua foto em um desenho para colorir! ✨
           </p>

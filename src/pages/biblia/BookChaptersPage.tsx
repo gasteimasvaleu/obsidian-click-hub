@@ -42,7 +42,7 @@ export default function BookChaptersPage() {
       
       <div className="container mx-auto px-4 pt-20">
         <GlassCard className="mb-6">
-          <h1 className="text-3xl font-bold text-foreground mb-3">{book?.name}</h1>
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-primary via-primary to-primary/60 bg-clip-text text-transparent mb-3">{book?.name}</h1>
           
           <div className="flex justify-between items-center">
             <p className="text-muted-foreground">{book?.chapters_count} capítulos</p>
