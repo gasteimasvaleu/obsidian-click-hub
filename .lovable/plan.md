@@ -1,16 +1,11 @@
 
 
-# Centralizar textos dos cards
+# Substituir imagem do card "Acessar Cursos"
 
 ## Alteracao
 
-No arquivo `src/pages/Index.tsx`, centralizar o texto em todos os cards adicionando `text-center` e ajustando o layout para `justify-center`.
+No arquivo `src/pages/Index.tsx`, linha 70, trocar a URL da imagem:
 
-### Card principal (linha 73)
-De: `<span className="text-white font-bold text-base">`
-Para: `<span className="text-white font-bold text-base text-center w-full">`
-
-### Cards do grid (linha 88)
-De: `<span className="text-white font-semibold text-sm leading-tight">`
-Para: `<span className="text-white font-semibold text-sm leading-tight text-center w-full">`
+De: `https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/botaocursos.png`
+Para: `https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/botaocursos2.png`
 
