@@ -127,7 +127,7 @@ const Games = () => {
             {/* Game Type Filters */}
             <div>
               <h3 className="text-sm font-medium text-muted-foreground mb-3">Tipo de Jogo</h3>
-              <div className="flex flex-wrap gap-2">
+              <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
                 {gameTypes.map((type) => {
                   const IconComponent = type.icon;
                   const isActive = selectedType === type.value;
