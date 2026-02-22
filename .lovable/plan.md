@@ -1,28 +1,21 @@
 
+# Adicionar card de descricao na pagina Colorir
 
-# Ajustar layout dos botoes de categoria (Colorir)
-
-Os botoes de categoria na pagina Colorir usam `flex flex-wrap gap-2`, ficando lado a lado sem ocupar todo o espaco horizontal.
+A pagina Colorir nao possui o card com titulo e descricao abaixo do video, diferente das outras paginas (Biblia, Amigo Divino, etc.).
 
 ## Mudanca
 
-Em `src/components/colorir/CategoryFilter.tsx`, linha 20, trocar:
+Em `src/pages/colorir/ColorirPage.tsx`, adicionar um GlassCard de descricao entre o video (linha 70) e os Action Cards (linha 72), seguindo o mesmo padrao da pagina da Biblia:
 
-```
-<div className="flex flex-wrap gap-2">
-```
-
-por:
-
-```
-<div className="grid grid-cols-2 gap-2">
-```
-
-E adicionar `w-full` aos botoes (linha 27) para que preencham toda a celula do grid:
-
-```
-className={`w-full transition-all duration-300 active:scale-95 group ${
+```tsx
+<GlassCard className="max-w-3xl mx-auto mb-6 text-center animate-fade-in bg-gradient-to-br from-purple-500/10 to-pink-500/10 border-purple-400/30">
+  <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
+    Colorir Biblico
+  </h1>
+  <p className="text-muted-foreground text-base">
+    Pinte desenhos biblicos incriveis e solte sua criatividade!
+  </p>
+</GlassCard>
 ```
 
-Isso faz os 4 botoes (Todos, Contos, Parabolas, Personagens) ficarem organizados em 2 por linha, ocupando todo o espaco horizontal.
-
+Usa gradiente roxo/rosa para combinar com a identidade visual da secao de colorir, e segue o padrao responsivo de fonte ja aplicado nas outras paginas.
