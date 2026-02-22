@@ -1,28 +1,16 @@
 
 
-# Substituir placeholder do card "Acessar Cursos" pela imagem real
+# Centralizar textos dos cards
 
 ## Alteracao
 
-No arquivo `src/pages/Index.tsx`, linha 70, substituir o div placeholder (retangulo gradiente com icone) pela tag `<img>` com a URL fornecida.
+No arquivo `src/pages/Index.tsx`, centralizar o texto em todos os cards adicionando `text-center` e ajustando o layout para `justify-center`.
 
-### De (linhas 68-72):
-```tsx
-<div className="absolute left-2 bottom-0 h-[130px] w-[72px] flex items-end">
-  <div className={`w-full h-[90px] rounded-xl bg-gradient-to-br ${mainAction.gradient} flex items-center justify-center`}>
-    <mainAction.icon size={36} className="text-white" />
-  </div>
-</div>
-```
+### Card principal (linha 73)
+De: `<span className="text-white font-bold text-base">`
+Para: `<span className="text-white font-bold text-base text-center w-full">`
 
-### Para:
-```tsx
-<img
-  src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/botaocursos.png"
-  alt="Acessar Cursos"
-  className="absolute left-2 bottom-0 h-[130px] w-auto object-contain pointer-events-none"
-/>
-```
-
-Isso remove o placeholder de icone com gradiente e coloca a imagem real no mesmo posicionamento (absolute, bottom-0, left-2), mantendo a altura de 130px com o efeito de "vazar" acima do card.
+### Cards do grid (linha 88)
+De: `<span className="text-white font-semibold text-sm leading-tight">`
+Para: `<span className="text-white font-semibold text-sm leading-tight text-center w-full">`
 
