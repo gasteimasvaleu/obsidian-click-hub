@@ -23,7 +23,7 @@ const Index = () => {
   };
 
   const gridActions = [
-    { title: "Bíblia Interativa", icon: Book, action: () => navigate('/biblia'), gradient: "from-blue-500 to-indigo-600" },
+    { title: "Bíblia Interativa", icon: Book, action: () => navigate('/biblia'), gradient: "from-blue-500 to-indigo-600", image: "https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/botaobiblia.png" },
     { title: "Devocional Diário", icon: Heart, action: () => navigate('/devocional'), gradient: "from-purple-500 to-pink-500" },
     { title: "Orações", icon: HandHeart, action: () => navigate('/oracoes'), gradient: "from-blue-500 to-cyan-500" },
     { title: "Audiofy", icon: Music, action: () => navigate('/audiofy'), gradient: "from-green-500 to-emerald-500" },
@@ -86,11 +86,19 @@ const Index = () => {
                   onClick={action.action}
                   className="relative h-[90px] pl-[65px] pr-3 flex items-center overflow-visible cursor-pointer"
                 >
-                  <div className="absolute left-1 bottom-0 h-[110px] w-[58px] flex items-end">
-                    <div className={`w-full h-[80px] rounded-xl bg-gradient-to-br ${action.gradient} flex items-center justify-center`}>
-                      <Icon size={28} className="text-white" />
+                  {action.image ? (
+                    <img
+                      src={action.image}
+                      alt={action.title}
+                      className="absolute left-1 bottom-0 h-[110px] w-auto object-contain pointer-events-none"
+                    />
+                  ) : (
+                    <div className="absolute left-1 bottom-0 h-[110px] w-[58px] flex items-end">
+                      <div className={`w-full h-[80px] rounded-xl bg-gradient-to-br ${action.gradient} flex items-center justify-center`}>
+                        <Icon size={28} className="text-white" />
+                      </div>
                     </div>
-                  </div>
+                  )}
                   <span className="text-white font-semibold text-sm leading-tight text-center w-full">
                     {action.title}
                   </span>
