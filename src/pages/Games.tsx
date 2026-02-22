@@ -175,7 +175,7 @@ const Games = () => {
             {/* Difficulty Filters */}
             <div>
               <h3 className="text-sm font-medium text-muted-foreground mb-3">Dificuldade</h3>
-              <div className="flex flex-wrap gap-2">
+              <div className="grid grid-cols-4 gap-2">
                 {difficulties.map((diff) => {
                   const isActive = selectedDifficulty === diff.value;
                   return (
