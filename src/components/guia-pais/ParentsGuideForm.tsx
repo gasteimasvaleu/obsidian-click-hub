@@ -20,7 +20,7 @@ interface ParentsGuideFormProps {
 
 const comportamentoOptions = [
   "Agitado", "Tímido", "Curioso", "Questionador", 
-  "Obediente", "Desafiador", "Sensível"
+  "Obediente", "Desafiador", "Sensível", "Carinhoso", "Independente"
 ];
 
 const personalidadeOptions = [
@@ -198,7 +198,7 @@ export const ParentsGuideForm = ({
                   <Badge
                     key={option}
                     variant={formData.comportamento.includes(option) ? "default" : "outline"}
-                    className="cursor-pointer text-sm py-1.5 px-3 text-center justify-center"
+                    className="cursor-pointer text-sm py-1.5 px-3 text-center justify-center rounded-lg"
                     onClick={() => toggleArrayItem('comportamento', option)}
                   >
                     {option}
@@ -222,7 +222,7 @@ export const ParentsGuideForm = ({
                   <Badge
                     key={option}
                     variant={formData.personalidade.includes(option) ? "default" : "outline"}
-                    className="cursor-pointer text-sm py-1.5 px-3 text-center justify-center"
+                    className="cursor-pointer text-sm py-1.5 px-3 text-center justify-center rounded-lg"
                     onClick={() => toggleArrayItem('personalidade', option)}
                   >
                     {option}
