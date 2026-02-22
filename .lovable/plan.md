@@ -1,22 +1,28 @@
 
 
-# Ajustar fonte do titulo da Biblia
+# Ajustar layout dos botoes de categoria (Colorir)
 
-O titulo "Biblia Interativa" em `src/pages/biblia/BibliaPage.tsx` (linha 108) usa `text-4xl font-bold` fixo, mesmo caso das paginas anteriores.
+Os botoes de categoria na pagina Colorir usam `flex flex-wrap gap-2`, ficando lado a lado sem ocupar todo o espaco horizontal.
 
 ## Mudanca
 
-Linha 108, trocar:
+Em `src/components/colorir/CategoryFilter.tsx`, linha 20, trocar:
 
 ```
-text-4xl font-bold text-foreground mb-2
+<div className="flex flex-wrap gap-2">
 ```
 
 por:
 
 ```
-text-3xl md:text-4xl font-bold text-foreground mb-2
+<div className="grid grid-cols-2 gap-2">
 ```
 
-Mesmo padrao responsivo aplicado no Guia para Pais e no Devocional.
+E adicionar `w-full` aos botoes (linha 27) para que preencham toda a celula do grid:
+
+```
+className={`w-full transition-all duration-300 active:scale-95 group ${
+```
+
+Isso faz os 4 botoes (Todos, Contos, Parabolas, Personagens) ficarem organizados em 2 por linha, ocupando todo o espaco horizontal.
 
