@@ -25,7 +25,7 @@ const comportamentoOptions = [
 
 const personalidadeOptions = [
   "Extrovertido", "Introvertido", "Criativo", "Lógico",
-  "Emocional", "Racional", "Competitivo", "Colaborativo"
+  "Emocional", "Racional", "Competitivo", "Colaborativo", "Aventureiro"
 ];
 
 export const ParentsGuideForm = ({ 
