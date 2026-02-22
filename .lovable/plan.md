@@ -1,25 +1,23 @@
 
 
-# Reduzir espaco entre navbar e video na home
+# Reduzir fonte do titulo "Amigo Divino"
 
 ## Problema
-No iPhone real, ha um espaco excessivo entre a navbar fixa e o video de animacao. Isso acontece porque o container do video usa `pt-16` (64px) de padding superior para compensar a navbar fixa, mas no iPhone com a barra de status nativa, esse valor fica grande demais.
+O titulo "Amigo Divino - Orientador Espiritual" esta quebrando em duas linhas no header do chat.
 
 ## Solucao
-Reduzir o padding-top do container do video de `pt-16` para `pt-14` (56px). Isso diminui o espaco em 8px, mantendo a compensacao necessaria para a navbar fixa mas eliminando o excesso visual.
+Reduzir o tamanho da fonte de `text-xl` para `text-base` na linha 98 de `src/components/ChatInterface.tsx`, para que o titulo caiba em uma unica linha.
 
 ## Detalhe tecnico
 
-**Arquivo:** `src/pages/Index.tsx`, linha 42
+**Arquivo:** `src/components/ChatInterface.tsx`, linha 98
 
 Alterar:
 ```
-pt-16
+text-xl font-bold
 ```
 Para:
 ```
-pt-14
+text-base font-bold
 ```
-
-Isso afeta apenas o espaco acima do video na pagina inicial, sem impactar nenhum outro componente.
 
