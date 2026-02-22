@@ -127,25 +127,48 @@ const Games = () => {
             {/* Game Type Filters */}
             <div>
               <h3 className="text-sm font-medium text-muted-foreground mb-3">Tipo de Jogo</h3>
-              <div className="grid grid-cols-5 gap-1.5 sm:gap-2">
-                {gameTypes.map((type) => {
-                  const IconComponent = type.icon;
-                  const isActive = selectedType === type.value;
+              <div className="space-y-2">
+                {/* Botão Todos - linha inteira */}
+                {(() => {
+                  const allType = gameTypes[0];
+                  const IconComponent = allType.icon;
+                  const isActive = selectedType === allType.value;
                   return (
-                  <Button
-                      key={type.value}
+                    <Button
+                      key={allType.value}
                       variant={isActive ? "default" : "outline"}
                       size="sm"
-                      onClick={() => setSelectedType(type.value)}
-                      className={`transition-all duration-300 active:scale-95 group text-xs sm:text-sm ${
+                      onClick={() => setSelectedType(allType.value)}
+                      className={`w-full transition-all duration-300 active:scale-95 group ${
                         isActive ? "neon-glow shadow-lg shadow-primary/50" : "hover:border-primary/50"
                       }`}
                     >
-                      <IconComponent size={16} className="hidden sm:block transition-transform duration-300 group-hover:rotate-12" />
-                      {type.label}
+                      <IconComponent size={16} className="transition-transform duration-300 group-hover:rotate-12" />
+                      {allType.label}
                     </Button>
                   );
-                })}
+                })()}
+                {/* Demais botões - 2 por linha */}
+                <div className="grid grid-cols-2 gap-2">
+                  {gameTypes.slice(1).map((type) => {
+                    const IconComponent = type.icon;
+                    const isActive = selectedType === type.value;
+                    return (
+                      <Button
+                        key={type.value}
+                        variant={isActive ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setSelectedType(type.value)}
+                        className={`transition-all duration-300 active:scale-95 group ${
+                          isActive ? "neon-glow shadow-lg shadow-primary/50" : "hover:border-primary/50"
+                        }`}
+                      >
+                        <IconComponent size={16} className="transition-transform duration-300 group-hover:rotate-12" />
+                        {type.label}
+                      </Button>
+                    );
+                  })}
+                </div>
               </div>
             </div>
 
