@@ -43,21 +43,7 @@ const AmigoDivino = () => {
             <div className="glass rounded-xl p-6">
               <h3 className="text-primary font-semibold mb-4">Orientação Espiritual</h3>
               <p className="text-muted-foreground text-sm">
-                Encontre paz, propósito e direcionamento em sua caminhada
-              </p>
-            </div>
-            
-            <div className="glass rounded-xl p-6">
-              <h3 className="text-primary font-semibold mb-4">Comunidade</h3>
-              <p className="text-muted-foreground text-sm">
-                Conecte-se com outras pessoas em busca de crescimento espiritual
-              </p>
-            </div>
-            
-            <div className="glass rounded-xl p-6">
-              <h3 className="text-primary font-semibold mb-4">Recursos</h3>
-              <p className="text-muted-foreground text-sm">
-                Meditações, orações e conteúdo inspiracional diário
+                Converse com seu companheiro espiritual, tire dúvidas sobre a Bíblia, receba palavras de encorajamento e descubra mais sobre a Palavra de Deus de um jeito divertido e acolhedor.
               </p>
             </div>
           </div>
