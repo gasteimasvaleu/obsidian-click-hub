@@ -66,11 +66,11 @@ const Index = () => {
             onClick={mainAction.action}
             className="relative h-[100px] pl-[80px] pr-4 flex items-center overflow-visible cursor-pointer"
           >
-            <div className="absolute left-2 bottom-0 h-[130px] w-[72px] flex items-end">
-              <div className={`w-full h-[90px] rounded-xl bg-gradient-to-br ${mainAction.gradient} flex items-center justify-center`}>
-                <mainAction.icon size={36} className="text-white" />
-              </div>
-            </div>
+            <img
+              src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/botaocursos.png"
+              alt="Acessar Cursos"
+              className="absolute left-2 bottom-0 h-[130px] w-auto object-contain pointer-events-none"
+            />
             <span className="text-white font-bold text-base">{mainAction.title}</span>
           </GlassCard>
 
