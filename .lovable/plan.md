@@ -1,27 +1,41 @@
 
 
-# Ajustar filtros de tipo de jogo para caber em uma linha
+# Reorganizar filtros: "Todos" sozinho + pares abaixo
 
 ## Problema
 
-Com `grid-cols-3`, os botoes "Caca-palavras" e "Quebra-cabeca" ficam na segunda linha sem estilo adequado e com texto cortado/sobreposto.
+Forcar 5 colunas ou scroll horizontal nao funciona bem no mobile.
 
 ## Solucao
 
-Fazer todos os 5 botoes caberem em uma unica linha no mobile usando:
+Separar o botao "Todos" dos demais e usar grid de 2 colunas para os restantes:
 
-- `grid grid-cols-5` (sempre 5 colunas, inclusive no mobile)
-- `gap-1.5` em vez de `gap-2` para economizar espaco
-- `text-xs` nos botoes no mobile para que o texto caiba
-- Esconder o icone no mobile para economizar mais espaco
+1. "Todos" ocupa uma linha inteira (largura total)
+2. "Quiz" + "Memoria" na segunda linha
+3. "Caca-palavras" + "Quebra-cabeca" na terceira linha
 
 ## Mudanca
 
 | Arquivo | Alteracao |
 |---------|-----------|
-| `src/pages/Games.tsx` | Linha 130: trocar `grid grid-cols-3 sm:grid-cols-5 gap-2` por `grid grid-cols-5 gap-1.5 sm:gap-2` |
-| `src/pages/Games.tsx` | Linha 140: adicionar `text-xs sm:text-sm` na className do Button |
-| `src/pages/Games.tsx` | Linha 144: esconder icone no mobile com `hidden sm:block` no IconComponent |
+| `src/pages/Games.tsx` | Linhas 130-149: Substituir o grid unico por dois blocos - um Button "Todos" com `w-full` seguido de um `grid grid-cols-2 gap-2` com os 4 botoes restantes |
 
-Com essas 3 mudancas, todos os 5 botoes ficarao em uma unica linha horizontal, mesmo em telas pequenas.
+### Codigo resultante (trecho)
+
+```text
+<div className="space-y-2">
+  {/* Botao Todos - linha inteira */}
+  <Button w-full ...>Todos</Button>
+  
+  {/* Demais botoes - 2 por linha */}
+  <div className="grid grid-cols-2 gap-2">
+    <Button>Quiz</Button>
+    <Button>Memoria</Button>
+    <Button>Caca-palavras</Button>
+    <Button>Quebra-cabeca</Button>
+  </div>
+</div>
+```
+
+Tambem reverter as mudancas anteriores: remover `text-xs sm:text-sm` e `hidden sm:block` dos botoes, voltando ao tamanho e icones normais.
 
