@@ -105,7 +105,7 @@ export default function BibliaPage() {
         </div>
 
         <GlassCard className="mb-6 text-center bg-gradient-to-br from-blue-500/10 to-purple-500/10 border-blue-400/30">
-          <h1 className="text-4xl font-bold text-foreground mb-2">
+          <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
             Bíblia Interativa
           </h1>
           <p className="text-muted-foreground text-base">
