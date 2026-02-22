@@ -193,12 +193,12 @@ export const ParentsGuideForm = ({
               <p className="text-sm text-muted-foreground">
                 Selecione uma ou mais opções
               </p>
-              <div className="flex flex-wrap gap-2">
+              <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
                 {comportamentoOptions.map((option) => (
                   <Badge
                     key={option}
                     variant={formData.comportamento.includes(option) ? "default" : "outline"}
-                    className="cursor-pointer text-sm py-1.5 px-3"
+                    className="cursor-pointer text-sm py-1.5 px-3 text-center justify-center"
                     onClick={() => toggleArrayItem('comportamento', option)}
                   >
                     {option}
@@ -217,12 +217,12 @@ export const ParentsGuideForm = ({
               <p className="text-sm text-muted-foreground">
                 Selecione uma ou mais características
               </p>
-              <div className="flex flex-wrap gap-2">
+              <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
                 {personalidadeOptions.map((option) => (
                   <Badge
                     key={option}
                     variant={formData.personalidade.includes(option) ? "default" : "outline"}
-                    className="cursor-pointer text-sm py-1.5 px-3"
+                    className="cursor-pointer text-sm py-1.5 px-3 text-center justify-center"
                     onClick={() => toggleArrayItem('personalidade', option)}
                   >
                     {option}
