@@ -1,42 +1,20 @@
 
 
-# Ajustar imagens para vazar apenas no topo dos cards
+# Ajustar imagens coladas na borda inferior com clip no bottom
 
-## Problema atual
-As imagens estao posicionadas com `bottom-0`, fazendo com que fiquem alinhadas na base do card e vazem para cima. Porem, como o card tem `overflow-visible`, a parte inferior tambem pode vazar dependendo do tamanho.
+## Objetivo
+Posicionar as imagens coladas na borda inferior do card (bottom-0) e usar clip-path para cortar apenas a parte inferior, permitindo que o topo continue vazando. O border-radius do card vai cortar a imagem na parte de baixo, criando um visual ajustado.
 
-## Solucao
-Trocar o posicionamento das imagens de `bottom-0` para usar alinhamento pela base do card, garantindo que a parte inferior da imagem fique dentro do card e apenas o topo vaze para fora.
+## Solucao tecnica
 
-### Card principal (linha 70)
-De:
-```tsx
-className="absolute left-2 bottom-0 h-[130px] w-auto object-contain pointer-events-none"
-```
-Para:
-```tsx
-className="absolute left-2 bottom-2 h-[130px] w-auto object-contain pointer-events-none"
-```
+Usar `clipPath: inset(-50px -10px 0 -10px)` nos cards com imagem. Isso permite overflow no topo (valores negativos) mas corta na borda inferior do card (valor 0).
 
-### Cards do grid - imagem (linha 91)
-De:
-```tsx
-className="absolute left-1 bottom-0 h-[110px] w-auto object-contain pointer-events-none"
-```
-Para:
-```tsx
-className="absolute left-1 bottom-2 h-[110px] w-auto object-contain pointer-events-none"
-```
+### Alteracoes em `src/pages/Index.tsx`:
 
-### Cards do grid - placeholder icon (linha 97)
-De:
-```tsx
-className="absolute left-1 bottom-0 h-[110px] w-[58px] flex items-end"
-```
-Para:
-```tsx
-className="absolute left-1 bottom-2 h-[110px] w-[58px] flex items-end"
-```
+1. **Card principal (linha ~65-74):** Trocar `overflow-visible` por `overflow-hidden` e adicionar `style={{ clipPath: 'inset(-50px -10px 0px -10px)' }}` no GlassCard. Mudar imagem de `bottom-2` para `bottom-0`.
 
-Isso move as imagens levemente para cima dentro do card, mantendo a base da imagem dentro dos limites do card enquanto a parte superior continua vazando acima.
+2. **Cards do grid (linha ~83-103):** Mesmo ajuste: adicionar clipPath inline e posicionar imagem/placeholder em `bottom-0`.
+
+### Alteracao no `GlassCard.tsx`:
+Adicionar suporte a prop `style` para permitir estilos inline.
 
