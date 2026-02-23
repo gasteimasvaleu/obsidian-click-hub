@@ -45,8 +45,8 @@ export default function BibliaPage() {
     ],
     novo: [
       { name: 'Evangelhos', filter: 'evangelhos' },
-      { name: 'Históricos', filter: 'historicos' },
-      { name: 'Cartas Paulinas', filter: 'cartas_paulinas' },
+      { name: 'Históricos', filter: 'historico' },
+      { name: 'Cartas Paulinas', filter: 'cartas_paulo' },
       { name: 'Cartas Gerais', filter: 'cartas_gerais' },
       { name: 'Profético', filter: 'profetico' }
     ]
