@@ -1,26 +1,54 @@
 
 
-# Corrigir gap da navbar ao voltar do scroll no iOS
+# Corrigir categorias do Novo Testamento na Biblia
 
 ## Problema
-No iOS Safari, ao rolar para baixo e voltar ao topo, o efeito de "rubber-band" (overscroll elastico) causa um deslocamento na navbar, criando um espaco visivel entre a barra de status e a navbar.
+Os livros de Timoteo (e todas as cartas paulinas + Atos) nao aparecem na interface porque os nomes das categorias no banco de dados nao correspondem aos filtros usados no codigo.
+
+**Categorias no banco vs filtros no codigo:**
+
+| Filtro no codigo | Categoria no banco | Resultado |
+|---|---|---|
+| `cartas_paulinas` | `cartas_paulo` | Nao aparece |
+| `historicos` | `historico` | Nao aparece |
+| `cartas_gerais` | `cartas_gerais` | OK |
+| `evangelhos` | `evangelhos` | OK |
+| `profetico` | `profetico` | OK |
+
+Isso afeta **15 livros**: Romanos, 1/2 Corintios, Galatas, Efesios, Filipenses, Colossenses, 1/2 Tessalonicenses, **1/2 Timoteo**, Tito, Filemom e Atos.
 
 ## Solucao
-Desabilitar o overscroll bounce no iOS adicionando `overscroll-behavior: none` nos elementos `html` e `body` no CSS. Isso elimina o efeito elastico que desloca a navbar.
+Atualizar os filtros no arquivo `src/pages/biblia/BibliaPage.tsx` para corresponder aos valores reais do banco de dados.
 
 ## Detalhe tecnico
 
-**Arquivo:** `src/index.css`
+**Arquivo:** `src/pages/biblia/BibliaPage.tsx`
 
-1. No seletor `html` (aprox. linha 86), adicionar:
-```css
-overscroll-behavior: none;
+Alterar o objeto `categories.novo` (aprox. linha 49-55):
+
+De:
+```js
+novo: [
+  { name: 'Evangelhos', filter: 'evangelhos' },
+  { name: 'Historicos', filter: 'historicos' },
+  { name: 'Cartas Paulinas', filter: 'cartas_paulinas' },
+  { name: 'Cartas Gerais', filter: 'cartas_gerais' },
+  { name: 'Profetico', filter: 'profetico' }
+]
 ```
 
-2. No primeiro seletor `body` (aprox. linha 81), adicionar:
-```css
-overscroll-behavior: none;
+Para:
+```js
+novo: [
+  { name: 'Evangelhos', filter: 'evangelhos' },
+  { name: 'Historicos', filter: 'historico' },
+  { name: 'Cartas Paulinas', filter: 'cartas_paulo' },
+  { name: 'Cartas Gerais', filter: 'cartas_gerais' },
+  { name: 'Profetico', filter: 'profetico' }
+]
 ```
 
-Isso impede o Safari de fazer o bounce elastico ao chegar no topo/fundo da pagina, mantendo a navbar sempre na posicao correta.
+Apenas duas mudancas de string: `historicos` -> `historico` e `cartas_paulinas` -> `cartas_paulo`.
+
+Com isso, todos os 27 livros do Novo Testamento passam a aparecer corretamente, incluindo 1 Timoteo e 2 Timoteo.
 
