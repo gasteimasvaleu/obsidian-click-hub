@@ -11,6 +11,7 @@ export const useColoringCanvas = () => {
   const [tool, setTool] = useState<Tool>('brush');
   const [color, setColor] = useState('#FF0000');
   const [brushSize, setBrushSize] = useState(8);
+  const [zoom, setZoom] = useState(1);
   const lastPoint = useRef<{ x: number; y: number } | null>(null);
 
   // Refs for mutable values used inside stable callbacks
@@ -252,6 +253,8 @@ export const useColoringCanvas = () => {
     setColor,
     brushSize,
     setBrushSize,
+    zoom,
+    setZoom,
     startDrawing,
     draw,
     stopDrawing,
