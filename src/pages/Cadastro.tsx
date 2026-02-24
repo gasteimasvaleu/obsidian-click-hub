@@ -151,7 +151,7 @@ const Cadastro = () => {
       if (data.success) {
         setTokenStatus('success');
         toast.success('Conta criada com sucesso!');
-        setTimeout(() => navigate('/login'), 3000);
+        setTimeout(() => navigate('/download'), 3000);
       } else {
         toast.error(data.message || 'Erro ao criar conta');
       }

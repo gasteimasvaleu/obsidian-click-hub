@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { Home, Package, BookOpen, Heart, Gamepad2, Users, MessageCircle, GraduationCap, BookHeart, Music } from "lucide-react";
 import { NavBar } from "@/components/ui/tubelight-navbar";
 import { SplashScreen } from "./components/SplashScreen";
@@ -55,6 +55,7 @@ import ColoringManager from "./pages/admin/ColoringManager";
 
 // Comunidade
 import Comunidade from "./pages/Comunidade";
+import DownloadPage from "./pages/Download";
 
 // Colorir pages
 import ColorirPage from "./pages/colorir/ColorirPage";
@@ -63,6 +64,14 @@ import PhotoTransformPage from "./pages/colorir/PhotoTransformPage";
 import MyCreationsPage from "./pages/colorir/MyCreationsPage";
 
 const queryClient = new QueryClient();
+
+const hiddenNavBarRoutes = ['/download', '/login', '/cadastro'];
+
+const NavBarWrapper = ({ items }: { items: typeof navItems }) => {
+  const location = useLocation();
+  if (hiddenNavBarRoutes.some(r => location.pathname.startsWith(r))) return null;
+  return <NavBar items={items} />;
+};
 
 const navItems = [
   { name: 'Início', url: '/', icon: Home },
@@ -128,6 +137,7 @@ const App = () => {
                 <Route path="/devocional" element={<ProtectedRoute><DailyDevotionalPage /></ProtectedRoute>} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/cadastro" element={<Cadastro />} />
+                <Route path="/download" element={<DownloadPage />} />
                 <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
                 <Route path="/comunidade" element={<ProtectedRoute><Comunidade /></ProtectedRoute>} />
                 <Route path="/colorir" element={<ProtectedRoute><ColorirPage /></ProtectedRoute>} />
@@ -156,7 +166,7 @@ const App = () => {
                 <Route path="*" element={<NotFound />} />
               </Routes>
             
-              <NavBar items={navItems} />
+              <NavBarWrapper items={navItems} />
             </BrowserRouter>
           </TooltipProvider>
         </AuthProvider>
