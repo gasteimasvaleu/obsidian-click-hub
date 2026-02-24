@@ -144,6 +144,10 @@ const ColoringEditorPage = () => {
           onRedo={canvas.redo}
           canUndo={canvas.canUndo}
           canRedo={canvas.canRedo}
+          zoom={canvas.zoom}
+          onZoomIn={() => canvas.setZoom(z => Math.min(4, z + 0.5))}
+          onZoomOut={() => canvas.setZoom(z => Math.max(1, z - 0.5))}
+          onZoomReset={() => canvas.setZoom(1)}
         />
         <ColorPalette selectedColor={canvas.color} onColorChange={canvas.setColor} />
       </div>
