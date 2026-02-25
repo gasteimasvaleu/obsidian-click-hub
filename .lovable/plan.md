@@ -1,32 +1,42 @@
 
 
-# Zoom no Canvas de Colorir
+# Auditoria: Remover mencoes a compra/assinatura do app
 
-## Objetivo
-Adicionar controle de zoom (pinch-to-zoom no mobile + botoes de zoom) ao canvas do editor de colorir, permitindo que o usuario amplie areas para colorir com mais precisao.
+## Contexto
+A Apple rejeitou o app por conter referencias a conteudo pago fora do sistema de compras in-app. Precisamos remover qualquer mencao a compra, assinatura ou planos de preco para que o app pareca 100% gratuito para usuarios logados.
 
-## Abordagem
-Usar CSS `transform: scale()` no wrapper do canvas, sem alterar o canvas interno (assim o desenho/coordenadas continuam funcionando normalmente). Adicionar pan (arrastar para mover) quando o zoom estiver ativo.
+## Problemas encontrados
 
-## Alteracoes
+### 1. Pagina Sobre - Texto "Assinatura mensal acessivel" (CRITICO)
+- **Arquivo**: `src/pages/Sobre.tsx`, linha 109
+- **Texto atual**: "Assinatura mensal acessivel, novos conteudos adicionados regularmente..."
+- **Correcao**: Remover mencao a assinatura, manter apenas: "Novos conteudos adicionados regularmente e recursos que estimulam a continuidade do aprendizado."
 
-### 1. `src/components/colorir/ColoringCanvas.tsx`
-- Adicionar estado de `zoom` (1x a 4x) e `offset` (pan x/y)
-- Aplicar `transform: scale(zoom) translate(offset)` no container do canvas
-- Detectar pinch-to-zoom via touch events (2 dedos) no wrapper div
-- Quando ha 2 dedos tocando, bloquear o desenho e fazer zoom/pan
-- Quando ha 1 dedo, manter comportamento atual de desenho
-- Adicionar suporte a scroll wheel para zoom no desktop
+### 2. Pagina Sobre - CTA "Assine" (CRITICO)
+- **Arquivo**: `src/pages/Sobre.tsx`, linha 277
+- **Texto atual**: "Assine, explore o conteudo, interaja com a comunidade..."
+- **Correcao**: Trocar para "Explore o conteudo, interaja com a comunidade e transforme o aprendizado da fe em uma aventura inesquecivel."
 
-### 2. `src/components/colorir/ToolBar.tsx`
-- Adicionar botoes de Zoom In (+), Zoom Out (-) e Reset (1:1) na barra de ferramentas
-- Posicionar apos o separador de undo/redo
+### 3. Login - Codigo morto da Hotmart (BAIXO RISCO)
+- **Arquivo**: `src/pages/Login.tsx`, linhas 9-11
+- **Problema**: Constante `HOTMART_URL` e import `ExternalLink` ainda no codigo, mesmo sem uso na UI
+- **Correcao**: Remover ambos (codigo morto). Isso NAO afeta o fluxo de checkout da Hotmart, que funciona via webhook no Supabase (`hotmart-webhook`) de forma totalmente independente.
 
-### 3. `src/hooks/useColoringCanvas.tsx`
-- Exportar estado `zoom` e `setZoom` para uso externo
-- Nenhuma alteracao na logica de desenho (as coordenadas ja sao calculadas via `getBoundingClientRect` que respeita o scale CSS)
+## Itens verificados e LIMPOS
+- Pagina de Login (UI) - botao de assinar ja removido
+- Pagina de Cadastro - apenas criacao de conta
+- Pagina de Download - sem mencoes a compra
+- Perfil do usuario - sem mencoes a premium/upgrade
+- Navbar - sem referencias a planos
+- Pages admin - protegidas, usuario comum nao acessa
 
-## Arquivos afetados
-1. `src/components/colorir/ColoringCanvas.tsx` - Logica de zoom/pan + pinch gesture
-2. `src/components/colorir/ToolBar.tsx` - Botoes de zoom
-3. `src/hooks/useColoringCanvas.tsx` - Estado de zoom exportado
+## Resumo
+
+| Arquivo | Alteracao | Risco |
+|---------|-----------|-------|
+| `src/pages/Sobre.tsx` | Remover "Assinatura mensal acessivel" | Nenhum |
+| `src/pages/Sobre.tsx` | Trocar "Assine" por "Explore" no CTA | Nenhum |
+| `src/pages/Login.tsx` | Remover `HOTMART_URL` e `ExternalLink` (codigo morto) | Nenhum |
+
+Todas as alteracoes sao cosmeticas (texto) ou limpeza de codigo morto. O fluxo real de pagamento via Hotmart webhook continua funcionando normalmente.
+
