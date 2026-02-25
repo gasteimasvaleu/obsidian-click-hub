@@ -1,42 +1,74 @@
 
 
-# Auditoria: Remover mencoes a compra/assinatura do app
+# Parental Gate para Links Externos
 
-## Contexto
-A Apple rejeitou o app por conter referencias a conteudo pago fora do sistema de compras in-app. Precisamos remover qualquer mencao a compra, assinatura ou planos de preco para que o app pareca 100% gratuito para usuarios logados.
+## Problema
+A Apple exige um mecanismo de "Parental Gate" antes de qualquer link que tire a crianca do app em apps voltados para criancas.
 
-## Problemas encontrados
+## Links que precisam de Parental Gate
 
-### 1. Pagina Sobre - Texto "Assinatura mensal acessivel" (CRITICO)
-- **Arquivo**: `src/pages/Sobre.tsx`, linha 109
-- **Texto atual**: "Assinatura mensal acessivel, novos conteudos adicionados regularmente..."
-- **Correcao**: Remover mencao a assinatura, manter apenas: "Novos conteudos adicionados regularmente e recursos que estimulam a continuidade do aprendizado."
+| Local | Tipo | Destino |
+|-------|------|---------|
+| `LessonPlayer.tsx` | window.open | Conteudo externo da aula |
+| `ExternalContentModal.tsx` | window.open + iframe | Conteudo externo em nova aba |
+| `PrayerCard.tsx` | window.open | WhatsApp (wa.me) |
+| `ExternalFrame.tsx` / rota `/external-login` | iframe | themembers.com.br |
 
-### 2. Pagina Sobre - CTA "Assine" (CRITICO)
-- **Arquivo**: `src/pages/Sobre.tsx`, linha 277
-- **Texto atual**: "Assine, explore o conteudo, interaja com a comunidade..."
-- **Correcao**: Trocar para "Explore o conteudo, interaja com a comunidade e transforme o aprendizado da fe em uma aventura inesquecivel."
+**NAO precisam de gate** (usam APIs nativas do sistema):
+- `navigator.share` (VerseCard, ShareModal, DevotionalPage) - abre share sheet do iOS
+- Downloads de arquivos do proprio storage (MaterialsList)
 
-### 3. Login - Codigo morto da Hotmart (BAIXO RISCO)
-- **Arquivo**: `src/pages/Login.tsx`, linhas 9-11
-- **Problema**: Constante `HOTMART_URL` e import `ExternalLink` ainda no codigo, mesmo sem uso na UI
-- **Correcao**: Remover ambos (codigo morto). Isso NAO afeta o fluxo de checkout da Hotmart, que funciona via webhook no Supabase (`hotmart-webhook`) de forma totalmente independente.
+## Solucao
 
-## Itens verificados e LIMPOS
-- Pagina de Login (UI) - botao de assinar ja removido
-- Pagina de Cadastro - apenas criacao de conta
-- Pagina de Download - sem mencoes a compra
-- Perfil do usuario - sem mencoes a premium/upgrade
-- Navbar - sem referencias a planos
-- Pages admin - protegidas, usuario comum nao acessa
+### 1. Criar `src/components/ParentalGate.tsx`
+- Modal (Dialog) com uma conta matematica simples
+- Gera uma soma de 2 numeros aleatorios entre 3 e 15 ao abrir
+- Texto: "Para continuar, peca a um adulto para resolver:"
+- Input numerico com `inputMode="numeric"`
+- Se acertar: chama `onSuccess` e fecha o modal
+- Se errar: mostra mensagem "Resposta incorreta, tente novamente" mas **mantém a mesma conta** (tentativas infinitas)
+- A conta so muda quando o modal e reaberto (novo clique)
 
-## Resumo
+### 2. Modificar `src/components/plataforma/LessonPlayer.tsx`
+- Importar ParentalGate
+- Ao clicar em "Abrir conteudo externo", abrir o ParentalGate
+- No `onSuccess`, executar o `window.open` original
 
-| Arquivo | Alteracao | Risco |
-|---------|-----------|-------|
-| `src/pages/Sobre.tsx` | Remover "Assinatura mensal acessivel" | Nenhum |
-| `src/pages/Sobre.tsx` | Trocar "Assine" por "Explore" no CTA | Nenhum |
-| `src/pages/Login.tsx` | Remover `HOTMART_URL` e `ExternalLink` (codigo morto) | Nenhum |
+### 3. Modificar `src/components/plataforma/ExternalContentModal.tsx`
+- Adicionar ParentalGate no botao "Abrir em nova aba"
+- O iframe interno permanece sem gate (conteudo ja esta dentro do app)
 
-Todas as alteracoes sao cosmeticas (texto) ou limpeza de codigo morto. O fluxo real de pagamento via Hotmart webhook continua funcionando normalmente.
+### 4. Modificar `src/components/oracoes/PrayerCard.tsx`
+- Adicionar ParentalGate no fallback do compartilhamento que abre WhatsApp via `window.open`
+- O `navigator.share` nativo continua sem gate
+
+### 5. Verificar `src/App.tsx` e `ExternalFrame.tsx`
+- Proteger ou remover a rota `/external-login` se necessario
+
+## Fluxo do usuario
+
+```text
+Crianca clica em "Abrir conteudo externo"
+         |
+         v
+  +-------------------------------+
+  | Modal: Parental Gate          |
+  | "Peca a um adulto resolver:"  |
+  | Quanto e 8 + 6?               |
+  | [    ] [Confirmar]            |
+  +-------------------------------+
+         |
+    Resposta correta?
+    Sim -> abre o link externo
+    Nao -> "Resposta incorreta, tente novamente"
+           (mesma conta, pode tentar de novo)
+```
+
+## Detalhes tecnicos
+
+- Conta matematica gerada com `Math.random()` ao abrir o modal (via `useEffect` no `open`)
+- Mesma conta mantida ate fechar e reabrir o modal
+- Input `type="number"` com `inputMode="numeric"` para teclado numerico no mobile
+- Componente reutilizavel: recebe `open`, `onOpenChange`, `onSuccess`
+- 5 arquivos afetados no total
 
