@@ -6,6 +6,7 @@ import { LessonPlaylist } from "./LessonPlaylist";
 import { MaterialsList } from "./MaterialsList";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
+import { ParentalGate } from "@/components/ParentalGate";
 
 interface LessonMaterial {
   id: string;
@@ -52,6 +53,7 @@ export function LessonPlayer({
   const [stallCount, setStallCount] = useState(0);
   const [lastPosition, setLastPosition] = useState(0);
   const [hasRetried, setHasRetried] = useState(false);
+  const [showParentalGate, setShowParentalGate] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const isExternalContentOnly = externalContentUrl && !videoUrl;
@@ -110,6 +112,12 @@ export function LessonPlayer({
   }, []);
 
   const openExternalContent = () => {
+    if (externalContentUrl) {
+      setShowParentalGate(true);
+    }
+  };
+
+  const handleParentalGateSuccess = () => {
     if (externalContentUrl) {
       window.open(externalContentUrl, "_blank", "noopener,noreferrer");
     }
@@ -299,6 +307,11 @@ export function LessonPlayer({
         </div>
       )}
 
+      <ParentalGate
+        open={showParentalGate}
+        onOpenChange={setShowParentalGate}
+        onSuccess={handleParentalGateSuccess}
+      />
     </div>
   );
 }

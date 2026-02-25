@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { ParentalGate } from "@/components/ParentalGate";
 
 interface ExternalFrameProps {
   url: string;
@@ -9,6 +11,21 @@ interface ExternalFrameProps {
 
 export const ExternalFrame = ({ url, title = "External Content" }: ExternalFrameProps) => {
   const navigate = useNavigate();
+  const [verified, setVerified] = useState(false);
+
+  if (!verified) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <ParentalGate
+          open={true}
+          onOpenChange={(open) => {
+            if (!open) navigate(-1);
+          }}
+          onSuccess={() => setVerified(true)}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-black relative pb-24">
