@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -6,6 +7,7 @@ import {
 } from "@/components/ui/dialog";
 import { ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ParentalGate } from "@/components/ParentalGate";
 
 interface ExternalContentModalProps {
   open: boolean;
@@ -20,8 +22,10 @@ export function ExternalContentModal({
   url,
   title = "Conteúdo externo",
 }: ExternalContentModalProps) {
+  const [showGate, setShowGate] = useState(false);
+
   const openInNewTab = () => {
-    window.open(url, "_blank", "noopener,noreferrer");
+    setShowGate(true);
   };
 
   return (
@@ -50,6 +54,12 @@ export function ExternalContentModal({
           />
         </div>
       </DialogContent>
+
+      <ParentalGate
+        open={showGate}
+        onOpenChange={setShowGate}
+        onSuccess={() => window.open(url, "_blank", "noopener,noreferrer")}
+      />
     </Dialog>
   );
 }

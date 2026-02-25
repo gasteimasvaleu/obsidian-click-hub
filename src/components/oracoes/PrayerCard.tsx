@@ -3,6 +3,7 @@ import { GlassCard } from "@/components/GlassCard";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { toast } from "sonner";
+import { ParentalGate } from "@/components/ParentalGate";
 
 interface PrayerCardProps {
   id: string;
@@ -20,6 +21,8 @@ export const PrayerCard = ({
   onToggleFavorite,
 }: PrayerCardProps) => {
   const [copied, setCopied] = useState(false);
+  const [showGate, setShowGate] = useState(false);
+  const [pendingShareText, setPendingShareText] = useState("");
 
   const handleCopy = async () => {
     const text = `${title}\n\n${content}`;
@@ -48,8 +51,8 @@ export const PrayerCard = ({
   };
 
   const handleWhatsAppShare = (text: string) => {
-    const encodedText = encodeURIComponent(text);
-    window.open(`https://wa.me/?text=${encodedText}`, "_blank");
+    setPendingShareText(text);
+    setShowGate(true);
   };
 
   return (
@@ -108,6 +111,14 @@ export const PrayerCard = ({
           Compartilhar
         </Button>
       </div>
+      <ParentalGate
+        open={showGate}
+        onOpenChange={setShowGate}
+        onSuccess={() => {
+          const encodedText = encodeURIComponent(pendingShareText);
+          window.open(`https://wa.me/?text=${encodedText}`, "_blank");
+        }}
+      />
     </GlassCard>
   );
 };
