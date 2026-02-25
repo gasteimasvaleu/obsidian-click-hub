@@ -106,7 +106,7 @@ const differentials = [
   {
     icon: Rocket,
     title: "Acessível e Dinâmico",
-    description: "Assinatura mensal acessível, novos conteúdos adicionados regularmente e recursos que estimulam a continuidade do aprendizado.",
+    description: "Novos conteúdos adicionados regularmente e recursos que estimulam a continuidade do aprendizado.",
     gradient: "from-blue-500 to-cyan-500"
   }
 ];
@@ -274,7 +274,7 @@ const Sobre = () => {
             Junte-se a nós
           </h2>
               <p className="text-foreground/90 text-lg mb-8 max-w-3xl mx-auto leading-relaxed">
-                Venha fazer parte da família BíbliaToon KIDS! Assine, explore o conteúdo, interaja com a comunidade e transforme o aprendizado da fé em uma aventura inesquecível. O futuro dos nossos pequenos começa com sementes de valores — e estamos prontos para plantar juntos.
+                Venha fazer parte da família BíbliaToon KIDS! Explore o conteúdo, interaja com a comunidade e transforme o aprendizado da fé em uma aventura inesquecível. O futuro dos nossos pequenos começa com sementes de valores — e estamos prontos para plantar juntos.
               </p>
               <NeonButton 
                 onClick={() => navigate('/login')}
