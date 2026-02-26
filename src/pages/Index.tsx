@@ -95,34 +95,6 @@ const Index = () => {
               <span className="text-white font-bold text-base text-center w-full">{mainAction.title}</span>
             </GlassCard>
 
-          {/* Carrossel de Lançamentos */}
-          {highlights.length > 0 && (
-            <>
-              <GlassCard className="h-[50px] flex items-center justify-center gap-2 p-0">
-                <Sparkles size={18} className="text-primary" />
-                <span className="text-white font-bold text-sm">Confira nossos Lançamentos</span>
-              </GlassCard>
-
-              <div className="overflow-hidden" ref={emblaRef}>
-                <div className="flex gap-3">
-                  {highlights.map((h: any) => (
-                    <div
-                      key={h.id}
-                      className="flex-[0_0_auto] cursor-pointer"
-                      onClick={() => h.link_to && navigate(h.link_to)}
-                    >
-                      <img
-                        src={h.image_url}
-                        alt={h.title || 'Lançamento'}
-                        className="w-[150px] h-[290px] rounded-xl object-cover"
-                      />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </>
-          )}
-
           {/* Grid de Cards - 2 Colunas */}
           <div className="grid grid-cols-2 gap-x-4 gap-y-6">
             {gridActions.map((action, index) => {
@@ -145,6 +117,34 @@ const Index = () => {
               );
             })}
           </div>
+
+          {/* Carrossel de Lançamentos */}
+          {highlights.length > 0 && (
+            <>
+              <GlassCard className="h-[50px] flex items-center justify-center gap-2 p-0">
+                <Sparkles size={18} className="text-primary" />
+                <span className="text-white font-bold text-sm">Confira nossos Lançamentos</span>
+              </GlassCard>
+
+              <div className="overflow-hidden" ref={emblaRef}>
+                <div className="flex gap-3">
+                  {highlights.map((h: any) => (
+                    <div
+                      key={h.id}
+                      className="flex-[0_0_auto] cursor-pointer"
+                      onClick={() => h.link_to && navigate(h.link_to)}
+                    >
+                      <img
+                        src={h.image_url}
+                        alt={h.title || 'Lançamento'}
+                        className="w-[75px] h-[145px] rounded-xl object-cover"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
 
         </div>
       </div>
