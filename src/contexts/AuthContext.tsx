@@ -37,6 +37,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setUser(session?.user ?? null);
         
         if (session?.user) {
+          // Identify user in RevenueCat
+          import('@/lib/revenuecat').then(({ identifyUser }) => {
+            identifyUser(session.user.id);
+          });
           // Verificar se o usuário ainda existe no banco
           setTimeout(async () => {
             try {
