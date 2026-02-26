@@ -1,28 +1,32 @@
 
 
-# Mover Lancamentos para Baixo do Grid e Reduzir Imagens
+# Botoes de Assinatura na Pagina de Login
 
-## Alteracao
+## Resumo
 
-Duas mudancas simples no arquivo `src/pages/Index.tsx`:
+Adicionar dois botoes visuais (Apple e Google Play) na pagina de login, abaixo do botao "Entrar", com o texto "Assinar com:" acima deles. Os botoes serao placeholders visuais por enquanto (sem acao ao clicar), para demonstrar a intencao de oferecer assinatura nativa via App Store e Google Play.
 
-1. **Mover a secao de Lancamentos** (linhas 98-124) para depois do grid de botoes (apos linha 147), mantendo a ordem: Video > Cursos > Grid > Lancamentos.
-
-2. **Reduzir o tamanho das imagens pela metade**: de `w-[150px] h-[290px]` para `w-[75px] h-[145px]`.
-
-## Layout Final
+## Layout
 
 ```text
-[Video banner]
-[Card "Acessar Cursos"]
-[Grid de botoes 2 colunas]
-[Card "Confira nossos Lancamentos"]   <-- movido para ca
-[Carrossel com imagens 75x145]        <-- imagens reduzidas
+[Campo Email]
+[Campo Senha]
+[Botao "Entrar"]
+
+Assinar com:
+[Botao App Store]  [Botao Google Play]
 ```
+
+## Detalhes
+
+- Texto "Assinar com:" centralizado, em cor neutra
+- Dois botoes lado a lado com icones das respectivas lojas (Apple e Play Store) usando icones do Lucide ou SVG inline
+- Estilo visual: botoes com variant `outline` ou estilo escuro padrao das badges de loja
+- Ao clicar: nenhuma acao por enquanto (podem exibir um toast "Em breve" ou simplesmente nao fazer nada)
 
 ## Arquivo modificado
 
 | Arquivo | Alteracao |
 |---------|-----------|
-| `src/pages/Index.tsx` | Mover bloco do carrossel para apos o grid; alterar dimensoes das imagens de 150x290 para 75x145 |
+| `src/pages/Login.tsx` | Adicionar texto "Assinar com:" e dois botoes (App Store / Google Play) abaixo do botao Entrar |
 
