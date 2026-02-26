@@ -495,6 +495,36 @@ export type Database = {
         }
         Relationships: []
       }
+      home_highlights: {
+        Row: {
+          available: boolean
+          created_at: string
+          display_order: number
+          id: string
+          image_url: string
+          link_to: string | null
+          title: string
+        }
+        Insert: {
+          available?: boolean
+          created_at?: string
+          display_order?: number
+          id?: string
+          image_url: string
+          link_to?: string | null
+          title?: string
+        }
+        Update: {
+          available?: boolean
+          created_at?: string
+          display_order?: number
+          id?: string
+          image_url?: string
+          link_to?: string | null
+          title?: string
+        }
+        Relationships: []
+      }
       lesson_materials: {
         Row: {
           created_at: string

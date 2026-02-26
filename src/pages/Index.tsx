@@ -1,8 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import { GlassCard } from "@/components/GlassCard";
 import { FuturisticNavbar } from "@/components/FuturisticNavbar";
-import { Package, Book, Heart, HandHeart, Music, Palette, Users, Gamepad2, MessagesSquare, UserCircle } from "lucide-react";
+import { Package, Book, Heart, HandHeart, Music, Palette, Users, Gamepad2, MessagesSquare, UserCircle, Sparkles } from "lucide-react";
 import { useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import useEmblaCarousel from "embla-carousel-react";
+import Autoplay from "embla-carousel-autoplay";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -14,6 +18,22 @@ const Index = () => {
       localStorage.removeItem('appState');
     }
   }, []);
+
+  const { data: highlights = [] } = useQuery({
+    queryKey: ['home_highlights'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('home_highlights' as any)
+        .select('*')
+        .order('display_order', { ascending: true });
+      if (error) throw error;
+      return (data as any[]) || [];
+    },
+  });
+
+  const [emblaRef] = useEmblaCarousel({ loop: true, align: 'center' }, [
+    Autoplay({ delay: 3000, stopOnInteraction: false, stopOnMouseEnter: true }),
+  ]);
 
   const mainAction = {
     title: "Acessar Cursos",
@@ -74,6 +94,34 @@ const Index = () => {
               />
               <span className="text-white font-bold text-base text-center w-full">{mainAction.title}</span>
             </GlassCard>
+
+          {/* Carrossel de Lançamentos */}
+          {highlights.length > 0 && (
+            <>
+              <GlassCard className="h-[50px] flex items-center justify-center gap-2 p-0">
+                <Sparkles size={18} className="text-primary" />
+                <span className="text-white font-bold text-sm">Confira nossos Lançamentos</span>
+              </GlassCard>
+
+              <div className="overflow-hidden" ref={emblaRef}>
+                <div className="flex gap-3">
+                  {highlights.map((h: any) => (
+                    <div
+                      key={h.id}
+                      className="flex-[0_0_auto] cursor-pointer"
+                      onClick={() => h.link_to && navigate(h.link_to)}
+                    >
+                      <img
+                        src={h.image_url}
+                        alt={h.title || 'Lançamento'}
+                        className="w-[150px] h-[290px] rounded-xl object-cover"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
 
           {/* Grid de Cards - 2 Colunas */}
           <div className="grid grid-cols-2 gap-x-4 gap-y-6">
