@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Music, Gamepad2, GraduationCap, Layers, PlaySquare, FileText, Settings, LayoutGrid, Palette } from 'lucide-react';
+import { LayoutDashboard, Music, Gamepad2, GraduationCap, Layers, PlaySquare, FileText, Settings, LayoutGrid, Palette, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navItems = [
@@ -7,6 +7,7 @@ const navItems = [
   { name: 'Audiofy', url: '/admin/ebooks', icon: Music },
   { name: 'Jogos', url: '/admin/games', icon: Gamepad2 },
   { name: 'Colorir', url: '/admin/colorir', icon: Palette },
+  { name: 'Lançamentos', url: '/admin/highlights', icon: Sparkles },
 ];
 
 const plataformaItems = [
