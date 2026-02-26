@@ -29,3 +29,6 @@ verify_jwt = true
 
 [functions.send-daily-devotional-whatsapp]
 verify_jwt = false
+
+[functions.delete-account]
+verify_jwt = false

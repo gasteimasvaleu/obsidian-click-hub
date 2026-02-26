@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Trophy, Star, Target, Activity, LogOut, Camera, BookOpen, StickyNote, Music } from 'lucide-react';
+import { Trophy, Star, Target, Activity, LogOut, Camera, BookOpen, StickyNote, Music, Trash2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { AvatarUpload } from '@/components/profile/AvatarUpload';
@@ -15,6 +15,11 @@ import { VerseNotesTab } from '@/components/profile/VerseNotesTab';
 import { AppearanceSection } from '@/components/profile/AppearanceSection';
 import { WhatsAppOptinSection } from '@/components/profile/WhatsAppOptinSection';
 import { supabase } from '@/integrations/supabase/client';
+import { toast } from '@/components/ui/sonner';
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 
 const Profile = () => {
   const { user, loading: authLoading, signOut } = useAuth();
@@ -22,10 +27,38 @@ const Profile = () => {
   const navigate = useNavigate();
   const [showAvatarUpload, setShowAvatarUpload] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState<string>('');
+  const [deleting, setDeleting] = useState(false);
 
   const handleLogout = async () => {
     await signOut();
     navigate('/login');
+  };
+
+  const handleDeleteAccount = async () => {
+    setDeleting(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        toast.error('Sessão expirada. Faça login novamente.');
+        navigate('/login');
+        return;
+      }
+
+      const res = await supabase.functions.invoke('delete-account', {
+        headers: { Authorization: `Bearer ${session.access_token}` },
+      });
+
+      if (res.error) throw res.error;
+
+      await supabase.auth.signOut();
+      toast.success('Conta excluída com sucesso.');
+      navigate('/login');
+    } catch (err) {
+      console.error(err);
+      toast.error('Erro ao excluir conta. Tente novamente.');
+    } finally {
+      setDeleting(false);
+    }
   };
 
   // Fetch profile data including avatar_url
@@ -125,7 +158,7 @@ const Profile = () => {
               </div>
             </div>
             
-            <div className="mt-6 pt-6 border-t border-primary/20">
+            <div className="mt-6 pt-6 border-t border-primary/20 flex flex-col sm:flex-row gap-3">
               <Button 
                 variant="outline" 
                 className="w-full md:w-auto border-red-500/50 text-red-500 hover:bg-red-500/10 hover:text-red-400"
@@ -134,6 +167,36 @@ const Profile = () => {
                 <LogOut className="w-4 h-4 mr-2" />
                 Sair da Conta
               </Button>
+
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button 
+                    variant="outline" 
+                    className="w-full md:w-auto border-red-700/50 text-red-700 hover:bg-red-700/10 hover:text-red-600"
+                    disabled={deleting}
+                  >
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    {deleting ? 'Excluindo...' : 'Excluir Conta'}
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Excluir conta permanentemente?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Esta ação é irreversível. Todos os seus dados, progresso, conquistas e criações serão permanentemente removidos.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={handleDeleteAccount}
+                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                    >
+                      Sim, excluir minha conta
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </div>
           </CardContent>
         </Card>
