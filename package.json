@@ -4,8 +4,6 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-      "capacitor:sync:after": "node fix-signing.cjs",
-      "ionic:build:before": "node fix-signing.cjs",
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
