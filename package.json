@@ -9,7 +9,9 @@
     "build:dev": "vite build",
     "preview": "vite preview",
     "lint": "eslint . --ext swift,js,ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "format": "prettier --write \"src/**/*.{ts,tsx,css,md}\""
+    "format": "prettier --write \"src/**/*.{ts,tsx,css,md}\"",
+    "fix-signing": "node fix-signing.cjs",
+    "capacitor:sync:after": "npm run fix-signing"
   },
   "dependencies": {
     "@capacitor/android": "^8.1.0",

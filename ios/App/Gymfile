@@ -1,3 +1,4 @@
+xcargs "DEVELOPMENT_TEAM=CASJQDDA7L"
 export_method "app-store"
 export_options({
   provisioningProfiles: {
