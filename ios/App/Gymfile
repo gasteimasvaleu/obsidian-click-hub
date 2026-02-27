@@ -1,4 +1,5 @@
 xcargs "DEVELOPMENT_TEAM=CASJQDDA7L"
+codesigning_identity ""
 export_method "app-store"
 export_options({
   provisioningProfiles: {
@@ -7,6 +8,7 @@ export_options({
   },
   manageAppVersionAndBuildNumber: true
 })
+
 
 
 
