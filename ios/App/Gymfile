@@ -4,8 +4,12 @@ export_options({
   provisioningProfiles: {
     "App" => "com.bibliatoonkids.app2",
     "com.bibliatoonkids.app" => "com.bibliatoonkids.app2"
-  }
+  },
+  manageAppVersionAndBuildNumber: true,
+  # Força o Xcode a NÃO incluir capacidades que não estão no perfil
+  signingStyle: "manual"
 })
+
 
 
 
