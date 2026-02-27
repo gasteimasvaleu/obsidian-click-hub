@@ -2,7 +2,7 @@ xcargs "DEVELOPMENT_TEAM=CASJQDDA7L"
 export_method "app-store"
 export_options({
   provisioningProfiles: {
-    "com.bibliatoonkids.app" => "com.bibliatoonkids.app2"
+    "App" => "com.bibliatoonkids.app2"
   }
 })
 
