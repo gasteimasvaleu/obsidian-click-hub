@@ -1,51 +1,66 @@
 
 
-# Corrigir erro de signing do RevenueCat SPM no Appflow
+# Corrigir conflito de CODE_SIGN_IDENTITY global no Appflow
 
-## O Problema Real
+## Problema
 
-O `DEVELOPMENT_TEAM` que adicionamos no `project.pbxproj` so se aplica aos targets do **seu** projeto (`App`). Pacotes SPM como o RevenueCat sao resolvidos pelo Xcode em `DerivedData/SourcePackages/` e criam seus **proprios** projetos Xcode separados -- eles **nao herdam** as configuracoes do seu pbxproj.
+O Appflow injeta internamente `CODE_SIGN_IDENTITY=Apple Distribution: Caio Figueiredo Roberto (CASJQDDA7L)` como argumento global do `xcodebuild`, **ignorando** o `codesigning_identity ""` do Gymfile. Isso aplica uma identidade de distribuicao a todos os targets, incluindo o RevenueCat SPM, que usa signing automatico e rejeita identidades manuais.
 
-A unica forma de forcar o `DEVELOPMENT_TEAM` em **todos** os targets (incluindo SPM) e passa-lo como argumento de linha de comando do `xcodebuild`. Quando passado assim, ele sobrescreve as configuracoes de todos os targets, incluindo os pacotes SPM.
+Comando real executado pelo Appflow (do log):
+```text
+xcodebuild ... DEVELOPMENT_TEAM=CASJQDDA7L archive CODE_SIGN_IDENTITY=Apple\ Distribution:\ Caio\ Figueiredo\ Roberto\ \(CASJQDDA7L\)
+```
+
+O `CODE_SIGN_IDENTITY` e adicionado **pelo Appflow** apos o xcargs, entao precisamos forcar um override.
 
 ## Solucao
 
-Criar um arquivo `Gymfile` na pasta `ios/App/` que o fastlane (usado internamente pelo Appflow) vai detectar automaticamente. Esse arquivo passa `DEVELOPMENT_TEAM` como `xcargs`, forcando o valor em todos os targets.
+Mover `CODE_SIGN_IDENTITY=` (vazio) para **dentro do xcargs**. Argumentos CLI do xcodebuild sao processados na ordem, e como o Appflow adiciona `CODE_SIGN_IDENTITY=...` separadamente, precisamos que nosso xcargs venha **depois** usando uma tecnica: colocar ambos no mesmo xcargs string.
 
-## Alteracoes
+Na verdade, olhando o comando, o Appflow adiciona `CODE_SIGN_IDENTITY=...` DEPOIS dos xcargs. Entao precisamos de outra abordagem: usar o `fix-signing.cjs` (que ja roda no `postinstall` / cap sync) para **tambem** configurar `CODE_SIGN_STYLE = Automatic` nos targets-level do pbxproj para os SPM packages.
 
-### 1. Criar `ios/App/Gymfile`
+**Abordagem correta**: O problema real e que o Appflow passa `CODE_SIGN_IDENTITY` globalmente e nao ha como impedir isso do lado do repositorio. A solucao e configurar o Appflow para usar **Automatic Signing** no painel de configuracao, OU adicionar `CODE_SIGN_IDENTITY=` no xcargs para tentar sobrescrever.
+
+Vamos tentar a abordagem mais agressiva: incluir no xcargs o reset da identidade para que o xcodebuild use a identidade correta por target.
+
+## Alteracao
+
+### `ios/App/Gymfile`
 
 ```ruby
-xcargs "DEVELOPMENT_TEAM=CASJQDDA7L"
+xcargs "DEVELOPMENT_TEAM=CASJQDDA7L CODE_SIGN_IDENTITY= CODE_SIGN_STYLE=Automatic"
+export_method "app-store"
+export_options({
+  provisioningProfiles: {
+    "com.bibliatoonkids.app" => "com.bibliatoonkids.app_v2"
+  },
+  signingStyle: "automatic",
+  manageAppVersionAndBuildNumber: true
+})
 ```
 
-Isso faz o fastlane gym passar `DEVELOPMENT_TEAM=CASJQDDA7L` como argumento do `xcodebuild`, que se aplica a **todos** os targets incluindo pacotes SPM como RevenueCat.
+Mudancas:
+- `CODE_SIGN_IDENTITY=` (vazio) no xcargs: neutraliza a identidade global, deixando o Xcode resolver por target
+- `CODE_SIGN_STYLE=Automatic` no xcargs: forca signing automatico para todos os targets
+- `signingStyle: "automatic"` no export_options: garante que a exportacao use signing automatico
+- Removido `codesigning_identity ""` (nao funciona, Appflow ignora)
+- Removido `"App"` duplicado do provisioningProfiles
 
-### 2. Alternativa: Configuracao no Appflow
+## Como funciona
 
-Se o Gymfile nao for detectado pelo Appflow, a alternativa e configurar diretamente no painel do Appflow:
+Com `CODE_SIGN_STYLE=Automatic` e `CODE_SIGN_IDENTITY=` nos xcargs (que sao argumentos CLI e tem prioridade maxima):
+- O Xcode resolve a identidade de assinatura automaticamente para cada target
+- O target App usara a identidade de distribuicao (resolvida via provisioning profile)
+- Os targets SPM (RevenueCat) nao terao conflito porque o Xcode sabe que libraries nao precisam de signing manual
 
-- Acesse **Build > iOS > Build Configuration**
-- No campo **Build Arguments** ou **Custom xcargs**, adicione: `DEVELOPMENT_TEAM=CASJQDDA7L`
+## Plano B (se nao funcionar)
 
-Essa configuracao faz exatamente a mesma coisa que o Gymfile.
-
-### 3. Manter as alteracoes anteriores no pbxproj
-
-As configuracoes de `DEVELOPMENT_TEAM` que ja adicionamos no pbxproj continuam uteis para builds locais no Xcode. Nao vamos remove-las.
-
-## Arquivos
+Se o Appflow sobrescrever os xcargs com seus proprios valores DEPOIS:
+1. No painel do Appflow, ir em **Build > iOS > Signing**
+2. Mudar para **Automatic Signing**
+3. Isso impede o Appflow de injetar `CODE_SIGN_IDENTITY` manualmente
 
 | Arquivo | Alteracao |
 |---------|-----------|
-| `ios/App/Gymfile` | Novo - passa DEVELOPMENT_TEAM como xcargs do xcodebuild |
-
-## Por que as tentativas anteriores nao funcionaram
-
-- **pbxproj project-level settings**: so afetam targets dentro do seu projeto, nao pacotes SPM resolvidos externamente
-- **build.xcconfig**: mesma limitacao -- xcconfig files sao vinculados ao seu projeto, nao aos projetos SPM em DerivedData
-- **fix-signing.cjs**: modifica apenas o seu pbxproj, nao os projetos SPM
-
-A solucao de `xcargs` na linha de comando e a unica que funciona porque o `xcodebuild` aplica argumentos CLI como override global em **todos** os targets do workspace.
+| `ios/App/Gymfile` | Adicionar CODE_SIGN_IDENTITY= e CODE_SIGN_STYLE=Automatic nos xcargs |
 
