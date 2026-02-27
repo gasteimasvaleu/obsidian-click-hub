@@ -1,0 +1,36 @@
+{
+	"appId": "com.bibliatoonkids.app",
+	"appName": "BíbliaToon KIDS",
+	"webDir": "dist",
+	"ios": {
+		"contentInset": "always",
+		"backgroundColor": "#000000"
+	},
+	"server": {
+		"hostname": "app.bibliatoonkids.com",
+		"iosScheme": "https",
+		"androidScheme": "https",
+		"allowNavigation": [
+			"*.youtube.com",
+			"*.youtube-nocookie.com",
+			"*.googlevideo.com",
+			"*.ytimg.com",
+			"*.vimeo.com",
+			"*.vimeocdn.com",
+			"*.akamaized.net"
+		]
+	},
+	"plugins": {
+		"LiveUpdates": {
+			"appId": "688c8cc6",
+			"channel": "Production",
+			"autoUpdateMethod": "background",
+			"maxVersions": 3
+		}
+	},
+	"packageClassList": [
+		"CAPCameraPlugin",
+		"CAPLiveUpdatesPlugin",
+		"PurchasesPlugin"
+	]
+}
