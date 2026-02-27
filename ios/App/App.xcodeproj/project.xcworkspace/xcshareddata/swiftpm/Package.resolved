@@ -1,5 +1,5 @@
 {
-  "originHash" : "5ee22e8d20b97ea598f020e97d678eb5fc8f765c8dbe242b29b09ddbb2bc870b",
+  "originHash" : "ee9c899daed946db61309dd7999408baaeb1f2858c4832c7c47b2982c6813c89",
   "pins" : [
     {
       "identity" : "capacitor-swift-pm",
@@ -26,6 +26,15 @@
       "state" : {
         "revision" : "6856d04423ade0663403bd3a0640ad016dcfc1c9",
         "version" : "17.41.1"
+      }
+    },
+    {
+      "identity" : "purchases-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/RevenueCat/purchases-ios.git",
+      "state" : {
+        "revision" : "4d75c384d9169316d6aa5b74b541c02dd0e345ec",
+        "version" : "5.60.0"
       }
     },
     {

@@ -2,16 +2,14 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>CAPACITOR_DEBUG</key>
+    <key>CAPACITOR_DEBUG</key>
 	<string>$(CAPACITOR_DEBUG)</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>BíbliaToonKIDS</string>
+        <string>BíbliaToon KIDS</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
-	<key>CFBundleGetInfoString</key>
-	<string></string>
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
@@ -22,33 +20,10 @@
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
 	<string>$(MARKETING_VERSION)</string>
-	<key>CFBundleSignature</key>
-	<string></string>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
-	<key>LSApplicationCategoryType</key>
-	<string></string>
-	<key>LSApplicationQueriesSchemes</key>
-	<array>
-		<string>yotube</string>
-		<string>youtube-nocookie</string>
-		<string>https</string>
-	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSAppTransportSecurity</key>
-	<dict>
-		<key>NSAllowsArbitraryLoads</key>
-		<true/>
-		<key>NSAllowsArbitraryLoadsInWebContent</key>
-		<true/>
-	</dict>
-	<key>NSCameraUsageDescription</key>
-	<string>BíbliaToon KIDS precisa acessar sua câmera para que você possa tirar fotos e personalizar seu perfil!</string>
-	<key>NSHumanReadableCopyright</key>
-	<string></string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>BíbliaToon KIDS precisa acessar sua galeria para que você possa escolher fotos e personalizar seu perfil!</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
