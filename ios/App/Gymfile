@@ -3,8 +3,8 @@ codesigning_identity ""
 export_method "app-store"
 export_options({
   provisioningProfiles: {
-    "App" => "com.bibliatoonkids.app2",
-    "com.bibliatoonkids.app" => "com.bibliatoonkids.app2"
+    "App" => "com.bibliatoonkids.app_v2",
+    "com.bibliatoonkids.app" => "com.bibliatoonkids.app_v2"
   },
   manageAppVersionAndBuildNumber: true
 })
