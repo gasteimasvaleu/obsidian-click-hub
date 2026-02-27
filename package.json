@@ -4,13 +4,14 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-      "ionic:build:before": "node fix-signing.js",
-      "dev": "vite",
-      "build": "tsc && vite build",
-      "preview": "vite preview",
-      "lint": "eslint . --ext swift,js,ts,tsx --report-unused-disable-directives --max-warnings 0",
-      "format": "prettier --write \"src/**/*.{ts,tsx,css,md}\""
-    },
+    "capacitor:sync:after": "node fix-signing.js",
+    "ionic:build:before": "node fix-signing.js",
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext swift,js,ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "format": "prettier --write \"src/**/*.{ts,tsx,css,md}\""
+  },
   "dependencies": {
     "@capacitor/android": "^8.1.0",
     "@capacitor/camera": "^8.0.1",
