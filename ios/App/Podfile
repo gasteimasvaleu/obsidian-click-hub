@@ -1,10 +1,7 @@
-# Plataforma e uso de frameworks
 platform :ios, '13.0'
 use_frameworks!
 
-# Função capacitor_pods embutida para garantir que esteja sempre disponível
 def capacitor_pods
-  # Adiciona os pods essenciais do Capacitor
   pod 'CapacitorCordova', :path => '../../node_modules/@capacitor/ios'
   pod 'Capacitor', :path => '../../node_modules/@capacitor/ios'
   pod 'CapacitorApp', :path => '../../node_modules/@capacitor/app'
@@ -13,25 +10,19 @@ def capacitor_pods
   pod 'CapacitorStatusBar', :path => '../../node_modules/@capacitor/status-bar'
 end
 
-# Hook para ser executado ANTES da instalação dos Pods
 pre_install do |installer|
-  # Chama a função capacitor_pods que acabamos de definir
   capacitor_pods
 end
 
 target 'App' do
-  # Adiciona o RevenueCat via CocoaPods
   pod 'RevenueCat', '5.59.2'
 end
 
-# BLOCO DE CORREÇÃO DE ASSINATURA (AGORA SIMPLIFICADO PARA OS PODS)
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     target.build_configurations.each do |config|
       config.build_settings['ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES'] = '$(inherited)'
       config.build_settings['ENABLE_BITCODE'] = 'NO'
-      # REMOVIDO: CODE_SIGN_IDENTITY, CODE_SIGN_STYLE, PROVISIONING_PROFILE_SPECIFIER e DEVELOPMENT_TEAM
-      # Pods/frameworks não devem ter signing manual
     end
   end
 end
