@@ -5,9 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build && cd ios/App && pod install && cd ../..",
-    "preview": "vite preview",
-    "xcodebuild": "./xcodebuild-wrapper.sh"
+    "build": "tsc && vite build && cd ios/App && pod install && cd ../.. && node fix-signing.cjs",
+    "preview": "vite preview"
   },
   "dependencies": {
     "@capacitor/android": "^8.1.0",
