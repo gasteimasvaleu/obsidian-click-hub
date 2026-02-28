@@ -1,10 +1,9 @@
-xcargs "DEVELOPMENT_TEAM=CASJQDDA7L"
-codesigning_identity ""
+xcargs "DEVELOPMENT_TEAM=CASJQDDA7L CODE_SIGN_IDENTITY= CODE_SIGN_STYLE=Manual"
 export_method "app-store"
+skip_profile_detection true
 export_options({
+  signingStyle: "manual",
   provisioningProfiles: {
-    "App" => "com.bibliatoonkids.app_v2_distribution",
-    "com.bibliatoonkids.app" => "com.bibliatoonkids.app_v2_distribution"
-  },
-  manageAppVersionAndBuildNumber: true
+    "com.bibliatoonkids.app" => "BibliaToonKIDS_AppStore_Final"
+  }
 })
