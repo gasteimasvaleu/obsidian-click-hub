@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build && node fix-signing.cjs",
+    "build": "tsc && vite build && cd ios/App && pod install && cd ../..",
     "preview": "vite preview"
   },
   "dependencies": {
