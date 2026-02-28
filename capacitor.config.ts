@@ -29,10 +29,15 @@ const config: CapacitorConfig = {
       autoUpdateMethod: 'background',
       maxVersions: 3
     }
+  },
+  // ADICIONADO: Este gancho garante que o script de correção rode após o sync no Appflow
+  hooks: {
+    'cap-sync-after': 'node fix-signing.cjs'
   }
 };
 
 export default config;
+
 
 
 
