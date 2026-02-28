@@ -25,6 +25,10 @@ if (fs.existsSync(projectPath)) {
             modified = modified.replace("buildSettings = {", "buildSettings = {\n\t\t\t\tCODE_SIGNING_ALLOWED = YES;");
         } else {
             // Outros targets (projeto global, pods, SPM): CODE_SIGNING_ALLOWED = NO
+            // Tambem limpar CODE_SIGN_IDENTITY e PROVISIONING_PROFILE_SPECIFIER
+            modified = modified.replace(/\s*CODE_SIGN_IDENTITY = [^;]+;/g, "");
+            modified = modified.replace(/\s*"CODE_SIGN_IDENTITY\[sdk=iphoneos\*\]" = [^;]+;/g, "");
+            modified = modified.replace(/\s*PROVISIONING_PROFILE_SPECIFIER = [^;]+;/g, "");
             modified = modified.replace("buildSettings = {", "buildSettings = {\n\t\t\t\tCODE_SIGNING_ALLOWED = NO;");
         }
 
@@ -32,7 +36,7 @@ if (fs.existsSync(projectPath)) {
     });
 
     fs.writeFileSync(projectPath, content);
-    console.log("✅ Sucesso: CODE_SIGNING_ALLOWED configurado (YES=App target, NO=outros).");
+    console.log("✅ Sucesso: CODE_SIGNING_ALLOWED configurado (YES=App target, NO=outros). Identity/Profile limpos de targets globais.");
 } else {
     console.error("❌ Erro: Projeto não encontrado em " + projectPath);
     process.exit(1);
