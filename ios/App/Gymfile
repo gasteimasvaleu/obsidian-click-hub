@@ -1,9 +1,11 @@
-xcargs "DEVELOPMENT_TEAM=CASJQDDA7L"
+xcargs "DEVELOPMENT_TEAM=CASJQDDA7L CODE_SIGNING_ALLOWED=NO"
 export_method "app-store"
 skip_profile_detection true
 export_options({
   signingStyle: "manual",
   provisioningProfiles: {
     "com.bibliatoonkids.app" => "BibliaToonKIDS_AppStore_Final"
-  }
+  },
+  signingCertificate: "Apple Distribution: Caio Figueiredo Roberto (CASJQDDA7L)",
+  teamID: "CASJQDDA7L"
 })
