@@ -1,29 +1,28 @@
 
 
-## Corrigir conflito de merge no Gymfile
+## Corrigir conflito de assinatura do RevenueCat SPM
 
 ### Problema
-O arquivo `ios/App/Gymfile` tambem tem marcadores de conflito do git (`<<<<<<< Updated upstream`, `=======`, `>>>>>>> Stashed changes`), igual ao `fix-signing.cjs` que ja foi corrigido.
+O RevenueCat (pacote SPM) e automaticamente assinado, mas o Gymfile esta forcando a identidade "Apple Distribution" globalmente via `DEVELOPMENT_TEAM`. Isso causa conflito porque targets SPM nao aceitam assinatura manual com certificado de distribuicao.
 
 ### Solucao
-Limpar o `ios/App/Gymfile` removendo os marcadores de conflito. Baseado na memoria do projeto, a versao correta usa `xcargs "DEVELOPMENT_TEAM=CASJQDDA7L"` (sem `CODE_SIGNING_ALLOWED=NO`).
+Atualizar o `ios/App/Gymfile` para incluir `CODE_SIGN_IDENTITY=` (vazio) e `CODE_SIGN_STYLE=Automatic` nos xcargs. Isso permite que:
+- O App target use as configuracoes manuais definidas no projeto Xcode
+- Os targets SPM (RevenueCat) herdem assinatura automatica sem conflito
 
 ### Arquivo modificado
-- `ios/App/Gymfile` -- remover marcadores de conflito e manter a versao funcional:
+- `ios/App/Gymfile` -- alterar a linha xcargs de:
+  ```
+  xcargs "DEVELOPMENT_TEAM=CASJQDDA7L"
+  ```
+  para:
+  ```
+  xcargs "DEVELOPMENT_TEAM=CASJQDDA7L CODE_SIGN_IDENTITY= CODE_SIGN_STYLE=Automatic"
+  ```
+  O resto do arquivo permanece igual.
 
-```
-xcargs "DEVELOPMENT_TEAM=CASJQDDA7L"
-export_method "app-store"
-skip_profile_detection true
-export_options({
-  signingStyle: "manual",
-  provisioningProfiles: {
-    "com.bibliatoonkids.app" => "BibliaToonKIDS_AppStore_Final"
-  },
-  signingCertificate: "Apple Distribution: Caio Figueiredo Roberto (CASJQDDA7L)",
-  teamID: "CASJQDDA7L"
-})
-```
+### Por que funciona
+Passar `CODE_SIGN_IDENTITY=` (vazio) como argumento global do xcodebuild remove a identidade manual dos targets que nao tem override explicito (como RevenueCat). O `CODE_SIGN_STYLE=Automatic` permite que o Xcode resolva a assinatura automaticamente para esses targets. O App target continua usando suas configuracoes manuais definidas no `project.pbxproj`.
 
 ### Apos a correcao
-Fazer push e iniciar novo build no Appflow.
+Fazer commit, push e iniciar novo build no Appflow.
