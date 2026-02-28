@@ -1,20 +1,20 @@
 
 
-## Corrigir erro do TestFlight: Missing Purpose String
+## Corrigir conflito de merge no fix-signing.cjs
 
 ### Problema
-A Apple rejeitou o build porque o `Info.plist` nao tem a chave `NSPhotoLibraryUsageDescription`. O app usa a biblioteca de fotos (provavelmente via Capacitor Camera para a funcionalidade "Transformar Foto") e precisa declarar o motivo.
+O arquivo `fix-signing.cjs` contém marcadores de conflito do git (`<<<<<<< Updated upstream`, `=======`, `>>>>>>> Stashed changes`) na linha 10. Isso causa `SyntaxError` quando o Node.js tenta executar o script durante o build.
 
 ### Solucao
-Adicionar as seguintes chaves no arquivo `ios/App/App/Info.plist`:
-
-- **NSPhotoLibraryUsageDescription** - Acesso a galeria de fotos (obrigatorio)
-- **NSCameraUsageDescription** - Acesso a camera (recomendado, ja que o app usa `@capacitor/camera`)
-- **NSPhotoLibraryAddUsageDescription** - Salvar fotos na galeria (recomendado, para salvar desenhos coloridos)
+Reescrever o `fix-signing.cjs` com a versao limpa e funcional (sem marcadores de conflito). Baseado no log do build anterior que deu certo, a versao correta e a que configura `CODE_SIGNING_ALLOWED = YES` para o App target e `NO` para os outros.
 
 ### Arquivo modificado
-- `ios/App/App/Info.plist` - Adicionar as 3 chaves de privacidade com mensagens em portugues adequadas para um app infantil
+- `fix-signing.cjs` -- remover todos os marcadores de conflito e manter a logica funcional que ja funcionou no build anterior
 
-### Apos a mudanca
-Sera necessario fazer um novo build no Appflow para que o TestFlight aceite.
+### Detalhes tecnicos
+O arquivo atual tem multiplos blocos de conflito intercalados. A versao limpa deve:
+1. Encontrar todos os blocos `buildSettings` no `project.pbxproj`
+2. Para o App target (que tem `PRODUCT_BUNDLE_IDENTIFIER`): setar `CODE_SIGNING_ALLOWED = YES` e `CODE_SIGN_STYLE = Manual`
+3. Para todos os outros targets: setar `CODE_SIGNING_ALLOWED = NO`
+4. Remover configuracoes de assinatura duplicadas de targets que nao sao o App
 
