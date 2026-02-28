@@ -1,20 +1,29 @@
 
 
-## Corrigir conflito de merge no fix-signing.cjs
+## Corrigir conflito de merge no Gymfile
 
 ### Problema
-O arquivo `fix-signing.cjs` contém marcadores de conflito do git (`<<<<<<< Updated upstream`, `=======`, `>>>>>>> Stashed changes`) na linha 10. Isso causa `SyntaxError` quando o Node.js tenta executar o script durante o build.
+O arquivo `ios/App/Gymfile` tambem tem marcadores de conflito do git (`<<<<<<< Updated upstream`, `=======`, `>>>>>>> Stashed changes`), igual ao `fix-signing.cjs` que ja foi corrigido.
 
 ### Solucao
-Reescrever o `fix-signing.cjs` com a versao limpa e funcional (sem marcadores de conflito). Baseado no log do build anterior que deu certo, a versao correta e a que configura `CODE_SIGNING_ALLOWED = YES` para o App target e `NO` para os outros.
+Limpar o `ios/App/Gymfile` removendo os marcadores de conflito. Baseado na memoria do projeto, a versao correta usa `xcargs "DEVELOPMENT_TEAM=CASJQDDA7L"` (sem `CODE_SIGNING_ALLOWED=NO`).
 
 ### Arquivo modificado
-- `fix-signing.cjs` -- remover todos os marcadores de conflito e manter a logica funcional que ja funcionou no build anterior
+- `ios/App/Gymfile` -- remover marcadores de conflito e manter a versao funcional:
 
-### Detalhes tecnicos
-O arquivo atual tem multiplos blocos de conflito intercalados. A versao limpa deve:
-1. Encontrar todos os blocos `buildSettings` no `project.pbxproj`
-2. Para o App target (que tem `PRODUCT_BUNDLE_IDENTIFIER`): setar `CODE_SIGNING_ALLOWED = YES` e `CODE_SIGN_STYLE = Manual`
-3. Para todos os outros targets: setar `CODE_SIGNING_ALLOWED = NO`
-4. Remover configuracoes de assinatura duplicadas de targets que nao sao o App
+```
+xcargs "DEVELOPMENT_TEAM=CASJQDDA7L"
+export_method "app-store"
+skip_profile_detection true
+export_options({
+  signingStyle: "manual",
+  provisioningProfiles: {
+    "com.bibliatoonkids.app" => "BibliaToonKIDS_AppStore_Final"
+  },
+  signingCertificate: "Apple Distribution: Caio Figueiredo Roberto (CASJQDDA7L)",
+  teamID: "CASJQDDA7L"
+})
+```
 
+### Apos a correcao
+Fazer push e iniciar novo build no Appflow.
