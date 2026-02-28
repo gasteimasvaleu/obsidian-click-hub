@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build && cd ios/App && pod install && cd ../..",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "xcodebuild": "./xcodebuild-wrapper.sh"
   },
   "dependencies": {
     "@capacitor/android": "^8.1.0",
