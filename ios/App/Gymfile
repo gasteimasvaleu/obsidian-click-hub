@@ -1,8 +1,4 @@
-<<<<<<< Updated upstream
-xcargs "DEVELOPMENT_TEAM=CASJQDDA7L CODE_SIGNING_ALLOWED=NO"
-=======
 xcargs "DEVELOPMENT_TEAM=CASJQDDA7L"
->>>>>>> Stashed changes
 export_method "app-store"
 skip_profile_detection true
 export_options({
@@ -13,4 +9,3 @@ export_options({
   signingCertificate: "Apple Distribution: Caio Figueiredo Roberto (CASJQDDA7L)",
   teamID: "CASJQDDA7L"
 })
-
