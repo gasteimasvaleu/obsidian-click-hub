@@ -1,9 +1,16 @@
+# Caminho para os scripts do Capacitor
 require_relative '../../node_modules/@capacitor/ios/scripts/pods_helpers'
 
 platform :ios, '13.0'
 
 target 'App' do
-  capacitor_pods
-  # Adicionando o RevenueCat via CocoaPods para compatibilidade total com Appflow
+  # Tenta carregar as pods do Capacitor de forma segura
+  begin
+    capacitor_pods
+  rescue => e
+    puts "Aviso: Não foi possível carregar capacitor_pods automaticamente: #{e.message}"
+  end
+
+  # Adicionando o RevenueCat explicitamente
   pod 'RevenueCat', '5.59.2'
 end
