@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
+import { useAIConsent } from "@/hooks/useAIConsent";
+import { AIConsentDialog } from "@/components/AIConsentDialog";
 
 interface Message {
   role: "user" | "assistant";
@@ -18,6 +20,8 @@ export const ChatInterface = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const scrollRef = useRef<HTMLDivElement>(null);
+  const { showConsent, setShowConsent, acceptConsent, requireConsent } = useAIConsent();
+  const pendingMessageRef = useRef<string | null>(null);
 
   // Auto scroll to bottom when new messages arrive
   useEffect(() => {
@@ -26,19 +30,16 @@ export const ChatInterface = () => {
     }
   }, [messages]);
 
-  const handleSendMessage = async () => {
-    if (!input.trim() || isLoading) return;
-
-    const userMessage: Message = { role: "user", content: input };
+  const doSendMessage = async (message: string) => {
+    const userMessage: Message = { role: "user", content: message };
     setMessages((prev) => [...prev, userMessage]);
-    setInput("");
     setIsLoading(true);
 
     try {
       const response = await fetch("https://hook.us2.make.com/f2v3uj2teps5wg8xirjjlcicqbqpcvy6", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: input }),
+        body: JSON.stringify({ message }),
       });
 
       if (!response.ok) {
@@ -49,11 +50,9 @@ export const ChatInterface = () => {
 
       let assistantContent: string;
       try {
-        // Tentar fazer parse como JSON
         const data = JSON.parse(responseText);
         assistantContent = data.response || responseText;
       } catch {
-        // Se não for JSON válido, usar o texto direto
         assistantContent = responseText;
       }
 
@@ -73,6 +72,34 @@ export const ChatInterface = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleSendMessage = () => {
+    if (!input.trim() || isLoading) return;
+    const message = input;
+    setInput("");
+    
+    requireConsent(() => {
+      doSendMessage(message);
+    });
+
+    // If consent needed, store pending message
+    if (!localStorage.getItem("ai_consent_accepted")) {
+      pendingMessageRef.current = message;
+    }
+  };
+
+  const handleConsentAccepted = () => {
+    acceptConsent();
+    if (pendingMessageRef.current) {
+      doSendMessage(pendingMessageRef.current);
+      pendingMessageRef.current = null;
+    }
+  };
+
+  const handleConsentCancelled = () => {
+    setShowConsent(false);
+    pendingMessageRef.current = null;
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -165,6 +192,12 @@ export const ChatInterface = () => {
           </div>
         </div>
       </div>
+
+      <AIConsentDialog
+        open={showConsent}
+        onAccept={handleConsentAccepted}
+        onCancel={handleConsentCancelled}
+      />
     </div>
   );
 };

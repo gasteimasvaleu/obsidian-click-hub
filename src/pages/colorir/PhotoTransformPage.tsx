@@ -4,9 +4,24 @@ import { GlassCard } from '@/components/GlassCard';
 import { PhotoUploader } from '@/components/colorir/PhotoUploader';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Camera } from 'lucide-react';
+import { useAIConsent } from '@/hooks/useAIConsent';
+import { AIConsentDialog } from '@/components/AIConsentDialog';
+import { useState } from 'react';
 
 const PhotoTransformPage = () => {
   const navigate = useNavigate();
+  const { showConsent, setShowConsent, acceptConsent, hasConsent } = useAIConsent();
+  const [consentChecked, setConsentChecked] = useState(false);
+
+  // Show consent on first interaction if not yet accepted
+  const handlePageInteraction = () => {
+    if (!consentChecked && !hasConsent()) {
+      setShowConsent(true);
+      setConsentChecked(true);
+      return false;
+    }
+    return true;
+  };
 
   const handleTransformed = (transformedUrl: string, _originalUrl: string) => {
     navigate(`/colorir/editor/photo?photoUrl=${encodeURIComponent(transformedUrl)}`);
@@ -37,8 +52,19 @@ const PhotoTransformPage = () => {
           </p>
         </GlassCard>
 
-        <PhotoUploader onTransformed={handleTransformed} />
+        <div onClick={handlePageInteraction}>
+          <PhotoUploader onTransformed={handleTransformed} />
+        </div>
       </main>
+
+      <AIConsentDialog
+        open={showConsent}
+        onAccept={() => {
+          acceptConsent();
+          setShowConsent(false);
+        }}
+        onCancel={() => setShowConsent(false)}
+      />
     </div>
   );
 };
