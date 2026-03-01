@@ -1,33 +1,28 @@
 
 
-## Adicionar Logs Detalhados para Diagnosticar Erro de Compra
+## Corrigir Build Script que Falha no CI
 
 ### Problema
-A compra via App Store falha com "Erro ao processar a compra", mas o codigo atual esconde o erro real. Precisamos ver exatamente onde e por que esta falhando.
+O script `build` no `package.json` executa `pod install` como parte do processo, mas o ambiente de CI do Appflow nao tem CocoaPods instalado, causando o erro `sh: 1: pod: not found` (exit code 127).
 
-### Alteracoes
+O build do Vite completa com sucesso - a falha e apenas no `pod install`.
 
-**Arquivo: `src/lib/revenuecat.ts`**
+### Solucao
 
-Adicionar logs detalhados em cada etapa da funcao `purchaseMonthly` para identificar o ponto exato da falha:
+**Arquivo: `package.json`**
 
-1. **Antes de buscar offerings**: Log confirmando que o SDK foi importado
-2. **Apos buscar offerings**: Log mostrando o conteudo retornado (quantidade de pacotes, IDs dos produtos)
-3. **No erro "Nenhum plano disponivel"**: Log detalhado do objeto `offerings` completo
-4. **No pacote selecionado**: Log do pacote que sera usado na compra
-5. **No catch**: Incluir `error?.code`, `error?.message`, `error?.underlyingErrorMessage` e o objeto completo `JSON.stringify(error)` no console.error
-6. **Retornar erro detalhado**: Mostrar o codigo e mensagem real do erro no toast para facilitar o diagnostico
+Separar o script de build em dois:
+- `build`: apenas `tsc && vite build` (usado pelo CI/Appflow e pelo Lovable)
+- `build:ios`: `tsc && vite build && cd ios/App && pod install && cd ../.. && node fix-signing.cjs` (usado localmente quando for fazer build iOS)
 
-**Arquivo: `src/pages/Login.tsx`**
+Alterar a linha 8:
+```json
+"build": "tsc && vite build",
+"build:ios": "tsc && vite build && cd ios/App && pod install && cd ../.. && node fix-signing.cjs",
+```
 
-Alterar o `handleAppStorePurchase` para exibir o erro detalhado no toast em vez da mensagem generica, permitindo ver no iPhone qual erro exato esta ocorrendo.
+### Resultado
+O build no Appflow passara sem erros, pois usara apenas `npm run build` que agora nao inclui `pod install`. Quando precisar fazer build iOS local, use `npm run build:ios`.
 
-### Resultado Esperado
-Ao tentar a compra novamente no iPhone, o toast mostrara o erro real (ex: "Product not found", "Store problem", "Network error", etc.), permitindo corrigir a causa raiz.
-
-### Possiveis Causas Comuns
-- Offering "default" sem pacote vinculado no dashboard do RevenueCat
-- Produto `BIBLIATOONKIDS2` nao vinculado ao pacote no RevenueCat
-- App Store Connect Agreements (contratos de Paid Apps) nao finalizados
-- Bundle ID do app diferente do configurado no RevenueCat
-
+### Nota
+O `fix-signing.cjs` tambem e removido do build padrao pois so e relevante para builds iOS. O hook `cap-sync-after` no `capacitor.config.json` ja executa `fix-signing.cjs` automaticamente quando `npx cap sync` e rodado.
