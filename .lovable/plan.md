@@ -1,36 +1,53 @@
 
 
-## Corrigir Scroll Horizontal no Guia dos Pais
+## Corrigir Bounce da Navbar no iOS
 
 ### Problema
-No celular, o formulario do Guia dos Pais permite scroll horizontal, quebrando a experiencia de app nativo. Isso acontece em determinados steps do formulario e potencialmente na tela de resultado.
+No iPhone real, ao fazer scroll para baixo, a navbar superior desce junto (efeito de "bounce"/elasticidade do iOS). Isso acontece porque o Safari/WebView do iOS ignora `overscroll-behavior: none` no nivel do viewport -- o rubber-banding afeta elementos `position: fixed` quando o documento inteiro faz overscroll.
 
 ### Causa Raiz
-- Os grids de badges nos steps 4 (Comportamento) e 5 (Personalidade) usam `grid-cols-3` que pode estourar em telas pequenas com palavras longas como "Questionador", "Colaborativo", "Independente"
-- O efeito `neon-glow` (box-shadow) pode gerar overflow visual
-- Os `AccordionItem` no `GuideDisplay` usam `px-6` que somado ao padding do card pai pode ultrapassar a largura
-- O titulo "Roteiro de Conversa Passo a Passo" nos AccordionTriggers pode ser muito longo para telas pequenas
+Atualmente `html` e `body` sao o container de scroll. No iOS, o scroll do viewport tem bounce nativo que nenhuma propriedade CSS consegue desabilitar completamente. Elementos `fixed` se movem junto com esse bounce.
 
-### Correcoes Planejadas
+### Solucao
+Transformar `html` e `body` em containers estaticos (`overflow: hidden`, `height: 100%`) e mover o scroll para o `#root`. Dessa forma, o viewport nunca faz scroll (logo nao ha bounce), e o scroll acontece dentro de um div controlado onde `overscroll-behavior: none` funciona.
 
-**Arquivo: `src/components/guia-pais/ParentsGuideForm.tsx`**
-- Alterar grid de badges de `grid-cols-3 sm:grid-cols-4` para `grid-cols-2 sm:grid-cols-3` nos steps 4 e 5
-- Adicionar `overflow-hidden` no wrapper principal do formulario
-- Adicionar `truncate` ou `text-center break-words` nos badges para textos longos
+### Alteracoes
 
-**Arquivo: `src/components/guia-pais/GuideDisplay.tsx`**
-- Reduzir padding dos `AccordionItem` de `px-6` para `px-3 sm:px-6`
-- Adicionar `overflow-hidden` e `break-words` nos containers de texto gerado pela IA
-- Garantir que o `CardTitle` no roteiro de conversa quebre linha em vez de estourar (`flex-wrap` ou `flex-col`)
-- Adicionar `overflow-hidden` no container de tabs
+**Arquivo: `src/index.css`**
 
-**Arquivo: `src/pages/GuiaPais.tsx`**
-- Garantir que o wrapper principal ja tem `overflow-x-hidden` (ja presente, verificar se esta correto)
+Alterar os estilos de `html`, `body` e `#root`:
 
-### Nenhuma alteracao no package.json
-O script de build permanece inalterado para compatibilidade com Appflow.
+```css
+html {
+  overflow: hidden;
+  height: 100%;
+  max-width: 100vw;
+  background: #000000;
+  overscroll-behavior: none;
+}
 
-### Arquivos Modificados
-- `src/components/guia-pais/ParentsGuideForm.tsx`
-- `src/components/guia-pais/GuideDisplay.tsx`
+body {
+  overflow: hidden;
+  height: 100%;
+  max-width: 100vw;
+  overscroll-behavior: none;
+}
 
+#root {
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 100%;
+  max-width: 100vw;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: none;
+}
+```
+
+### Impacto
+- Apenas CSS, sem alteracao de componentes React
+- Nao altera `package.json` (compativel com Appflow)
+- Deploy via JS Web Build (Live Update)
+- Corrige o bounce em todas as paginas, nao apenas na navbar
+
+### Risco
+Paginas que dependem de `window.scrollTo` ou `document.documentElement.scrollTop` podem precisar usar `document.getElementById('root').scrollTop` em vez disso. Sera necessario testar no dispositivo apos o deploy.
