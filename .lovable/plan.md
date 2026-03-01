@@ -1,53 +1,33 @@
 
 
-## Corrigir Bounce da Navbar no iOS
+## Adicionar Logs Detalhados para Diagnosticar Erro de Compra
 
 ### Problema
-No iPhone real, ao fazer scroll para baixo, a navbar superior desce junto (efeito de "bounce"/elasticidade do iOS). Isso acontece porque o Safari/WebView do iOS ignora `overscroll-behavior: none` no nivel do viewport -- o rubber-banding afeta elementos `position: fixed` quando o documento inteiro faz overscroll.
-
-### Causa Raiz
-Atualmente `html` e `body` sao o container de scroll. No iOS, o scroll do viewport tem bounce nativo que nenhuma propriedade CSS consegue desabilitar completamente. Elementos `fixed` se movem junto com esse bounce.
-
-### Solucao
-Transformar `html` e `body` em containers estaticos (`overflow: hidden`, `height: 100%`) e mover o scroll para o `#root`. Dessa forma, o viewport nunca faz scroll (logo nao ha bounce), e o scroll acontece dentro de um div controlado onde `overscroll-behavior: none` funciona.
+A compra via App Store falha com "Erro ao processar a compra", mas o codigo atual esconde o erro real. Precisamos ver exatamente onde e por que esta falhando.
 
 ### Alteracoes
 
-**Arquivo: `src/index.css`**
+**Arquivo: `src/lib/revenuecat.ts`**
 
-Alterar os estilos de `html`, `body` e `#root`:
+Adicionar logs detalhados em cada etapa da funcao `purchaseMonthly` para identificar o ponto exato da falha:
 
-```css
-html {
-  overflow: hidden;
-  height: 100%;
-  max-width: 100vw;
-  background: #000000;
-  overscroll-behavior: none;
-}
+1. **Antes de buscar offerings**: Log confirmando que o SDK foi importado
+2. **Apos buscar offerings**: Log mostrando o conteudo retornado (quantidade de pacotes, IDs dos produtos)
+3. **No erro "Nenhum plano disponivel"**: Log detalhado do objeto `offerings` completo
+4. **No pacote selecionado**: Log do pacote que sera usado na compra
+5. **No catch**: Incluir `error?.code`, `error?.message`, `error?.underlyingErrorMessage` e o objeto completo `JSON.stringify(error)` no console.error
+6. **Retornar erro detalhado**: Mostrar o codigo e mensagem real do erro no toast para facilitar o diagnostico
 
-body {
-  overflow: hidden;
-  height: 100%;
-  max-width: 100vw;
-  overscroll-behavior: none;
-}
+**Arquivo: `src/pages/Login.tsx`**
 
-#root {
-  overflow-y: auto;
-  overflow-x: hidden;
-  height: 100%;
-  max-width: 100vw;
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior: none;
-}
-```
+Alterar o `handleAppStorePurchase` para exibir o erro detalhado no toast em vez da mensagem generica, permitindo ver no iPhone qual erro exato esta ocorrendo.
 
-### Impacto
-- Apenas CSS, sem alteracao de componentes React
-- Nao altera `package.json` (compativel com Appflow)
-- Deploy via JS Web Build (Live Update)
-- Corrige o bounce em todas as paginas, nao apenas na navbar
+### Resultado Esperado
+Ao tentar a compra novamente no iPhone, o toast mostrara o erro real (ex: "Product not found", "Store problem", "Network error", etc.), permitindo corrigir a causa raiz.
 
-### Risco
-Paginas que dependem de `window.scrollTo` ou `document.documentElement.scrollTop` podem precisar usar `document.getElementById('root').scrollTop` em vez disso. Sera necessario testar no dispositivo apos o deploy.
+### Possiveis Causas Comuns
+- Offering "default" sem pacote vinculado no dashboard do RevenueCat
+- Produto `BIBLIATOONKIDS2` nao vinculado ao pacote no RevenueCat
+- App Store Connect Agreements (contratos de Paid Apps) nao finalizados
+- Bundle ID do app diferente do configurado no RevenueCat
+
