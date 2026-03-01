@@ -85,7 +85,7 @@ export const ParentsGuideForm = ({
   const progress = (currentStep / totalSteps) * 100;
 
   return (
-    <div className="max-w-2xl mx-auto animate-fade-in overflow-hidden">
+    <div className="max-w-2xl mx-auto animate-fade-in overflow-x-hidden">
       {/* Header */}
       <GlassCard className="max-w-2xl mx-auto text-center mb-8">
         <h1 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-primary via-primary to-primary/60 bg-clip-text text-transparent">
@@ -193,12 +193,12 @@ export const ParentsGuideForm = ({
               <p className="text-sm text-muted-foreground">
                 Selecione uma ou mais opções
               </p>
-              <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                 {comportamentoOptions.map((option) => (
                   <Badge
                     key={option}
                     variant={formData.comportamento.includes(option) ? "default" : "outline"}
-                    className="cursor-pointer text-sm py-1.5 px-3 text-center justify-center rounded-lg"
+                    className="cursor-pointer text-sm py-1.5 px-3 text-center justify-center rounded-lg break-words"
                     onClick={() => toggleArrayItem('comportamento', option)}
                   >
                     {option}
@@ -217,12 +217,12 @@ export const ParentsGuideForm = ({
               <p className="text-sm text-muted-foreground">
                 Selecione uma ou mais características
               </p>
-              <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                 {personalidadeOptions.map((option) => (
                   <Badge
                     key={option}
                     variant={formData.personalidade.includes(option) ? "default" : "outline"}
-                    className="cursor-pointer text-sm py-1.5 px-3 text-center justify-center rounded-lg"
+                    className="cursor-pointer text-sm py-1.5 px-3 text-center justify-center rounded-lg break-words"
                     onClick={() => toggleArrayItem('personalidade', option)}
                   >
                     {option}
