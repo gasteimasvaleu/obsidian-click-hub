@@ -59,9 +59,9 @@ const Login = () => {
       } else if (result.error) {
         toast.error(result.error);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Purchase error:', error);
-      toast.error('Erro ao processar a compra.');
+      toast.error(error?.message ?? 'Erro ao processar a compra.');
     } finally {
       setIsPurchasing(false);
     }

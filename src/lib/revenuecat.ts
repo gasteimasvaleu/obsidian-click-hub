@@ -66,14 +66,22 @@ export const purchaseMonthly = async (): Promise<{
 
   try {
     const { Purchases } = await import('@revenuecat/purchases-capacitor');
+    console.log('RevenueCat: SDK imported successfully');
 
     // Get available packages
     const offerings = await Purchases.getOfferings();
+    console.log('RevenueCat: Offerings received', JSON.stringify({
+      hasCurrentOffering: !!offerings?.current,
+      currentId: offerings?.current?.identifier,
+      packagesCount: offerings?.current?.availablePackages?.length ?? 0,
+      productIds: offerings?.current?.availablePackages?.map(p => p.product?.identifier) ?? [],
+    }));
 
     if (!offerings?.current?.availablePackages?.length) {
+      console.error('RevenueCat: No packages available. Full offerings:', JSON.stringify(offerings));
       return {
         success: false,
-        error: 'Nenhum plano disponível no momento. Tente novamente mais tarde.',
+        error: `Nenhum plano disponível. Offering: ${offerings?.current?.identifier ?? 'null'}, Pacotes: ${offerings?.current?.availablePackages?.length ?? 0}`,
       };
     }
 
@@ -82,6 +90,12 @@ export const purchaseMonthly = async (): Promise<{
       offerings.current.availablePackages.find(
         (pkg) => pkg.product?.identifier === PRODUCT_ID
       ) || offerings.current.availablePackages[0];
+
+    console.log('RevenueCat: Selected package', JSON.stringify({
+      productId: monthlyPackage.product?.identifier,
+      packageType: monthlyPackage.packageType,
+      price: monthlyPackage.product?.priceString,
+    }));
 
     const { customerInfo } = await Purchases.purchasePackage({
       aPackage: monthlyPackage,
@@ -103,10 +117,15 @@ export const purchaseMonthly = async (): Promise<{
     if (error?.code === 1 || error?.message?.includes('cancel')) {
       return { success: false, error: 'cancelled' };
     }
-    console.error('RevenueCat: Purchase failed', error);
+    console.error('RevenueCat: Purchase failed', JSON.stringify({
+      code: error?.code,
+      message: error?.message,
+      underlyingErrorMessage: error?.underlyingErrorMessage,
+      full: JSON.stringify(error),
+    }));
     return {
       success: false,
-      error: 'Erro ao processar a compra. Tente novamente.',
+      error: `Erro [${error?.code ?? '?'}]: ${error?.message ?? error?.underlyingErrorMessage ?? 'Erro desconhecido'}`,
     };
   }
 };
