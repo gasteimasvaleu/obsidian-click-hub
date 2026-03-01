@@ -1,21 +1,14 @@
 
 
-## Corrigir padding da pagina Index
+## Subir o menu tubelight inferior
 
 ### Problema
-1. **Topo**: O primeiro card (video) fica atras da navbar fixa. O `pt-12` atual nao eh suficiente para compensar a altura da navbar + safe-area-inset-top.
-2. **Inferior**: O menu tubelight aparece cortado porque o `pb-24` nao eh suficiente para o menu + safe-area-inset-bottom.
+O menu tubelight inferior esta sendo cortado pela safe area do iOS.
 
 ### Solucao
-Ajustar apenas o padding do container principal em `src/pages/Index.tsx`:
+Aumentar o `mb-2` para `mb-6` no componente `NavBar` em `src/components/ui/tubelight-navbar.tsx` (linha 46), para que o menu fique mais acima e nao seja cortado pela safe area.
 
-- **Padding superior**: Trocar `pt-12` (do wrapper do video) para algo maior como `pt-20`, garantindo que o conteudo comece abaixo da navbar fixa.
-- **Padding inferior**: Trocar `pb-24` para `pb-32` ou `pb-36`, garantindo espaco suficiente para o menu tubelight + safe area.
+### Alteracao
+**Arquivo: `src/components/ui/tubelight-navbar.tsx`**
+- Linha 46: Trocar `mb-2` por `mb-6` na classe do container fixo do menu.
 
-### Alteracoes
-
-**Arquivo: `src/pages/Index.tsx`**
-- Linha 59: Alterar `pb-24` para `pb-36` no container principal
-- Linha 62: Alterar `pt-12` para `pt-20` no wrapper do video
-
-Apenas 2 valores de classe CSS serao modificados, sem alterar navbar nem menu.
