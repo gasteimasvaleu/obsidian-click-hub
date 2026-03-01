@@ -1,42 +1,40 @@
 
 
-## Resolver Rejeicao Apple: Dialog de Consentimento de IA
+## Corrigir fluxo de cadastro pos-compra RevenueCat
 
-O app precisa pedir permissao ao usuario antes de enviar dados para servicos de IA, conforme exigido pela Apple (Guidelines 5.1.1 e 5.1.2).
+O botao de App Store no Login ja esta integrado com o RevenueCat e funciona corretamente no app nativo. Porem, apos a compra bem-sucedida, o usuario e redirecionado para `/cadastro?source=revenuecat`, que atualmente mostra "Link Invalido" porque a pagina so aceita tokens do Hotmart.
 
-### O que sera feito
+Precisamos adicionar um fluxo de cadastro direto para usuarios que vieram do RevenueCat.
 
-**1. Criar componente `AIConsentDialog`**
+### Arquivo: `src/pages/Cadastro.tsx`
 
-Um dialog reutilizavel que explica:
-- Quais dados serao enviados (mensagens, fotos, informacoes do formulario)
-- Para quem (servicos de inteligencia artificial do Google, via servidores seguros)
-- Que os dados sao usados apenas para gerar o conteudo e nao sao armazenados
+**Mudancas:**
 
-O consentimento sera salvo no `localStorage` (`ai_consent_accepted`). O dialog so aparece uma vez.
+1. Detectar o parametro `source=revenuecat` no useEffect inicial
+2. Quando `source=revenuecat`, mostrar um formulario de cadastro direto (sem token) com campos: email, nome, telefone, senha, confirmar senha
+3. No submit, usar `signUp` do AuthContext (que ja cria o usuario no Supabase com perfil automatico via trigger `handle_new_user`)
+4. Apos o cadastro, o `identifyUser` no AuthContext sincroniza automaticamente o ID com o RevenueCat
+5. O webhook do RevenueCat vai atualizar a tabela `subscribers` quando receber o evento de compra
 
-**2. Criar hook `useAIConsent`**
+### Detalhes tecnicos
 
-Hook simples que retorna `{ hasConsent, showConsent, setShowConsent, acceptConsent }` para facilitar a integracao nos componentes.
+No `useEffect`, adicionar verificacao:
+```
+if (searchParams.get('source') === 'revenuecat') {
+  setTokenStatus('revenuecat');
+}
+```
 
-**3. Integrar nos 4 pontos que usam IA**
+Adicionar novo case `'revenuecat'` no `renderContent()` com formulario completo (email, nome, telefone, senha). O submit usara `signUp` do AuthContext em vez da edge function `complete-signup`.
 
-| Arquivo | Gatilho |
-|---|---|
-| `ChatInterface.tsx` | Antes de enviar a primeira mensagem |
-| `GuiaPais.tsx` | Antes de gerar o guia |
-| `VerseCard.tsx` | Antes de gerar comentario teologico |
-| `PhotoTransformPage.tsx` | Antes de enviar a foto |
+Adicionar `'revenuecat'` ao tipo `TokenStatus`.
 
-Em cada caso: se o usuario ainda nao aceitou, abre o dialog. Apos aceitar, executa a acao normalmente.
+### Resultado
 
-**4. Corrigir erro de build**
-
-Adicionar script `"build:dev": "vite build"` no `package.json` para resolver o erro `Script not found "build:dev"`.
-
----
-
-### Nao sera feito (conforme solicitado)
-
-- Atualizar politica de privacidade na pagina Sobre (ja feito externamente)
-
+O fluxo completo sera:
+1. Usuario clica "App Store" no Login
+2. RevenueCat abre a tela de compra nativa da Apple
+3. Compra confirmada -> redireciona para `/cadastro?source=revenuecat`
+4. Usuario preenche email, nome e senha
+5. Conta criada no Supabase -> `identifyUser` sincroniza com RevenueCat
+6. Webhook do RevenueCat atualiza `subscribers` com status ativo
