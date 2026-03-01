@@ -2,7 +2,7 @@ import { Capacitor } from '@capacitor/core';
 
 // RevenueCat API key (publishable - safe in client code)
 const REVENUECAT_API_KEY = 'appl_rDJWtfWfVugefZjBugxiJIISOcR';
-const PRODUCT_ID = 'com.bibliatoon.mensal';
+const PRODUCT_ID = 'BIBLIATOONKIDS2';
 
 /**
  * Check if we're running on a native platform (iOS/Android)
