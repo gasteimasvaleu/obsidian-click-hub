@@ -9,6 +9,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { useAIConsent } from "@/hooks/useAIConsent";
+import { AIConsentDialog } from "@/components/AIConsentDialog";
 
 interface VerseCardProps {
   verse: {
@@ -30,6 +32,7 @@ export default function VerseCard({ verse, bookName, chapterNumber, isFavorite }
   const [showComment, setShowComment] = useState(false);
   const [comment, setComment] = useState<string | null>(verse.theological_comment || null);
   const [isLoadingComment, setIsLoadingComment] = useState(false);
+  const { showConsent, setShowConsent, acceptConsent, requireConsent } = useAIConsent();
 
   const reference = `${bookName} ${chapterNumber}:${verse.verse_number}`;
 
@@ -54,8 +57,7 @@ export default function VerseCard({ verse, bookName, chapterNumber, isFavorite }
     }
   };
 
-  const handleLoadComment = async () => {
-    // If already have comment, just toggle visibility
+  const doLoadComment = async () => {
     if (comment) {
       setShowComment(!showComment);
       return;
@@ -73,11 +75,6 @@ export default function VerseCard({ verse, bookName, chapterNumber, isFavorite }
 
       if (data?.comment) {
         setComment(data.comment);
-        if (data.cached) {
-          console.log('Comentário carregado do cache');
-        } else {
-          console.log('Novo comentário gerado');
-        }
       } else {
         throw new Error('Comentário não retornado');
       }
@@ -95,6 +92,21 @@ export default function VerseCard({ verse, bookName, chapterNumber, isFavorite }
     } finally {
       setIsLoadingComment(false);
     }
+  };
+
+  const handleLoadComment = () => {
+    if (comment) {
+      setShowComment(!showComment);
+      return;
+    }
+    requireConsent(() => {
+      doLoadComment();
+    });
+  };
+
+  const handleConsentAccepted = () => {
+    acceptConsent();
+    doLoadComment();
   };
 
   const toggleFavoriteMutation = useMutation({
@@ -177,7 +189,7 @@ export default function VerseCard({ verse, bookName, chapterNumber, isFavorite }
             ) : (
               <MessageSquareText size={16} className="mr-1" />
             )}
-            {comment ? 'Comentário' : 'Comentário'}
+            Comentário
             {showComment ? <ChevronUp size={14} className="ml-1" /> : <ChevronDown size={14} className="ml-1" />}
           </Button>
           
@@ -248,6 +260,12 @@ export default function VerseCard({ verse, bookName, chapterNumber, isFavorite }
           </div>
         </DialogContent>
       </Dialog>
+
+      <AIConsentDialog
+        open={showConsent}
+        onAccept={handleConsentAccepted}
+        onCancel={() => setShowConsent(false)}
+      />
     </>
   );
 }

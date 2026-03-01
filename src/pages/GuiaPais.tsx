@@ -4,6 +4,8 @@ import { GlassCard } from "@/components/GlassCard";
 import { ParentsGuideForm } from "@/components/guia-pais/ParentsGuideForm";
 import { GuideDisplay } from "@/components/guia-pais/GuideDisplay";
 import { useToast } from "@/hooks/use-toast";
+import { useAIConsent } from "@/hooks/useAIConsent";
+import { AIConsentDialog } from "@/components/AIConsentDialog";
 
 export interface FormData {
   nome: string;
@@ -69,8 +71,9 @@ const GuiaPais = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedGuide, setGeneratedGuide] = useState<Guide | null>(null);
   const { toast } = useToast();
+  const { showConsent, setShowConsent, acceptConsent, requireConsent } = useAIConsent();
 
-  const handleGenerateGuide = async () => {
+  const doGenerateGuide = async () => {
     setIsGenerating(true);
     
     try {
@@ -98,7 +101,6 @@ const GuiaPais = () => {
         description: "Seu guia está pronto para usar.",
       });
 
-      // Scroll suave para o topo
       window.scrollTo({ top: 0, behavior: 'smooth' });
       
     } catch (error) {
@@ -111,6 +113,17 @@ const GuiaPais = () => {
     } finally {
       setIsGenerating(false);
     }
+  };
+
+  const handleGenerateGuide = () => {
+    requireConsent(() => {
+      doGenerateGuide();
+    });
+  };
+
+  const handleConsentAccepted = () => {
+    acceptConsent();
+    doGenerateGuide();
   };
 
   const handleNewGuide = () => {
@@ -168,6 +181,12 @@ const GuiaPais = () => {
           )}
         </div>
       </div>
+
+      <AIConsentDialog
+        open={showConsent}
+        onAccept={handleConsentAccepted}
+        onCancel={() => setShowConsent(false)}
+      />
     </div>
   );
 };
