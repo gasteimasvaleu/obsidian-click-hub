@@ -1,23 +1,23 @@
 
 
-## Atualizar PRODUCT_ID para BIBLIATOONKIDS2
+## Incrementar versao do build para 28
 
-### Problema
-O Product ID no codigo (`com.bibliatoon.mensal`) nao corresponde ao produto configurado no RevenueCat (`BIBLIATOONKIDS2`).
+### Contexto
+O build anterior foi enviado com `CURRENT_PROJECT_VERSION = 27`. Para enviar um novo build ao App Store Connect, esse numero precisa ser incrementado.
 
 ### Mudanca
 
-**Arquivo:** `src/lib/revenuecat.ts` (linha 5)
+**Arquivo:** `ios/App/App.xcodeproj/project.pbxproj`
 
-Alterar de:
+Alterar `CURRENT_PROJECT_VERSION` de `27` para `28` em duas ocorrencias (configuracoes Debug e Release do target App):
+
 ```
-const PRODUCT_ID = 'com.bibliatoon.mensal';
+// Linha ~197 (Debug)
+CURRENT_PROJECT_VERSION = 28;
+
+// Linha ~218 (Release)  
+CURRENT_PROJECT_VERSION = 28;
 ```
 
-Para:
-```
-const PRODUCT_ID = 'BIBLIATOONKIDS2';
-```
-
-Uma unica linha. Nenhuma outra alteracao necessaria.
+Nenhuma outra alteracao necessaria. Apos isso, basta disparar o build no Appflow.
 
