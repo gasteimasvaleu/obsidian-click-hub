@@ -1,28 +1,21 @@
 
 
-## Corrigir Build Script que Falha no CI
+## Corrigir padding da pagina Index
 
 ### Problema
-O script `build` no `package.json` executa `pod install` como parte do processo, mas o ambiente de CI do Appflow nao tem CocoaPods instalado, causando o erro `sh: 1: pod: not found` (exit code 127).
-
-O build do Vite completa com sucesso - a falha e apenas no `pod install`.
+1. **Topo**: O primeiro card (video) fica atras da navbar fixa. O `pt-12` atual nao eh suficiente para compensar a altura da navbar + safe-area-inset-top.
+2. **Inferior**: O menu tubelight aparece cortado porque o `pb-24` nao eh suficiente para o menu + safe-area-inset-bottom.
 
 ### Solucao
+Ajustar apenas o padding do container principal em `src/pages/Index.tsx`:
 
-**Arquivo: `package.json`**
+- **Padding superior**: Trocar `pt-12` (do wrapper do video) para algo maior como `pt-20`, garantindo que o conteudo comece abaixo da navbar fixa.
+- **Padding inferior**: Trocar `pb-24` para `pb-32` ou `pb-36`, garantindo espaco suficiente para o menu tubelight + safe area.
 
-Separar o script de build em dois:
-- `build`: apenas `tsc && vite build` (usado pelo CI/Appflow e pelo Lovable)
-- `build:ios`: `tsc && vite build && cd ios/App && pod install && cd ../.. && node fix-signing.cjs` (usado localmente quando for fazer build iOS)
+### Alteracoes
 
-Alterar a linha 8:
-```json
-"build": "tsc && vite build",
-"build:ios": "tsc && vite build && cd ios/App && pod install && cd ../.. && node fix-signing.cjs",
-```
+**Arquivo: `src/pages/Index.tsx`**
+- Linha 59: Alterar `pb-24` para `pb-36` no container principal
+- Linha 62: Alterar `pt-12` para `pt-20` no wrapper do video
 
-### Resultado
-O build no Appflow passara sem erros, pois usara apenas `npm run build` que agora nao inclui `pod install`. Quando precisar fazer build iOS local, use `npm run build:ios`.
-
-### Nota
-O `fix-signing.cjs` tambem e removido do build padrao pois so e relevante para builds iOS. O hook `cap-sync-after` no `capacitor.config.json` ja executa `fix-signing.cjs` automaticamente quando `npx cap sync` e rodado.
+Apenas 2 valores de classe CSS serao modificados, sem alterar navbar nem menu.
