@@ -60,7 +60,7 @@ export const GuideDisplay = ({ guide, formData, onNewGuide }: GuideDisplayProps)
       {/* Seções Expandíveis */}
       <Accordion type="multiple" defaultValue={["contexto", "objetivos"]} className="space-y-4">
         {/* Contexto da Passagem */}
-        <AccordionItem value="contexto" className="glass neon-glow border-0 rounded-lg px-6">
+        <AccordionItem value="contexto" className="glass neon-glow border-0 rounded-lg px-3 sm:px-6 overflow-hidden">
           <AccordionTrigger className="hover:no-underline">
             <div className="flex items-center gap-2">
               <BookOpen className="w-5 h-5 text-primary" />
@@ -73,7 +73,7 @@ export const GuideDisplay = ({ guide, formData, onNewGuide }: GuideDisplayProps)
         </AccordionItem>
 
         {/* Objetivos */}
-        <AccordionItem value="objetivos" className="glass neon-glow border-0 rounded-lg px-6">
+        <AccordionItem value="objetivos" className="glass neon-glow border-0 rounded-lg px-3 sm:px-6 overflow-hidden">
           <AccordionTrigger className="hover:no-underline">
             <div className="flex items-center gap-2">
               <Target className="w-5 h-5 text-primary" />
@@ -93,7 +93,7 @@ export const GuideDisplay = ({ guide, formData, onNewGuide }: GuideDisplayProps)
         </AccordionItem>
 
         {/* Roteiro de Conversa */}
-        <AccordionItem value="roteiro" className="glass neon-glow border-0 rounded-lg px-6">
+        <AccordionItem value="roteiro" className="glass neon-glow border-0 rounded-lg px-3 sm:px-6 overflow-hidden">
           <AccordionTrigger className="hover:no-underline">
             <div className="flex items-center gap-2">
               <MessageCircle className="w-5 h-5 text-primary" />
@@ -105,9 +105,9 @@ export const GuideDisplay = ({ guide, formData, onNewGuide }: GuideDisplayProps)
               {guide.roteiro_conversa.map((passo) => (
                 <Card key={passo.passo} className="border-border/50">
                   <CardHeader className="pb-3">
-                    <CardTitle className="text-base flex items-center justify-between">
-                      <span>Passo {passo.passo}: {passo.titulo}</span>
-                      <Badge variant="secondary">{passo.tempo_estimado}</Badge>
+                    <CardTitle className="text-base flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
+                      <span className="break-words">Passo {passo.passo}: {passo.titulo}</span>
+                      <Badge variant="secondary" className="shrink-0 w-fit">{passo.tempo_estimado}</Badge>
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
@@ -120,7 +120,7 @@ export const GuideDisplay = ({ guide, formData, onNewGuide }: GuideDisplayProps)
         </AccordionItem>
 
         {/* Atividades Práticas */}
-        <AccordionItem value="atividades" className="glass neon-glow border-0 rounded-lg px-6">
+        <AccordionItem value="atividades" className="glass neon-glow border-0 rounded-lg px-3 sm:px-6 overflow-hidden">
           <AccordionTrigger className="hover:no-underline">
             <div className="flex items-center gap-2">
               <Palette className="w-5 h-5 text-primary" />
@@ -132,9 +132,9 @@ export const GuideDisplay = ({ guide, formData, onNewGuide }: GuideDisplayProps)
               {guide.atividades_praticas.map((atividade, idx) => (
                 <Card key={idx} className="border-border/50">
                   <CardHeader className="pb-3">
-                    <CardTitle className="text-base flex items-center justify-between">
-                      <span>{atividade.titulo}</span>
-                      <Badge variant="secondary">{atividade.duracao}</Badge>
+                    <CardTitle className="text-base flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
+                      <span className="break-words">{atividade.titulo}</span>
+                      <Badge variant="secondary" className="shrink-0 w-fit">{atividade.duracao}</Badge>
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-2">
@@ -155,7 +155,7 @@ export const GuideDisplay = ({ guide, formData, onNewGuide }: GuideDisplayProps)
         </AccordionItem>
 
         {/* Frases Prontas */}
-        <AccordionItem value="frases" className="glass neon-glow border-0 rounded-lg px-6">
+        <AccordionItem value="frases" className="glass neon-glow border-0 rounded-lg px-3 sm:px-6 overflow-hidden">
           <AccordionTrigger className="hover:no-underline">
             <div className="flex items-center gap-2">
               <Lightbulb className="w-5 h-5 text-primary" />
@@ -195,7 +195,7 @@ export const GuideDisplay = ({ guide, formData, onNewGuide }: GuideDisplayProps)
         </AccordionItem>
 
         {/* Desafios e Soluções */}
-        <AccordionItem value="desafios" className="glass neon-glow border-0 rounded-lg px-6">
+        <AccordionItem value="desafios" className="glass neon-glow border-0 rounded-lg px-3 sm:px-6 overflow-hidden">
           <AccordionTrigger className="hover:no-underline">
             <div className="flex items-center gap-2">
               <AlertTriangle className="w-5 h-5 text-primary" />
@@ -221,7 +221,7 @@ export const GuideDisplay = ({ guide, formData, onNewGuide }: GuideDisplayProps)
         </AccordionItem>
 
         {/* Plano de Reforço */}
-        <AccordionItem value="reforco" className="glass neon-glow border-0 rounded-lg px-6">
+        <AccordionItem value="reforco" className="glass neon-glow border-0 rounded-lg px-3 sm:px-6 overflow-hidden">
           <AccordionTrigger className="hover:no-underline">
             <div className="flex items-center gap-2">
               <Calendar className="w-5 h-5 text-primary" />
@@ -255,7 +255,7 @@ export const GuideDisplay = ({ guide, formData, onNewGuide }: GuideDisplayProps)
         </AccordionItem>
 
         {/* Recursos Extras */}
-        <AccordionItem value="recursos" className="glass neon-glow border-0 rounded-lg px-6">
+        <AccordionItem value="recursos" className="glass neon-glow border-0 rounded-lg px-3 sm:px-6 overflow-hidden">
           <AccordionTrigger className="hover:no-underline">
             <div className="flex items-center gap-2">
               <BookMarked className="w-5 h-5 text-primary" />
@@ -282,7 +282,7 @@ export const GuideDisplay = ({ guide, formData, onNewGuide }: GuideDisplayProps)
         </AccordionItem>
 
         {/* Dicas Personalizadas */}
-        <AccordionItem value="dicas" className="glass neon-glow border-0 rounded-lg px-6">
+        <AccordionItem value="dicas" className="glass neon-glow border-0 rounded-lg px-3 sm:px-6 overflow-hidden">
           <AccordionTrigger className="hover:no-underline">
             <div className="flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-primary" />
