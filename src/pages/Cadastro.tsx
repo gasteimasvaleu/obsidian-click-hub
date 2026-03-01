@@ -9,7 +9,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { Loader2, CheckCircle, XCircle, AlertTriangle, Mail, ShieldCheck } from 'lucide-react';
 
-type TokenStatus = 'loading' | 'valid' | 'invalid' | 'expired' | 'success' | 'admin-mode';
+type TokenStatus = 'loading' | 'valid' | 'invalid' | 'expired' | 'success' | 'admin-mode' | 'revenuecat';
 
 interface SubscriberData {
   email: string;
@@ -20,7 +20,7 @@ interface SubscriberData {
 const Cadastro = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { user, isAdmin, loading: authLoading } = useAuth();
+  const { user, isAdmin, loading: authLoading, signUp } = useAuth();
   const [tokenStatus, setTokenStatus] = useState<TokenStatus>('loading');
   const [subscriberData, setSubscriberData] = useState<SubscriberData | null>(null);
   const [expiredEmail, setExpiredEmail] = useState<string>('');
@@ -34,6 +34,12 @@ const Cadastro = () => {
     // If there's a token, use the normal flow
     if (token) {
       validateToken(token);
+      return;
+    }
+
+    // Check if coming from RevenueCat purchase
+    if (searchParams.get('source') === 'revenuecat') {
+      setTokenStatus('revenuecat');
       return;
     }
 
@@ -108,6 +114,45 @@ const Cadastro = () => {
     } catch (error: any) {
       console.error('Error creating user:', error);
       toast.error(error.message || 'Erro ao criar usuário');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleRevenueCatSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    const formData = new FormData(e.currentTarget);
+    const email = formData.get('email') as string;
+    const fullName = formData.get('fullName') as string;
+    const phone = formData.get('phone') as string;
+    const password = formData.get('password') as string;
+    const confirmPassword = formData.get('confirmPassword') as string;
+
+    if (password !== confirmPassword) {
+      toast.error('As senhas não coincidem');
+      setIsLoading(false);
+      return;
+    }
+
+    if (password.length < 6) {
+      toast.error('A senha deve ter pelo menos 6 caracteres');
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      const { error } = await signUp(email, password, fullName, phone);
+
+      if (!error) {
+        setTokenStatus('success');
+        toast.success('Conta criada com sucesso!');
+        setTimeout(() => navigate('/download'), 3000);
+      }
+    } catch (error: any) {
+      console.error('Error completing RevenueCat signup:', error);
+      toast.error('Erro ao criar conta. Tente novamente.');
     } finally {
       setIsLoading(false);
     }
@@ -302,6 +347,92 @@ const Cadastro = () => {
           </div>
         );
 
+      case 'revenuecat':
+        return (
+          <form onSubmit={handleRevenueCatSubmit} className="space-y-4">
+            <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-3">
+              <p className="text-green-400 text-sm flex items-start gap-2">
+                <CheckCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                <span>
+                  Compra realizada com sucesso! Complete seu cadastro para acessar o app.
+                </span>
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                placeholder="Seu email"
+                required
+                disabled={isLoading}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="fullName">Nome Completo</Label>
+              <Input
+                id="fullName"
+                name="fullName"
+                type="text"
+                placeholder="Seu nome completo"
+                required
+                disabled={isLoading}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="phone">Telefone (opcional)</Label>
+              <Input
+                id="phone"
+                name="phone"
+                type="tel"
+                placeholder="(11) 99999-9999"
+                disabled={isLoading}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="password">Senha</Label>
+              <Input
+                id="password"
+                name="password"
+                type="password"
+                placeholder="Mínimo 6 caracteres"
+                required
+                minLength={6}
+                disabled={isLoading}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="confirmPassword">Confirmar Senha</Label>
+              <Input
+                id="confirmPassword"
+                name="confirmPassword"
+                type="password"
+                placeholder="Confirme sua senha"
+                required
+                minLength={6}
+                disabled={isLoading}
+              />
+            </div>
+
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Criando conta...
+                </>
+              ) : (
+                'Criar Conta'
+              )}
+            </Button>
+          </form>
+        );
+
       case 'valid':
         return (
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -396,9 +527,9 @@ const Cadastro = () => {
       <Card className="w-full max-w-md glass border-primary/20">
         <CardHeader className="text-center">
           <CardTitle className="text-3xl font-bold bg-gradient-to-r from-primary via-primary-glow to-primary bg-clip-text text-transparent">
-            {tokenStatus === 'valid' ? 'Complete seu Cadastro' : tokenStatus === 'admin-mode' ? 'Cadastrar Usuário' : 'Cadastro'}
+            {tokenStatus === 'valid' || tokenStatus === 'revenuecat' ? 'Complete seu Cadastro' : tokenStatus === 'admin-mode' ? 'Cadastrar Usuário' : 'Cadastro'}
           </CardTitle>
-          {tokenStatus === 'valid' && (
+          {(tokenStatus === 'valid' || tokenStatus === 'revenuecat') && (
             <CardDescription className="text-muted-foreground">
               Defina sua senha para acessar a plataforma
             </CardDescription>
