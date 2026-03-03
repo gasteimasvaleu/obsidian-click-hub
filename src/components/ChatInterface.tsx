@@ -1,12 +1,15 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Send, Loader2 } from "lucide-react";
+import { ArrowLeft, Send, Loader2, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
 import { useAIConsent } from "@/hooks/useAIConsent";
 import { AIConsentDialog } from "@/components/AIConsentDialog";
+import { FuturisticNavbar } from "@/components/FuturisticNavbar";
+import { GlassCard } from "@/components/GlassCard";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 interface Message {
   role: "user" | "assistant";
@@ -23,7 +26,6 @@ export const ChatInterface = () => {
   const { showConsent, setShowConsent, acceptConsent, requireConsent } = useAIConsent();
   const pendingMessageRef = useRef<string | null>(null);
 
-  // Auto scroll to bottom when new messages arrive
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollIntoView({ behavior: "smooth" });
@@ -42,12 +44,9 @@ export const ChatInterface = () => {
         body: JSON.stringify({ message }),
       });
 
-      if (!response.ok) {
-        throw new Error("Falha ao comunicar com o servidor");
-      }
+      if (!response.ok) throw new Error("Falha ao comunicar com o servidor");
 
       const responseText = await response.text();
-
       let assistantContent: string;
       try {
         const data = JSON.parse(responseText);
@@ -56,12 +55,10 @@ export const ChatInterface = () => {
         assistantContent = responseText;
       }
 
-      const assistantMessage: Message = {
+      setMessages((prev) => [...prev, {
         role: "assistant",
         content: assistantContent || "Desculpe, não consegui processar sua mensagem.",
-      };
-
-      setMessages((prev) => [...prev, assistantMessage]);
+      }]);
     } catch (error) {
       console.error("Error sending message:", error);
       toast({
@@ -78,12 +75,7 @@ export const ChatInterface = () => {
     if (!input.trim() || isLoading) return;
     const message = input;
     setInput("");
-    
-    requireConsent(() => {
-      doSendMessage(message);
-    });
-
-    // If consent needed, store pending message
+    requireConsent(() => { doSendMessage(message); });
     if (!localStorage.getItem("ai_consent_accepted")) {
       pendingMessageRef.current = message;
     }
@@ -110,10 +102,12 @@ export const ChatInterface = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black flex flex-col">
-      {/* Header */}
-      <header className="sticky top-0 z-50 backdrop-blur-lg bg-black/50 border-b border-primary/20">
-        <div className="container mx-auto px-4 py-4 flex items-center gap-4">
+    <div className="min-h-screen bg-background flex flex-col">
+      <FuturisticNavbar />
+
+      {/* Sub-header com botão voltar */}
+      <div className="sticky top-14 z-40 backdrop-blur-lg bg-background/50 border-b border-primary/20">
+        <div className="container mx-auto px-4 py-3 flex items-center gap-3">
           <Button
             variant="ghost"
             size="icon"
@@ -122,53 +116,75 @@ export const ChatInterface = () => {
           >
             <ArrowLeft className="h-5 w-5" />
           </Button>
-          <h1 className="text-base font-bold text-primary">
-            Amigo Divino - Orientador Espiritual
-          </h1>
+          <div className="flex items-center gap-2">
+            <Avatar className="h-8 w-8 border border-primary/30">
+              <AvatarFallback className="bg-primary/20 text-primary text-xs">
+                <Sparkles className="h-4 w-4" />
+              </AvatarFallback>
+            </Avatar>
+            <h1 className="text-sm font-bold text-primary">Amigo Divino</h1>
+          </div>
         </div>
-      </header>
+      </div>
 
-      {/* Messages Area */}
+      {/* Chat area */}
       <ScrollArea className="flex-1 p-4">
-        <div className="container mx-auto max-w-4xl space-y-4">
-          {messages.length === 0 && (
-            <div className="text-center py-12 text-muted-foreground">
-              <p className="text-lg">Olá! Como posso ajudá-lo em sua jornada espiritual hoje?</p>
-            </div>
-          )}
-
-          {messages.map((message, index) => (
-            <div
-              key={index}
-              className={`flex ${message.role === "user" ? "justify-end" : "justify-start"} animate-fade-in`}
-            >
-              <div
-                className={`max-w-[80%] p-4 rounded-lg ${
-                  message.role === "user"
-                    ? "bg-primary/20 border border-primary/40 text-white ml-auto"
-                    : "backdrop-blur-lg bg-white/5 border border-white/10 text-foreground"
-                }`}
-              >
-                <p className="whitespace-pre-wrap">{message.content}</p>
+        <div className="container mx-auto max-w-2xl">
+          <GlassCard className="min-h-[50vh] p-4">
+            {messages.length === 0 && (
+              <div className="text-center py-12 text-muted-foreground">
+                <Sparkles className="h-10 w-10 mx-auto mb-4 text-primary/60" />
+                <p className="text-base">Olá! Como posso ajudá-lo em sua jornada espiritual hoje?</p>
               </div>
-            </div>
-          ))}
+            )}
 
-          {isLoading && (
-            <div className="flex justify-start animate-fade-in">
-              <div className="backdrop-blur-lg bg-white/5 border border-white/10 p-4 rounded-lg">
-                <p className="text-muted-foreground italic">Digitando...</p>
-              </div>
-            </div>
-          )}
+            <div className="space-y-4">
+              {messages.map((message, index) => (
+                <div
+                  key={index}
+                  className={`flex gap-2 ${message.role === "user" ? "justify-end" : "justify-start"} animate-fade-in`}
+                >
+                  {message.role === "assistant" && (
+                    <Avatar className="h-7 w-7 mt-1 shrink-0 border border-primary/30">
+                      <AvatarFallback className="bg-primary/20 text-primary text-[10px]">
+                        <Sparkles className="h-3.5 w-3.5" />
+                      </AvatarFallback>
+                    </Avatar>
+                  )}
+                  <div
+                    className={`max-w-[80%] p-3 rounded-2xl text-sm ${
+                      message.role === "user"
+                        ? "bg-primary/20 border border-primary/40 text-foreground"
+                        : "bg-muted/50 border border-border text-foreground"
+                    }`}
+                  >
+                    <p className="whitespace-pre-wrap">{message.content}</p>
+                  </div>
+                </div>
+              ))}
 
-          <div ref={scrollRef} />
+              {isLoading && (
+                <div className="flex gap-2 justify-start animate-fade-in">
+                  <Avatar className="h-7 w-7 mt-1 shrink-0 border border-primary/30">
+                    <AvatarFallback className="bg-primary/20 text-primary text-[10px]">
+                      <Sparkles className="h-3.5 w-3.5" />
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="bg-muted/50 border border-border p-3 rounded-2xl">
+                    <p className="text-muted-foreground italic text-sm">Digitando...</p>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div ref={scrollRef} />
+          </GlassCard>
         </div>
       </ScrollArea>
 
-      {/* Input Area */}
-      <div className="sticky bottom-0 backdrop-blur-lg bg-black/50 border-t border-primary/20 pb-20">
-        <div className="container mx-auto max-w-4xl p-4">
+      {/* Input fixo no bottom com pb-36 para não ficar atrás do tubelight */}
+      <div className="sticky bottom-0 backdrop-blur-lg bg-background/80 border-t border-primary/20 pb-36">
+        <div className="container mx-auto max-w-2xl p-4">
           <div className="flex gap-2">
             <Input
               value={input}
@@ -176,7 +192,7 @@ export const ChatInterface = () => {
               onKeyPress={handleKeyPress}
               placeholder="Digite sua mensagem..."
               disabled={isLoading}
-              className="flex-1 bg-white/5 border-white/10 text-foreground placeholder:text-muted-foreground focus:border-primary/40"
+              className="flex-1 bg-muted/30 border-border text-foreground placeholder:text-muted-foreground focus:border-primary/40"
             />
             <Button
               onClick={handleSendMessage}
