@@ -102,12 +102,12 @@ export const ChatInterface = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col pt-28">
       <FuturisticNavbar />
 
       {/* Sub-header com botão voltar */}
-      <div className="sticky top-14 z-40 backdrop-blur-lg bg-background/50 border-b border-primary/20">
-        <div className="container mx-auto px-4 py-3 flex items-center gap-3">
+      <div className="fixed top-14 left-0 right-0 z-40 backdrop-blur-lg bg-background/50 border-b border-primary/20">
+        <div className="px-4 py-3 flex items-center gap-3">
           <Button
             variant="ghost"
             size="icon"
@@ -128,9 +128,9 @@ export const ChatInterface = () => {
       </div>
 
       {/* Chat area */}
-      <ScrollArea className="flex-1 p-4">
-        <div className="container mx-auto max-w-2xl">
-          <GlassCard className="min-h-[50vh] p-4">
+      <ScrollArea className="flex-1 px-2">
+        <div className="max-w-3xl mx-auto">
+          <GlassCard className="min-h-[50vh] p-3">
             {messages.length === 0 && (
               <div className="text-center py-12 text-muted-foreground">
                 <Sparkles className="h-10 w-10 mx-auto mb-4 text-primary/60" />
@@ -184,7 +184,7 @@ export const ChatInterface = () => {
 
       {/* Input fixo no bottom com pb-36 para não ficar atrás do tubelight */}
       <div className="sticky bottom-0 backdrop-blur-lg bg-background/80 border-t border-primary/20 pb-36">
-        <div className="container mx-auto max-w-2xl p-4">
+        <div className="max-w-3xl mx-auto px-2 pt-4">
           <div className="flex gap-2">
             <Input
               value={input}
