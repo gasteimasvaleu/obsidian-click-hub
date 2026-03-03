@@ -1,18 +1,17 @@
 
 
-## Plano: Melhorar UX do Chat do Amigo Divino
+## Plano: Corrigir layout do Chat do Amigo Divino
 
-### Mudanças no `src/components/ChatInterface.tsx`:
+### Problemas identificados:
+1. O GlassCard do chat fica cortado atrás da barra "Amigo Divino" (sub-header sticky)
+2. Muito espaço lateral reduzindo a area util do chat
+3. Input parcialmente escondido pelo tubelight menu
 
-1. **Adicionar FuturisticNavbar** no topo da página (substituindo o header custom atual)
-2. **Envolver as mensagens em um GlassCard** para dar mais identidade visual
-3. **Aumentar o padding inferior** da área de input para `pb-36` (compatível com o tubelight navbar `mb-9`)
-4. **Manter o botão de voltar** integrado ao header, mas agora junto com a navbar
-5. **Adicionar avatar/ícone** nas mensagens do assistente para melhorar a experiência visual
+### Mudancas no `src/components/ChatInterface.tsx`:
 
-### Estrutura final:
-- `FuturisticNavbar` no topo
-- Header com título "Amigo Divino" e botão voltar
-- Área de mensagens dentro de um `GlassCard`
-- Input fixo no bottom com `pb-36` para não ficar atrás do tubelight menu
+1. **Adicionar `pt-28`** ao container principal do chat para compensar a navbar (top-0) + sub-header (top-14) ambos fixos/sticky
+2. **Reduzir padding lateral** - trocar `p-4` por `px-2` no ScrollArea e remover `container mx-auto` desnecessario para usar a largura toda
+3. **Reduzir padding do GlassCard** - de `p-4` para `p-3` para ganhar mais espaco interno
+4. **Ajustar max-width** - remover ou aumentar `max-w-2xl` para aproveitar mais a tela
+5. **Manter `pb-36`** no input area (ja esta correto para o tubelight)
 
