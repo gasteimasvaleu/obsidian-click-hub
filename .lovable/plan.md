@@ -1,35 +1,49 @@
 
 
-## Plano: Alinhar versão Android com iOS
+## Plano: Corrigir build Android sem afetar iOS
 
-### Versões atuais
+### Problema
+O build Android falha em `mergeDexRelease` com 4 erros — classes duplicadas vindas do `amazon-appstore-sdk` que é dependência transitiva do RevenueCat.
 
-| Plataforma | Version Name | Version Code / Build |
-|-----------|-------------|---------------------|
-| iOS       | 1.0         | 28                  |
-| Android   | 2.0         | 2                   |
+### Abordagem
+Editar **apenas** o arquivo `android/app/build.gradle` para:
 
-### O que fazer
+1. Adicionar `multiDexEnabled true` no `defaultConfig`
+2. Adicionar `packagingOptions` para excluir META-INF duplicados
+3. Sobrescrever a dependência do RevenueCat (que vem do `capacitor.build.gradle` gerado) com uma versão que exclui o Amazon SDK
 
-**No código (eu faço):**
-- Alterar `android/app/build.gradle`:
-  - `versionCode 2` → `versionCode 28`
-  - `versionName "2.0"` → `versionName "1.0"`
+### Mudanças
 
-Isso alinha o Android com o iOS: **versão 1.0, build 28**.
+**Arquivo: `android/app/build.gradle`** (único arquivo alterado)
 
-**No Android Studio (você NÃO precisa alterar manualmente):**
-- O Android Studio lê o `build.gradle` automaticamente. Depois do `git pull` e `npx cap sync android`, ao abrir o projeto no Android Studio ele já vai pegar a versão correta.
-- Basta gerar o AAB (Build → Generate Signed Bundle) e enviar.
+```groovy
+defaultConfig {
+    ...
+    multiDexEnabled true   // ← adicionar
+}
 
-**Importante:** Como o Google Play já recebeu `versionCode 2`, o novo `versionCode 28` é maior, então será aceito sem problemas. O Google exige apenas que o versionCode seja **maior** que o anterior.
+// Adicionar bloco packaging:
+packaging {
+    resources {
+        excludes += ['META-INF/DEPENDENCIES', 'META-INF/LICENSE', 'META-INF/LICENSE.txt', 'META-INF/NOTICE', 'META-INF/NOTICE.txt']
+    }
+}
+```
 
-### Resumo de todas as mudanças planejadas (incluindo o plano anterior)
+E no bloco `dependencies`, adicionar a exclusão do Amazon SDK **antes** do `apply from: 'capacitor.build.gradle'` para que a configuração do módulo RevenueCat exclua o Amazon SDK:
 
-1. **`src/lib/revenuecat.ts`** — Desabilitar RevenueCat no Android
-2. **`android/app/build.gradle`** — versionCode 28, versionName "1.0"
-3. **`src/pages/PoliticaFamilia.tsx`** — Nova página de Política de Família
-4. **`src/pages/Index.tsx`** — Link para a página de política
-5. **`src/App.tsx`** — Registrar rota `/politica-familia`
-6. **`src/pages/Login.tsx`** — Ajustar botões de assinatura por plataforma
+```groovy
+configurations.all {
+    exclude group: 'com.amazon.device', module: 'amazon-appstore-sdk'
+}
+```
+
+### O que NÃO será alterado
+- Nenhum arquivo iOS
+- Nenhum arquivo em `src/` (código TypeScript)
+- O `capacitor.build.gradle` e `capacitor.settings.gradle` continuam intactos (são gerados pelo `cap sync`)
+- O RevenueCat continua instalado e funcionando no iOS normalmente
+
+### Após a mudança
+Rodar novamente: `Build > Generate Signed Bundle (AAB)` no Android Studio.
 
