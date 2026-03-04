@@ -35,6 +35,7 @@ import DevotionalsManager from "./pages/admin/DevotionalsManager";
 import GuiaPais from "./pages/GuiaPais";
 import NotFound from "./pages/NotFound";
 import PoliticaFamilia from "./pages/PoliticaFamilia";
+import TermosDeUso from "./pages/TermosDeUso";
 import { ExternalFrame } from "./components/ExternalFrame";
 import { ChatInterface } from "./components/ChatInterface";
 import { ProtectedRoute } from "./components/admin/ProtectedRoute";
@@ -150,6 +151,7 @@ const App = () => {
                 <Route path="/cadastro" element={<Cadastro />} />
                 <Route path="/download" element={<DownloadPage />} />
                 <Route path="/politica-familia" element={<PoliticaFamilia />} />
+                <Route path="/termos-de-uso" element={<TermosDeUso />} />
                 <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
                 <Route path="/comunidade" element={<ProtectedRoute><Comunidade /></ProtectedRoute>} />
                 <Route path="/colorir" element={<ProtectedRoute><ColorirPage /></ProtectedRoute>} />
