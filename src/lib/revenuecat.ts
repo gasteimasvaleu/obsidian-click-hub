@@ -16,11 +16,29 @@ export const isNativePlatform = (): boolean => {
 };
 
 /**
- * Initialize RevenueCat SDK - only works on native platforms
+ * Get current platform: 'ios', 'android', or 'web'
+ */
+export const getPlatform = (): string => {
+  try {
+    return Capacitor.getPlatform();
+  } catch {
+    return 'web';
+  }
+};
+
+/**
+ * Check if RevenueCat is supported (iOS only for now)
+ */
+const isRevenueCatSupported = (): boolean => {
+  return isNativePlatform() && getPlatform() === 'ios';
+};
+
+/**
+ * Initialize RevenueCat SDK - only works on iOS
  */
 export const initRevenueCat = async (): Promise<void> => {
-  if (!isNativePlatform()) {
-    console.log('RevenueCat: Skipping init - not on native platform');
+  if (!isRevenueCatSupported()) {
+    console.log(`RevenueCat: Skipping init - platform: ${getPlatform()}`);
     return;
   }
 
@@ -37,7 +55,7 @@ export const initRevenueCat = async (): Promise<void> => {
  * Identify user in RevenueCat with their Supabase user ID
  */
 export const identifyUser = async (userId: string): Promise<void> => {
-  if (!isNativePlatform()) return;
+  if (!isRevenueCatSupported()) return;
 
   try {
     const { Purchases } = await import('@revenuecat/purchases-capacitor');
@@ -57,7 +75,14 @@ export const purchaseMonthly = async (): Promise<{
   expiresAt?: string;
   error?: string;
 }> => {
-  if (!isNativePlatform()) {
+  if (!isRevenueCatSupported()) {
+    const platform = getPlatform();
+    if (platform === 'android') {
+      return {
+        success: false,
+        error: 'Assinaturas via Google Play estarão disponíveis em breve!',
+      };
+    }
     return {
       success: false,
       error: 'Assinaturas só estão disponíveis no app nativo (iOS).',
@@ -137,7 +162,7 @@ export const checkSubscriptionStatus = async (): Promise<{
   isActive: boolean;
   expiresAt?: string;
 }> => {
-  if (!isNativePlatform()) {
+  if (!isRevenueCatSupported()) {
     return { isActive: false };
   }
 
