@@ -194,4 +194,28 @@ All colors MUST be HSL.
     animation-timing-function: ease-in-out;
     animation-iteration-count: infinite;
   }
+
+  /* Bouncing dots for chat typing indicator */
+  @keyframes bouncing-dot {
+    0%, 80%, 100% {
+      transform: translateY(0);
+      opacity: 0.4;
+    }
+    40% {
+      transform: translateY(-6px);
+      opacity: 1;
+    }
+  }
+
+  .bouncing-dot {
+    animation: bouncing-dot 1.2s ease-in-out infinite;
+  }
+
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 }
