@@ -185,3 +185,41 @@ export const checkSubscriptionStatus = async (): Promise<{
     return { isActive: false };
   }
 };
+
+/**
+ * Restore previously purchased subscriptions (required by Apple Guideline 3.1.1)
+ */
+export const restorePurchases = async (): Promise<{
+  success: boolean;
+  isActive: boolean;
+  expiresAt?: string;
+  error?: string;
+}> => {
+  if (!isRevenueCatSupported()) {
+    return { success: false, isActive: false, error: 'Restauração só está disponível no app nativo (iOS).' };
+  }
+
+  try {
+    const { Purchases } = await import('@revenuecat/purchases-capacitor');
+    const { customerInfo } = await Purchases.restorePurchases();
+
+    const entitlements = customerInfo?.entitlements?.active;
+    if (entitlements && Object.keys(entitlements).length > 0) {
+      const firstEntitlement = Object.values(entitlements)[0];
+      return {
+        success: true,
+        isActive: true,
+        expiresAt: firstEntitlement.expirationDate ?? undefined,
+      };
+    }
+
+    return { success: true, isActive: false };
+  } catch (error: any) {
+    console.error('RevenueCat: Failed to restore purchases', error);
+    return {
+      success: false,
+      isActive: false,
+      error: error?.message ?? 'Erro ao restaurar compras.',
+    };
+  }
+};

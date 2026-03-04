@@ -1,18 +1,19 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
-import { purchaseMonthly, isNativePlatform, getPlatform } from '@/lib/revenuecat';
+import { purchaseMonthly, restorePurchases, isNativePlatform, getPlatform } from '@/lib/revenuecat';
 import { supabase } from '@/integrations/supabase/client';
 import { Loader2 } from 'lucide-react';
 
 const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isPurchasing, setIsPurchasing] = useState(false);
+  const [isRestoring, setIsRestoring] = useState(false);
   const { signIn, user } = useAuth();
   const navigate = useNavigate();
 
@@ -52,7 +53,6 @@ const Login = () => {
 
       if (result.success) {
         toast.success('Assinatura realizada com sucesso!');
-        // Redirect to signup so user can create account linked to purchase
         navigate('/cadastro?source=revenuecat');
       } else if (result.error === 'cancelled') {
         // User cancelled, do nothing
@@ -66,6 +66,28 @@ const Login = () => {
       setIsPurchasing(false);
     }
   };
+
+  const handleRestorePurchases = async () => {
+    setIsRestoring(true);
+    try {
+      const result = await restorePurchases();
+
+      if (result.success && result.isActive) {
+        toast.success('Assinatura restaurada com sucesso! Faça login para continuar.');
+      } else if (result.success && !result.isActive) {
+        toast.info('Nenhuma assinatura ativa encontrada.');
+      } else if (result.error) {
+        toast.error(result.error);
+      }
+    } catch (error: any) {
+      console.error('Restore error:', error);
+      toast.error('Erro ao restaurar compras.');
+    } finally {
+      setIsRestoring(false);
+    }
+  };
+
+  const platform = getPlatform();
 
   return (
     <div className="min-h-screen bg-black flex items-center justify-center p-4 pb-24">
@@ -110,7 +132,7 @@ const Login = () => {
           <div className="space-y-3 pt-2">
             <p className="text-center text-sm text-muted-foreground">Assinar com:</p>
             <div className="flex gap-3">
-              {getPlatform() !== 'android' && (
+              {platform !== 'android' && (
                 <Button
                   variant="outline"
                   className="flex-1 h-12 gap-2 border-muted-foreground/30"
@@ -127,7 +149,7 @@ const Login = () => {
                   App Store
                 </Button>
               )}
-              {getPlatform() !== 'ios' && (
+              {platform === 'android' && (
                 <Button
                   variant="outline"
                   className="flex-1 h-12 gap-2 border-muted-foreground/30"
@@ -139,6 +161,54 @@ const Login = () => {
                   Google Play
                 </Button>
               )}
+            </div>
+
+            {/* Subscription info - required by Apple Guideline 3.1.2(c) */}
+            <div className="text-center space-y-1 pt-1">
+              <p className="text-xs text-muted-foreground font-medium">
+                BíbliaToon KIDS Premium — Assinatura Mensal
+              </p>
+              <p className="text-xs text-muted-foreground/70">
+                Renovação automática. Cancele a qualquer momento nas configurações da App Store.
+              </p>
+            </div>
+
+            {/* Restore purchases - required by Apple Guideline 3.1.1 */}
+            {platform !== 'android' && (
+              <div className="text-center">
+                <Button
+                  variant="link"
+                  size="sm"
+                  className="text-xs text-muted-foreground underline"
+                  disabled={isRestoring}
+                  onClick={handleRestorePurchases}
+                >
+                  {isRestoring ? (
+                    <>
+                      <Loader2 className="h-3 w-3 animate-spin mr-1" />
+                      Restaurando...
+                    </>
+                  ) : (
+                    'Restaurar Compras'
+                  )}
+                </Button>
+              </div>
+            )}
+
+            {/* Legal links - required by Apple Guideline 3.1.2(c) */}
+            <div className="flex justify-center gap-4 pt-1">
+              <Link
+                to="/termos-de-uso"
+                className="text-xs text-muted-foreground underline hover:text-foreground transition-colors"
+              >
+                Termos de Uso
+              </Link>
+              <Link
+                to="/politica-familia"
+                className="text-xs text-muted-foreground underline hover:text-foreground transition-colors"
+              >
+                Política de Privacidade
+              </Link>
             </div>
           </div>
 
