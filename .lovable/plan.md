@@ -1,11 +1,19 @@
 
 
-# Correções no Chat do Amigo Divino
+# Remover barra de scroll cinza global
 
-## Alterações em `src/components/ChatInterface.tsx`
+Adicionar ocultação de scrollbar no `#root` em `src/index.css`, mantendo a rolagem funcional.
 
-1. **Remover ScrollArea** — substituir `<ScrollArea className="flex-1 px-3">` por `<div className="flex-1 overflow-y-auto scrollbar-none px-3">` e remover o import do `ScrollArea`
-2. **Aumentar padding inferior do input** — trocar `pb-24` por `pb-28` na linha 238
+## Alteração
 
-Sub-header permanece translúcido como está.
+**`src/index.css`** — no bloco `#root` (linhas ~118-125), adicionar:
+- `scrollbar-width: none;` (Firefox)
+- `-ms-overflow-style: none;` (IE/Edge)
+
+E após o bloco, adicionar:
+```css
+#root::-webkit-scrollbar {
+    display: none;
+}
+```
 
