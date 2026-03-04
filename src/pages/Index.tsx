@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { GlassCard } from "@/components/GlassCard";
 import { FuturisticNavbar } from "@/components/FuturisticNavbar";
-import { Package, Book, Heart, HandHeart, Music, Palette, Users, Gamepad2, MessagesSquare, UserCircle, Sparkles } from "lucide-react";
+import { Package, Book, Heart, HandHeart, Music, Palette, Users, Gamepad2, MessagesSquare, UserCircle, Sparkles, ShieldCheck } from "lucide-react";
 import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -145,6 +145,17 @@ const Index = () => {
               </div>
             </>
           )}
+
+          {/* Link Política de Famílias */}
+          <GlassCard
+            hoverable
+            pressable
+            onClick={() => navigate('/politica-familia')}
+            className="h-[50px] flex items-center justify-center gap-2 p-0 cursor-pointer"
+          >
+            <ShieldCheck size={16} className="text-primary" />
+            <span className="text-muted-foreground text-xs underline">Política de Famílias e Privacidade</span>
+          </GlassCard>
 
         </div>
       </div>

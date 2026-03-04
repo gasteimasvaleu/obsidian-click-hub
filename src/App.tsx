@@ -34,6 +34,7 @@ import DailyDevotionalPage from "./pages/devocional/DailyDevotionalPage";
 import DevotionalsManager from "./pages/admin/DevotionalsManager";
 import GuiaPais from "./pages/GuiaPais";
 import NotFound from "./pages/NotFound";
+import PoliticaFamilia from "./pages/PoliticaFamilia";
 import { ExternalFrame } from "./components/ExternalFrame";
 import { ChatInterface } from "./components/ChatInterface";
 import { ProtectedRoute } from "./components/admin/ProtectedRoute";
@@ -148,6 +149,7 @@ const App = () => {
                 <Route path="/login" element={<Login />} />
                 <Route path="/cadastro" element={<Cadastro />} />
                 <Route path="/download" element={<DownloadPage />} />
+                <Route path="/politica-familia" element={<PoliticaFamilia />} />
                 <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
                 <Route path="/comunidade" element={<ProtectedRoute><Comunidade /></ProtectedRoute>} />
                 <Route path="/colorir" element={<ProtectedRoute><ColorirPage /></ProtectedRoute>} />
