@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Send, Loader2, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
+
 import { useToast } from "@/hooks/use-toast";
 import { useAIConsent } from "@/hooks/useAIConsent";
 import { AIConsentDialog } from "@/components/AIConsentDialog";
@@ -154,7 +154,7 @@ export const ChatInterface = () => {
       </div>
 
       {/* Chat area — sem GlassCard, mensagens flutuam direto */}
-      <ScrollArea className="flex-1 px-3">
+      <div className="flex-1 overflow-y-auto scrollbar-none px-3">
         <div className="max-w-3xl mx-auto py-4">
           {/* Estado vazio com sugestões */}
           {messages.length === 0 && !isLoading && (
@@ -232,10 +232,10 @@ export const ChatInterface = () => {
 
           <div ref={scrollRef} />
         </div>
-      </ScrollArea>
+      </div>
 
       {/* Input redesenhado */}
-      <div className="sticky bottom-0 backdrop-blur-xl bg-background/80 border-t border-border/30 pb-24">
+      <div className="sticky bottom-0 backdrop-blur-xl bg-background/80 border-t border-border/30 pb-28">
         <div className="max-w-3xl mx-auto px-3 pt-3">
           <div className="flex items-end gap-2 bg-muted/20 border border-border/40 rounded-2xl px-3 py-2 focus-within:border-primary/40 transition-colors">
             <textarea
