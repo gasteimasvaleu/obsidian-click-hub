@@ -289,7 +289,7 @@ export const ParentsGuideForm = ({
                 placeholder="Ex: Medo do escuro, dificuldade em obedecer, ansiedade..."
                 value={formData.desafio}
                 onChange={(e) => updateFormData('desafio', e.target.value)}
-                className="min-h-[120px]"
+                className="min-h-[120px] w-full max-w-full"
                 maxLength={150}
               />
               <div className="text-sm text-muted-foreground text-right">
