@@ -106,7 +106,7 @@ export const ParentsGuideForm = ({
       </div>
 
       {/* Form Steps */}
-      <Card className="glass p-4 sm:p-8 neon-glow overflow-hidden">
+      <Card className="glass p-4 sm:p-8 neon-glow overflow-hidden w-full max-w-full">
         <div className="space-y-6">
           {/* Step 1: Nome */}
           {currentStep === 1 && (
