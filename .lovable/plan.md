@@ -1,15 +1,19 @@
 
 
-# Alinhar versão do Android com iOS (28 → 29)
+# Remover barra de scroll cinza global
 
-## Problema
-- **iOS**: `CURRENT_PROJECT_VERSION = 29` ✅
-- **Android**: `versionCode 28` ❌ (desatualizado)
+Adicionar ocultação de scrollbar no `#root` em `src/index.css`, mantendo a rolagem funcional.
 
-## Correção
+## Alteração
 
-**`android/app/build.gradle`** (linha 10):
-- Alterar `versionCode 28` para `versionCode 29`
+**`src/index.css`** — no bloco `#root` (linhas ~118-125), adicionar:
+- `scrollbar-width: none;` (Firefox)
+- `-ms-overflow-style: none;` (IE/Edge)
 
-Apenas uma linha precisa ser alterada. Após a implementação, lembre-se de rodar `npx cap sync android` localmente antes do próximo upload ao Google Play.
+E após o bloco, adicionar:
+```css
+#root::-webkit-scrollbar {
+    display: none;
+}
+```
 
