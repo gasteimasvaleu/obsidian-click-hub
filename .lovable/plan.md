@@ -1,31 +1,19 @@
 
 
-# Corrigir pacote Android sem afetar iOS
+# Remover barra de scroll cinza global
 
-## Situação atual
+Adicionar ocultação de scrollbar no `#root` em `src/index.css`, mantendo a rolagem funcional.
 
-| Plataforma | Bundle ID atual | Bundle ID correto |
-|------------|----------------|-------------------|
-| **iOS** | `com.bibliatoonkids.app` | `com.bibliatoonkids.app` ✅ |
-| **Android** | `com.caio.bibliatoonkids` | `br.com.caio.bibliatoonkids` ❌ |
+## Alteração
 
-O `capacitor.config.ts` tem `appId: 'com.bibliatoonkids.app'`, que é o ID do iOS. O Android já usa um `applicationId` diferente definido diretamente no `build.gradle` — o `appId` do Capacitor config **não sobrescreve** o `applicationId` do `build.gradle` quando já está definido lá.
+**`src/index.css`** — no bloco `#root` (linhas ~118-125), adicionar:
+- `scrollbar-width: none;` (Firefox)
+- `-ms-overflow-style: none;` (IE/Edge)
 
-## Plano — alterar APENAS arquivos Android
-
-Não mexer no `capacitor.config.ts` nem em nenhum arquivo iOS. As mudanças ficam restritas a:
-
-1. **`android/app/build.gradle`** — alterar `namespace` e `applicationId` de `com.caio.bibliatoonkids` para `br.com.caio.bibliatoonkids`
-2. **`android/app/src/main/res/values/strings.xml`** — alterar `package_name` e `custom_url_scheme` para `br.com.caio.bibliatoonkids`
-
-## Passos locais obrigatórios (após git pull)
-
-1. Deletar a pasta `android/` inteira
-2. `npx cap add android`
-3. `npx cap sync android`
-4. Isso recriará o `MainActivity.java` com o pacote correto (`br/com/caio/bibliatoonkids/`)
-5. Verificar que o `versionCode` no `build.gradle` gerado é `29` (se for resetado, corrigir manualmente)
-6. Gerar o AAB
-
-O iOS permanece 100% intacto.
+E após o bloco, adicionar:
+```css
+#root::-webkit-scrollbar {
+    display: none;
+}
+```
 

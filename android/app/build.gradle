@@ -1,10 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
-    namespace = "com.caio.bibliatoonkids"
+    namespace = "br.com.caio.bibliatoonkids"
     compileSdk = rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "com.caio.bibliatoonkids"
+        applicationId "br.com.caio.bibliatoonkids"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 29

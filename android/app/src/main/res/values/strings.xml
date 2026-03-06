@@ -2,6 +2,6 @@
 <resources>
     <string name="app_name">BíbliaToon KIDS</string>
     <string name="title_activity_main">BíbliaToon KIDS</string>
-    <string name="package_name">com.caio.bibliatoonkids</string>
-    <string name="custom_url_scheme">com.caio.bibliatoonkids</string>
+    <string name="package_name">br.com.caio.bibliatoonkids</string>
+    <string name="custom_url_scheme">br.com.caio.bibliatoonkids</string>
 </resources>
