@@ -106,7 +106,7 @@ export const ParentsGuideForm = ({
       </div>
 
       {/* Form Steps */}
-      <Card className="glass p-4 sm:p-8 neon-glow overflow-hidden">
+      <Card className="glass p-4 sm:p-8 neon-glow overflow-hidden w-full max-w-full">
         <div className="space-y-6">
           {/* Step 1: Nome */}
           {currentStep === 1 && (
@@ -270,7 +270,7 @@ export const ParentsGuideForm = ({
                 placeholder="Ex: Antes de dormir, no domingo após o almoço, durante o culto familiar..."
                 value={formData.contexto}
                 onChange={(e) => updateFormData('contexto', e.target.value)}
-                className="min-h-[120px]"
+                className="min-h-[120px] w-full max-w-full"
                 maxLength={200}
               />
               <div className="text-sm text-muted-foreground text-right">
@@ -289,7 +289,7 @@ export const ParentsGuideForm = ({
                 placeholder="Ex: Medo do escuro, dificuldade em obedecer, ansiedade..."
                 value={formData.desafio}
                 onChange={(e) => updateFormData('desafio', e.target.value)}
-                className="min-h-[120px]"
+                className="min-h-[120px] w-full max-w-full"
                 maxLength={150}
               />
               <div className="text-sm text-muted-foreground text-right">
@@ -308,7 +308,7 @@ export const ParentsGuideForm = ({
                 placeholder="Ex: João 3:16, Parábola do Bom Samaritano, Moisés e o Mar Vermelho..."
                 value={formData.passagem}
                 onChange={(e) => updateFormData('passagem', e.target.value)}
-                className="min-h-[120px]"
+                className="min-h-[120px] w-full max-w-full"
               />
             </div>
           )}
