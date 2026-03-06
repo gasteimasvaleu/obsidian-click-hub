@@ -270,7 +270,7 @@ export const ParentsGuideForm = ({
                 placeholder="Ex: Antes de dormir, no domingo após o almoço, durante o culto familiar..."
                 value={formData.contexto}
                 onChange={(e) => updateFormData('contexto', e.target.value)}
-                className="min-h-[120px]"
+                className="min-h-[120px] w-full max-w-full"
                 maxLength={200}
               />
               <div className="text-sm text-muted-foreground text-right">
