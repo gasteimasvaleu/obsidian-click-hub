@@ -1,21 +1,19 @@
 
 
-## Plano: Script de automação pós-sync Android
+# Remover barra de scroll cinza global
 
-Você já corrigiu tudo manualmente. Agora vamos criar apenas a automação para proteger essas mudanças em futuros syncs.
+Adicionar ocultação de scrollbar no `#root` em `src/index.css`, mantendo a rolagem funcional.
 
-### 1. Criar `fix-android-appid.cjs`
-Script Node.js que, após o `cap sync android`, corrige automaticamente:
-- `namespace` e `applicationId` no `build.gradle`
-- `package_name` e `custom_url_scheme` no `strings.xml`
-- Move `MainActivity.java` para `com/caio/bibliatoonkids/` e corrige o `package`
+## Alteração
 
-### 2. Editar `package.json`
-Adicionar:
-```json
-"sync:android": "npx cap sync android && node fix-android-appid.cjs"
+**`src/index.css`** — no bloco `#root` (linhas ~118-125), adicionar:
+- `scrollbar-width: none;` (Firefox)
+- `-ms-overflow-style: none;` (IE/Edge)
+
+E após o bloco, adicionar:
+```css
+#root::-webkit-scrollbar {
+    display: none;
+}
 ```
-
-### Uso futuro
-Em vez de `npx cap sync android`, rodar `npm run sync:android` — tudo corrigido automaticamente.
 
