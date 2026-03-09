@@ -266,13 +266,15 @@ export const ParentsGuideForm = ({
               <h2 className="text-lg font-semibold text-foreground">
                 Onde e quando você planeja ensinar?
               </h2>
-              <Textarea
-                placeholder="Ex: Antes de dormir, no domingo após o almoço, durante o culto familiar..."
-                value={formData.contexto}
-                onChange={(e) => updateFormData('contexto', e.target.value)}
-                className="min-h-[120px] w-full max-w-full"
-                maxLength={200}
-              />
+              <div className="overflow-hidden w-full">
+                <Textarea
+                  placeholder="Ex: Antes de dormir, no domingo após o almoço, durante o culto familiar..."
+                  value={formData.contexto}
+                  onChange={(e) => updateFormData('contexto', e.target.value)}
+                  className="min-h-[120px] w-full max-w-full box-border"
+                  maxLength={200}
+                />
+              </div>
               <div className="text-sm text-muted-foreground text-right">
                 {formData.contexto.length}/200
               </div>
