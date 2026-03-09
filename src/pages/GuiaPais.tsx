@@ -6,6 +6,7 @@ import { GuideDisplay } from "@/components/guia-pais/GuideDisplay";
 import { useToast } from "@/hooks/use-toast";
 import { useAIConsent } from "@/hooks/useAIConsent";
 import { AIConsentDialog } from "@/components/AIConsentDialog";
+import { useLoading } from "@/contexts/LoadingContext";
 
 export interface FormData {
   nome: string;
