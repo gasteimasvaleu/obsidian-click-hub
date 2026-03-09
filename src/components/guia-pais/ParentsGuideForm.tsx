@@ -85,7 +85,7 @@ export const ParentsGuideForm = ({
   const progress = (currentStep / totalSteps) * 100;
 
   return (
-    <div className="max-w-2xl mx-auto animate-fade-in overflow-x-hidden">
+    <div className="max-w-2xl mx-auto animate-fade-in overflow-hidden">
       {/* Header */}
       <GlassCard className="max-w-2xl mx-auto text-center mb-8">
         <h1 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-primary via-primary to-primary/60 bg-clip-text text-transparent">
