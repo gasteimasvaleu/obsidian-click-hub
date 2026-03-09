@@ -308,12 +308,14 @@ export const ParentsGuideForm = ({
               <h2 className="text-lg font-semibold text-foreground">
                 Qual passagem bíblica você quer ensinar?
               </h2>
-              <Textarea
-                placeholder="Ex: João 3:16, Parábola do Bom Samaritano, Moisés e o Mar Vermelho..."
-                value={formData.passagem}
-                onChange={(e) => updateFormData('passagem', e.target.value)}
-                className="min-h-[120px] w-full max-w-full"
-              />
+              <div className="overflow-hidden w-full">
+                <Textarea
+                  placeholder="Ex: João 3:16, Parábola do Bom Samaritano, Moisés e o Mar Vermelho..."
+                  value={formData.passagem}
+                  onChange={(e) => updateFormData('passagem', e.target.value)}
+                  className="min-h-[120px] w-full max-w-full box-border"
+                />
+              </div>
             </div>
           )}
         </div>
