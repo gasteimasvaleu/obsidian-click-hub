@@ -28,6 +28,7 @@ export const PhotoUploader = ({ onTransformed }: PhotoUploaderProps) => {
     reader.readAsDataURL(file);
 
     setLoading(true);
+    showLoading('Transformando sua foto em desenho...');
     try {
       // Upload original to storage first
       const fileName = `originals/${Date.now()}_${file.name}`;
