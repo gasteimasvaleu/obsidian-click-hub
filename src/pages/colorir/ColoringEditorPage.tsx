@@ -22,6 +22,7 @@ const ColoringEditorPage = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { addActivity } = useUserProgress();
+  const { showLoading, hideLoading } = useLoading();
   const canvas = useColoringCanvas();
   const [saving, setSaving] = useState(false);
   const [drawingTitle, setDrawingTitle] = useState('Minha Criação');
