@@ -94,6 +94,7 @@ export default function DailyDevotionalPage() {
   useEffect(() => {
     if (!isLoading && !devotional && !isGenerating && !error) {
       setIsGenerating(true);
+      showLoading('Gerando devocional do dia...');
       generateDevotionalMutation.mutate();
     }
   }, [devotional, isLoading, isGenerating, error]);
