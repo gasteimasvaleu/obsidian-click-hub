@@ -56,6 +56,7 @@ export const ChatInterface = () => {
     const userMessage: Message = { role: "user", content: message };
     setMessages((prev) => [...prev, userMessage]);
     setIsLoading(true);
+    showLoading('Enviando mensagem...');
 
     try {
       const response = await fetch("https://hook.us2.make.com/f2v3uj2teps5wg8xirjjlcicqbqpcvy6", {
