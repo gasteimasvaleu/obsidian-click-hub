@@ -9,6 +9,7 @@ import { NavBar } from "@/components/ui/tubelight-navbar";
 import { SplashScreen } from "./components/SplashScreen";
 import { AuthProvider } from "./contexts/AuthContext";
 import { ThemePreferencesProvider } from "./contexts/ThemePreferencesContext";
+import { LoadingProvider } from "./contexts/LoadingContext";
 import Index from "./pages/Index";
 import Oracoes from "./pages/Oracoes";
 import Audiofy from "./pages/Audiofy";
