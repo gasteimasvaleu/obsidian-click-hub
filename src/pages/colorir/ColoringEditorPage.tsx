@@ -67,6 +67,7 @@ const ColoringEditorPage = () => {
     }
 
     setSaving(true);
+    showLoading('Salvando sua criação...');
     try {
       const blob = await canvas.getCanvasBlob();
       if (!blob) throw new Error('Erro ao capturar canvas');
