@@ -14,6 +14,7 @@ import { ColoringEditorSkeleton } from '@/components/skeletons/ColoringEditorSke
 import { toast } from 'sonner';
 import { useUserProgress } from '@/hooks/useUserProgress';
 import { fireCompleteConfetti } from '@/lib/confetti';
+import { useLoading } from '@/contexts/LoadingContext';
 
 const ColoringEditorPage = () => {
   const { drawingId } = useParams();
