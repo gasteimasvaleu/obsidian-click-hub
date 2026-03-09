@@ -73,6 +73,7 @@ const GuiaPais = () => {
   const [generatedGuide, setGeneratedGuide] = useState<Guide | null>(null);
   const { toast } = useToast();
   const { showConsent, setShowConsent, acceptConsent, requireConsent } = useAIConsent();
+  const { showLoading, hideLoading } = useLoading();
 
   const doGenerateGuide = async () => {
     setIsGenerating(true);
