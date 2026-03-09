@@ -33,6 +33,7 @@ export const ChatInterface = () => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { showConsent, setShowConsent, acceptConsent, requireConsent } = useAIConsent();
   const pendingMessageRef = useRef<string | null>(null);
+  const { showLoading, hideLoading } = useLoading();
 
   useEffect(() => {
     if (scrollRef.current) {
