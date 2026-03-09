@@ -5,6 +5,7 @@ import { GlassCard } from '@/components/GlassCard';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { useLoading } from '@/contexts/LoadingContext';
 
 interface PhotoUploaderProps {
   onTransformed: (transformedUrl: string, originalUrl: string) => void;
