@@ -14,6 +14,7 @@ interface PhotoUploaderProps {
 export const PhotoUploader = ({ onTransformed }: PhotoUploaderProps) => {
   const [loading, setLoading] = useState(false);
   const [preview, setPreview] = useState<string | null>(null);
+  const { showLoading, hideLoading } = useLoading();
 
   const processFile = useCallback(async (file: File) => {
     if (!file.type.startsWith('image/')) {
