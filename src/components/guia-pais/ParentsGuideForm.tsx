@@ -85,7 +85,7 @@ export const ParentsGuideForm = ({
   const progress = (currentStep / totalSteps) * 100;
 
   return (
-    <div className="max-w-2xl mx-auto animate-fade-in overflow-x-hidden">
+    <div className="max-w-2xl mx-auto animate-fade-in overflow-hidden">
       {/* Header */}
       <GlassCard className="max-w-2xl mx-auto text-center mb-8">
         <h1 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-primary via-primary to-primary/60 bg-clip-text text-transparent">
@@ -266,13 +266,15 @@ export const ParentsGuideForm = ({
               <h2 className="text-lg font-semibold text-foreground">
                 Onde e quando você planeja ensinar?
               </h2>
-              <Textarea
-                placeholder="Ex: Antes de dormir, no domingo após o almoço, durante o culto familiar..."
-                value={formData.contexto}
-                onChange={(e) => updateFormData('contexto', e.target.value)}
-                className="min-h-[120px] w-full max-w-full"
-                maxLength={200}
-              />
+              <div className="overflow-hidden w-full">
+                <Textarea
+                  placeholder="Ex: Antes de dormir, no domingo após o almoço, durante o culto familiar..."
+                  value={formData.contexto}
+                  onChange={(e) => updateFormData('contexto', e.target.value)}
+                  className="min-h-[120px] w-full max-w-full box-border"
+                  maxLength={200}
+                />
+              </div>
               <div className="text-sm text-muted-foreground text-right">
                 {formData.contexto.length}/200
               </div>
@@ -285,13 +287,15 @@ export const ParentsGuideForm = ({
               <h2 className="text-lg font-semibold text-foreground">
                 Há algum desafio específico? (Opcional)
               </h2>
-              <Textarea
-                placeholder="Ex: Medo do escuro, dificuldade em obedecer, ansiedade..."
-                value={formData.desafio}
-                onChange={(e) => updateFormData('desafio', e.target.value)}
-                className="min-h-[120px] w-full max-w-full"
-                maxLength={150}
-              />
+              <div className="overflow-hidden w-full">
+                <Textarea
+                  placeholder="Ex: Medo do escuro, dificuldade em obedecer, ansiedade..."
+                  value={formData.desafio}
+                  onChange={(e) => updateFormData('desafio', e.target.value)}
+                  className="min-h-[120px] w-full max-w-full box-border"
+                  maxLength={150}
+                />
+              </div>
               <div className="text-sm text-muted-foreground text-right">
                 {formData.desafio.length}/150
               </div>
@@ -304,12 +308,14 @@ export const ParentsGuideForm = ({
               <h2 className="text-lg font-semibold text-foreground">
                 Qual passagem bíblica você quer ensinar?
               </h2>
-              <Textarea
-                placeholder="Ex: João 3:16, Parábola do Bom Samaritano, Moisés e o Mar Vermelho..."
-                value={formData.passagem}
-                onChange={(e) => updateFormData('passagem', e.target.value)}
-                className="min-h-[120px] w-full max-w-full"
-              />
+              <div className="overflow-hidden w-full">
+                <Textarea
+                  placeholder="Ex: João 3:16, Parábola do Bom Samaritano, Moisés e o Mar Vermelho..."
+                  value={formData.passagem}
+                  onChange={(e) => updateFormData('passagem', e.target.value)}
+                  className="min-h-[120px] w-full max-w-full box-border"
+                />
+              </div>
             </div>
           )}
         </div>
