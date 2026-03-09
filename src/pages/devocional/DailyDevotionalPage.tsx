@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { format, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import jsPDF from 'jspdf';
+import { useLoading } from '@/contexts/LoadingContext';
 
 export default function DailyDevotionalPage() {
   const { user } = useAuth();
