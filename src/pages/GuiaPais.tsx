@@ -77,6 +77,7 @@ const GuiaPais = () => {
 
   const doGenerateGuide = async () => {
     setIsGenerating(true);
+    showLoading('Gerando guia personalizado...');
     
     try {
       const response = await fetch(
