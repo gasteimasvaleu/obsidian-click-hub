@@ -19,6 +19,7 @@ export default function DailyDevotionalPage() {
   const queryClient = useQueryClient();
   const [userNotes, setUserNotes] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
+  const { showLoading, hideLoading } = useLoading();
 
   const { data: devotional, isLoading, error } = useQuery({
     queryKey: ['daily-devotional'],
