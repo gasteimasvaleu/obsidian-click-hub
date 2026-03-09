@@ -87,6 +87,7 @@ export default function DailyDevotionalPage() {
     },
     onSettled: () => {
       setIsGenerating(false);
+      hideLoading();
     }
   });
 

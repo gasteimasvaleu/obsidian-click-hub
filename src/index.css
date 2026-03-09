@@ -224,4 +224,19 @@ All colors MUST be HSL.
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+
+  /* Loading overlay indeterminate bar */
+  @keyframes loading-bar-slide {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(400%);
+    }
+  }
+
+  .loading-bar-indeterminate {
+    width: 30%;
+    animation: loading-bar-slide 1.5s ease-in-out infinite;
+  }
 }

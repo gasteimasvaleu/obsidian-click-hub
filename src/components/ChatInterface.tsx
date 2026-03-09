@@ -89,6 +89,7 @@ export const ChatInterface = () => {
       });
     } finally {
       setIsLoading(false);
+      hideLoading();
     }
   };
 

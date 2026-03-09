@@ -108,6 +108,7 @@ const ColoringEditorPage = () => {
       toast.error('Erro ao salvar criação');
     } finally {
       setSaving(false);
+      hideLoading();
     }
   };
 

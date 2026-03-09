@@ -186,6 +186,7 @@ const App = () => {
               <NavBarWrapper items={navItems} />
             </BrowserRouter>
           </TooltipProvider>
+          </LoadingProvider>
         </AuthProvider>
       </ThemePreferencesProvider>
     </QueryClientProvider>

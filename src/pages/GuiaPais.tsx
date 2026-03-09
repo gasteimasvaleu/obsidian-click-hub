@@ -115,6 +115,7 @@ const GuiaPais = () => {
       });
     } finally {
       setIsGenerating(false);
+      hideLoading();
     }
   };
 

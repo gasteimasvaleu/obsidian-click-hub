@@ -57,6 +57,7 @@ export const PhotoUploader = ({ onTransformed }: PhotoUploaderProps) => {
       toast.error(err.message || 'Erro ao transformar foto');
     } finally {
       setLoading(false);
+      hideLoading();
     }
   }, [onTransformed]);
 
