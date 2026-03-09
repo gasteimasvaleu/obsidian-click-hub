@@ -287,13 +287,15 @@ export const ParentsGuideForm = ({
               <h2 className="text-lg font-semibold text-foreground">
                 Há algum desafio específico? (Opcional)
               </h2>
-              <Textarea
-                placeholder="Ex: Medo do escuro, dificuldade em obedecer, ansiedade..."
-                value={formData.desafio}
-                onChange={(e) => updateFormData('desafio', e.target.value)}
-                className="min-h-[120px] w-full max-w-full"
-                maxLength={150}
-              />
+              <div className="overflow-hidden w-full">
+                <Textarea
+                  placeholder="Ex: Medo do escuro, dificuldade em obedecer, ansiedade..."
+                  value={formData.desafio}
+                  onChange={(e) => updateFormData('desafio', e.target.value)}
+                  className="min-h-[120px] w-full max-w-full box-border"
+                  maxLength={150}
+                />
+              </div>
               <div className="text-sm text-muted-foreground text-right">
                 {formData.desafio.length}/150
               </div>
