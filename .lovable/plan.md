@@ -1,12 +1,19 @@
 
 
-## Atualizar vídeo do Loading Overlay
+# Remover barra de scroll cinza global
 
-Trocar a URL do vídeo em `src/components/LoadingOverlay.tsx` de `loading2.mp4` para `loading3.mp4`:
+Adicionar ocultação de scrollbar no `#root` em `src/index.css`, mantendo a rolagem funcional.
 
-**Arquivo**: `src/components/LoadingOverlay.tsx` (linha 37)
-- De: `https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/loading2.mp4`
-- Para: `https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/loading3.mp4`
+## Alteração
 
-Também posso aumentar o container do vídeo de `w-48 h-48` para `w-64 h-64` se o novo vídeo tiver resolução maior, para aproveitar melhor a qualidade.
+**`src/index.css`** — no bloco `#root` (linhas ~118-125), adicionar:
+- `scrollbar-width: none;` (Firefox)
+- `-ms-overflow-style: none;` (IE/Edge)
+
+E após o bloco, adicionar:
+```css
+#root::-webkit-scrollbar {
+    display: none;
+}
+```
 
