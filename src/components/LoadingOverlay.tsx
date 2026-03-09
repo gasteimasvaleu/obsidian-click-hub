@@ -32,8 +32,8 @@ export const LoadingOverlay = ({ visible, message }: LoadingOverlayProps) => {
     >
       {/* Video */}
       <video
-        src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/loading2.mp4"
-        className="w-48 h-48 object-contain"
+        src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/loading3.mp4"
+        className="w-64 h-64 object-contain"
         autoPlay
         muted
         playsInline
