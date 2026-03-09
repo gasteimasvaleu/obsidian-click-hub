@@ -5,6 +5,7 @@ import { GlassCard } from '@/components/GlassCard';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { useLoading } from '@/contexts/LoadingContext';
 
 interface PhotoUploaderProps {
   onTransformed: (transformedUrl: string, originalUrl: string) => void;
@@ -13,6 +14,7 @@ interface PhotoUploaderProps {
 export const PhotoUploader = ({ onTransformed }: PhotoUploaderProps) => {
   const [loading, setLoading] = useState(false);
   const [preview, setPreview] = useState<string | null>(null);
+  const { showLoading, hideLoading } = useLoading();
 
   const processFile = useCallback(async (file: File) => {
     if (!file.type.startsWith('image/')) {
@@ -26,6 +28,7 @@ export const PhotoUploader = ({ onTransformed }: PhotoUploaderProps) => {
     reader.readAsDataURL(file);
 
     setLoading(true);
+    showLoading('Transformando sua foto em desenho...');
     try {
       // Upload original to storage first
       const fileName = `originals/${Date.now()}_${file.name}`;
@@ -54,6 +57,7 @@ export const PhotoUploader = ({ onTransformed }: PhotoUploaderProps) => {
       toast.error(err.message || 'Erro ao transformar foto');
     } finally {
       setLoading(false);
+      hideLoading();
     }
   }, [onTransformed]);
 

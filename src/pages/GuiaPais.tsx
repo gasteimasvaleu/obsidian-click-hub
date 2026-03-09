@@ -6,6 +6,7 @@ import { GuideDisplay } from "@/components/guia-pais/GuideDisplay";
 import { useToast } from "@/hooks/use-toast";
 import { useAIConsent } from "@/hooks/useAIConsent";
 import { AIConsentDialog } from "@/components/AIConsentDialog";
+import { useLoading } from "@/contexts/LoadingContext";
 
 export interface FormData {
   nome: string;
@@ -72,9 +73,11 @@ const GuiaPais = () => {
   const [generatedGuide, setGeneratedGuide] = useState<Guide | null>(null);
   const { toast } = useToast();
   const { showConsent, setShowConsent, acceptConsent, requireConsent } = useAIConsent();
+  const { showLoading, hideLoading } = useLoading();
 
   const doGenerateGuide = async () => {
     setIsGenerating(true);
+    showLoading('Gerando guia personalizado...');
     
     try {
       const response = await fetch(
@@ -112,6 +115,7 @@ const GuiaPais = () => {
       });
     } finally {
       setIsGenerating(false);
+      hideLoading();
     }
   };
 

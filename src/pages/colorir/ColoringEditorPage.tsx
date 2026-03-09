@@ -14,6 +14,7 @@ import { ColoringEditorSkeleton } from '@/components/skeletons/ColoringEditorSke
 import { toast } from 'sonner';
 import { useUserProgress } from '@/hooks/useUserProgress';
 import { fireCompleteConfetti } from '@/lib/confetti';
+import { useLoading } from '@/contexts/LoadingContext';
 
 const ColoringEditorPage = () => {
   const { drawingId } = useParams();
@@ -21,6 +22,7 @@ const ColoringEditorPage = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { addActivity } = useUserProgress();
+  const { showLoading, hideLoading } = useLoading();
   const canvas = useColoringCanvas();
   const [saving, setSaving] = useState(false);
   const [drawingTitle, setDrawingTitle] = useState('Minha Criação');
@@ -65,6 +67,7 @@ const ColoringEditorPage = () => {
     }
 
     setSaving(true);
+    showLoading('Salvando sua criação...');
     try {
       const blob = await canvas.getCanvasBlob();
       if (!blob) throw new Error('Erro ao capturar canvas');
@@ -105,6 +108,7 @@ const ColoringEditorPage = () => {
       toast.error('Erro ao salvar criação');
     } finally {
       setSaving(false);
+      hideLoading();
     }
   };
 

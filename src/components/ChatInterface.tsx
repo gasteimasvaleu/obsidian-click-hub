@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useAIConsent } from "@/hooks/useAIConsent";
 import { AIConsentDialog } from "@/components/AIConsentDialog";
+import { useLoading } from "@/contexts/LoadingContext";
 import { FuturisticNavbar } from "@/components/FuturisticNavbar";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import ReactMarkdown from "react-markdown";
@@ -32,6 +33,7 @@ export const ChatInterface = () => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { showConsent, setShowConsent, acceptConsent, requireConsent } = useAIConsent();
   const pendingMessageRef = useRef<string | null>(null);
+  const { showLoading, hideLoading } = useLoading();
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -54,6 +56,7 @@ export const ChatInterface = () => {
     const userMessage: Message = { role: "user", content: message };
     setMessages((prev) => [...prev, userMessage]);
     setIsLoading(true);
+    showLoading('Enviando mensagem...');
 
     try {
       const response = await fetch("https://hook.us2.make.com/f2v3uj2teps5wg8xirjjlcicqbqpcvy6", {
@@ -86,6 +89,7 @@ export const ChatInterface = () => {
       });
     } finally {
       setIsLoading(false);
+      hideLoading();
     }
   };
 

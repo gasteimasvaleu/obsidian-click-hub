@@ -12,12 +12,14 @@ import { toast } from "sonner";
 import { format, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import jsPDF from 'jspdf';
+import { useLoading } from '@/contexts/LoadingContext';
 
 export default function DailyDevotionalPage() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const [userNotes, setUserNotes] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
+  const { showLoading, hideLoading } = useLoading();
 
   const { data: devotional, isLoading, error } = useQuery({
     queryKey: ['daily-devotional'],
@@ -85,6 +87,7 @@ export default function DailyDevotionalPage() {
     },
     onSettled: () => {
       setIsGenerating(false);
+      hideLoading();
     }
   });
 
@@ -92,6 +95,7 @@ export default function DailyDevotionalPage() {
   useEffect(() => {
     if (!isLoading && !devotional && !isGenerating && !error) {
       setIsGenerating(true);
+      showLoading('Gerando devocional do dia...');
       generateDevotionalMutation.mutate();
     }
   }, [devotional, isLoading, isGenerating, error]);
