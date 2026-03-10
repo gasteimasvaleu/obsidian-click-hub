@@ -11,7 +11,7 @@ const TermosDeUso = () => {
     {
       icon: FileText,
       title: "Descrição do Serviço",
-      text: "O BíbliaToon KIDS é uma plataforma educativa cristã para crianças e famílias, oferecendo conteúdo interativo incluindo Bíblia infantil, devocionais, jogos, músicas, atividades de colorir e cursos. O acesso ao conteúdo completo requer uma assinatura ativa.",
+      text: "O BíbliaToon Club é uma plataforma educativa cristã para crianças e famílias, oferecendo conteúdo interativo incluindo Bíblia infantil, devocionais, jogos, músicas, atividades de colorir e cursos. O acesso ao conteúdo completo requer uma assinatura ativa.",
     },
     {
       icon: CreditCard,
