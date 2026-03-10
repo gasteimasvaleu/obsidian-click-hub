@@ -2,7 +2,7 @@ import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'com.bibliatoonkids.app',
-  appName: 'BíbliaToon KIDS',
+  appName: 'BíbliaToon Club',
   webDir: 'dist',
   ios: {
     contentInset: 'always',

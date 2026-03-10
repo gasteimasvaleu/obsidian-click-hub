@@ -11,12 +11,12 @@ const TermosDeUso = () => {
     {
       icon: FileText,
       title: "Descrição do Serviço",
-      text: "O BíbliaToon KIDS é uma plataforma educativa cristã para crianças e famílias, oferecendo conteúdo interativo incluindo Bíblia infantil, devocionais, jogos, músicas, atividades de colorir e cursos. O acesso ao conteúdo completo requer uma assinatura ativa.",
+      text: "O BíbliaToon Club é uma plataforma educativa cristã para crianças e famílias, oferecendo conteúdo interativo incluindo Bíblia infantil, devocionais, jogos, músicas, atividades de colorir e cursos. O acesso ao conteúdo completo requer uma assinatura ativa.",
     },
     {
       icon: CreditCard,
       title: "Assinatura e Pagamento",
-      text: "A assinatura \"BíbliaToon KIDS Premium\" é mensal com renovação automática. O pagamento será cobrado na sua conta do iTunes/App Store no momento da confirmação da compra. O valor da assinatura é exibido na tela de compra antes da confirmação.",
+      text: "A assinatura \"BíbliaToon Club Premium\" é mensal com renovação automática. O pagamento será cobrado na sua conta do iTunes/App Store no momento da confirmação da compra. O valor da assinatura é exibido na tela de compra antes da confirmação.",
     },
     {
       icon: RefreshCw,
@@ -57,14 +57,14 @@ const TermosDeUso = () => {
               Termos de Uso (EULA)
             </h1>
             <p className="text-muted-foreground text-sm">
-              Termos e condições de uso do aplicativo BíbliaToon KIDS.
+              Termos e condições de uso do aplicativo BíbliaToon Club.
             </p>
           </GlassCard>
 
           <GlassCard className="p-5">
             <p className="text-muted-foreground text-sm leading-relaxed">
-              Ao utilizar o aplicativo BíbliaToon KIDS, você concorda com os termos descritos abaixo. 
-              Estes termos constituem um acordo legal entre você e a BíbliaToon KIDS. 
+              Ao utilizar o aplicativo BíbliaToon Club, você concorda com os termos descritos abaixo. 
+              Estes termos constituem um acordo legal entre você e a BíbliaToon Club. 
               Caso não concorde com algum dos termos, não utilize o aplicativo.
             </p>
           </GlassCard>

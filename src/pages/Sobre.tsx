@@ -153,7 +153,7 @@ const Sobre = () => {
           >
             <GlassCard className="text-center p-8 md:p-12 border-primary/20">
               <h1 className="text-4xl md:text-6xl font-bold mb-4 text-white">
-                Sobre o BíbliaToonKIDS
+                Sobre o BíbliaToon Club
               </h1>
               <p className="text-xl md:text-2xl text-white/80">
                 Transformando fé em aventura
@@ -171,7 +171,7 @@ const Sobre = () => {
           <SectionTitle icon={BookHeart}>Nossa História</SectionTitle>
           <div className="glass rounded-2xl p-6 md:p-8 border border-primary/20">
             <p className="text-foreground/90 mb-4 leading-relaxed">
-              O BíbliaToon KIDS nasceu do desejo sincero de transformar histórias bíblicas em experiências envolventes para crianças — e incentivar pais e educadores a utilizarem a fé como ferramenta de formação. Fundado por uma equipe de animadores, educadores cristãos e desenvolvedores apaixonados pela infância, o projeto começou com uma simples pergunta: <span className="text-primary font-semibold">"E se os heróis das Escrituras falassem a linguagem da geração digital?"</span>
+              O BíbliaToon Club nasceu do desejo sincero de transformar histórias bíblicas em experiências envolventes para crianças — e incentivar pais e educadores a utilizarem a fé como ferramenta de formação. Fundado por uma equipe de animadores, educadores cristãos e desenvolvedores apaixonados pela infância, o projeto começou com uma simples pergunta: <span className="text-primary font-semibold">"E se os heróis das Escrituras falassem a linguagem da geração digital?"</span>
             </p>
             <p className="text-foreground/90 leading-relaxed">
               Desde então, a plataforma evoluiu e cresceu, conectando fé, criatividade e tecnologia de forma única.
@@ -216,7 +216,7 @@ const Sobre = () => {
 
         {/* O que você encontra */}
         <section className="mb-16 md:mb-24">
-          <SectionTitle icon={Sparkles}>O que você encontra no BíbliaToon KIDS</SectionTitle>
+          <SectionTitle icon={Sparkles}>O que você encontra no BíbliaToon Club</SectionTitle>
           <motion.div 
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
             variants={staggerContainer}
@@ -274,7 +274,7 @@ const Sobre = () => {
             Junte-se a nós
           </h2>
               <p className="text-foreground/90 text-lg mb-8 max-w-3xl mx-auto leading-relaxed">
-                Venha fazer parte da família BíbliaToon KIDS! Explore o conteúdo, interaja com a comunidade e transforme o aprendizado da fé em uma aventura inesquecível. O futuro dos nossos pequenos começa com sementes de valores — e estamos prontos para plantar juntos.
+                Venha fazer parte da família BíbliaToon Club! Explore o conteúdo, interaja com a comunidade e transforme o aprendizado da fé em uma aventura inesquecível. O futuro dos nossos pequenos começa com sementes de valores — e estamos prontos para plantar juntos.
               </p>
               <NeonButton 
                 onClick={() => navigate('/login')}
