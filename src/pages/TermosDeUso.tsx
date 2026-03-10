@@ -16,7 +16,7 @@ const TermosDeUso = () => {
     {
       icon: CreditCard,
       title: "Assinatura e Pagamento",
-      text: "A assinatura \"BíbliaToon KIDS Premium\" é mensal com renovação automática. O pagamento será cobrado na sua conta do iTunes/App Store no momento da confirmação da compra. O valor da assinatura é exibido na tela de compra antes da confirmação.",
+      text: "A assinatura \"BíbliaToon Club Premium\" é mensal com renovação automática. O pagamento será cobrado na sua conta do iTunes/App Store no momento da confirmação da compra. O valor da assinatura é exibido na tela de compra antes da confirmação.",
     },
     {
       icon: RefreshCw,
