@@ -63,8 +63,8 @@ const TermosDeUso = () => {
 
           <GlassCard className="p-5">
             <p className="text-muted-foreground text-sm leading-relaxed">
-              Ao utilizar o aplicativo BíbliaToon KIDS, você concorda com os termos descritos abaixo. 
-              Estes termos constituem um acordo legal entre você e a BíbliaToon KIDS. 
+              Ao utilizar o aplicativo BíbliaToon Club, você concorda com os termos descritos abaixo. 
+              Estes termos constituem um acordo legal entre você e a BíbliaToon Club. 
               Caso não concorde com algum dos termos, não utilize o aplicativo.
             </p>
           </GlassCard>
