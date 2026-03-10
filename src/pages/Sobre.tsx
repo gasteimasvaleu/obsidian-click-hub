@@ -153,7 +153,7 @@ const Sobre = () => {
           >
             <GlassCard className="text-center p-8 md:p-12 border-primary/20">
               <h1 className="text-4xl md:text-6xl font-bold mb-4 text-white">
-                Sobre o BíbliaToonKIDS
+                Sobre o BíbliaToon Club
               </h1>
               <p className="text-xl md:text-2xl text-white/80">
                 Transformando fé em aventura
