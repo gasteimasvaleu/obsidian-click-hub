@@ -78,11 +78,7 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
       <video
         className={cn(
           "transition-opacity duration-300",
-          "w-full h-full object-cover",
-          // Mobile: full screen cover
-          "md:w-auto md:h-full md:max-w-none",
-          // Desktop: maintain 9:16 aspect ratio, centered
-          "md:object-contain",
+          "w-full h-full object-contain",
           isVideoLoaded ? "opacity-100" : "opacity-0"
         )}
         autoPlay
