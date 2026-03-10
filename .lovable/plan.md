@@ -1,14 +1,19 @@
 
 
-## Plano: Atualizar URL da logo na navbar
+# Remover barra de scroll cinza global
 
-Substituir a URL antiga da logo na `FuturisticNavbar.tsx` pela nova URL sem espaços.
+Adicionar ocultação de scrollbar no `#root` em `src/index.css`, mantendo a rolagem funcional.
 
-**Arquivo:** `src/components/FuturisticNavbar.tsx` (linha 19)
+## Alteração
 
-**Alteração:**
-- De: `https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/Design%20sem%20nome.png`
-- Para: `https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/logonova2navbar.png`
+**`src/index.css`** — no bloco `#root` (linhas ~118-125), adicionar:
+- `scrollbar-width: none;` (Firefox)
+- `-ms-overflow-style: none;` (IE/Edge)
 
-Depois disso, rodar `git pull` + `npx cap sync ios` + `node fix-signing.cjs` localmente para ver a mudança no simulador.
+E após o bloco, adicionar:
+```css
+#root::-webkit-scrollbar {
+    display: none;
+}
+```
 
