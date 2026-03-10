@@ -216,7 +216,7 @@ const Sobre = () => {
 
         {/* O que você encontra */}
         <section className="mb-16 md:mb-24">
-          <SectionTitle icon={Sparkles}>O que você encontra no BíbliaToon KIDS</SectionTitle>
+          <SectionTitle icon={Sparkles}>O que você encontra no BíbliaToon Club</SectionTitle>
           <motion.div 
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
             variants={staggerContainer}
