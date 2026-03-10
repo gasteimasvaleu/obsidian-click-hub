@@ -104,7 +104,7 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
         <div className="flex items-center justify-center h-full">
           <img
             src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/image.png"
-            alt="BíbliaToonKIDS"
+            alt="BíbliaToon Club"
             className="max-w-sm max-h-96 object-contain"
             onLoad={handleComplete}
           />

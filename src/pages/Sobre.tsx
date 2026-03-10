@@ -171,7 +171,7 @@ const Sobre = () => {
           <SectionTitle icon={BookHeart}>Nossa História</SectionTitle>
           <div className="glass rounded-2xl p-6 md:p-8 border border-primary/20">
             <p className="text-foreground/90 mb-4 leading-relaxed">
-              O BíbliaToon KIDS nasceu do desejo sincero de transformar histórias bíblicas em experiências envolventes para crianças — e incentivar pais e educadores a utilizarem a fé como ferramenta de formação. Fundado por uma equipe de animadores, educadores cristãos e desenvolvedores apaixonados pela infância, o projeto começou com uma simples pergunta: <span className="text-primary font-semibold">"E se os heróis das Escrituras falassem a linguagem da geração digital?"</span>
+              O BíbliaToon Club nasceu do desejo sincero de transformar histórias bíblicas em experiências envolventes para crianças — e incentivar pais e educadores a utilizarem a fé como ferramenta de formação. Fundado por uma equipe de animadores, educadores cristãos e desenvolvedores apaixonados pela infância, o projeto começou com uma simples pergunta: <span className="text-primary font-semibold">"E se os heróis das Escrituras falassem a linguagem da geração digital?"</span>
             </p>
             <p className="text-foreground/90 leading-relaxed">
               Desde então, a plataforma evoluiu e cresceu, conectando fé, criatividade e tecnologia de forma única.

@@ -166,7 +166,7 @@ const Login = () => {
             {/* Subscription info - required by Apple Guideline 3.1.2(c) */}
             <div className="text-center space-y-1 pt-1">
               <p className="text-xs text-muted-foreground font-medium">
-                BíbliaToon KIDS Premium — Assinatura Mensal
+                BíbliaToon Club Premium — Assinatura Mensal
               </p>
               <p className="text-xs text-muted-foreground/70">
                 Renovação automática. Cancele a qualquer momento nas configurações da App Store.

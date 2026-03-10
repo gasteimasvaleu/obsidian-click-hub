@@ -36,7 +36,7 @@ const DownloadPage = () => {
               Obrigado!
             </h1>
             <p className="text-muted-foreground text-lg max-w-md mx-auto">
-              Sua conta foi criada com sucesso. Você já pode acessar o BíbliaToon KIDS!
+              Sua conta foi criada com sucesso. Você já pode acessar o BíbliaToon Club!
             </p>
             <Link to="/login">
               <Button size="lg" className="gap-2 mt-2">

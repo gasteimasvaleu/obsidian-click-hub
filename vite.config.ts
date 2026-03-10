@@ -100,8 +100,8 @@ export default defineConfig(({ mode }) => ({
   },
       includeAssets: ['pwa-192x192.png', 'pwa-512x512.png', 'favicon.ico'],
       manifest: {
-        name: 'BíbliaToonKIDS',
-        short_name: 'BíbliaToonKIDS',
+        name: 'BíbliaToon Club',
+        short_name: 'BíbliaToon Club',
         description: 'A Bíblia Ganha Vida para as Crianças e Pais!',
         theme_color: '#00ff00',
         background_color: '#000000',
