@@ -274,7 +274,7 @@ const Sobre = () => {
             Junte-se a nós
           </h2>
               <p className="text-foreground/90 text-lg mb-8 max-w-3xl mx-auto leading-relaxed">
-                Venha fazer parte da família BíbliaToon KIDS! Explore o conteúdo, interaja com a comunidade e transforme o aprendizado da fé em uma aventura inesquecível. O futuro dos nossos pequenos começa com sementes de valores — e estamos prontos para plantar juntos.
+                Venha fazer parte da família BíbliaToon Club! Explore o conteúdo, interaja com a comunidade e transforme o aprendizado da fé em uma aventura inesquecível. O futuro dos nossos pequenos começa com sementes de valores — e estamos prontos para plantar juntos.
               </p>
               <NeonButton 
                 onClick={() => navigate('/login')}

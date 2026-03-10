@@ -219,7 +219,7 @@ export default function PlatformSettingsManager() {
                     onChange={(e) =>
                       setFormData({ ...formData, hero_title: e.target.value })
                     }
-                    placeholder="BíbliaToonKIDS – A Bíblia Ganha Vida..."
+                    placeholder="BíbliaToon Club – A Bíblia Ganha Vida..."
                   />
                 </div>
                 <div className="space-y-2">
