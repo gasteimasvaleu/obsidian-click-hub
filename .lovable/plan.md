@@ -1,19 +1,8 @@
 
 
-# Remover barra de scroll cinza global
+## Alterar CFBundleDisplayName no Info.plist
 
-Adicionar ocultação de scrollbar no `#root` em `src/index.css`, mantendo a rolagem funcional.
+**Arquivo:** `ios/App/App/Info.plist`
 
-## Alteração
-
-**`src/index.css`** — no bloco `#root` (linhas ~118-125), adicionar:
-- `scrollbar-width: none;` (Firefox)
-- `-ms-overflow-style: none;` (IE/Edge)
-
-E após o bloco, adicionar:
-```css
-#root::-webkit-scrollbar {
-    display: none;
-}
-```
+Trocar o valor de `CFBundleDisplayName` de `BíbliaToon KIDS` para `BibliaToon Club`.
 
