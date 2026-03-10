@@ -1,11 +1,19 @@
 
 
-## Alterar Build Number para 30
+# Remover barra de scroll cinza global
 
-Atualizar o número de build de **29 → 30** em três arquivos:
+Adicionar ocultação de scrollbar no `#root` em `src/index.css`, mantendo a rolagem funcional.
 
-1. **`ios/App/App.xcodeproj/project.pbxproj`** — duas ocorrências de `CURRENT_PROJECT_VERSION = 29` → `30`
-2. **`android/app/build.gradle`** — `versionCode 29` → `30`
+## Alteração
 
-Alteração simples e direta, sem impacto funcional.
+**`src/index.css`** — no bloco `#root` (linhas ~118-125), adicionar:
+- `scrollbar-width: none;` (Firefox)
+- `-ms-overflow-style: none;` (IE/Edge)
+
+E após o bloco, adicionar:
+```css
+#root::-webkit-scrollbar {
+    display: none;
+}
+```
 
