@@ -1,19 +1,10 @@
 
 
-# Remover barra de scroll cinza global
+## Atualizar logo da navbar
 
-Adicionar ocultação de scrollbar no `#root` em `src/index.css`, mantendo a rolagem funcional.
+Trocar a URL da imagem no `src/components/FuturisticNavbar.tsx` (linha 18) para a nova logo sem "KIDS".
 
-## Alteração
-
-**`src/index.css`** — no bloco `#root` (linhas ~118-125), adicionar:
-- `scrollbar-width: none;` (Firefox)
-- `-ms-overflow-style: none;` (IE/Edge)
-
-E após o bloco, adicionar:
-```css
-#root::-webkit-scrollbar {
-    display: none;
-}
-```
+**Arquivo:** `src/components/FuturisticNavbar.tsx`
+- Linha 18: trocar `src` de `logonavbar.png` para `Design%20sem%20nome.png`
+- Linha 19: trocar `alt` de `"BíbliaToonKIDS"` para `"BíbliaToon"`
 
