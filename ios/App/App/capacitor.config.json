@@ -1,6 +1,6 @@
 {
 	"appId": "com.bibliatoonkids.app",
-	"appName": "BíbliaToon KIDS",
+	"appName": "BíbliaToon Club",
 	"webDir": "dist",
 	"ios": {
 		"contentInset": "always",
