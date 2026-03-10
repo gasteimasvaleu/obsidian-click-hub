@@ -57,7 +57,7 @@ const TermosDeUso = () => {
               Termos de Uso (EULA)
             </h1>
             <p className="text-muted-foreground text-sm">
-              Termos e condições de uso do aplicativo BíbliaToon KIDS.
+              Termos e condições de uso do aplicativo BíbliaToon Club.
             </p>
           </GlassCard>
 
