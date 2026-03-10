@@ -14,8 +14,8 @@ export const FuturisticNavbar = () => {
       <div className="flex justify-between items-center">
         <Link to="/">
           <img 
-            src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/logonavbar.png"
-            alt="BíbliaToonKIDS"
+            src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/Design%20sem%20nome.png"
+            alt="BíbliaToon"
             className="h-8 w-auto hover:animate-glow transition-all duration-300"
           />
         </Link>
