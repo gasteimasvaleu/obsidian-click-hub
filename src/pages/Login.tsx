@@ -14,6 +14,7 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isPurchasing, setIsPurchasing] = useState(false);
   const [isRestoring, setIsRestoring] = useState(false);
+  const [isAppleSigningIn, setIsAppleSigningIn] = useState(false);
   const { signIn, user } = useAuth();
   const navigate = useNavigate();
 
