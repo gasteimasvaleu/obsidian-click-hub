@@ -42,6 +42,26 @@ const Login = () => {
     setIsLoading(false);
   };
 
+  const handleAppleSignIn = async () => {
+    setIsAppleSigningIn(true);
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'apple',
+        options: {
+          redirectTo: window.location.origin,
+        },
+      });
+      if (error) {
+        toast.error(error.message || 'Erro ao fazer login com Apple');
+      }
+    } catch (error: any) {
+      console.error('Apple Sign In error:', error);
+      toast.error('Erro ao fazer login com Apple');
+    } finally {
+      setIsAppleSigningIn(false);
+    }
+  };
+
   const handleAppStorePurchase = async () => {
     if (!isNativePlatform()) {
       toast.info('Assinaturas só estão disponíveis no app nativo (iOS).');
