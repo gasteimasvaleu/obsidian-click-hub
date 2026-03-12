@@ -1,27 +1,19 @@
 
 
-## Registrar NativeAppleSignInPlugin no Capacitor
+# Remover barra de scroll cinza global
 
-### Problema
-O erro `{"code":"UNIMPLEMENTED"}` ocorre porque o plugin nativo `NativeAppleSignInPlugin` não está registrado na lista de plugins do Capacitor. O Capacitor precisa saber quais classes de plugin carregar.
+Adicionar ocultação de scrollbar no `#root` em `src/index.css`, mantendo a rolagem funcional.
 
-### Solução
-Adicionar `NativeAppleSignInPlugin` ao `packageClassList` no `ios/App/App/capacitor.config.json`.
+## Alteração
 
-### Alteração
+**`src/index.css`** — no bloco `#root` (linhas ~118-125), adicionar:
+- `scrollbar-width: none;` (Firefox)
+- `-ms-overflow-style: none;` (IE/Edge)
 
-**`ios/App/App/capacitor.config.json`** - Adicionar `"NativeAppleSignInPlugin"` ao array `packageClassList`:
-```json
-"packageClassList": [
-  "CAPCameraPlugin",
-  "CAPLiveUpdatesPlugin",
-  "PurchasesPlugin",
-  "NativeAppleSignInPlugin"
-]
+E após o bloco, adicionar:
+```css
+#root::-webkit-scrollbar {
+    display: none;
+}
 ```
-
-### Pós-implementação
-Como é uma mudança no config nativo do iOS, o usuário precisa:
-1. `git pull`
-2. Rebuild no Xcode (não precisa de `cap sync` pois o arquivo já está no projeto iOS)
 
