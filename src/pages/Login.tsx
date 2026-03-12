@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
-import { purchaseMonthly, restorePurchases, isNativePlatform, getPlatform, syncSubscriptionAfterLogin } from '@/lib/revenuecat';
+import { purchaseMonthly, restorePurchases, isNativePlatform, getPlatform } from '@/lib/revenuecat';
 import { supabase } from '@/integrations/supabase/client';
 import { Loader2 } from 'lucide-react';
 import { nativeAppleSignIn } from '@/lib/native-apple-signin';
