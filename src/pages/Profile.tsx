@@ -50,7 +50,7 @@ const Profile = () => {
 
       if (res.error) throw res.error;
 
-      await supabase.auth.signOut();
+      await signOut();
       toast.success('Conta excluída com sucesso.');
       navigate('/login');
     } catch (err) {
