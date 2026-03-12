@@ -74,6 +74,7 @@
 				504EC3071FED79650016851F /* AppDelegate.swift */,
 				A1B2C3D52F5300AA00AABBCC /* NativeAppleSignInPlugin.swift */,
 				A1B2C3D72F5300AA00AABBCC /* NativeAppleSignInPlugin.m */,
+				B1C2D3E52F5400BB00BBCCDD /* MyViewController.swift */,
 				504EC30B1FED79650016851F /* Main.storyboard */,
 				504EC30E1FED79650016851F /* Assets.xcassets */,
 				504EC3101FED79650016851F /* LaunchScreen.storyboard */,
