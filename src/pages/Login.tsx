@@ -9,7 +9,7 @@ import { toast } from 'sonner';
 import { purchaseMonthly, restorePurchases, isNativePlatform, getPlatform } from '@/lib/revenuecat';
 import { supabase } from '@/integrations/supabase/client';
 import { Loader2 } from 'lucide-react';
-import { SignInWithApple, SignInWithAppleOptions, SignInWithAppleResponse } from '@capacitor-community/apple-sign-in';
+import { nativeAppleSignIn } from '@/lib/native-apple-signin';
 
 const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -48,14 +48,9 @@ const Login = () => {
     setIsAppleSigningIn(true);
     try {
       if (isNativePlatform()) {
-        // Native: use Sign in with Apple plugin + signInWithIdToken
-        const options: SignInWithAppleOptions = {
-          clientId: 'com.bibliatoonkids.app',
-          redirectURI: 'https://fnksvazibtekphseknob.supabase.co/auth/v1/callback',
-          scopes: 'email name',
-        };
-        const result: SignInWithAppleResponse = await SignInWithApple.authorize(options);
-        const identityToken = result.response.identityToken;
+        // Native: use custom Apple Sign In plugin + signInWithIdToken
+        const result = await nativeAppleSignIn();
+        const identityToken = result.identityToken;
         
         if (!identityToken) {
           toast.error('Não foi possível obter o token da Apple.');
