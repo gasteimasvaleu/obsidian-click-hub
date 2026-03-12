@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 import { purchaseMonthly, restorePurchases, isNativePlatform, getPlatform } from '@/lib/revenuecat';
 import { supabase } from '@/integrations/supabase/client';
 import { Loader2 } from 'lucide-react';
+import { SignInWithApple, SignInWithAppleOptions, SignInWithAppleResponse } from '@capacitor-community/apple-sign-in';
 
 const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -46,18 +47,52 @@ const Login = () => {
   const handleAppleSignIn = async () => {
     setIsAppleSigningIn(true);
     try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'apple',
-        options: {
-          redirectTo: window.location.origin,
-        },
-      });
-      if (error) {
-        toast.error(error.message || 'Erro ao fazer login com Apple');
+      if (isNativePlatform()) {
+        // Native: use Sign in with Apple plugin + signInWithIdToken
+        const options: SignInWithAppleOptions = {
+          clientId: 'com.bibliatoonkids.app',
+          redirectURI: 'https://fnksvazibtekphseknob.supabase.co/auth/v1/callback',
+          scopes: 'email name',
+        };
+        const result: SignInWithAppleResponse = await SignInWithApple.authorize(options);
+        const identityToken = result.response.identityToken;
+        
+        if (!identityToken) {
+          toast.error('Não foi possível obter o token da Apple.');
+          return;
+        }
+
+        const { error } = await supabase.auth.signInWithIdToken({
+          provider: 'apple',
+          token: identityToken,
+        });
+
+        if (error) {
+          console.error('Supabase signInWithIdToken error:', error);
+          toast.error(error.message || 'Erro ao autenticar com Apple');
+        } else {
+          toast.success('Login realizado com sucesso!');
+          navigate('/');
+        }
+      } else {
+        // Web fallback: OAuth redirect
+        const { error } = await supabase.auth.signInWithOAuth({
+          provider: 'apple',
+          options: {
+            redirectTo: window.location.origin,
+          },
+        });
+        if (error) {
+          toast.error(error.message || 'Erro ao fazer login com Apple');
+        }
       }
     } catch (error: any) {
       console.error('Apple Sign In error:', error);
-      toast.error('Erro ao fazer login com Apple');
+      if (error?.message?.includes('cancelled') || error?.code === '1001') {
+        // User cancelled, do nothing
+      } else {
+        toast.error('Erro ao fazer login com Apple');
+      }
     } finally {
       setIsAppleSigningIn(false);
     }
