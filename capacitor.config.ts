@@ -7,6 +7,12 @@ const config: CapacitorConfig = {
   ios: {
     contentInset: 'always',
     backgroundColor: '#000000',
+    packageClassList: [
+      'CAPCameraPlugin',
+      'CAPLiveUpdatesPlugin',
+      'PurchasesPlugin',
+      'NativeAppleSignInPlugin'
+    ]
   },
   server: {
     hostname: 'app.bibliatoonkids.com',
