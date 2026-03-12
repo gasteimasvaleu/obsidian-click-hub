@@ -6,7 +6,7 @@ const REVENUECAT_API_KEY = 'appl_rDJWtfWfVugefZjBugxiJIISOcR';
 const PRODUCT_ID = 'BIBLIATOONKIDS2';
 
 // App version marker for debugging Live Updates bundles
-const APP_BUNDLE_VERSION = '2026-03-12-v2';
+const APP_BUNDLE_VERSION = '2026-03-12-v3';
 
 /**
  * Check if we're running on a native platform (iOS/Android)
