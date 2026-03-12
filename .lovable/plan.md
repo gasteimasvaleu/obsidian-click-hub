@@ -1,19 +1,11 @@
 
 
-# Remover barra de scroll cinza global
+## Atualizar versão para Build 32
 
-Adicionar ocultação de scrollbar no `#root` em `src/index.css`, mantendo a rolagem funcional.
+O build 31 já foi enviado anteriormente. Precisamos incrementar para 32 para o próximo envio.
 
-## Alteração
+### Alterações
 
-**`src/index.css`** — no bloco `#root` (linhas ~118-125), adicionar:
-- `scrollbar-width: none;` (Firefox)
-- `-ms-overflow-style: none;` (IE/Edge)
-
-E após o bloco, adicionar:
-```css
-#root::-webkit-scrollbar {
-    display: none;
-}
-```
+1. **Android** (`android/app/build.gradle`): `versionCode 31` → `versionCode 32`
+2. **iOS** (`ios/App/App.xcodeproj/project.pbxproj`): `CURRENT_PROJECT_VERSION = 31` → `CURRENT_PROJECT_VERSION = 32` (Debug e Release)
 
