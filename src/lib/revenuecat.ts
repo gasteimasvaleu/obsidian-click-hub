@@ -234,7 +234,7 @@ export const syncSubscriptionAfterLogin = async (userId: string, email: string):
 
   try {
     // Retry up to 3 times with delay to handle RevenueCat propagation after identifyUser
-    let status = { isActive: false, expiresAt: undefined as string | undefined };
+    let status: { isActive: boolean; expiresAt?: string } = { isActive: false, expiresAt: undefined };
     for (let attempt = 1; attempt <= 3; attempt++) {
       status = await checkSubscriptionStatus();
       console.log(`RevenueCat: syncSubscriptionAfterLogin attempt ${attempt}`, { userId, isActive: status.isActive, expiresAt: status.expiresAt });
