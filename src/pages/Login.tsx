@@ -57,7 +57,7 @@ const Login = () => {
           return;
         }
 
-        const { error } = await supabase.auth.signInWithIdToken({
+        const { data, error } = await supabase.auth.signInWithIdToken({
           provider: 'apple',
           token: identityToken,
         });
@@ -67,6 +67,10 @@ const Login = () => {
           toast.error(error.message || 'Erro ao autenticar com Apple');
         } else {
           toast.success('Login realizado com sucesso!');
+          // Sync subscription after successful Apple login
+          if (data?.user) {
+            syncSubscriptionAfterLogin(data.user.id, data.user.email ?? '');
+          }
           navigate('/');
         }
       } else {
