@@ -233,10 +233,48 @@ export const syncSubscriptionAfterLogin = async (userId: string, email: string):
   if (!isRevenueCatSupported()) return;
 
   try {
-    const status = await checkSubscriptionStatus();
-    console.log('RevenueCat: syncSubscriptionAfterLogin', { userId, isActive: status.isActive, expiresAt: status.expiresAt });
+    // Retry up to 3 times with delay to handle RevenueCat propagation after identifyUser
+    let status = { isActive: false, expiresAt: undefined as string | undefined };
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      status = await checkSubscriptionStatus();
+      console.log(`RevenueCat: syncSubscriptionAfterLogin attempt ${attempt}`, { userId, isActive: status.isActive, expiresAt: status.expiresAt });
+      if (status.isActive) break;
+      if (attempt < 3) {
+        await new Promise(resolve => setTimeout(resolve, 1500));
+      }
+    }
 
-    if (!status.isActive) return;
+    if (!status.isActive) {
+      console.log('RevenueCat: No active subscription found after retries, skipping sync');
+      return;
+    }
+
+    // Check if there's an existing subscriber with this email but no user_id (legacy/webhook-created)
+    const { data: existingByEmail } = await supabase
+      .from('subscribers')
+      .select('id, user_id')
+      .eq('email', email)
+      .maybeSingle();
+
+    if (existingByEmail && !existingByEmail.user_id) {
+      // Link existing record to this user
+      const { error } = await supabase
+        .from('subscribers')
+        .update({
+          user_id: userId,
+          subscription_status: 'active' as const,
+          subscription_expires_at: status.expiresAt ?? null,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', existingByEmail.id);
+
+      if (error) {
+        console.error('RevenueCat: Failed to link existing subscriber', error);
+      } else {
+        console.log('RevenueCat: Linked existing subscriber to user');
+      }
+      return;
+    }
 
     const { error } = await supabase
       .from('subscribers')

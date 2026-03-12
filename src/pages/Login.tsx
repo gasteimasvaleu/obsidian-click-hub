@@ -69,7 +69,9 @@ const Login = () => {
           toast.success('Login realizado com sucesso!');
           // Sync subscription after successful Apple login
           if (data?.user) {
-            syncSubscriptionAfterLogin(data.user.id, data.user.email ?? '');
+            const { identifyUser } = await import('@/lib/revenuecat');
+            await identifyUser(data.user.id);
+            await syncSubscriptionAfterLogin(data.user.id, data.user.email ?? '');
           }
           navigate('/');
         }
