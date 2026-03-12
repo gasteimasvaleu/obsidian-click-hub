@@ -276,23 +276,46 @@ export const syncSubscriptionAfterLogin = async (userId: string, email: string):
       return;
     }
 
-    const { error } = await supabase
+    // Check if subscriber already exists for this user_id
+    const { data: existingByUserId } = await supabase
       .from('subscribers')
-      .upsert(
-        {
+      .select('id')
+      .eq('user_id', userId)
+      .maybeSingle();
+
+    if (existingByUserId) {
+      // Update existing record
+      const { error } = await supabase
+        .from('subscribers')
+        .update({
+          subscription_status: 'active' as const,
+          subscription_expires_at: status.expiresAt ?? null,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', existingByUserId.id);
+
+      if (error) {
+        console.error('RevenueCat: Failed to update subscriber', error);
+      } else {
+        console.log('RevenueCat: Subscriber updated successfully');
+      }
+    } else {
+      // Insert new record
+      const { error } = await supabase
+        .from('subscribers')
+        .insert({
           user_id: userId,
           email,
           subscription_status: 'active' as const,
           subscription_expires_at: status.expiresAt ?? null,
           updated_at: new Date().toISOString(),
-        },
-        { onConflict: 'user_id' }
-      );
+        });
 
-    if (error) {
-      console.error('RevenueCat: Failed to sync subscriber', error);
-    } else {
-      console.log('RevenueCat: Subscriber synced successfully');
+      if (error) {
+        console.error('RevenueCat: Failed to insert subscriber', error);
+      } else {
+        console.log('RevenueCat: Subscriber inserted successfully');
+      }
     }
   } catch (error) {
     console.error('RevenueCat: syncSubscriptionAfterLogin error', error);

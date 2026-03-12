@@ -127,7 +127,7 @@ const Profile = () => {
               
               <div className="flex-1 text-center md:text-left">
                 <h1 className="text-3xl font-bold text-white mb-1">
-                  {user.user_metadata?.full_name || 'Usuário'}
+                  {user.user_metadata?.full_name || (user.email?.includes('privaterelay.appleid.com') ? 'Usuário Apple' : 'Usuário')}
                 </h1>
                 <p className="text-muted-foreground mb-3 flex items-center gap-1.5 justify-center md:justify-start">
                   {user.email?.includes('privaterelay.appleid.com') ? (
