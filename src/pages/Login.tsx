@@ -73,8 +73,7 @@ const Login = () => {
       const result = await purchaseMonthly();
 
       if (result.success) {
-        toast.success('Assinatura realizada com sucesso!');
-        navigate('/cadastro?source=revenuecat');
+        toast.success('Assinatura realizada! Agora toque em "Continuar com Apple" para criar sua conta.', { duration: 8000 });
       } else if (result.error === 'cancelled') {
         // User cancelled, do nothing
       } else if (result.error) {
