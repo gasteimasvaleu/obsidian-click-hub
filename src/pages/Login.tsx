@@ -67,8 +67,31 @@ const Login = () => {
           toast.error(error.message || 'Erro ao autenticar com Apple');
         } else {
           toast.success('Login realizado com sucesso!');
-          // Sync subscription after successful Apple login
           if (data?.user) {
+            // Save Apple name to profile (Apple only sends name on first auth)
+            const appleName = [result.givenName, result.familyName].filter(Boolean).join(' ').trim();
+            const displayName = appleName || 'Usuário Apple';
+            
+            // Update profile name if it's empty or default
+            const { data: profile } = await supabase
+              .from('profiles')
+              .select('full_name')
+              .eq('id', data.user.id)
+              .maybeSingle();
+            
+            if (!profile?.full_name || profile.full_name === 'Usuário' || profile.full_name === 'Usuário Apple') {
+              await supabase
+                .from('profiles')
+                .update({ full_name: displayName })
+                .eq('id', data.user.id);
+              
+              // Also update user metadata so it's available immediately
+              await supabase.auth.updateUser({
+                data: { full_name: displayName },
+              });
+            }
+
+            // Sync subscription after successful Apple login
             const { identifyUser } = await import('@/lib/revenuecat');
             await identifyUser(data.user.id);
             await syncSubscriptionAfterLogin(data.user.id, data.user.email ?? '');
