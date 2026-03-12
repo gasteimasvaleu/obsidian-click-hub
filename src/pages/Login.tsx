@@ -48,14 +48,9 @@ const Login = () => {
     setIsAppleSigningIn(true);
     try {
       if (isNativePlatform()) {
-        // Native: use Sign in with Apple plugin + signInWithIdToken
-        const options: SignInWithAppleOptions = {
-          clientId: 'com.bibliatoonkids.app',
-          redirectURI: 'https://fnksvazibtekphseknob.supabase.co/auth/v1/callback',
-          scopes: 'email name',
-        };
-        const result: SignInWithAppleResponse = await SignInWithApple.authorize(options);
-        const identityToken = result.response.identityToken;
+        // Native: use custom Apple Sign In plugin + signInWithIdToken
+        const result = await nativeAppleSignIn();
+        const identityToken = result.identityToken;
         
         if (!identityToken) {
           toast.error('Não foi possível obter o token da Apple.');
