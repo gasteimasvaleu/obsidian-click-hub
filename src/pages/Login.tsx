@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 import { purchaseMonthly, restorePurchases, isNativePlatform, getPlatform } from '@/lib/revenuecat';
 import { supabase } from '@/integrations/supabase/client';
 import { Loader2 } from 'lucide-react';
+import { SignInWithApple, SignInWithAppleOptions, SignInWithAppleResponse } from '@capacitor-community/apple-sign-in';
 
 const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
