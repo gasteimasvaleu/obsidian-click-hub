@@ -1,4 +1,5 @@
 import { Capacitor } from '@capacitor/core';
+import { supabase } from '@/integrations/supabase/client';
 
 // RevenueCat API key (publishable - safe in client code)
 const REVENUECAT_API_KEY = 'appl_rDJWtfWfVugefZjBugxiJIISOcR';
