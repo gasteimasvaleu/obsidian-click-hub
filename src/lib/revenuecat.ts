@@ -1,4 +1,5 @@
 import { Capacitor } from '@capacitor/core';
+import { supabase } from '@/integrations/supabase/client';
 
 // RevenueCat API key (publishable - safe in client code)
 const REVENUECAT_API_KEY = 'appl_rDJWtfWfVugefZjBugxiJIISOcR';
@@ -221,5 +222,41 @@ export const restorePurchases = async (): Promise<{
       isActive: false,
       error: error?.message ?? 'Erro ao restaurar compras.',
     };
+  }
+};
+
+/**
+ * Sync RevenueCat subscription status to Supabase subscribers table.
+ * Safety net for when the webhook fires with an anonymous RevenueCat ID.
+ */
+export const syncSubscriptionAfterLogin = async (userId: string, email: string): Promise<void> => {
+  if (!isRevenueCatSupported()) return;
+
+  try {
+    const status = await checkSubscriptionStatus();
+    console.log('RevenueCat: syncSubscriptionAfterLogin', { userId, isActive: status.isActive, expiresAt: status.expiresAt });
+
+    if (!status.isActive) return;
+
+    const { error } = await supabase
+      .from('subscribers')
+      .upsert(
+        {
+          user_id: userId,
+          email,
+          subscription_status: 'active' as const,
+          subscription_expires_at: status.expiresAt ?? null,
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: 'user_id' }
+      );
+
+    if (error) {
+      console.error('RevenueCat: Failed to sync subscriber', error);
+    } else {
+      console.log('RevenueCat: Subscriber synced successfully');
+    }
+  } catch (error) {
+    console.error('RevenueCat: syncSubscriptionAfterLogin error', error);
   }
 };

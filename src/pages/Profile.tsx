@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Trophy, Star, Target, Activity, LogOut, Camera, BookOpen, StickyNote, Music, Trash2 } from 'lucide-react';
+import { Trophy, Star, Target, Activity, LogOut, Camera, BookOpen, StickyNote, Music, Trash2, Lock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { AvatarUpload } from '@/components/profile/AvatarUpload';
@@ -129,7 +129,16 @@ const Profile = () => {
                 <h1 className="text-3xl font-bold text-white mb-1">
                   {user.user_metadata?.full_name || 'Usuário'}
                 </h1>
-                <p className="text-muted-foreground mb-3">{user.email}</p>
+                <p className="text-muted-foreground mb-3 flex items-center gap-1.5 justify-center md:justify-start">
+                  {user.email?.includes('privaterelay.appleid.com') ? (
+                    <>
+                      <Lock className="w-3.5 h-3.5" />
+                      <span>E-mail protegido pela Apple</span>
+                    </>
+                  ) : (
+                    user.email
+                  )}
+                </p>
                 
                 <div className="flex flex-wrap gap-2 justify-center md:justify-start">
                   <Badge variant="outline" className="border-primary/50 text-primary">

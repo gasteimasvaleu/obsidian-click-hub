@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from 'sonner';
-import { purchaseMonthly, restorePurchases, isNativePlatform, getPlatform } from '@/lib/revenuecat';
+import { purchaseMonthly, restorePurchases, isNativePlatform, getPlatform, syncSubscriptionAfterLogin } from '@/lib/revenuecat';
 import { supabase } from '@/integrations/supabase/client';
 import { Loader2 } from 'lucide-react';
 import { nativeAppleSignIn } from '@/lib/native-apple-signin';
@@ -57,7 +57,7 @@ const Login = () => {
           return;
         }
 
-        const { error } = await supabase.auth.signInWithIdToken({
+        const { data, error } = await supabase.auth.signInWithIdToken({
           provider: 'apple',
           token: identityToken,
         });
@@ -67,6 +67,10 @@ const Login = () => {
           toast.error(error.message || 'Erro ao autenticar com Apple');
         } else {
           toast.success('Login realizado com sucesso!');
+          // Sync subscription after successful Apple login
+          if (data?.user) {
+            syncSubscriptionAfterLogin(data.user.id, data.user.email ?? '');
+          }
           navigate('/');
         }
       } else {
