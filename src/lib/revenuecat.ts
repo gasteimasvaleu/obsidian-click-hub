@@ -5,6 +5,9 @@ import { supabase } from '@/integrations/supabase/client';
 const REVENUECAT_API_KEY = 'appl_rDJWtfWfVugefZjBugxiJIISOcR';
 const PRODUCT_ID = 'BIBLIATOONKIDS2';
 
+// App version marker for debugging Live Updates bundles
+const APP_BUNDLE_VERSION = '2026-03-12-v2';
+
 /**
  * Check if we're running on a native platform (iOS/Android)
  */
@@ -38,6 +41,8 @@ const isRevenueCatSupported = (): boolean => {
  * Initialize RevenueCat SDK - only works on iOS
  */
 export const initRevenueCat = async (): Promise<void> => {
+  console.log(`[BundleVersion] ${APP_BUNDLE_VERSION}`);
+  
   if (!isRevenueCatSupported()) {
     console.log(`RevenueCat: Skipping init - platform: ${getPlatform()}`);
     return;
@@ -64,6 +69,39 @@ export const identifyUser = async (userId: string): Promise<void> => {
     console.log('RevenueCat: User identified', userId);
   } catch (error) {
     console.error('RevenueCat: Failed to identify user', error);
+  }
+};
+
+/**
+ * Log out current RevenueCat user (reset to anonymous).
+ * Call this when Supabase session ends to prevent identity leaks.
+ */
+export const logOutRevenueCat = async (): Promise<void> => {
+  if (!isRevenueCatSupported()) return;
+
+  try {
+    const { Purchases } = await import('@revenuecat/purchases-capacitor');
+    await Purchases.logOut();
+    console.log('RevenueCat: Logged out (now anonymous)');
+  } catch (error) {
+    // logOut throws if already anonymous — safe to ignore
+    console.log('RevenueCat: logOut skipped (likely already anonymous)', error);
+  }
+};
+
+/**
+ * Get current RevenueCat appUserID
+ */
+export const getAppUserID = async (): Promise<string | null> => {
+  if (!isRevenueCatSupported()) return null;
+
+  try {
+    const { Purchases } = await import('@revenuecat/purchases-capacitor');
+    const { appUserID } = await Purchases.getAppUserID();
+    return appUserID;
+  } catch (error) {
+    console.error('RevenueCat: Failed to get appUserID', error);
+    return null;
   }
 };
 
@@ -227,7 +265,7 @@ export const restorePurchases = async (): Promise<{
 
 /**
  * Sync RevenueCat subscription status to Supabase subscribers table.
- * Safety net for when the webhook fires with an anonymous RevenueCat ID.
+ * Includes restorePurchases fallback for cross-account transfers in sandbox.
  */
 export const syncSubscriptionAfterLogin = async (userId: string, email: string): Promise<void> => {
   if (!isRevenueCatSupported()) return;
@@ -244,12 +282,21 @@ export const syncSubscriptionAfterLogin = async (userId: string, email: string):
       }
     }
 
+    // Fallback: if still not active, try restorePurchases to transfer from previous anonymous/other user
     if (!status.isActive) {
-      console.log('RevenueCat: No active subscription found after retries, skipping sync');
-      return;
+      console.log('RevenueCat: No active subscription after retries, attempting restorePurchases fallback...');
+      const restoreResult = await restorePurchases();
+      if (restoreResult.isActive) {
+        status = { isActive: true, expiresAt: restoreResult.expiresAt };
+        console.log('RevenueCat: restorePurchases fallback succeeded!', status);
+      } else {
+        console.log('RevenueCat: restorePurchases fallback also found no active subscription, skipping sync');
+        return;
+      }
     }
 
-    // Check if there's an existing subscriber with this email but no user_id (legacy/webhook-created)
+    // Now persist to Supabase using SELECT + INSERT/UPDATE (no upsert with partial index)
+    // First check by email (for legacy/webhook-created records without user_id)
     const { data: existingByEmail } = await supabase
       .from('subscribers')
       .select('id, user_id')

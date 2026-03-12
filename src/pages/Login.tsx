@@ -91,10 +91,7 @@ const Login = () => {
               });
             }
 
-            // Sync subscription after successful Apple login
-            const { identifyUser } = await import('@/lib/revenuecat');
-            await identifyUser(data.user.id);
-            await syncSubscriptionAfterLogin(data.user.id, data.user.email ?? '');
+            // RevenueCat identify+sync is handled by AuthContext onAuthStateChange
           }
           navigate('/');
         }

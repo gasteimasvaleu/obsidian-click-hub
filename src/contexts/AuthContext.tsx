@@ -30,6 +30,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           setUser(null);
           setIsAdmin(false);
           setLoading(false);
+          
+          // Reset RevenueCat to anonymous to prevent identity leaks
+          import('@/lib/revenuecat').then(({ logOutRevenueCat }) => {
+            logOutRevenueCat();
+          });
           return;
         }
 
@@ -37,14 +42,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setUser(session?.user ?? null);
         
         if (session?.user) {
-          // Identify user in RevenueCat and sync subscription (await to ensure proper order)
-          import('@/lib/revenuecat').then(async ({ identifyUser, syncSubscriptionAfterLogin }) => {
-            await identifyUser(session.user.id);
-            await syncSubscriptionAfterLogin(session.user.id, session.user.email ?? '');
-          });
-          // Verificar se o usuário ainda existe no banco
+          // Identify user in RevenueCat and sync subscription
           setTimeout(async () => {
             try {
+              // First check user still exists in DB
               const { data: profile, error } = await supabase
                 .from('profiles')
                 .select('id')
@@ -57,6 +58,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 await supabase.auth.signOut();
                 return;
               }
+              
+              // RevenueCat: identify + sync (single source of truth)
+              import('@/lib/revenuecat').then(async ({ identifyUser, syncSubscriptionAfterLogin }) => {
+                await identifyUser(session.user.id);
+                await syncSubscriptionAfterLogin(session.user.id, session.user.email ?? '');
+              });
               
               checkAdminStatus(session.user.id);
             } catch (err) {
@@ -80,6 +87,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         checkAdminStatus(session.user.id);
       } else {
         setLoading(false);
+        // No session: ensure RevenueCat is anonymous
+        import('@/lib/revenuecat').then(({ logOutRevenueCat }) => {
+          logOutRevenueCat();
+        });
       }
     });
 
@@ -146,16 +157,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const signOut = async () => {
     try {
+      // Reset RevenueCat before clearing session
+      const { logOutRevenueCat } = await import('@/lib/revenuecat');
+      await logOutRevenueCat();
+      
       const { error } = await supabase.auth.signOut();
       
-      // Mesmo se houver erro (como session_not_found), limpar estado local
+      // Mesmo se houver erro, limpar estado local
       setSession(null);
       setUser(null);
       setIsAdmin(false);
       
       if (error) {
-        // Se for erro de sessão não encontrada, apenas logar
-        // O logout local já foi feito
         console.log('Logout server-side falhou (sessão provavelmente já expirada):', error.message);
       }
       
