@@ -164,10 +164,11 @@
 		504EC3001FED79650016851F /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
-			files = (
+		files = (
 				504EC3081FED79650016851F /* AppDelegate.swift in Sources */,
 				A1B2C3D42F5300AA00AABBCC /* NativeAppleSignInPlugin.swift in Sources */,
 				A1B2C3D62F5300AA00AABBCC /* NativeAppleSignInPlugin.m in Sources */,
+				B1C2D3E42F5400BB00BBCCDD /* MyViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
