@@ -12,6 +12,7 @@ import { Loader2 } from 'lucide-react';
 
 const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [hasPurchased, setHasPurchased] = useState(false);
   const [isPurchasing, setIsPurchasing] = useState(false);
   const [isRestoring, setIsRestoring] = useState(false);
   const [isAppleSigningIn, setIsAppleSigningIn] = useState(false);
