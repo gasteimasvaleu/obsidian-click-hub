@@ -1,13 +1,19 @@
 
 
-# Atualizar versão para 1.1
+# Remover barra de scroll cinza global
 
-Os arquivos iOS e Android estão com `1.0.1`, mas a versão criada no App Store Connect é `1.1`. Preciso alinhar.
+Adicionar ocultação de scrollbar no `#root` em `src/index.css`, mantendo a rolagem funcional.
 
-## Alterações
+## Alteração
 
-1. **`ios/App/App.xcodeproj/project.pbxproj`** — Alterar `MARKETING_VERSION = 1.0.1` para `1.1` (2 ocorrências: Debug e Release)
-2. **`android/app/build.gradle`** — Alterar `versionName "1.0.1"` para `"1.1"`
+**`src/index.css`** — no bloco `#root` (linhas ~118-125), adicionar:
+- `scrollbar-width: none;` (Firefox)
+- `-ms-overflow-style: none;` (IE/Edge)
 
-Após a alteração, faça novo Archive no Xcode e upload.
+E após o bloco, adicionar:
+```css
+#root::-webkit-scrollbar {
+    display: none;
+}
+```
 
