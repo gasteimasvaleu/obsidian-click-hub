@@ -1,19 +1,14 @@
 
 
-# Remover barra de scroll cinza global
+# Incrementar Build Number para 34 (iOS + Android)
 
-Adicionar ocultação de scrollbar no `#root` em `src/index.css`, mantendo a rolagem funcional.
+Atualizar o build number de 33 para 34 em ambas as plataformas para permitir o upload de um novo build no App Store Connect.
 
-## Alteração
+## Arquivos a alterar
 
-**`src/index.css`** — no bloco `#root` (linhas ~118-125), adicionar:
-- `scrollbar-width: none;` (Firefox)
-- `-ms-overflow-style: none;` (IE/Edge)
+1. **`ios/App/App.xcodeproj/project.pbxproj`** — Alterar `CURRENT_PROJECT_VERSION = 33` para `34` (2 ocorrências: Debug e Release)
 
-E após o bloco, adicionar:
-```css
-#root::-webkit-scrollbar {
-    display: none;
-}
-```
+2. **`android/app/build.gradle`** — Alterar `versionCode 33` para `34`
+
+Após isso, você precisará fazer Archive no Xcode e Upload to App Store Connect para o build 34 aparecer disponível na nova versão.
 
