@@ -264,6 +264,56 @@ export const restorePurchases = async (): Promise<{
 };
 
 /**
+ * Claim orphan subscriber records created by webhook for anonymous RevenueCat purchases.
+ * Finds records without user_id that have revenuecat: prefix and links them to the current user.
+ */
+const claimOrphanSubscriber = async (
+  userId: string,
+  email: string,
+  status: { isActive: boolean; expiresAt?: string }
+): Promise<boolean> => {
+  try {
+    // Find orphan records: no user_id, revenuecat product, active status
+    const { data: orphans } = await supabase
+      .from('subscribers')
+      .select('id, hotmart_transaction_id')
+      .is('user_id', null)
+      .like('hotmart_product_id', 'revenuecat:%')
+      .eq('subscription_status', 'active')
+      .limit(5);
+
+    if (!orphans?.length) {
+      console.log('RevenueCat: No orphan records found');
+      return false;
+    }
+
+    // Claim the first orphan (link it to this user)
+    const orphan = orphans[0];
+    const { error } = await supabase
+      .from('subscribers')
+      .update({
+        user_id: userId,
+        email,
+        subscription_status: status.isActive ? ('active' as const) : ('expired' as const),
+        subscription_expires_at: status.expiresAt ?? null,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', orphan.id);
+
+    if (error) {
+      console.error('RevenueCat: Failed to claim orphan', error);
+      return false;
+    }
+
+    console.log(`RevenueCat: Claimed orphan record ${orphan.id} (txn: ${orphan.hotmart_transaction_id}) for user ${userId}`);
+    return true;
+  } catch (error) {
+    console.error('RevenueCat: claimOrphanSubscriber error', error);
+    return false;
+  }
+};
+
+/**
  * Sync RevenueCat subscription status to Supabase subscribers table.
  * Includes restorePurchases fallback for cross-account transfers in sandbox.
  */
@@ -295,8 +345,10 @@ export const syncSubscriptionAfterLogin = async (userId: string, email: string):
       }
     }
 
-    // Now persist to Supabase using SELECT + INSERT/UPDATE (no upsert with partial index)
-    // First check by email (for legacy/webhook-created records without user_id)
+    // Step 1: Try to claim any orphan records (created by webhook for anonymous purchases)
+    await claimOrphanSubscriber(userId, email, status);
+
+    // Step 2: Ensure subscriber record exists for this user
     const { data: existingByEmail } = await supabase
       .from('subscribers')
       .select('id, user_id')
@@ -304,7 +356,6 @@ export const syncSubscriptionAfterLogin = async (userId: string, email: string):
       .maybeSingle();
 
     if (existingByEmail && !existingByEmail.user_id) {
-      // Link existing record to this user
       const { error } = await supabase
         .from('subscribers')
         .update({
@@ -323,7 +374,6 @@ export const syncSubscriptionAfterLogin = async (userId: string, email: string):
       return;
     }
 
-    // Check if subscriber already exists for this user_id
     const { data: existingByUserId } = await supabase
       .from('subscribers')
       .select('id')
@@ -331,7 +381,6 @@ export const syncSubscriptionAfterLogin = async (userId: string, email: string):
       .maybeSingle();
 
     if (existingByUserId) {
-      // Update existing record
       const { error } = await supabase
         .from('subscribers')
         .update({
@@ -347,7 +396,6 @@ export const syncSubscriptionAfterLogin = async (userId: string, email: string):
         console.log('RevenueCat: Subscriber updated successfully');
       }
     } else {
-      // Insert new record
       const { error } = await supabase
         .from('subscribers')
         .insert({

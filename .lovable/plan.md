@@ -1,33 +1,19 @@
 
 
-## Correção: Webhook RevenueCat para IDs Anônimos + Sync Cliente
+# Remover barra de scroll cinza global
 
-### Arquivos a alterar
+Adicionar ocultação de scrollbar no `#root` em `src/index.css`, mantendo a rolagem funcional.
 
-**1. `supabase/functions/revenuecat-webhook/index.ts`**
-- Detectar `app_user_id` começando com `$RCAnonymousID:`
-- Verificar array `aliases` por UUID válido (não-anônimo)
-- Se UUID encontrado nos aliases → usar como `user_id` normalmente
-- Se nenhum UUID → criar registro sem `user_id`, armazenando `original_transaction_id` no campo `hotmart_transaction_id` para rastreio futuro
-- Antes de inserir, verificar duplicata por `hotmart_transaction_id`
+## Alteração
 
-**2. `src/lib/revenuecat.ts`**
-- No `syncSubscriptionAfterLogin`, após confirmar assinatura ativa, buscar registros órfãos (sem `user_id`) que tenham `hotmart_product_id` começando com `revenuecat:` e vinculá-los ao usuário atual
-- Usar `original_transaction_id` do RevenueCat SDK para match mais preciso quando disponível
+**`src/index.css`** — no bloco `#root` (linhas ~118-125), adicionar:
+- `scrollbar-width: none;` (Firefox)
+- `-ms-overflow-style: none;` (IE/Edge)
 
-### Fluxo corrigido
-
-```text
-Compra (anônimo) → Webhook recebe $RCAnonymousID
-                  → Cria registro sem user_id (com transaction_id)
-                  
-Login/Signup      → identifyUser(uuid)
-                  → syncSubscriptionAfterLogin()
-                  → Detecta assinatura ativa via SDK
-                  → Busca registro órfão → vincula user_id
+E após o bloco, adicionar:
+```css
+#root::-webkit-scrollbar {
+    display: none;
+}
 ```
-
-### Sem novo build necessário
-- Webhook: deploy automático via Supabase
-- Cliente JS: deploy via Live Update
 
