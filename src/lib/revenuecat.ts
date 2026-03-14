@@ -295,8 +295,10 @@ export const syncSubscriptionAfterLogin = async (userId: string, email: string):
       }
     }
 
-    // Now persist to Supabase using SELECT + INSERT/UPDATE (no upsert with partial index)
-    // First check by email (for legacy/webhook-created records without user_id)
+    // Step 1: Try to claim any orphan records (created by webhook for anonymous purchases)
+    await claimOrphanSubscriber(userId, email, status);
+
+    // Step 2: Ensure subscriber record exists for this user
     const { data: existingByEmail } = await supabase
       .from('subscribers')
       .select('id, user_id')
@@ -304,7 +306,6 @@ export const syncSubscriptionAfterLogin = async (userId: string, email: string):
       .maybeSingle();
 
     if (existingByEmail && !existingByEmail.user_id) {
-      // Link existing record to this user
       const { error } = await supabase
         .from('subscribers')
         .update({
@@ -323,7 +324,6 @@ export const syncSubscriptionAfterLogin = async (userId: string, email: string):
       return;
     }
 
-    // Check if subscriber already exists for this user_id
     const { data: existingByUserId } = await supabase
       .from('subscribers')
       .select('id')
@@ -331,7 +331,6 @@ export const syncSubscriptionAfterLogin = async (userId: string, email: string):
       .maybeSingle();
 
     if (existingByUserId) {
-      // Update existing record
       const { error } = await supabase
         .from('subscribers')
         .update({
@@ -347,7 +346,6 @@ export const syncSubscriptionAfterLogin = async (userId: string, email: string):
         console.log('RevenueCat: Subscriber updated successfully');
       }
     } else {
-      // Insert new record
       const { error } = await supabase
         .from('subscribers')
         .insert({
