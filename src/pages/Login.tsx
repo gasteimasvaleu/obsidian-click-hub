@@ -26,6 +26,16 @@ const Login = () => {
     }
   }, [user, navigate]);
 
+  useEffect(() => {
+    if (isNativePlatform()) {
+      restorePurchases().then((result) => {
+        if (result.success && result.isActive) {
+          setHasPurchased(true);
+        }
+      }).catch(() => {});
+    }
+  }, []);
+
   const handleSignIn = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);

@@ -1,32 +1,19 @@
 
 
-## Problema
+# Remover barra de scroll cinza global
 
-O botão "Continuar com Apple" está condicionado ao estado `hasPurchased`, que começa como `false` e só muda para `true` após uma nova compra na mesma sessão. Após logout, o estado reseta e o botão fica desabilitado permanentemente, mesmo com assinatura ativa.
+Adicionar ocultação de scrollbar no `#root` em `src/index.css`, mantendo a rolagem funcional.
 
-## Solução
+## Alteração
 
-No `Login.tsx`, ao montar o componente em plataforma nativa, chamar `restorePurchases()` automaticamente para verificar se já existe assinatura ativa. Se sim, setar `hasPurchased = true` e habilitar o botão Apple.
+**`src/index.css`** — no bloco `#root` (linhas ~118-125), adicionar:
+- `scrollbar-width: none;` (Firefox)
+- `-ms-overflow-style: none;` (IE/Edge)
 
-## Mudanças
-
-**`src/pages/Login.tsx`**
-- Adicionar `useEffect` que roda no mount (apenas em plataforma nativa)
-- Chama `restorePurchases()` silenciosamente (sem toasts)
-- Se `result.isActive === true`, seta `hasPurchased(true)`
-- Isso desbloqueia o botão "Continuar com Apple" automaticamente
-
-```typescript
-useEffect(() => {
-  if (isNativePlatform()) {
-    restorePurchases().then((result) => {
-      if (result.success && result.isActive) {
-        setHasPurchased(true);
-      }
-    }).catch(() => {});
-  }
-}, []);
+E após o bloco, adicionar:
+```css
+#root::-webkit-scrollbar {
+    display: none;
+}
 ```
-
-Mudança mínima — apenas um `useEffect` adicionado. Sem impacto no fluxo de nova compra.
 
