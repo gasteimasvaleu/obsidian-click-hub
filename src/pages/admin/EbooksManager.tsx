@@ -204,6 +204,20 @@ const EbooksManager = () => {
     setFile(null);
     setVideoUrl('');
     setVideoSource('upload');
+    setEditingEbook(null);
+  };
+
+  const startEditing = (ebook: Ebook) => {
+    setEditingEbook(ebook);
+    setTitle(ebook.title);
+    setDescription(ebook.description);
+    setPages(ebook.pages);
+    setDuration(ebook.duration);
+    setContentType(ebook.content_type as ContentType);
+    setVideoUrl(ebook.video_url || '');
+    setVideoSource(ebook.video_url ? 'link' : 'upload');
+    setFile(null);
+    setDialogOpen(true);
   };
 
   const toggleAvailability = async (id: string, currentStatus: boolean) => {
