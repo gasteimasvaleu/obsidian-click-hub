@@ -1,19 +1,13 @@
 
 
-# Remover barra de scroll cinza global
+## Plan: Remove GlassCard from Family Policy Link
 
-Adicionar ocultação de scrollbar no `#root` em `src/index.css`, mantendo a rolagem funcional.
+Replace the `GlassCard` wrapper with a simple `div` keeping the same icon + text link style.
 
-## Alteração
+### Change
 
-**`src/index.css`** — no bloco `#root` (linhas ~118-125), adicionar:
-- `scrollbar-width: none;` (Firefox)
-- `-ms-overflow-style: none;` (IE/Edge)
-
-E após o bloco, adicionar:
-```css
-#root::-webkit-scrollbar {
-    display: none;
-}
-```
+**`src/pages/Index.tsx`** (lines ~149-155):
+- Remove the `GlassCard` wrapper around the "Política de Famílias e Privacidade" link
+- Replace with a plain `div` with `flex items-center justify-center gap-2 cursor-pointer` and the `onClick` handler
+- Keep the `ShieldCheck` icon and `span` text as-is
 
