@@ -163,18 +163,20 @@ const EbooksManager = () => {
         }
       }
 
-      // Insert into database
-      const { error } = await supabase.from('ebooks').insert({
+      const payload = {
         title,
         description,
         pages: contentType === 'ebook' ? pages : null,
         duration: contentType !== 'ebook' ? duration : null,
         format,
-        file_url: fileUrl,
+        file_url: fileUrl || editingEbook?.file_url || null,
         video_url: contentType === 'video' && videoSource === 'link' ? videoUrl : null,
         content_type: contentType,
-        available: false,
-      });
+      };
+
+      const { error } = editingEbook
+        ? await supabase.from('ebooks').update(payload).eq('id', editingEbook.id)
+        : await supabase.from('ebooks').insert({ ...payload, available: false });
 
       if (error) {
         toast.error('Erro ao salvar conteúdo');
