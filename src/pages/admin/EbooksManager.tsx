@@ -125,7 +125,7 @@ const EbooksManager = () => {
       return;
     }
     
-    if (contentType !== 'video' && !file) {
+    if (contentType !== 'video' && !file && !editingEbook) {
       toast.error('Por favor, selecione um arquivo');
       return;
     }
