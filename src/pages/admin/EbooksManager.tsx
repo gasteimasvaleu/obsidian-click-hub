@@ -4,7 +4,7 @@ import { AdminLayout } from '@/components/admin/AdminLayout';
 import { ProtectedRoute } from '@/components/admin/ProtectedRoute';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Plus, Trash2, Eye, EyeOff, Upload, FileText, Music, Video, Link } from 'lucide-react';
+import { Plus, Trash2, Eye, EyeOff, Upload, FileText, Music, Video, Link, Pencil } from 'lucide-react';
 import { toast } from 'sonner';
 import {
   Dialog,
