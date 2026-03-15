@@ -4,7 +4,7 @@ import { AdminLayout } from '@/components/admin/AdminLayout';
 import { ProtectedRoute } from '@/components/admin/ProtectedRoute';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Plus, Trash2, Eye, EyeOff, Upload, FileText, Music, Video, Link } from 'lucide-react';
+import { Plus, Trash2, Eye, EyeOff, Upload, FileText, Music, Video, Link, Pencil } from 'lucide-react';
 import { toast } from 'sonner';
 import {
   Dialog,
@@ -56,6 +56,7 @@ const EbooksManager = () => {
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [editingEbook, setEditingEbook] = useState<Ebook | null>(null);
   
   // Form state
   const [title, setTitle] = useState('');
@@ -124,7 +125,7 @@ const EbooksManager = () => {
       return;
     }
     
-    if (contentType !== 'video' && !file) {
+    if (contentType !== 'video' && !file && !editingEbook) {
       toast.error('Por favor, selecione um arquivo');
       return;
     }
@@ -162,24 +163,26 @@ const EbooksManager = () => {
         }
       }
 
-      // Insert into database
-      const { error } = await supabase.from('ebooks').insert({
+      const payload = {
         title,
         description,
         pages: contentType === 'ebook' ? pages : null,
         duration: contentType !== 'ebook' ? duration : null,
         format,
-        file_url: fileUrl,
+        file_url: fileUrl || editingEbook?.file_url || null,
         video_url: contentType === 'video' && videoSource === 'link' ? videoUrl : null,
         content_type: contentType,
-        available: false,
-      });
+      };
+
+      const { error } = editingEbook
+        ? await supabase.from('ebooks').update(payload).eq('id', editingEbook.id)
+        : await supabase.from('ebooks').insert({ ...payload, available: false });
 
       if (error) {
         toast.error('Erro ao salvar conteúdo');
         console.error(error);
       } else {
-        toast.success('Conteúdo criado com sucesso');
+        toast.success(editingEbook ? 'Conteúdo atualizado com sucesso' : 'Conteúdo criado com sucesso');
         resetForm();
         setDialogOpen(false);
         loadEbooks();
@@ -201,6 +204,20 @@ const EbooksManager = () => {
     setFile(null);
     setVideoUrl('');
     setVideoSource('upload');
+    setEditingEbook(null);
+  };
+
+  const startEditing = (ebook: Ebook) => {
+    setEditingEbook(ebook);
+    setTitle(ebook.title);
+    setDescription(ebook.description);
+    setPages(ebook.pages);
+    setDuration(ebook.duration);
+    setContentType(ebook.content_type as ContentType);
+    setVideoUrl(ebook.video_url || '');
+    setVideoSource(ebook.video_url ? 'link' : 'upload');
+    setFile(null);
+    setDialogOpen(true);
   };
 
   const toggleAvailability = async (id: string, currentStatus: boolean) => {
@@ -266,7 +283,7 @@ const EbooksManager = () => {
           <div className="flex justify-between items-center mb-8">
             <h2 className="text-3xl font-bold text-foreground">Gerenciar Biblioteca</h2>
             
-            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+            <Dialog open={dialogOpen} onOpenChange={(open) => { setDialogOpen(open); if (!open) resetForm(); }}>
               <DialogTrigger asChild>
                 <Button className="gap-2">
                   <Plus className="h-4 w-4" />
@@ -275,9 +292,9 @@ const EbooksManager = () => {
               </DialogTrigger>
               <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
-                  <DialogTitle>Adicionar Novo Conteúdo</DialogTitle>
+                  <DialogTitle>{editingEbook ? 'Editar Conteúdo' : 'Adicionar Novo Conteúdo'}</DialogTitle>
                   <DialogDescription>
-                    Preencha os dados do ebook, audiobook ou vídeo
+                    {editingEbook ? 'Altere os dados do conteúdo' : 'Preencha os dados do ebook, audiobook ou vídeo'}
                   </DialogDescription>
                 </DialogHeader>
                 
@@ -410,7 +427,6 @@ const EbooksManager = () => {
                         type="file"
                         accept={getAcceptedFormats()}
                         onChange={handleFileChange}
-                        required
                       />
                     </div>
                   )}
@@ -424,7 +440,7 @@ const EbooksManager = () => {
                     ) : (
                       <>
                         <Upload className="h-4 w-4 mr-2" />
-                        Criar Conteúdo
+                        {editingEbook ? 'Salvar Alterações' : 'Criar Conteúdo'}
                       </>
                     )}
                   </Button>
@@ -489,6 +505,13 @@ const EbooksManager = () => {
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-2">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => startEditing(ebook)}
+                          >
+                            <Pencil className="h-4 w-4" />
+                          </Button>
                           <Button
                             variant="ghost"
                             size="sm"
