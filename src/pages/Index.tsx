@@ -147,15 +147,13 @@ const Index = () => {
           )}
 
           {/* Link Política de Famílias */}
-          <GlassCard
-            hoverable
-            pressable
+          <div
             onClick={() => navigate('/politica-familia')}
-            className="h-[50px] flex items-center justify-center gap-2 p-0 cursor-pointer"
+            className="flex items-center justify-center gap-2 cursor-pointer py-3"
           >
             <ShieldCheck size={16} className="text-primary" />
             <span className="text-muted-foreground text-xs underline">Política de Famílias e Privacidade</span>
-          </GlassCard>
+          </div>
 
         </div>
       </div>
