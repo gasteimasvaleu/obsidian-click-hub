@@ -292,9 +292,9 @@ const EbooksManager = () => {
               </DialogTrigger>
               <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
-                  <DialogTitle>Adicionar Novo Conteúdo</DialogTitle>
+                  <DialogTitle>{editingEbook ? 'Editar Conteúdo' : 'Adicionar Novo Conteúdo'}</DialogTitle>
                   <DialogDescription>
-                    Preencha os dados do ebook, audiobook ou vídeo
+                    {editingEbook ? 'Altere os dados do conteúdo' : 'Preencha os dados do ebook, audiobook ou vídeo'}
                   </DialogDescription>
                 </DialogHeader>
                 
