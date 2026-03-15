@@ -182,7 +182,7 @@ const EbooksManager = () => {
         toast.error('Erro ao salvar conteúdo');
         console.error(error);
       } else {
-        toast.success('Conteúdo criado com sucesso');
+        toast.success(editingEbook ? 'Conteúdo atualizado com sucesso' : 'Conteúdo criado com sucesso');
         resetForm();
         setDialogOpen(false);
         loadEbooks();
