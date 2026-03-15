@@ -440,7 +440,7 @@ const EbooksManager = () => {
                     ) : (
                       <>
                         <Upload className="h-4 w-4 mr-2" />
-                        Criar Conteúdo
+                        {editingEbook ? 'Salvar Alterações' : 'Criar Conteúdo'}
                       </>
                     )}
                   </Button>
