@@ -313,7 +313,7 @@ export const ParentsGuideForm = ({
                   placeholder="Ex: João 3:16, Parábola do Bom Samaritano, Moisés e o Mar Vermelho..."
                   value={formData.passagem}
                   onChange={(e) => updateFormData('passagem', e.target.value)}
-                  className="min-h-[120px] w-full max-w-full box-border"
+                  className="min-h-[120px] w-full max-w-full box-border text-base md:text-sm"
                 />
               </div>
             </div>
