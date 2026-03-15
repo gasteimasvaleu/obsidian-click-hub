@@ -508,6 +508,13 @@ const EbooksManager = () => {
                           <Button
                             variant="ghost"
                             size="sm"
+                            onClick={() => startEditing(ebook)}
+                          >
+                            <Pencil className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
                             onClick={() => toggleAvailability(ebook.id, ebook.available)}
                           >
                             {ebook.available ? (
