@@ -283,7 +283,7 @@ const EbooksManager = () => {
           <div className="flex justify-between items-center mb-8">
             <h2 className="text-3xl font-bold text-foreground">Gerenciar Biblioteca</h2>
             
-            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+            <Dialog open={dialogOpen} onOpenChange={(open) => { setDialogOpen(open); if (!open) resetForm(); }}>
               <DialogTrigger asChild>
                 <Button className="gap-2">
                   <Plus className="h-4 w-4" />
