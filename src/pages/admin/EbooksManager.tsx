@@ -56,6 +56,7 @@ const EbooksManager = () => {
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [editingEbook, setEditingEbook] = useState<Ebook | null>(null);
   
   // Form state
   const [title, setTitle] = useState('');
