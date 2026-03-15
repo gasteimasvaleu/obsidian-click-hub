@@ -427,7 +427,6 @@ const EbooksManager = () => {
                         type="file"
                         accept={getAcceptedFormats()}
                         onChange={handleFileChange}
-                        required
                       />
                     </div>
                   )}
