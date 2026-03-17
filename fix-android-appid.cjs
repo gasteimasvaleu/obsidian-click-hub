@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 
 const CORRECT_PACKAGE = "br.com.caio.bibliatoonkids";
-const CORRECT_PACKAGE_DIR = "com/caio/bibliatoonkids";
+const CORRECT_PACKAGE_DIR = "br/com/caio/bibliatoonkids";
 const CAPACITOR_PACKAGE = "com.bibliatoonkids.app";
 const CAPACITOR_PACKAGE_DIR = "com/bibliatoonkids/app";
 
