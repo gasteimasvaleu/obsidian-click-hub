@@ -1,32 +1,45 @@
 
 
-## Fix: Revert excessive padding + Add safe-area to bottom menu
+## Add "Mais" (More) hamburger menu to tubelight navbar
 
-### Problem 1: Navbar spacing
-The previous fix changed `pt-16` to `pt-20` on all pages, but this created too much gap between the navbar and content. The original problem was a tiny overlap — the fix overcompensated.
+**Idea:** Replace the "Games" item in the bottom navbar with a "Mais" (More) button that opens a sheet/drawer listing all pages not in the main navbar — similar to the screenshot from your other app.
 
-**Solution:** Revert all pages back to `pt-16` and instead reduce the FuturisticNavbar's bottom padding from `pb-4` to `pb-2`. This makes the navbar thinner, eliminating the tiny overlap without pushing content too far down.
+### Current navbar items (6)
+1. Inicio (/)
+2. Oracoes (/oracoes)
+3. Bibliafy (/audiofy)
+4. Cursos (/plataforma)
+5. Guia para Pais (/guia-pais)
+6. **Games (/games)** — will be replaced by "Mais"
 
-### Problem 2: Bottom tubelight menu lacks safe-area background
-The bottom navigation floats with `mb-9` but has no solid background beneath it, looking disconnected on iOS.
+### "Mais" menu items (pages NOT in navbar)
+- Games (/games)
+- Biblia Interativa (/biblia)
+- Devocional Diario (/devocional)
+- Colorir (/colorir)
+- Amigo Divino (/amigodivino)
+- Comunidade (/comunidade)
+- Meu Perfil (/profile)
+- Sobre (/sobre)
+- Politica Familia (/politica-familia)
+- Termos de Uso (/termos-de-uso)
 
-**Solution:** Add a black safe-area strip behind/below the tubelight menu by wrapping it with a background container that extends to the bottom edge of the screen.
+### Changes
 
-### Files to change
+**1. `src/App.tsx`**
+- Replace the Games nav item with `{ name: 'Mais', url: '#more', icon: Menu }` (or a special flag)
+- Import `Menu` from lucide-react
 
-1. **`src/components/FuturisticNavbar.tsx`** — Change `pb-4` to `pb-2` on the nav element
-2. **`src/components/ui/tubelight-navbar.tsx`** — Add a black safe-area background behind the bottom nav:
-   - Wrap the menu in a container with a solid black background strip that covers from the menu to the bottom of the screen
-   - Use `pb-[env(safe-area-inset-bottom)]` for proper iOS spacing
-   - Reduce `mb-9` to `mb-0` since the safe-area container handles spacing
-3. **9 page files** — Revert `pt-20` back to `pt-16`:
-   - `src/pages/Audiofy.tsx`
-   - `src/pages/colorir/ColorirPage.tsx`
-   - `src/pages/Comunidade.tsx`
-   - `src/pages/AmigoDivino.tsx`
-   - `src/pages/colorir/PhotoTransformPage.tsx`
-   - `src/pages/Oracoes.tsx`
-   - `src/pages/GuiaPais.tsx`
-   - `src/pages/colorir/MyCreationsPage.tsx`
-   - `src/pages/Games.tsx`
+**2. `src/components/ui/tubelight-navbar.tsx`**
+- Detect when the "Mais" item is clicked (by url `#more` or a special prop)
+- Instead of navigating, open a `Sheet` (bottom drawer) with the list of secondary pages
+- Each item in the sheet: icon + label, clicking navigates and closes the sheet
+- The sheet slides up from the bottom, styled consistently with the app's dark theme
+- When sheet is open, the "Mais" icon changes to an X (close)
+
+### Technical details
+- Use the existing `Sheet` component from `src/components/ui/sheet.tsx` with `side="bottom"`
+- The "Mais" button won't use `<Link>`, it will toggle sheet state via `onClick`
+- NavBar interface updated: add optional `isMenu?: boolean` flag to NavItem
+- Secondary menu items defined inline in tubelight-navbar or passed as a prop
 
