@@ -105,7 +105,7 @@ const Audiofy = () => {
     <div className={`min-h-screen bg-black relative ${showPlayer ? 'pb-56' : 'pb-24'}`}>
       <FuturisticNavbar />
       
-      <div className="flex items-center justify-center min-h-screen pt-16 px-4">
+      <div className="flex items-center justify-center min-h-screen pt-20 px-4">
         <div className="flex flex-col items-center w-full">
           {/* Video animation */}
           <div className="flex justify-center w-full mb-8">

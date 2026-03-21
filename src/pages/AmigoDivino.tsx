@@ -14,7 +14,7 @@ const AmigoDivino = () => {
     <div className="min-h-screen bg-black relative pb-24">
       <FuturisticNavbar />
       
-      <div className="flex items-center justify-center min-h-screen pt-16 px-4">
+      <div className="flex items-center justify-center min-h-screen pt-20 px-4">
         <div className="flex flex-col items-center w-full">
           {/* Animação */}
           <div className="flex justify-center w-full mb-8">

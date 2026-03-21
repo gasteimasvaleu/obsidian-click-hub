@@ -114,7 +114,7 @@ const Oracoes = () => {
   return <div className="min-h-screen bg-black relative">
       <FuturisticNavbar />
 
-      <div className="container mx-auto px-4 pt-16 pb-32">
+      <div className="container mx-auto px-4 pt-20 pb-32">
         {/* Header */}
         <div className="flex justify-center mb-8">
           <div className="flex flex-col items-center w-full max-w-3xl">
