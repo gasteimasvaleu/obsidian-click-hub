@@ -59,7 +59,7 @@ const Comunidade = () => {
       <FuturisticNavbar />
 
       {/* Video Banner */}
-      <div className="flex justify-center w-full pt-20 pb-4 px-4">
+      <div className="flex justify-center w-full pt-16 pb-4 px-4">
         <GlassCard className="w-full max-w-[500px] p-0 overflow-hidden">
           <video 
             src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/bannercomunidade.mp4"

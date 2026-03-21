@@ -53,7 +53,7 @@ const ColorirPage = () => {
     <div className="min-h-screen bg-background pb-24">
       <FuturisticNavbar />
 
-      <main className="container mx-auto px-4 pt-20">
+      <main className="container mx-auto px-4 pt-16">
         {/* Hero */}
         <div className="flex justify-center mb-6 animate-fade-in">
           <GlassCard className="w-full max-w-3xl p-0 overflow-hidden">

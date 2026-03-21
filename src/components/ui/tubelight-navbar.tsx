@@ -41,66 +41,71 @@ export function NavBar({ items, className }: NavBarProps) {
   return (
     <div
       className={cn(
-        "fixed bottom-0 left-1/2 -translate-x-1/2 z-50 mb-9",
+        "fixed bottom-0 left-0 right-0 z-50",
         className,
       )}
     >
-      <div className="flex items-center gap-1.5 md:gap-3 glass border border-primary/20 backdrop-blur-lg py-2 px-2 rounded-2xl shadow-lg">
-        {items.map((item) => {
-          const Icon = item.icon
-          const isActive = activeTab === item.name
+      {/* Safe-area black background strip */}
+      <div className="bg-black/90 backdrop-blur-lg pb-[env(safe-area-inset-bottom)]">
+        <div className="flex justify-center px-3 pt-2 pb-2">
+          <div className="flex items-center gap-1.5 md:gap-3 glass border border-primary/20 backdrop-blur-lg py-2 px-2 rounded-2xl shadow-lg">
+            {items.map((item) => {
+              const Icon = item.icon
+              const isActive = activeTab === item.name
 
-          return (
-            <Link
-              key={item.name}
-              to={item.url}
-              onClick={() => {
-                setActiveTab(item.name);
-                
-                // Haptic feedback em dispositivos móveis
-                if ('vibrate' in navigator && window.innerWidth < 768) {
-                  navigator.vibrate(10);
-                }
-              }}
-              className={cn(
-                "relative cursor-pointer text-sm font-semibold rounded-full transition-all duration-300",
-                "min-w-[48px] min-h-[48px] flex items-center justify-center",
-                "px-3 py-3 md:px-6 md:py-2",
-                "text-primary/80 hover:text-primary",
-                "active:scale-95",
-                isActive && "bg-primary/10 text-primary",
-              )}
-            >
-              <span className="flex items-center gap-2">
-                <Icon size={24} strokeWidth={2.5} />
-                <span className={cn(
-                  "transition-all duration-200 overflow-hidden whitespace-nowrap",
-                  isActive ? "inline max-w-[200px] opacity-100" : "hidden md:inline md:max-w-[200px] md:opacity-100"
-                )}>
-                  {item.shortName || item.name}
-                </span>
-              </span>
-              {isActive && (
-                <motion.div
-                  layoutId="lamp"
-                  className="absolute inset-0 w-full bg-primary/5 rounded-full -z-10"
-                  initial={false}
-                  transition={{
-                    type: "spring",
-                    stiffness: 300,
-                    damping: 30,
+              return (
+                <Link
+                  key={item.name}
+                  to={item.url}
+                  onClick={() => {
+                    setActiveTab(item.name);
+                    
+                    // Haptic feedback em dispositivos móveis
+                    if ('vibrate' in navigator && window.innerWidth < 768) {
+                      navigator.vibrate(10);
+                    }
                   }}
+                  className={cn(
+                    "relative cursor-pointer text-sm font-semibold rounded-full transition-all duration-300",
+                    "min-w-[48px] min-h-[48px] flex items-center justify-center",
+                    "px-3 py-3 md:px-6 md:py-2",
+                    "text-primary/80 hover:text-primary",
+                    "active:scale-95",
+                    isActive && "bg-primary/10 text-primary",
+                  )}
                 >
-                  <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-8 h-1 bg-primary rounded-t-full">
-                    <div className="absolute w-12 h-6 bg-primary/20 rounded-full blur-md -top-2 -left-2" />
-                    <div className="absolute w-8 h-6 bg-primary/20 rounded-full blur-md -top-1" />
-                    <div className="absolute w-4 h-4 bg-primary/20 rounded-full blur-sm top-0 left-2" />
-                  </div>
-                </motion.div>
-              )}
-            </Link>
-          )
-        })}
+                  <span className="flex items-center gap-2">
+                    <Icon size={24} strokeWidth={2.5} />
+                    <span className={cn(
+                      "transition-all duration-200 overflow-hidden whitespace-nowrap",
+                      isActive ? "inline max-w-[200px] opacity-100" : "hidden md:inline md:max-w-[200px] md:opacity-100"
+                    )}>
+                      {item.shortName || item.name}
+                    </span>
+                  </span>
+                  {isActive && (
+                    <motion.div
+                      layoutId="lamp"
+                      className="absolute inset-0 w-full bg-primary/5 rounded-full -z-10"
+                      initial={false}
+                      transition={{
+                        type: "spring",
+                        stiffness: 300,
+                        damping: 30,
+                      }}
+                    >
+                      <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-8 h-1 bg-primary rounded-t-full">
+                        <div className="absolute w-12 h-6 bg-primary/20 rounded-full blur-md -top-2 -left-2" />
+                        <div className="absolute w-8 h-6 bg-primary/20 rounded-full blur-md -top-1" />
+                        <div className="absolute w-4 h-4 bg-primary/20 rounded-full blur-sm top-0 left-2" />
+                      </div>
+                    </motion.div>
+                  )}
+                </Link>
+              )
+            })}
+          </div>
+        </div>
       </div>
     </div>
   )

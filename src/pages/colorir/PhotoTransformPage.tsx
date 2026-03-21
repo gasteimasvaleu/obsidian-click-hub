@@ -31,7 +31,7 @@ const PhotoTransformPage = () => {
     <div className="min-h-screen bg-background pb-24">
       <FuturisticNavbar />
 
-      <main className="container mx-auto px-4 pt-20 max-w-lg">
+      <main className="container mx-auto px-4 pt-16 max-w-lg">
         <Button
           variant="ghost"
           size="sm"

@@ -68,7 +68,7 @@ const MyCreationsPage = () => {
     <div className="min-h-screen bg-background pb-24">
       <FuturisticNavbar />
 
-      <main className="container mx-auto px-4 pt-20 max-w-3xl">
+      <main className="container mx-auto px-4 pt-16 max-w-3xl">
         <Button
           variant="ghost"
           size="sm"
