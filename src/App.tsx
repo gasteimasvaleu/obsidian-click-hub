@@ -4,7 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-import { Home, Package, BookOpen, Heart, Gamepad2, Users, MessageCircle, GraduationCap, BookHeart, Music } from "lucide-react";
+import { Home, Package, BookOpen, Heart, Gamepad2, Users, MessageCircle, GraduationCap, BookHeart, Music, Menu } from "lucide-react";
 import { NavBar } from "@/components/ui/tubelight-navbar";
 import { SplashScreen } from "./components/SplashScreen";
 import { AuthProvider } from "./contexts/AuthContext";
