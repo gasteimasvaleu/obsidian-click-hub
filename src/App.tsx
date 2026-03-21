@@ -83,7 +83,7 @@ const navItems = [
   { name: 'Bíbliafy', url: '/audiofy', icon: Music },
   { name: 'Cursos', url: '/plataforma', icon: GraduationCap },
   { name: 'Guia para Pais', url: '/guia-pais', icon: Users, shortName: 'Guia Pais' },
-  { name: 'Games', url: '/games', icon: Gamepad2 }
+  { name: 'Mais', url: '#more', icon: Menu, isMenu: true }
 ];
 
 const App = () => {
