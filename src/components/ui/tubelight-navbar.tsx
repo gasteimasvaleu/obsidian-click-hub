@@ -66,7 +66,7 @@ export function NavBar({ items, className }: NavBarProps) {
       {/* More menu panel — floats above navbar */}
       {moreOpen && (
         <div
-          className="fixed left-3 right-3 z-45 rounded-2xl border border-primary/20 bg-background/80 backdrop-blur-xl shadow-[0_0_30px_-5px_hsl(var(--primary)/0.15)] overflow-hidden"
+          className="fixed left-3 right-3 z-[45] rounded-2xl border border-primary/20 bg-background/80 backdrop-blur-xl shadow-[0_0_30px_-5px_hsl(var(--primary)/0.15)] overflow-hidden"
           style={{ bottom: 'calc(env(safe-area-inset-bottom) + 4.5rem)' }}
         >
           <div className="grid grid-cols-3 gap-2 p-3">
@@ -74,7 +74,8 @@ export function NavBar({ items, className }: NavBarProps) {
               const MenuIcon = menuItem.icon
               const isCurrentPage = location.pathname === menuItem.url
               return (
-                <button
+                 <button
+                    type="button"
                   key={menuItem.url}
                   onClick={() => {
                     navigate(menuItem.url)
