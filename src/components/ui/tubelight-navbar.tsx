@@ -56,62 +56,48 @@ export function NavBar({ items, className }: NavBarProps) {
   return (
     <>
       {/* Backdrop to close menu */}
-      <AnimatePresence>
-        {moreOpen && (
-          <motion.div
-            className="fixed inset-0 z-40"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setMoreOpen(false)}
-          />
-        )}
-      </AnimatePresence>
+      {moreOpen && (
+        <div
+          className="fixed inset-0 z-40"
+          onClick={() => setMoreOpen(false)}
+        />
+      )}
 
       {/* More menu panel — floats above navbar */}
-      <AnimatePresence>
-        {moreOpen && (
-          <motion.div
-            className="fixed left-3 right-3 z-45 rounded-2xl border border-primary/20 bg-background/80 backdrop-blur-xl shadow-[0_0_30px_-5px_hsl(var(--primary)/0.15)] overflow-hidden"
-            style={{ bottom: 'calc(env(safe-area-inset-bottom) + 4.5rem)' }}
-            initial={{ opacity: 0, y: 40, scale: 0.96 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 40, scale: 0.96 }}
-            transition={{ type: "spring", stiffness: 400, damping: 30 }}
-          >
-            <div className="grid grid-cols-3 gap-2 p-3">
-              {moreMenuItems.map((menuItem, index) => {
-                const MenuIcon = menuItem.icon
-                const isCurrentPage = location.pathname === menuItem.url
-                return (
-                  <motion.button
-                    key={menuItem.url}
-                    initial={{ opacity: 0, y: 16 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.03, type: "spring", stiffness: 500, damping: 30 }}
-                    onClick={() => {
-                      navigate(menuItem.url)
-                      setMoreOpen(false)
-                      if ('vibrate' in navigator && window.innerWidth < 768) {
-                        navigator.vibrate(10)
-                      }
-                    }}
-                    className={cn(
-                      "flex flex-col items-center gap-1.5 p-3 rounded-xl transition-all duration-200 active:scale-95",
-                      isCurrentPage
-                        ? "bg-primary/15 text-primary shadow-[0_0_12px_-2px_hsl(var(--primary)/0.4)]"
-                        : "text-foreground/70 hover:bg-muted/60 hover:text-foreground"
-                    )}
-                  >
-                    <MenuIcon size={26} strokeWidth={1.8} />
-                    <span className="text-[11px] font-medium text-center leading-tight">{menuItem.name}</span>
-                  </motion.button>
-                )
-              })}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {moreOpen && (
+        <div
+          className="fixed left-3 right-3 z-45 rounded-2xl border border-primary/20 bg-background/80 backdrop-blur-xl shadow-[0_0_30px_-5px_hsl(var(--primary)/0.15)] overflow-hidden"
+          style={{ bottom: 'calc(env(safe-area-inset-bottom) + 4.5rem)' }}
+        >
+          <div className="grid grid-cols-3 gap-2 p-3">
+            {moreMenuItems.map((menuItem) => {
+              const MenuIcon = menuItem.icon
+              const isCurrentPage = location.pathname === menuItem.url
+              return (
+                <button
+                  key={menuItem.url}
+                  onClick={() => {
+                    navigate(menuItem.url)
+                    setMoreOpen(false)
+                    if ('vibrate' in navigator && window.innerWidth < 768) {
+                      navigator.vibrate(10)
+                    }
+                  }}
+                  className={cn(
+                    "flex flex-col items-center gap-1.5 p-3 rounded-xl transition-all duration-200 active:scale-95",
+                    isCurrentPage
+                      ? "bg-primary/15 text-primary shadow-[0_0_12px_-2px_hsl(var(--primary)/0.4)]"
+                      : "text-foreground/70 hover:bg-muted/60 hover:text-foreground"
+                  )}
+                >
+                  <MenuIcon size={26} strokeWidth={1.8} />
+                  <span className="text-[11px] font-medium text-center leading-tight">{menuItem.name}</span>
+                </button>
+              )
+            })}
+          </div>
+        </div>
+      )}
 
       <div
         className={cn(
