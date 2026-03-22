@@ -74,7 +74,8 @@ export function NavBar({ items, className }: NavBarProps) {
               const MenuIcon = menuItem.icon
               const isCurrentPage = location.pathname === menuItem.url
               return (
-                <button
+                 <button
+                    type="button"
                   key={menuItem.url}
                   onClick={() => {
                     navigate(menuItem.url)
