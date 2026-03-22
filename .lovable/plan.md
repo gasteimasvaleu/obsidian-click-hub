@@ -1,14 +1,17 @@
 
 
-## Adicionar padding inferior no AdminLayout
+## Adicionar padding inferior no sidebar admin
+
+### Problema
+Os últimos itens do menu lateral (como "Aulas" e "Materiais") ficam escondidos atrás da navbar inferior tubelight.
 
 ### Mudança
 
-**Arquivo:** `src/components/admin/AdminLayout.tsx` (linha 15)
+**Arquivo:** `src/components/admin/AdminSidebar.tsx` (linha 25)
 
-- Adicionar `pb-32` ao `<main>` para garantir que o conteúdo não fique atrás da navbar inferior
-- Classe atual: `flex-1 p-8 ml-64 mt-16`
-- Classe nova: `flex-1 p-8 pb-32 ml-64 mt-16`
+- Adicionar `pb-32` ao `<nav>` para criar espaço no final da lista
+- Classe atual: `p-4 space-y-2`
+- Classe nova: `p-4 pb-32 space-y-2`
 
 Uma única mudança de classe CSS.
 
