@@ -22,7 +22,7 @@ const plataformaItems = [
 export const AdminSidebar = () => {
   return (
     <aside className="fixed left-0 top-16 h-[calc(100vh-4rem)] w-64 glass border-r border-primary/20 overflow-y-auto">
-      <nav className="p-4 space-y-2">
+      <nav className="p-4 pb-32 space-y-2">
         {navItems.map((item) => (
           <NavLink
             key={item.url}
