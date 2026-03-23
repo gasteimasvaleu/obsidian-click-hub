@@ -34,6 +34,7 @@ export const ChatInterface = () => {
   const { showConsent, setShowConsent, acceptConsent, requireConsent } = useAIConsent();
   const pendingMessageRef = useRef<string | null>(null);
   const { showLoading, hideLoading } = useLoading();
+  const [keyboardOpen, setKeyboardOpen] = useState(false);
 
   useEffect(() => {
     if (scrollRef.current) {
