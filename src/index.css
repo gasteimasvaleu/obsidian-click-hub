@@ -240,3 +240,8 @@ All colors MUST be HSL.
     animation: loading-bar-slide 1.5s ease-in-out infinite;
   }
 }
+
+/* Hide bottom navbar when keyboard is open (iOS Capacitor) */
+body.keyboard-open .fixed.bottom-0.z-50 {
+  display: none !important;
+}

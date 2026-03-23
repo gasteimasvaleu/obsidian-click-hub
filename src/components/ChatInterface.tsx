@@ -264,6 +264,8 @@ export const ChatInterface = () => {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
               placeholder="Digite sua mensagem..."
               disabled={isLoading}
               rows={1}
