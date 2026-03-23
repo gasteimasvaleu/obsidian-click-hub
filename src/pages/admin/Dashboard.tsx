@@ -260,8 +260,18 @@ const Dashboard = () => {
                 </Button>
 
                 {isImporting && (
-                  <div className="text-xs text-muted-foreground text-center">
-                    ⏳ Este processo pode levar de 5 a 10 minutos. Não feche esta página.
+                  <div className="space-y-2">
+                    <div className="w-full bg-muted rounded-full h-3">
+                      <div 
+                        className="bg-gradient-to-r from-blue-500 to-purple-500 h-3 rounded-full transition-all duration-500"
+                        style={{ width: `${Math.round((importProgress.current / importProgress.total) * 100)}%` }}
+                      />
+                    </div>
+                    <div className="text-xs text-muted-foreground text-center">
+                      📚 {importProgress.books} livros | 📖 {importProgress.chapters} capítulos | ✍️ {importProgress.verses} versículos
+                      <br />
+                      Progresso: {importProgress.current}/{importProgress.total} livros processados
+                    </div>
                   </div>
                 )}
               </div>
