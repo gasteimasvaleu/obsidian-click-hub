@@ -40,26 +40,76 @@ const Dashboard = () => {
     });
   };
 
+  const [importProgress, setImportProgress] = useState({ current: 0, total: 73, books: 0, chapters: 0, verses: 0 });
+
   const handleImportBible = async () => {
     if (stats.bibleBooks > 0) {
       const confirmed = window.confirm(
-        'A Bíblia já foi importada. Deseja reimportar? Isso pode levar alguns minutos.'
+        'A Bíblia já foi importada. Deseja reimportar? Isso apagará todos os dados existentes (favoritos, notas, histórico).'
       );
       if (!confirmed) return;
     }
 
     setIsImporting(true);
-    toast.info('Iniciando importação da Bíblia ACF...');
+    setImportProgress({ current: 0, total: 73, books: 0, chapters: 0, verses: 0 });
 
     try {
-      const { data, error } = await supabase.functions.invoke('import-bible-data');
+      // Step 1: Clean existing data
+      toast.info('Limpando dados antigos...');
+      const { error: cleanError } = await supabase.functions.invoke('import-bible-data', {
+        body: null,
+        headers: { 'Content-Type': 'application/json' },
+      });
+      // Use GET with query params via direct fetch
+      const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
+      const { data: sessionData } = await supabase.auth.getSession();
+      const token = sessionData?.session?.access_token;
+      
+      const cleanRes = await fetch(
+        `https://${projectId}.supabase.co/functions/v1/import-bible-data?clean=true&cleanOnly=true`,
+        { headers: { Authorization: `Bearer ${token}`, apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY } }
+      );
+      if (!cleanRes.ok) throw new Error('Falha ao limpar dados');
+      toast.success('Dados antigos removidos!');
 
-      if (error) throw error;
+      // Step 2: Import in batches of 2
+      const batchSize = 2;
+      let start = 0;
+      let hasMore = true;
+      let totalBooks = 0, totalChapters = 0, totalVerses = 0;
+
+      while (hasMore) {
+        toast.info(`Importando livros ${start + 1} a ${start + batchSize}...`);
+        
+        const res = await fetch(
+          `https://${projectId}.supabase.co/functions/v1/import-bible-data?start=${start}&batch=${batchSize}`,
+          { headers: { Authorization: `Bearer ${token}`, apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY } }
+        );
+        
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          throw new Error(errData.error || `Erro no lote start=${start}`);
+        }
+        
+        const data = await res.json();
+        totalBooks += data.imported.books;
+        totalChapters += data.imported.chapters;
+        totalVerses += data.imported.verses;
+        hasMore = data.hasMore;
+        start = data.nextStart || start + batchSize;
+        
+        setImportProgress({
+          current: start,
+          total: data.batch.total,
+          books: totalBooks,
+          chapters: totalChapters,
+          verses: totalVerses,
+        });
+      }
 
       toast.success(
-        `✅ Bíblia importada com sucesso!\n📚 ${data.imported.books} livros\n📖 ${data.imported.chapters} capítulos\n✍️ ${data.imported.verses} versículos`
+        `✅ Bíblia Ave Maria importada!\n📚 ${totalBooks} livros\n📖 ${totalChapters} capítulos\n✍️ ${totalVerses} versículos`
       );
-      
       loadStats();
     } catch (error: any) {
       console.error('Import error:', error);
