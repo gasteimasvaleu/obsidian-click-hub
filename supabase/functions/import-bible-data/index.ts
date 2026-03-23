@@ -101,6 +101,14 @@ serve(async (req) => {
       await supabaseClient.from('bible_verses').delete().neq('id', '00000000-0000-0000-0000-000000000000');
       await supabaseClient.from('bible_chapters').delete().neq('id', '00000000-0000-0000-0000-000000000000');
       await supabaseClient.from('bible_books').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+      console.log('Clean completed.');
+      
+      // If cleanOnly, return immediately
+      if (url.searchParams.get('cleanOnly') === 'true') {
+        return new Response(JSON.stringify({ success: true, action: 'clean' }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200
+        });
+      }
     }
 
     // Fetch Bible data
