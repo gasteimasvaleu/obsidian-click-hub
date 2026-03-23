@@ -41,7 +41,8 @@ export default function BibliaPage() {
       { name: 'Históricos', filter: 'historicos' },
       { name: 'Poéticos', filter: 'poeticos' },
       { name: 'Profetas Maiores', filter: 'profetas_maiores' },
-      { name: 'Profetas Menores', filter: 'profetas_menores' }
+      { name: 'Profetas Menores', filter: 'profetas_menores' },
+      { name: 'Deuterocanônicos', filter: 'deuterocanonicos' }
     ],
     novo: [
       { name: 'Evangelhos', filter: 'evangelhos' },
