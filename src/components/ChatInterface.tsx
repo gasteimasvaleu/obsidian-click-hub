@@ -256,7 +256,7 @@ export const ChatInterface = () => {
       </div>
 
       {/* Input redesenhado */}
-      <div className="sticky bottom-0 backdrop-blur-xl bg-background/80 border-t border-border/30 pb-28">
+      <div className={`sticky bottom-0 backdrop-blur-xl bg-background/80 border-t border-border/30 ${keyboardOpen ? "pb-4" : "pb-28"}`}>
         <div className="max-w-3xl mx-auto px-3 pt-3">
           <div className="flex items-end gap-2 bg-muted/20 border border-border/40 rounded-2xl px-3 py-2 focus-within:border-primary/40 transition-colors">
             <textarea
