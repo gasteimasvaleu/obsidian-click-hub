@@ -214,7 +214,7 @@ const Dashboard = () => {
                     <Database className="h-6 w-6 text-white" />
                   </div>
                   <div>
-                    <CardTitle className="text-foreground">Importar Bíblia ACF</CardTitle>
+                    <CardTitle className="text-foreground">Importar Bíblia Ave Maria</CardTitle>
                     <p className="text-sm text-muted-foreground mt-1">
                       {stats.bibleBooks === 0 
                         ? 'Nenhum livro importado ainda' 
@@ -227,17 +227,17 @@ const Dashboard = () => {
             <CardContent>
               <div className="space-y-3">
                 <div className="text-sm text-muted-foreground">
-                  <p className="mb-2">Esta função importará:</p>
+                  <p className="mb-2">Esta função importará a Bíblia Católica completa:</p>
                   <ul className="list-disc list-inside space-y-1">
-                    <li>📚 66 livros (Antigo e Novo Testamento)</li>
-                    <li>📖 1.189 capítulos</li>
-                    <li>✍️ ~31.102 versículos</li>
+                    <li>📚 73 livros (46 AT + 27 NT, incluindo Deuterocanônicos)</li>
+                    <li>📖 ~1.328 capítulos</li>
+                    <li>✍️ ~35.000 versículos</li>
                   </ul>
                   <p className="mt-3 text-xs">
-                    Fonte: <span className="text-primary">thiagobodruk/biblia (GitHub)</span>
+                    Fonte: <span className="text-primary">fidalgobr/bibliaAveMariaJSON (GitHub)</span>
                   </p>
                   <p className="mt-1 text-xs">
-                    Versão: <span className="text-primary">ACF (Almeida Corrigida Fiel)</span>
+                    Versão: <span className="text-primary">Ave Maria (Católica)</span>
                   </p>
                 </div>
                 
