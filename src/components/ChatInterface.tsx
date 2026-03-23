@@ -250,7 +250,7 @@ export const ChatInterface = () => {
               placeholder="Digite sua mensagem..."
               disabled={isLoading}
               rows={1}
-              className="flex-1 bg-transparent border-none outline-none resize-none text-sm text-foreground placeholder:text-muted-foreground py-1.5 max-h-[120px] scrollbar-none"
+              className="flex-1 bg-transparent border-none outline-none resize-none text-base text-foreground placeholder:text-muted-foreground py-1.5 max-h-[120px] scrollbar-none"
             />
             <Button
               onClick={handleSendMessage}
