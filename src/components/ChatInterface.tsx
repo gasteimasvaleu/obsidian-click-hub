@@ -34,6 +34,7 @@ export const ChatInterface = () => {
   const { showConsent, setShowConsent, acceptConsent, requireConsent } = useAIConsent();
   const pendingMessageRef = useRef<string | null>(null);
   const { showLoading, hideLoading } = useLoading();
+  const [keyboardOpen, setKeyboardOpen] = useState(false);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -51,6 +52,22 @@ export const ChatInterface = () => {
   useEffect(() => {
     autoResize();
   }, [input, autoResize]);
+
+  const handleFocus = useCallback(() => {
+    setKeyboardOpen(true);
+    document.body.classList.add("keyboard-open");
+  }, []);
+
+  const handleBlur = useCallback(() => {
+    setKeyboardOpen(false);
+    document.body.classList.remove("keyboard-open");
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      document.body.classList.remove("keyboard-open");
+    };
+  }, []);
 
   const doSendMessage = async (message: string) => {
     const userMessage: Message = { role: "user", content: message };
@@ -239,7 +256,7 @@ export const ChatInterface = () => {
       </div>
 
       {/* Input redesenhado */}
-      <div className="sticky bottom-0 backdrop-blur-xl bg-background/80 border-t border-border/30 pb-28">
+      <div className={`sticky bottom-0 backdrop-blur-xl bg-background/80 border-t border-border/30 ${keyboardOpen ? "pb-4" : "pb-28"}`}>
         <div className="max-w-3xl mx-auto px-3 pt-3">
           <div className="flex items-end gap-2 bg-muted/20 border border-border/40 rounded-2xl px-3 py-2 focus-within:border-primary/40 transition-colors">
             <textarea
@@ -247,6 +264,8 @@ export const ChatInterface = () => {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
               placeholder="Digite sua mensagem..."
               disabled={isLoading}
               rows={1}
