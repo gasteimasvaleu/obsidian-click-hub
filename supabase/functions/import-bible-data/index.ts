@@ -6,97 +6,30 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-// Category mapping for each book name
 const bookCategoryMap: Record<string, string> = {
-  // Pentateuco
-  'Gênesis': 'pentateuco',
-  'Êxodo': 'pentateuco',
-  'Levítico': 'pentateuco',
-  'Números': 'pentateuco',
-  'Deuteronômio': 'pentateuco',
-  // Históricos
-  'Josué': 'historicos',
-  'Juízes': 'historicos',
-  'Rute': 'historicos',
-  'I Samuel': 'historicos',
-  'II Samuel': 'historicos',
-  'I Reis': 'historicos',
-  'II Reis': 'historicos',
-  'I Crônicas': 'historicos',
-  'II Crônicas': 'historicos',
-  'Esdras': 'historicos',
-  'Neemias': 'historicos',
-  'Ester': 'historicos',
-  // Poéticos
-  'Jó': 'poeticos',
-  'Salmos': 'poeticos',
-  'Provérbios': 'poeticos',
-  'Eclesiastes': 'poeticos',
-  'Cântico dos Cânticos': 'poeticos',
-  // Profetas Maiores
-  'Isaías': 'profetas_maiores',
-  'Jeremias': 'profetas_maiores',
-  'Lamentações': 'profetas_maiores',
-  'Ezequiel': 'profetas_maiores',
-  'Daniel': 'profetas_maiores',
-  // Profetas Menores
-  'Oséias': 'profetas_menores',
-  'Joel': 'profetas_menores',
-  'Amós': 'profetas_menores',
-  'Abdias': 'profetas_menores',
-  'Jonas': 'profetas_menores',
-  'Miquéias': 'profetas_menores',
-  'Naum': 'profetas_menores',
-  'Habacuc': 'profetas_menores',
-  'Sofonias': 'profetas_menores',
-  'Ageu': 'profetas_menores',
-  'Zacarias': 'profetas_menores',
-  'Malaquias': 'profetas_menores',
-  // Deuterocanônicos
-  'Tobias': 'deuterocanonicos',
-  'Judite': 'deuterocanonicos',
-  'Sabedoria': 'deuterocanonicos',
-  'Eclesiástico': 'deuterocanonicos',
-  'Baruc': 'deuterocanonicos',
-  'I Macabeus': 'deuterocanonicos',
-  'II Macabeus': 'deuterocanonicos',
-  // Evangelhos
-  'São Mateus': 'evangelhos',
-  'São Marcos': 'evangelhos',
-  'São Lucas': 'evangelhos',
-  'São João': 'evangelhos',
-  // Histórico NT
+  'Gênesis': 'pentateuco', 'Êxodo': 'pentateuco', 'Levítico': 'pentateuco', 'Números': 'pentateuco', 'Deuteronômio': 'pentateuco',
+  'Josué': 'historicos', 'Juízes': 'historicos', 'Rute': 'historicos',
+  'I Samuel': 'historicos', 'II Samuel': 'historicos', 'I Reis': 'historicos', 'II Reis': 'historicos',
+  'I Crônicas': 'historicos', 'II Crônicas': 'historicos', 'Esdras': 'historicos', 'Neemias': 'historicos', 'Ester': 'historicos',
+  'Jó': 'poeticos', 'Salmos': 'poeticos', 'Provérbios': 'poeticos', 'Eclesiastes': 'poeticos', 'Cântico dos Cânticos': 'poeticos',
+  'Isaías': 'profetas_maiores', 'Jeremias': 'profetas_maiores', 'Lamentações': 'profetas_maiores', 'Ezequiel': 'profetas_maiores', 'Daniel': 'profetas_maiores',
+  'Oséias': 'profetas_menores', 'Joel': 'profetas_menores', 'Amós': 'profetas_menores', 'Abdias': 'profetas_menores', 'Jonas': 'profetas_menores',
+  'Miquéias': 'profetas_menores', 'Naum': 'profetas_menores', 'Habacuc': 'profetas_menores', 'Sofonias': 'profetas_menores',
+  'Ageu': 'profetas_menores', 'Zacarias': 'profetas_menores', 'Malaquias': 'profetas_menores',
+  'Tobias': 'deuterocanonicos', 'Judite': 'deuterocanonicos', 'Sabedoria': 'deuterocanonicos', 'Eclesiástico': 'deuterocanonicos',
+  'Baruc': 'deuterocanonicos', 'I Macabeus': 'deuterocanonicos', 'II Macabeus': 'deuterocanonicos',
+  'São Mateus': 'evangelhos', 'São Marcos': 'evangelhos', 'São Lucas': 'evangelhos', 'São João': 'evangelhos',
   'Atos dos Apóstolos': 'historico',
-  // Cartas Paulinas
-  'Romanos': 'cartas_paulo',
-  'I Coríntios': 'cartas_paulo',
-  'II Coríntios': 'cartas_paulo',
-  'Gálatas': 'cartas_paulo',
-  'Efésios': 'cartas_paulo',
-  'Filipenses': 'cartas_paulo',
-  'Colossenses': 'cartas_paulo',
-  'I Tessalonicenses': 'cartas_paulo',
-  'II Tessalonicenses': 'cartas_paulo',
-  'I Timóteo': 'cartas_paulo',
-  'II Timóteo': 'cartas_paulo',
-  'Tito': 'cartas_paulo',
-  'Filêmon': 'cartas_paulo',
-  'Hebreus': 'cartas_paulo',
-  // Cartas Gerais
-  'São Tiago': 'cartas_gerais',
-  'I São Pedro': 'cartas_gerais',
-  'II São Pedro': 'cartas_gerais',
-  'I São João': 'cartas_gerais',
-  'II São João': 'cartas_gerais',
-  'III São João': 'cartas_gerais',
-  'São Judas': 'cartas_gerais',
-  // Profético
+  'Romanos': 'cartas_paulo', 'I Coríntios': 'cartas_paulo', 'II Coríntios': 'cartas_paulo', 'Gálatas': 'cartas_paulo',
+  'Efésios': 'cartas_paulo', 'Filipenses': 'cartas_paulo', 'Colossenses': 'cartas_paulo',
+  'I Tessalonicenses': 'cartas_paulo', 'II Tessalonicenses': 'cartas_paulo', 'I Timóteo': 'cartas_paulo', 'II Timóteo': 'cartas_paulo',
+  'Tito': 'cartas_paulo', 'Filêmon': 'cartas_paulo', 'Hebreus': 'cartas_paulo',
+  'São Tiago': 'cartas_gerais', 'I São Pedro': 'cartas_gerais', 'II São Pedro': 'cartas_gerais',
+  'I São João': 'cartas_gerais', 'II São João': 'cartas_gerais', 'III São João': 'cartas_gerais', 'São Judas': 'cartas_gerais',
   'Apocalipse': 'profetico',
 };
 
-// Canonical book order for the Catholic Bible
 const canonicalOrder: string[] = [
-  // AT
   'Gênesis', 'Êxodo', 'Levítico', 'Números', 'Deuteronômio',
   'Josué', 'Juízes', 'Rute', 'I Samuel', 'II Samuel', 'I Reis', 'II Reis',
   'I Crônicas', 'II Crônicas', 'Esdras', 'Neemias',
@@ -106,7 +39,6 @@ const canonicalOrder: string[] = [
   'Isaías', 'Jeremias', 'Lamentações', 'Baruc', 'Ezequiel', 'Daniel',
   'Oséias', 'Joel', 'Amós', 'Abdias', 'Jonas', 'Miquéias', 'Naum', 'Habacuc', 'Sofonias', 'Ageu', 'Zacarias', 'Malaquias',
   'I Macabeus', 'II Macabeus',
-  // NT
   'São Mateus', 'São Marcos', 'São Lucas', 'São João',
   'Atos dos Apóstolos',
   'Romanos', 'I Coríntios', 'II Coríntios', 'Gálatas', 'Efésios', 'Filipenses', 'Colossenses',
@@ -116,7 +48,7 @@ const canonicalOrder: string[] = [
 ];
 
 function getAbbrev(name: string): string {
-  const abbrevMap: Record<string, string> = {
+  const m: Record<string, string> = {
     'Gênesis': 'gn', 'Êxodo': 'ex', 'Levítico': 'lv', 'Números': 'nm', 'Deuteronômio': 'dt',
     'Josué': 'js', 'Juízes': 'jz', 'Rute': 'rt',
     'I Samuel': '1sm', 'II Samuel': '2sm', 'I Reis': '1rs', 'II Reis': '2rs',
@@ -137,7 +69,7 @@ function getAbbrev(name: string): string {
     'I São João': '1jo', 'II São João': '2jo', 'III São João': '3jo', 'São Judas': 'jd',
     'Apocalipse': 'ap',
   };
-  return abbrevMap[name] || name.toLowerCase().substring(0, 3);
+  return m[name] || name.toLowerCase().substring(0, 3);
 }
 
 serve(async (req) => {
@@ -151,138 +83,101 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     );
 
-    console.log('Starting Catholic Bible (Ave Maria) import...');
+    // Parse batch params: startBook (0-indexed), batchSize (default 5)
+    const url = new URL(req.url);
+    const startBook = parseInt(url.searchParams.get('start') || '0');
+    const batchSize = parseInt(url.searchParams.get('batch') || '5');
+    const cleanFirst = url.searchParams.get('clean') === 'true';
 
-    // Step 1: Clean up user data that references bible IDs
-    console.log('Cleaning user data...');
-    await supabaseClient.from('user_favorite_verses').delete().neq('id', '00000000-0000-0000-0000-000000000000');
-    await supabaseClient.from('user_verse_notes').delete().neq('id', '00000000-0000-0000-0000-000000000000');
-    await supabaseClient.from('user_reading_history').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+    console.log(`Import batch: start=${startBook}, batch=${batchSize}, clean=${cleanFirst}`);
 
-    // Step 2: Clean existing bible data (order matters for FK)
-    console.log('Cleaning existing bible data...');
-    await supabaseClient.from('bible_verses').delete().neq('id', '00000000-0000-0000-0000-000000000000');
-    await supabaseClient.from('bible_chapters').delete().neq('id', '00000000-0000-0000-0000-000000000000');
-    await supabaseClient.from('bible_books').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+    // Only clean on the first batch
+    if (cleanFirst) {
+      console.log('Cleaning user data...');
+      await supabaseClient.from('user_favorite_verses').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+      await supabaseClient.from('user_verse_notes').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+      await supabaseClient.from('user_reading_history').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+      console.log('Cleaning existing bible data...');
+      await supabaseClient.from('bible_verses').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+      await supabaseClient.from('bible_chapters').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+      await supabaseClient.from('bible_books').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+    }
 
-    // Step 3: Fetch Ave Maria Bible data
+    // Fetch Bible data
     console.log('Fetching Ave Maria Bible JSON...');
     const response = await fetch('https://raw.githubusercontent.com/fidalgobr/bibliaAveMariaJSON/main/bibliaAveMaria.json');
-    if (!response.ok) {
-      throw new Error(`Failed to fetch Bible data: ${response.statusText}`);
-    }
+    if (!response.ok) throw new Error(`Failed to fetch Bible data: ${response.statusText}`);
     const bibleData = await response.json();
 
-    let booksImported = 0;
-    let chaptersImported = 0;
-    let versesImported = 0;
-
-    // Combine AT and NT into a single list with testament info
     const allBooks: Array<{ book: any; testament: string }> = [
       ...bibleData.antigoTestamento.map((b: any) => ({ book: b, testament: 'antigo' })),
       ...bibleData.novoTestamento.map((b: any) => ({ book: b, testament: 'novo' })),
     ];
 
-    // Process each book
-    for (const { book, testament } of allBooks) {
+    const booksToProcess = allBooks.slice(startBook, startBook + batchSize);
+    let booksImported = 0;
+    let chaptersImported = 0;
+    let versesImported = 0;
+
+    for (const { book, testament } of booksToProcess) {
       const bookName = book.nome;
       const category = bookCategoryMap[bookName] || 'outros';
-      const bookOrder = canonicalOrder.indexOf(bookName) + 1 || (booksImported + 100);
+      const bookOrder = canonicalOrder.indexOf(bookName) + 1 || (startBook + booksImported + 100);
 
-      console.log(`Processing book: ${bookName} (order: ${bookOrder}, category: ${category})`);
+      console.log(`Processing: ${bookName} (${startBook + booksImported + 1}/${allBooks.length})`);
 
       const { data: bookData, error: bookError } = await supabaseClient
         .from('bible_books')
         .insert({
-          name: bookName,
-          abbrev: getAbbrev(bookName),
-          testament,
-          book_order: bookOrder,
-          chapters_count: book.capitulos.length,
-          category,
+          name: bookName, abbrev: getAbbrev(bookName), testament,
+          book_order: bookOrder, chapters_count: book.capitulos.length, category,
         })
-        .select()
-        .single();
+        .select().single();
 
-      if (bookError) {
-        console.error(`Error inserting book ${bookName}:`, bookError);
-        throw bookError;
-      }
+      if (bookError) throw bookError;
       booksImported++;
 
-      // Process chapters
       for (const cap of book.capitulos) {
         const { data: chapterData, error: chapterError } = await supabaseClient
           .from('bible_chapters')
-          .insert({
-            book_id: bookData.id,
-            chapter_number: cap.capitulo,
-            verses_count: cap.versiculos.length,
-          })
-          .select()
-          .single();
+          .insert({ book_id: bookData.id, chapter_number: cap.capitulo, verses_count: cap.versiculos.length })
+          .select().single();
 
-        if (chapterError) {
-          console.error(`Error inserting chapter ${cap.capitulo} of ${bookName}:`, chapterError);
-          throw chapterError;
-        }
+        if (chapterError) throw chapterError;
         chaptersImported++;
 
-        // Insert verses in batches of 500
         const verses = cap.versiculos.map((v: any) => ({
-          chapter_id: chapterData.id,
-          verse_number: v.versiculo,
-          text: v.texto,
+          chapter_id: chapterData.id, verse_number: v.versiculo, text: v.texto,
         }));
 
         for (let i = 0; i < verses.length; i += 500) {
-          const batch = verses.slice(i, i + 500);
-          const { error: versesError } = await supabaseClient
-            .from('bible_verses')
-            .insert(batch);
-
-          if (versesError) {
-            console.error(`Error inserting verses for chapter ${cap.capitulo} of ${bookName}:`, versesError);
-            throw versesError;
-          }
+          const { error } = await supabaseClient.from('bible_verses').insert(verses.slice(i, i + 500));
+          if (error) throw error;
         }
         versesImported += verses.length;
       }
 
-      console.log(`Completed book: ${bookName} (${booksImported}/${allBooks.length})`);
+      console.log(`Completed: ${bookName}`);
     }
 
-    console.log('Catholic Bible (Ave Maria) import completed successfully!');
+    const nextStart = startBook + batchSize;
+    const hasMore = nextStart < allBooks.length;
 
     return new Response(
       JSON.stringify({
         success: true,
-        version: 'Ave Maria (Católica)',
-        imported: {
-          books: booksImported,
-          chapters: chaptersImported,
-          verses: versesImported,
-        }
+        batch: { start: startBook, processed: booksImported, total: allBooks.length },
+        imported: { books: booksImported, chapters: chaptersImported, verses: versesImported },
+        hasMore,
+        nextStart: hasMore ? nextStart : null,
       }),
-      {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: 200,
-      }
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
     );
   } catch (error) {
     console.error('Import error:', error);
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-    const errorDetails = error instanceof Error ? error.toString() : String(error);
-
     return new Response(
-      JSON.stringify({
-        error: errorMessage,
-        details: errorDetails,
-      }),
-      {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: 500,
-      }
+      JSON.stringify({ error: error instanceof Error ? error.message : 'Unknown error', details: String(error) }),
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
     );
   }
 });
