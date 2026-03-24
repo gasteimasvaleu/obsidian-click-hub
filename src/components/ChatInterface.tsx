@@ -7,7 +7,6 @@ import { useToast } from "@/hooks/use-toast";
 import { useAIConsent } from "@/hooks/useAIConsent";
 import { AIConsentDialog } from "@/components/AIConsentDialog";
 import { useLoading } from "@/contexts/LoadingContext";
-import { FuturisticNavbar } from "@/components/FuturisticNavbar";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import ReactMarkdown from "react-markdown";
 
@@ -27,19 +26,81 @@ export const ChatInterface = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [viewportHeight, setViewportHeight] = useState<number | null>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { showConsent, setShowConsent, acceptConsent, requireConsent } = useAIConsent();
   const pendingMessageRef = useRef<string | null>(null);
   const { showLoading, hideLoading } = useLoading();
 
   useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollIntoView({ behavior: "smooth" });
+    const container = messagesContainerRef.current;
+    if (container) {
+      container.scrollTop = container.scrollHeight;
     }
-  }, [messages]);
+  }, [messages, isLoading]);
+
+  useEffect(() => {
+    const getViewportHeight = () => window.visualViewport?.height ?? window.innerHeight;
+
+    const updateViewportHeight = () => {
+      setViewportHeight(getViewportHeight());
+      window.scrollTo(0, 0);
+    };
+
+    updateViewportHeight();
+
+    const visualViewport = window.visualViewport;
+    visualViewport?.addEventListener("resize", updateViewportHeight);
+    visualViewport?.addEventListener("scroll", updateViewportHeight);
+    window.addEventListener("resize", updateViewportHeight);
+
+    return () => {
+      visualViewport?.removeEventListener("resize", updateViewportHeight);
+      visualViewport?.removeEventListener("scroll", updateViewportHeight);
+      window.removeEventListener("resize", updateViewportHeight);
+    };
+  }, []);
+
+  useEffect(() => {
+    const html = document.documentElement;
+    const body = document.body;
+    const root = document.getElementById("root");
+
+    const htmlOverflow = html.style.overflow;
+    const bodyOverflow = body.style.overflow;
+    const bodyPosition = body.style.position;
+    const bodyWidth = body.style.width;
+    const bodyOverscrollBehavior = body.style.overscrollBehavior;
+    const rootOverflow = root?.style.overflow;
+    const rootHeight = root?.style.height;
+
+    html.style.overflow = "hidden";
+    body.style.overflow = "hidden";
+    body.style.position = "fixed";
+    body.style.width = "100%";
+    body.style.overscrollBehavior = "none";
+
+    if (root) {
+      root.style.overflow = "hidden";
+      root.style.height = "100%";
+    }
+
+    return () => {
+      html.style.overflow = htmlOverflow;
+      body.style.overflow = bodyOverflow;
+      body.style.position = bodyPosition;
+      body.style.width = bodyWidth;
+      body.style.overscrollBehavior = bodyOverscrollBehavior;
+
+      if (root) {
+        root.style.overflow = rootOverflow ?? "";
+        root.style.height = rootHeight ?? "";
+      }
+    };
+  }, []);
 
   const autoResize = useCallback(() => {
     const ta = textareaRef.current;
@@ -132,14 +193,17 @@ export const ChatInterface = () => {
   };
 
   return (
-    <div className="h-screen flex flex-col bg-background overflow-hidden">
-      <FuturisticNavbar />
-
-      {/* Card container: header + messages + composer */}
-      <div className="pt-16 px-3 flex-1 flex flex-col min-h-0" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 0.5rem)' }}>
-        <div className="max-w-3xl mx-auto flex-1 flex flex-col min-h-0 overflow-hidden w-full">
+    <div
+      className="fixed inset-0 z-50 overflow-hidden bg-background"
+      style={{ height: viewportHeight ? `${viewportHeight}px` : "100dvh" }}
+    >
+      <div className="flex h-full flex-col px-3 pb-3 pt-3">
+        <div className="mx-auto flex h-full w-full max-w-3xl flex-col overflow-hidden rounded-2xl">
           {/* Green header */}
-          <div className="bg-primary rounded-t-2xl px-4">
+          <div
+            className="shrink-0 bg-primary px-4"
+            style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 0.25rem)" }}
+          >
             <div className="flex items-center gap-3 py-3">
               <Button
                 variant="ghost"
@@ -161,7 +225,10 @@ export const ChatInterface = () => {
           </div>
 
           {/* Messages area */}
-          <div className="border-x border-border/40 bg-card/30 backdrop-blur-sm px-3 flex-1 overflow-y-auto min-h-0">
+          <div
+            ref={messagesContainerRef}
+            className="min-h-0 flex-1 overflow-y-auto overscroll-contain border-x border-border/40 bg-card/30 px-3 backdrop-blur-sm"
+          >
             {/* Empty state */}
             {messages.length === 0 && !isLoading && (
               <div className="flex flex-col items-center justify-center py-10 animate-fade-in">
@@ -235,13 +302,14 @@ export const ChatInterface = () => {
                 </div>
               )}
             </div>
-
-            <div ref={scrollRef} />
           </div>
 
           {/* Composer — white bottom */}
-          <div className="px-3 py-3 bg-white rounded-b-2xl">
-            <div className="flex items-end gap-2 bg-gray-100 border border-gray-200 rounded-2xl px-3 py-2 focus-within:border-primary transition-colors">
+          <div
+            className="shrink-0 rounded-b-2xl bg-white px-3 pt-3"
+            style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 0.75rem)" }}
+          >
+            <div className="flex items-end gap-2 rounded-2xl border border-input bg-secondary px-3 py-2 transition-colors focus-within:border-primary">
               <textarea
                 ref={textareaRef}
                 value={input}
@@ -250,7 +318,7 @@ export const ChatInterface = () => {
                 placeholder="Digite sua mensagem..."
                 disabled={isLoading}
                 rows={1}
-                className="flex-1 bg-transparent border-none outline-none resize-none text-base text-gray-900 placeholder:text-gray-400 py-1.5 max-h-[120px] scrollbar-none"
+                className="scrollbar-none max-h-[120px] flex-1 resize-none border-none bg-transparent py-1.5 text-base text-foreground outline-none placeholder:text-muted-foreground"
               />
               <Button
                 onClick={handleSendMessage}
