@@ -305,10 +305,7 @@ export const ChatInterface = () => {
           </div>
 
           {/* Composer — white bottom */}
-          <div
-            className="shrink-0 bg-white px-3 pt-3"
-            style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 0.25rem)" }}
-          >
+          <div className="shrink-0 bg-white px-3 py-3">
             <div className="flex items-end gap-2 rounded-2xl border border-input bg-secondary px-3 py-2 transition-colors focus-within:border-primary">
               <textarea
                 ref={textareaRef}
