@@ -135,33 +135,33 @@ export const ChatInterface = () => {
     <div className="min-h-screen bg-background relative overflow-x-hidden" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 1rem)' }}>
       <FuturisticNavbar />
 
-      {/* Sub-header */}
-      <div className="pt-16 px-4">
-        <div className="flex items-center gap-3 py-3">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => navigate("/amigodivino")}
-            className="text-primary hover:text-primary/80"
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-          <div className="flex items-center gap-2">
-            <Avatar className="h-8 w-8 border border-primary/30">
-              <AvatarFallback className="bg-primary/20 text-primary text-xs">
-                <Sparkles className="h-4 w-4" />
-              </AvatarFallback>
-            </Avatar>
-            <h1 className="text-sm font-bold text-primary">Amigo Divino</h1>
+      {/* Card container: header + messages + composer */}
+      <div className="pt-16 px-3 pb-2">
+        <div className="max-w-3xl mx-auto overflow-hidden">
+          {/* Green header */}
+          <div className="bg-primary rounded-t-2xl px-4">
+            <div className="flex items-center gap-3 py-3">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => navigate("/amigodivino")}
+                className="text-primary-foreground hover:text-primary-foreground/80 hover:bg-black/10"
+              >
+                <ArrowLeft className="h-5 w-5" />
+              </Button>
+              <div className="flex items-center gap-2">
+                <Avatar className="h-8 w-8 border border-black/20">
+                  <AvatarFallback className="bg-black/20 text-primary-foreground text-xs">
+                    <Sparkles className="h-4 w-4" />
+                  </AvatarFallback>
+                </Avatar>
+                <h1 className="text-sm font-bold text-primary-foreground">Amigo Divino</h1>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
 
-      {/* Card container for messages + composer */}
-      <div className="px-3 pb-2">
-        <div className="max-w-3xl mx-auto rounded-2xl border border-border/40 bg-card/30 backdrop-blur-sm overflow-hidden">
           {/* Messages area */}
-          <div className="px-3">
+          <div className="border-x border-border/40 bg-card/30 backdrop-blur-sm px-3">
             {/* Empty state */}
             {messages.length === 0 && !isLoading && (
               <div className="flex flex-col items-center justify-center py-10 animate-fade-in">
@@ -239,9 +239,9 @@ export const ChatInterface = () => {
             <div ref={scrollRef} />
           </div>
 
-          {/* Composer — inside card, in normal flow */}
-          <div className="px-3 py-3 border-t border-border/30">
-            <div className="flex items-end gap-2 bg-muted/20 border border-border/40 rounded-2xl px-3 py-2 focus-within:border-primary/40 transition-colors">
+          {/* Composer — white bottom */}
+          <div className="px-3 py-3 bg-white rounded-b-2xl">
+            <div className="flex items-end gap-2 bg-gray-100 border border-gray-200 rounded-2xl px-3 py-2 focus-within:border-primary transition-colors">
               <textarea
                 ref={textareaRef}
                 value={input}
@@ -250,13 +250,13 @@ export const ChatInterface = () => {
                 placeholder="Digite sua mensagem..."
                 disabled={isLoading}
                 rows={1}
-                className="flex-1 bg-transparent border-none outline-none resize-none text-base text-foreground placeholder:text-muted-foreground py-1.5 max-h-[120px] scrollbar-none"
+                className="flex-1 bg-transparent border-none outline-none resize-none text-base text-gray-900 placeholder:text-gray-400 py-1.5 max-h-[120px] scrollbar-none"
               />
               <Button
                 onClick={handleSendMessage}
                 disabled={isLoading || !input.trim()}
                 size="icon"
-                className="h-9 w-9 rounded-full bg-primary hover:bg-primary/80 transition-all duration-200 active:scale-90 disabled:opacity-30 shrink-0"
+                className="h-9 w-9 rounded-full bg-primary hover:bg-primary/80 text-primary-foreground transition-all duration-200 active:scale-90 disabled:opacity-30 shrink-0"
               >
                 {isLoading ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
