@@ -69,7 +69,7 @@ import MyCreationsPage from "./pages/colorir/MyCreationsPage";
 
 const queryClient = new QueryClient();
 
-const hiddenNavBarRoutes = ['/download', '/login', '/cadastro', '/amigodivino/chat'];
+const hiddenNavBarRoutes = ['/download', '/login', '/cadastro'];
 
 const NavBarWrapper = ({ items }: { items: typeof navItems }) => {
   const location = useLocation();
