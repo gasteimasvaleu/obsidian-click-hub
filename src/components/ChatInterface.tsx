@@ -241,9 +241,9 @@ export const ChatInterface = () => {
             <div ref={scrollRef} />
           </div>
 
-          {/* Composer — inside card, in normal flow */}
-          <div className="px-3 py-3 border-t border-border/30">
-            <div className="flex items-end gap-2 bg-muted/20 border border-border/40 rounded-2xl px-3 py-2 focus-within:border-primary/40 transition-colors">
+          {/* Composer — white bottom */}
+          <div className="px-3 py-3 bg-white rounded-b-2xl">
+            <div className="flex items-end gap-2 bg-gray-100 border border-gray-200 rounded-2xl px-3 py-2 focus-within:border-primary transition-colors">
               <textarea
                 ref={textareaRef}
                 value={input}
@@ -252,13 +252,13 @@ export const ChatInterface = () => {
                 placeholder="Digite sua mensagem..."
                 disabled={isLoading}
                 rows={1}
-                className="flex-1 bg-transparent border-none outline-none resize-none text-base text-foreground placeholder:text-muted-foreground py-1.5 max-h-[120px] scrollbar-none"
+                className="flex-1 bg-transparent border-none outline-none resize-none text-base text-gray-900 placeholder:text-gray-400 py-1.5 max-h-[120px] scrollbar-none"
               />
               <Button
                 onClick={handleSendMessage}
                 disabled={isLoading || !input.trim()}
                 size="icon"
-                className="h-9 w-9 rounded-full bg-primary hover:bg-primary/80 transition-all duration-200 active:scale-90 disabled:opacity-30 shrink-0"
+                className="h-9 w-9 rounded-full bg-primary hover:bg-primary/80 text-primary-foreground transition-all duration-200 active:scale-90 disabled:opacity-30 shrink-0"
               >
                 {isLoading ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
