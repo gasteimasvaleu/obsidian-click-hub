@@ -1,14 +1,11 @@
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { FuturisticNavbar } from "@/components/FuturisticNavbar";
 import { GlassCard } from "@/components/GlassCard";
 import { NeonButton } from "@/components/NeonButton";
+import { ChatInterface } from "@/components/ChatInterface";
 
 const AmigoDivino = () => {
-  const navigate = useNavigate();
-  
-  const handleConnectClick = () => {
-    navigate('/amigodivino/chat');
-  };
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-black relative pb-24">
@@ -35,25 +32,27 @@ const AmigoDivino = () => {
           
           <GlassCard className="w-full max-w-lg mx-auto text-center">
             <h1 className="text-3xl font-bold mb-6 bg-gradient-to-r from-primary via-primary to-primary/60 bg-clip-text text-transparent">Amigo Divino</h1>
-          <p className="text-foreground/80 mb-8 text-lg">
-            Conexão espiritual e orientação para sua jornada
-          </p>
-          
-          <div className="space-y-6 mb-8">
-            <div className="glass rounded-xl p-6">
-              <h3 className="text-primary font-semibold mb-4">Orientação Espiritual</h3>
-              <p className="text-muted-foreground text-sm">
-                Converse com seu companheiro espiritual, tire dúvidas sobre a Bíblia, receba palavras de encorajamento e descubra mais sobre a Palavra de Deus de um jeito divertido e acolhedor.
-              </p>
+            <p className="text-foreground/80 mb-8 text-lg">
+              Conexão espiritual e orientação para sua jornada
+            </p>
+            
+            <div className="space-y-6 mb-8">
+              <div className="glass rounded-xl p-6">
+                <h3 className="text-primary font-semibold mb-4">Orientação Espiritual</h3>
+                <p className="text-muted-foreground text-sm">
+                  Converse com seu companheiro espiritual, tire dúvidas sobre a Bíblia, receba palavras de encorajamento e descubra mais sobre a Palavra de Deus de um jeito divertido e acolhedor.
+                </p>
+              </div>
             </div>
-          </div>
-          
-          <NeonButton onClick={handleConnectClick}>
-            Começar Jornada
-          </NeonButton>
-        </GlassCard>
+            
+            <NeonButton onClick={() => setIsChatOpen(true)}>
+              Começar Jornada
+            </NeonButton>
+          </GlassCard>
         </div>
       </div>
+
+      <ChatInterface open={isChatOpen} onClose={() => setIsChatOpen(false)} />
     </div>
   );
 };

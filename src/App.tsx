@@ -38,7 +38,7 @@ import NotFound from "./pages/NotFound";
 import PoliticaFamilia from "./pages/PoliticaFamilia";
 import TermosDeUso from "./pages/TermosDeUso";
 import { ExternalFrame } from "./components/ExternalFrame";
-import { ChatInterface } from "./components/ChatInterface";
+
 import { ProtectedRoute } from "./components/admin/ProtectedRoute";
 
 
@@ -69,7 +69,7 @@ import MyCreationsPage from "./pages/colorir/MyCreationsPage";
 
 const queryClient = new QueryClient();
 
-const hiddenNavBarRoutes = ['/download', '/login', '/cadastro', '/amigodivino/chat'];
+const hiddenNavBarRoutes = ['/download', '/login', '/cadastro'];
 
 const NavBarWrapper = ({ items }: { items: typeof navItems }) => {
   const location = useLocation();
@@ -136,7 +136,7 @@ const App = () => {
                 <Route path="/oracoes" element={<ProtectedRoute><Oracoes /></ProtectedRoute>} />
                 <Route path="/audiofy" element={<ProtectedRoute><Audiofy /></ProtectedRoute>} />
                 <Route path="/amigodivino" element={<ProtectedRoute><AmigoDivino /></ProtectedRoute>} />
-                <Route path="/amigodivino/chat" element={<ProtectedRoute><ChatInterface /></ProtectedRoute>} />
+                
                 <Route path="/sobre" element={<ProtectedRoute><Sobre /></ProtectedRoute>} />
                 <Route path="/guia-pais" element={<ProtectedRoute><GuiaPais /></ProtectedRoute>} />
                 <Route path="/games" element={<ProtectedRoute><Games /></ProtectedRoute>} />
