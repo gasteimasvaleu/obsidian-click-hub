@@ -194,11 +194,9 @@ export const ChatInterface = () => {
 
   return (
     <div
-      className="fixed inset-0 z-50 overflow-hidden bg-background"
+      className="fixed inset-0 z-50 flex flex-col overflow-hidden bg-background"
       style={{ height: viewportHeight ? `${viewportHeight}px` : "100dvh" }}
     >
-      <div className="flex h-full flex-col px-3 pb-3 pt-3">
-        <div className="mx-auto flex h-full w-full max-w-3xl flex-col overflow-hidden rounded-2xl">
           {/* Green header */}
           <div
             className="shrink-0 bg-primary px-4"
