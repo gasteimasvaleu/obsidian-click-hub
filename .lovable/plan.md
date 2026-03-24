@@ -1,52 +1,46 @@
 
-Objetivo: corrigir o chat do Amigo Divino aplicando de verdade a mesma lógica do Guia para os Pais.
+Objetivo: alinhar o chat do Amigo Divino ao mesmo padrão estrutural do Guia para os Pais, em vez de continuar tentando “corrigir” com hacks de teclado.
 
 Diagnóstico
-- O erro persiste porque o chat hoje não está seguindo a lógica do Guia.
-- No Guia para os Pais, os campos ficam no fluxo normal da página.
-- No chat, existem 2 camadas especiais no rodapé:
-  1. o menu tubelight global fixo
-  2. a barra de input local com `sticky bottom-0`
-- Além disso, foi adicionado um hack extra com `keyboard-open` no `body` para esconder a navbar.
-- No iOS nativo, essa combinação (`fixed` global + `sticky` local + safe-area + teclado) faz a faixa preta/rodapé “subirem” junto.
+- O problema não é o textarea em si.
+- O chat ainda está com uma estrutura diferente do Guia:
+  - header superior fixo
+  - conteúdo solto na página
+  - input no fim de um layout que não está organizado como coluna com área rolável dedicada
+- No iOS nativo, quando o foco entra no textarea, o sistema tenta reposicionar a viewport. Como o chat não está montado como o Guia, a área preta + tubelight acabam sendo empurradas visualmente.
 
 O que vou ajustar
-1. Remover a lógica temporária de teclado que foi adicionada só no chat
-- Tirar `keyboardOpen`
-- Tirar `handleFocus` / `handleBlur` que adicionam `body.keyboard-open`
-- Tirar o cleanup dessa classe no `body`
+1. Reestruturar `src/components/ChatInterface.tsx` para virar um layout em coluna real
+- container principal com altura estável da viewport
+- bloco interno com `flex flex-col`
+- área de mensagens com `flex-1 min-h-0 overflow-y-auto`
+- barra de input como bloco fixo no fluxo desse layout, não como parte solta da página
 
-2. Remover a regra global que esconde a navbar
-- Apagar de `src/index.css`:
-  - `body.keyboard-open .fixed.bottom-0.z-50 { display: none !important; }`
+2. Aplicar a mesma lógica do Guia na distribuição dos espaços
+- manter o topo reservado para a navbar/header
+- manter a reserva inferior para o tubelight
+- colocar o scroll apenas na área das mensagens, não no layout inteiro da tela
 
-3. Reestruturar o layout do chat para ficar igual ao padrão do Guia
-- Manter a página com reserva inferior fixa para o tubelight (`pb-24` / equivalente)
-- Deixar o chat como coluna flex normal:
-  - cabeçalho fixo no topo
-  - área de mensagens com `flex-1 min-h-0 overflow-y-auto`
-  - barra de input no fluxo normal da página, não `sticky`
+3. Parar de depender de qualquer comportamento “global” para teclado
+- não usar esconder navbar
+- não usar classe no `body`
+- não usar compensações dinâmicas de padding ao focar
 
-4. Trocar o rodapé do input
-- Hoje: `sticky bottom-0 ... ${keyboardOpen ? "pb-4" : "pb-28"}`
-- Novo: um bloco normal no fim do layout, com padding estável, sem depender do teclado
-- Isso replica o comportamento do Guia: o teclado abre, mas não “puxa” a faixa preta nem a navbar
-
-5. Preservar o que já estava certo
-- Manter `text-base` no `textarea` para evitar zoom do iOS
-- Manter auto-resize do campo
-- Manter scroll das mensagens
+4. Ajustar o composer do chat
+- deixar o input ancorado no fim da coluna
+- garantir `shrink-0`
+- manter `text-base` no textarea
+- preservar auto-resize e envio por Enter
 
 Arquivos
 - `src/components/ChatInterface.tsx`
-- `src/index.css`
+- revisão mínima em `src/index.css` apenas se houver alguma regra global interferindo no scroll/altura dessa tela
 
 Resultado esperado
-- Ao tocar no textarea, o teclado abre sem empurrar a faixa preta
-- O menu tubelight permanece com o mesmo comportamento do Guia para os Pais
-- O chat continua funcional, mas sem o conflito entre `sticky`, safe-area e teclado nativo
+- ao tocar no textarea, o teclado abre sem “subir” a faixa preta e o tubelight
+- o chat passa a se comportar como o Guia para os Pais
+- mensagens continuam rolando normalmente e o campo continua estável durante a digitação
 
 Detalhe técnico
-- O ponto principal não é “esconder o menu”, e sim parar de usar um composer com `sticky bottom-0` dentro dessa tela.
-- O Guia funciona porque os inputs não criam esse segundo rodapé dinâmico.
-- Então a correção certa é alinhar a estrutura do chat ao layout do Guia, não insistir no hack de `keyboard-open`.
+- a correção certa aqui é estrutural: transformar o chat em uma tela com “header + messages scroller + composer”.
+- enquanto o chat continuar fora desse padrão, o iOS vai continuar reposicionando a viewport de forma errada.
