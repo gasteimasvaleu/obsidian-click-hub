@@ -135,31 +135,33 @@ export const ChatInterface = () => {
     <div className="min-h-screen bg-background relative overflow-x-hidden" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 1rem)' }}>
       <FuturisticNavbar />
 
-      {/* Sub-header */}
-      <div className="pt-16 px-4">
-        <div className="flex items-center gap-3 py-3">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => navigate("/amigodivino")}
-            className="text-primary hover:text-primary/80"
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-          <div className="flex items-center gap-2">
-            <Avatar className="h-8 w-8 border border-primary/30">
-              <AvatarFallback className="bg-primary/20 text-primary text-xs">
-                <Sparkles className="h-4 w-4" />
-              </AvatarFallback>
-            </Avatar>
-            <h1 className="text-sm font-bold text-primary">Amigo Divino</h1>
+      {/* Card container: header + messages + composer */}
+      <div className="pt-16 px-3 pb-2">
+        <div className="max-w-3xl mx-auto overflow-hidden">
+          {/* Green header */}
+          <div className="bg-primary rounded-t-2xl px-4">
+            <div className="flex items-center gap-3 py-3">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => navigate("/amigodivino")}
+                className="text-primary-foreground hover:text-primary-foreground/80 hover:bg-black/10"
+              >
+                <ArrowLeft className="h-5 w-5" />
+              </Button>
+              <div className="flex items-center gap-2">
+                <Avatar className="h-8 w-8 border border-black/20">
+                  <AvatarFallback className="bg-black/20 text-primary-foreground text-xs">
+                    <Sparkles className="h-4 w-4" />
+                  </AvatarFallback>
+                </Avatar>
+                <h1 className="text-sm font-bold text-primary-foreground">Amigo Divino</h1>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
 
-      {/* Card container for messages + composer */}
-      <div className="px-3 pb-2">
-        <div className="max-w-3xl mx-auto rounded-2xl border border-border/40 bg-card/30 backdrop-blur-sm overflow-hidden">
+          {/* Messages area */}
+          <div className="border-x border-border/40 bg-card/30 backdrop-blur-sm">
           {/* Messages area */}
           <div className="px-3">
             {/* Empty state */}
