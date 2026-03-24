@@ -52,7 +52,6 @@ export const ChatInterface = () => {
     autoResize();
   }, [input, autoResize]);
 
-
   const doSendMessage = async (message: string) => {
     const userMessage: Message = { role: "user", content: message };
     setMessages((prev) => [...prev, userMessage]);
@@ -132,13 +131,13 @@ export const ChatInterface = () => {
     }
   };
 
-    return (
-    <div className="h-screen flex flex-col bg-background overflow-hidden">
+  return (
+    <div className="min-h-screen bg-background relative overflow-x-hidden" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 1rem)' }}>
       <FuturisticNavbar />
 
       {/* Sub-header */}
-      <div className="shrink-0 mt-14 backdrop-blur-lg bg-background/50 border-b border-primary/20">
-        <div className="px-4 py-3 flex items-center gap-3">
+      <div className="pt-16 px-4">
+        <div className="flex items-center gap-3 py-3">
           <Button
             variant="ghost"
             size="icon"
@@ -158,113 +157,114 @@ export const ChatInterface = () => {
         </div>
       </div>
 
-      {/* Messages area - scrollable */}
-      <div className="flex-1 min-h-0 overflow-y-auto px-3 scrollbar-none">
-        <div className="max-w-3xl mx-auto">
-          {/* Estado vazio com sugestões */}
-          {messages.length === 0 && !isLoading && (
-            <div className="flex flex-col items-center justify-center py-10 animate-fade-in">
-              <div className="w-14 h-14 rounded-full bg-primary/15 flex items-center justify-center mb-4">
-                <Sparkles className="h-7 w-7 text-primary" />
+      {/* Card container for messages + composer */}
+      <div className="px-3 pb-2">
+        <div className="max-w-3xl mx-auto rounded-2xl border border-border/40 bg-card/30 backdrop-blur-sm overflow-hidden">
+          {/* Messages area */}
+          <div className="px-3">
+            {/* Empty state */}
+            {messages.length === 0 && !isLoading && (
+              <div className="flex flex-col items-center justify-center py-10 animate-fade-in">
+                <div className="w-14 h-14 rounded-full bg-primary/15 flex items-center justify-center mb-4">
+                  <Sparkles className="h-7 w-7 text-primary" />
+                </div>
+                <p className="text-base text-muted-foreground text-center mb-6 max-w-xs">
+                  Olá! Sou seu conselheiro espiritual. Como posso ajudar sua família hoje?
+                </p>
+                <div className="flex flex-wrap gap-2 justify-center max-w-sm">
+                  {QUICK_SUGGESTIONS.map((suggestion) => (
+                    <button
+                      key={suggestion}
+                      onClick={() => handleSuggestionClick(suggestion)}
+                      className="px-3 py-2 text-xs rounded-full border border-primary/30 bg-primary/5 text-primary hover:bg-primary/15 transition-colors duration-200 active:scale-95"
+                    >
+                      {suggestion}
+                    </button>
+                  ))}
+                </div>
               </div>
-              <p className="text-base text-muted-foreground text-center mb-6 max-w-xs">
-                Olá! Sou seu conselheiro espiritual. Como posso ajudar sua família hoje?
-              </p>
-              <div className="flex flex-wrap gap-2 justify-center max-w-sm">
-                {QUICK_SUGGESTIONS.map((suggestion) => (
-                  <button
-                    key={suggestion}
-                    onClick={() => handleSuggestionClick(suggestion)}
-                    className="px-3 py-2 text-xs rounded-full border border-primary/30 bg-primary/5 text-primary hover:bg-primary/15 transition-colors duration-200 active:scale-95"
-                  >
-                    {suggestion}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
+            )}
 
-          {/* Mensagens */}
-          <div className="space-y-3 py-4">
-            {messages.map((message, index) => (
-              <div
-                key={index}
-                className={`flex gap-2 ${message.role === "user" ? "justify-end" : "justify-start"} animate-fade-in`}
-              >
-                {message.role === "assistant" && (
+            {/* Messages */}
+            <div className="space-y-3 py-4">
+              {messages.map((message, index) => (
+                <div
+                  key={index}
+                  className={`flex gap-2 ${message.role === "user" ? "justify-end" : "justify-start"} animate-fade-in`}
+                >
+                  {message.role === "assistant" && (
+                    <Avatar className="h-7 w-7 mt-1 shrink-0 border border-primary/30">
+                      <AvatarFallback className="bg-primary/20 text-primary text-[10px]">
+                        <Sparkles className="h-3.5 w-3.5" />
+                      </AvatarFallback>
+                    </Avatar>
+                  )}
+                  <div
+                    className={`max-w-[80%] px-4 py-3 text-sm ${
+                      message.role === "user"
+                        ? "bg-gradient-to-br from-primary/25 to-primary/10 border border-primary/30 rounded-2xl rounded-br-md text-foreground"
+                        : "bg-muted/40 backdrop-blur-sm border border-border/50 rounded-2xl rounded-bl-md text-foreground"
+                    }`}
+                  >
+                    {message.role === "assistant" ? (
+                      <div className="prose prose-invert prose-sm max-w-none prose-p:my-1 prose-ul:my-1 prose-ol:my-1 prose-li:my-0.5 prose-headings:my-2 prose-strong:text-primary">
+                        <ReactMarkdown>{message.content}</ReactMarkdown>
+                      </div>
+                    ) : (
+                      <p className="whitespace-pre-wrap">{message.content}</p>
+                    )}
+                  </div>
+                </div>
+              ))}
+
+              {/* Bouncing dots */}
+              {isLoading && (
+                <div className="flex gap-2 justify-start animate-fade-in">
                   <Avatar className="h-7 w-7 mt-1 shrink-0 border border-primary/30">
                     <AvatarFallback className="bg-primary/20 text-primary text-[10px]">
                       <Sparkles className="h-3.5 w-3.5" />
                     </AvatarFallback>
                   </Avatar>
-                )}
-                <div
-                  className={`max-w-[80%] px-4 py-3 text-sm ${
-                    message.role === "user"
-                      ? "bg-gradient-to-br from-primary/25 to-primary/10 border border-primary/30 rounded-2xl rounded-br-md text-foreground"
-                      : "bg-muted/40 backdrop-blur-sm border border-border/50 rounded-2xl rounded-bl-md text-foreground"
-                  }`}
-                >
-                  {message.role === "assistant" ? (
-                    <div className="prose prose-invert prose-sm max-w-none prose-p:my-1 prose-ul:my-1 prose-ol:my-1 prose-li:my-0.5 prose-headings:my-2 prose-strong:text-primary">
-                      <ReactMarkdown>{message.content}</ReactMarkdown>
+                  <div className="bg-muted/40 backdrop-blur-sm border border-border/50 px-5 py-4 rounded-2xl rounded-bl-md">
+                    <div className="flex gap-1.5 items-center">
+                      <span className="w-2 h-2 rounded-full bg-primary/60 bouncing-dot" style={{ animationDelay: "0ms" }} />
+                      <span className="w-2 h-2 rounded-full bg-primary/60 bouncing-dot" style={{ animationDelay: "150ms" }} />
+                      <span className="w-2 h-2 rounded-full bg-primary/60 bouncing-dot" style={{ animationDelay: "300ms" }} />
                     </div>
-                  ) : (
-                    <p className="whitespace-pre-wrap">{message.content}</p>
-                  )}
-                </div>
-              </div>
-            ))}
-
-            {/* Bouncing dots */}
-            {isLoading && (
-              <div className="flex gap-2 justify-start animate-fade-in">
-                <Avatar className="h-7 w-7 mt-1 shrink-0 border border-primary/30">
-                  <AvatarFallback className="bg-primary/20 text-primary text-[10px]">
-                    <Sparkles className="h-3.5 w-3.5" />
-                  </AvatarFallback>
-                </Avatar>
-                <div className="bg-muted/40 backdrop-blur-sm border border-border/50 px-5 py-4 rounded-2xl rounded-bl-md">
-                  <div className="flex gap-1.5 items-center">
-                    <span className="w-2 h-2 rounded-full bg-primary/60 bouncing-dot" style={{ animationDelay: "0ms" }} />
-                    <span className="w-2 h-2 rounded-full bg-primary/60 bouncing-dot" style={{ animationDelay: "150ms" }} />
-                    <span className="w-2 h-2 rounded-full bg-primary/60 bouncing-dot" style={{ animationDelay: "300ms" }} />
                   </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
+
+            <div ref={scrollRef} />
           </div>
 
-          <div ref={scrollRef} />
-        </div>
-      </div>
-
-      {/* Composer - static at bottom */}
-      <div className="shrink-0 px-3 pb-24 pt-2 bg-background">
-        <div className="max-w-3xl mx-auto">
-          <div className="flex items-end gap-2 bg-muted/20 border border-border/40 rounded-2xl px-3 py-2 focus-within:border-primary/40 transition-colors">
-            <textarea
-              ref={textareaRef}
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="Digite sua mensagem..."
-              disabled={isLoading}
-              rows={1}
-              className="flex-1 bg-transparent border-none outline-none resize-none text-base text-foreground placeholder:text-muted-foreground py-1.5 max-h-[120px] scrollbar-none"
-            />
-            <Button
-              onClick={handleSendMessage}
-              disabled={isLoading || !input.trim()}
-              size="icon"
-              className="h-9 w-9 rounded-full bg-primary hover:bg-primary/80 transition-all duration-200 active:scale-90 disabled:opacity-30 shrink-0"
-            >
-              {isLoading ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Send className="h-4 w-4" />
-              )}
-            </Button>
+          {/* Composer — inside card, in normal flow */}
+          <div className="px-3 py-3 border-t border-border/30">
+            <div className="flex items-end gap-2 bg-muted/20 border border-border/40 rounded-2xl px-3 py-2 focus-within:border-primary/40 transition-colors">
+              <textarea
+                ref={textareaRef}
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Digite sua mensagem..."
+                disabled={isLoading}
+                rows={1}
+                className="flex-1 bg-transparent border-none outline-none resize-none text-base text-foreground placeholder:text-muted-foreground py-1.5 max-h-[120px] scrollbar-none"
+              />
+              <Button
+                onClick={handleSendMessage}
+                disabled={isLoading || !input.trim()}
+                size="icon"
+                className="h-9 w-9 rounded-full bg-primary hover:bg-primary/80 transition-all duration-200 active:scale-90 disabled:opacity-30 shrink-0"
+              >
+                {isLoading ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Send className="h-4 w-4" />
+                )}
+              </Button>
+            </div>
           </div>
         </div>
       </div>
