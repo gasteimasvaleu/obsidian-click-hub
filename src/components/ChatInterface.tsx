@@ -187,7 +187,7 @@ export const ChatInterface = ({ open, onClose }: ChatInterfaceProps) => {
         className="flex flex-1 flex-col min-h-0 p-3"
         style={{
           paddingTop: "calc(env(safe-area-inset-top, 0px) + 0.75rem)",
-          paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 5rem)",
+          paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 5.5rem)",
         }}
       >
         {/* Card */}
