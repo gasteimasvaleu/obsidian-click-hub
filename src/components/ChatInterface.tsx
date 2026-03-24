@@ -133,11 +133,11 @@ export const ChatInterface = () => {
   };
 
     return (
-    <div className="min-h-screen bg-background relative pb-24 overflow-x-hidden">
+    <div className="h-screen flex flex-col bg-background overflow-hidden">
       <FuturisticNavbar />
 
       {/* Sub-header */}
-      <div className="fixed top-14 left-0 right-0 z-40 backdrop-blur-lg bg-background/50 border-b border-primary/20">
+      <div className="shrink-0 mt-14 backdrop-blur-lg bg-background/50 border-b border-primary/20">
         <div className="px-4 py-3 flex items-center gap-3">
           <Button
             variant="ghost"
@@ -158,7 +158,8 @@ export const ChatInterface = () => {
         </div>
       </div>
 
-      <div className="pt-28 px-3">
+      {/* Messages area - scrollable */}
+      <div className="flex-1 min-h-0 overflow-y-auto px-3 scrollbar-none">
         <div className="max-w-3xl mx-auto">
           {/* Estado vazio com sugestões */}
           {messages.length === 0 && !isLoading && (
@@ -235,33 +236,35 @@ export const ChatInterface = () => {
           </div>
 
           <div ref={scrollRef} />
+        </div>
+      </div>
 
-          {/* Input no fluxo normal */}
-          <div className="py-3">
-            <div className="flex items-end gap-2 bg-muted/20 border border-border/40 rounded-2xl px-3 py-2 focus-within:border-primary/40 transition-colors">
-              <textarea
-                ref={textareaRef}
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder="Digite sua mensagem..."
-                disabled={isLoading}
-                rows={1}
-                className="flex-1 bg-transparent border-none outline-none resize-none text-base text-foreground placeholder:text-muted-foreground py-1.5 max-h-[120px] scrollbar-none"
-              />
-              <Button
-                onClick={handleSendMessage}
-                disabled={isLoading || !input.trim()}
-                size="icon"
-                className="h-9 w-9 rounded-full bg-primary hover:bg-primary/80 transition-all duration-200 active:scale-90 disabled:opacity-30 shrink-0"
-              >
-                {isLoading ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <Send className="h-4 w-4" />
-                )}
-              </Button>
-            </div>
+      {/* Composer - static at bottom */}
+      <div className="shrink-0 px-3 pb-24 pt-2 bg-background">
+        <div className="max-w-3xl mx-auto">
+          <div className="flex items-end gap-2 bg-muted/20 border border-border/40 rounded-2xl px-3 py-2 focus-within:border-primary/40 transition-colors">
+            <textarea
+              ref={textareaRef}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="Digite sua mensagem..."
+              disabled={isLoading}
+              rows={1}
+              className="flex-1 bg-transparent border-none outline-none resize-none text-base text-foreground placeholder:text-muted-foreground py-1.5 max-h-[120px] scrollbar-none"
+            />
+            <Button
+              onClick={handleSendMessage}
+              disabled={isLoading || !input.trim()}
+              size="icon"
+              className="h-9 w-9 rounded-full bg-primary hover:bg-primary/80 transition-all duration-200 active:scale-90 disabled:opacity-30 shrink-0"
+            >
+              {isLoading ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Send className="h-4 w-4" />
+              )}
+            </Button>
           </div>
         </div>
       </div>
