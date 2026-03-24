@@ -161,9 +161,7 @@ export const ChatInterface = () => {
           </div>
 
           {/* Messages area */}
-          <div className="border-x border-border/40 bg-card/30 backdrop-blur-sm">
-          {/* Messages area */}
-          <div className="px-3">
+          <div className="border-x border-border/40 bg-card/30 backdrop-blur-sm px-3">
             {/* Empty state */}
             {messages.length === 0 && !isLoading && (
               <div className="flex flex-col items-center justify-center py-10 animate-fade-in">
