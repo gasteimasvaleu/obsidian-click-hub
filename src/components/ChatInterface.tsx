@@ -194,14 +194,16 @@ export const ChatInterface = () => {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex flex-col overflow-hidden bg-background"
-      style={{ height: viewportHeight ? `${viewportHeight}px` : "100dvh" }}
+      className="fixed inset-0 z-50 flex flex-col overflow-hidden bg-background p-3"
+      style={{
+        height: viewportHeight ? `${viewportHeight}px` : "100dvh",
+        paddingTop: "calc(env(safe-area-inset-top, 0px) + 0.5rem)",
+        paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 0.5rem)",
+      }}
     >
+      <div className="flex flex-1 flex-col rounded-2xl overflow-hidden min-h-0 border border-border/40 shadow-sm">
           {/* Green header */}
-          <div
-            className="shrink-0 bg-primary px-4"
-            style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 0.25rem)" }}
-          >
+          <div className="shrink-0 bg-primary px-4">
             <div className="flex items-center gap-3 py-3">
               <Button
                 variant="ghost"
@@ -303,10 +305,7 @@ export const ChatInterface = () => {
           </div>
 
           {/* Composer — white bottom */}
-          <div
-            className="shrink-0 bg-white px-3 pt-3"
-            style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 0.25rem)" }}
-          >
+          <div className="shrink-0 bg-white px-3 py-3">
             <div className="flex items-end gap-2 rounded-2xl border border-input bg-secondary px-3 py-2 transition-colors focus-within:border-primary">
               <textarea
                 ref={textareaRef}
@@ -332,6 +331,8 @@ export const ChatInterface = () => {
               </Button>
             </div>
           </div>
+
+      </div>
 
       <AIConsentDialog
         open={showConsent}
