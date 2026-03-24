@@ -136,7 +136,7 @@ const App = () => {
                 <Route path="/oracoes" element={<ProtectedRoute><Oracoes /></ProtectedRoute>} />
                 <Route path="/audiofy" element={<ProtectedRoute><Audiofy /></ProtectedRoute>} />
                 <Route path="/amigodivino" element={<ProtectedRoute><AmigoDivino /></ProtectedRoute>} />
-                <Route path="/amigodivino/chat" element={<ProtectedRoute><ChatInterface /></ProtectedRoute>} />
+                
                 <Route path="/sobre" element={<ProtectedRoute><Sobre /></ProtectedRoute>} />
                 <Route path="/guia-pais" element={<ProtectedRoute><GuiaPais /></ProtectedRoute>} />
                 <Route path="/games" element={<ProtectedRoute><Games /></ProtectedRoute>} />

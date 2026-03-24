@@ -1,14 +1,17 @@
 import { useState, useRef, useEffect, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Send, Loader2, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
 import { useToast } from "@/hooks/use-toast";
 import { useAIConsent } from "@/hooks/useAIConsent";
 import { AIConsentDialog } from "@/components/AIConsentDialog";
 import { useLoading } from "@/contexts/LoadingContext";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import ReactMarkdown from "react-markdown";
+
+interface ChatInterfaceProps {
+  open: boolean;
+  onClose: () => void;
+}
 
 interface Message {
   role: "user" | "assistant";
@@ -22,12 +25,11 @@ const QUICK_SUGGESTIONS = [
   "Como ensinar perdão aos filhos?",
 ];
 
-export const ChatInterface = () => {
+export const ChatInterface = ({ open, onClose }: ChatInterfaceProps) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [viewportHeight, setViewportHeight] = useState<number | null>(null);
-  const navigate = useNavigate();
   const { toast } = useToast();
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -35,6 +37,7 @@ export const ChatInterface = () => {
   const pendingMessageRef = useRef<string | null>(null);
   const { showLoading, hideLoading } = useLoading();
 
+  // Auto-scroll messages
   useEffect(() => {
     const container = messagesContainerRef.current;
     if (container) {
@@ -42,65 +45,43 @@ export const ChatInterface = () => {
     }
   }, [messages, isLoading]);
 
+  // Track visual viewport for iOS keyboard
   useEffect(() => {
-    const getViewportHeight = () => window.visualViewport?.height ?? window.innerHeight;
+    if (!open) return;
 
+    const getViewportHeight = () => window.visualViewport?.height ?? window.innerHeight;
     const updateViewportHeight = () => {
       setViewportHeight(getViewportHeight());
-      window.scrollTo(0, 0);
     };
 
     updateViewportHeight();
 
-    const visualViewport = window.visualViewport;
-    visualViewport?.addEventListener("resize", updateViewportHeight);
-    visualViewport?.addEventListener("scroll", updateViewportHeight);
+    const vv = window.visualViewport;
+    vv?.addEventListener("resize", updateViewportHeight);
+    vv?.addEventListener("scroll", updateViewportHeight);
     window.addEventListener("resize", updateViewportHeight);
 
     return () => {
-      visualViewport?.removeEventListener("resize", updateViewportHeight);
-      visualViewport?.removeEventListener("scroll", updateViewportHeight);
+      vv?.removeEventListener("resize", updateViewportHeight);
+      vv?.removeEventListener("scroll", updateViewportHeight);
       window.removeEventListener("resize", updateViewportHeight);
     };
-  }, []);
+  }, [open]);
 
+  // Lock body scroll while modal is open (minimal approach)
   useEffect(() => {
-    const html = document.documentElement;
-    const body = document.body;
-    const root = document.getElementById("root");
+    if (!open) return;
 
-    const htmlOverflow = html.style.overflow;
-    const bodyOverflow = body.style.overflow;
-    const bodyPosition = body.style.position;
-    const bodyWidth = body.style.width;
-    const bodyOverscrollBehavior = body.style.overscrollBehavior;
-    const rootOverflow = root?.style.overflow;
-    const rootHeight = root?.style.height;
-
-    html.style.overflow = "hidden";
-    body.style.overflow = "hidden";
-    body.style.position = "fixed";
-    body.style.width = "100%";
-    body.style.overscrollBehavior = "none";
-
-    if (root) {
-      root.style.overflow = "hidden";
-      root.style.height = "100%";
-    }
+    const originalOverflow = document.body.style.overflow;
+    const originalOverscroll = document.body.style.overscrollBehavior;
+    document.body.style.overflow = "hidden";
+    document.body.style.overscrollBehavior = "none";
 
     return () => {
-      html.style.overflow = htmlOverflow;
-      body.style.overflow = bodyOverflow;
-      body.style.position = bodyPosition;
-      body.style.width = bodyWidth;
-      body.style.overscrollBehavior = bodyOverscrollBehavior;
-
-      if (root) {
-        root.style.overflow = rootOverflow ?? "";
-        root.style.height = rootHeight ?? "";
-      }
+      document.body.style.overflow = originalOverflow;
+      document.body.style.overscrollBehavior = originalOverscroll;
     };
-  }, []);
+  }, [open]);
 
   const autoResize = useCallback(() => {
     const ta = textareaRef.current;
@@ -192,23 +173,32 @@ export const ChatInterface = () => {
     }
   };
 
+  if (!open) return null;
+
   return (
     <div
-      className="fixed inset-0 z-50 flex flex-col overflow-hidden bg-background p-3"
+      className="fixed inset-0 z-50 flex flex-col bg-black/60 backdrop-blur-sm"
       style={{
         height: viewportHeight ? `${viewportHeight}px` : "100dvh",
-        paddingTop: "calc(env(safe-area-inset-top, 0px) + 0.5rem)",
-        paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 0.5rem)",
       }}
     >
-      <div className="flex flex-1 flex-col rounded-2xl overflow-hidden min-h-0 border border-border/40 shadow-sm">
-          {/* Green header */}
+      {/* Padding wrapper for safe areas + visual margin */}
+      <div
+        className="flex flex-1 flex-col min-h-0 p-3"
+        style={{
+          paddingTop: "calc(env(safe-area-inset-top, 0px) + 0.75rem)",
+          paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 0.75rem)",
+        }}
+      >
+        {/* Card */}
+        <div className="flex flex-1 flex-col rounded-2xl overflow-hidden min-h-0 border border-border/40 shadow-2xl">
+          {/* Header */}
           <div className="shrink-0 bg-primary px-4">
             <div className="flex items-center gap-3 py-3">
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => navigate("/amigodivino")}
+                onClick={onClose}
                 className="text-primary-foreground hover:text-primary-foreground/80 hover:bg-black/10"
               >
                 <ArrowLeft className="h-5 w-5" />
@@ -224,12 +214,11 @@ export const ChatInterface = () => {
             </div>
           </div>
 
-          {/* Messages area */}
+          {/* Messages */}
           <div
             ref={messagesContainerRef}
-            className="min-h-0 flex-1 overflow-y-auto overscroll-contain border-x border-border/40 bg-card/30 px-3 backdrop-blur-sm"
+            className="min-h-0 flex-1 overflow-y-auto overscroll-contain bg-card/95 px-3 backdrop-blur-sm"
           >
-            {/* Empty state */}
             {messages.length === 0 && !isLoading && (
               <div className="flex flex-col items-center justify-center py-10 animate-fade-in">
                 <div className="w-14 h-14 rounded-full bg-primary/15 flex items-center justify-center mb-4">
@@ -252,7 +241,6 @@ export const ChatInterface = () => {
               </div>
             )}
 
-            {/* Messages */}
             <div className="space-y-3 py-4">
               {messages.map((message, index) => (
                 <div
@@ -284,7 +272,6 @@ export const ChatInterface = () => {
                 </div>
               ))}
 
-              {/* Bouncing dots */}
               {isLoading && (
                 <div className="flex gap-2 justify-start animate-fade-in">
                   <Avatar className="h-7 w-7 mt-1 shrink-0 border border-primary/30">
@@ -304,8 +291,8 @@ export const ChatInterface = () => {
             </div>
           </div>
 
-          {/* Composer — white bottom */}
-          <div className="shrink-0 bg-white px-3 py-3">
+          {/* Composer */}
+          <div className="shrink-0 bg-card px-3 py-3">
             <div className="flex items-end gap-2 rounded-2xl border border-input bg-secondary px-3 py-2 transition-colors focus-within:border-primary">
               <textarea
                 ref={textareaRef}
@@ -315,7 +302,7 @@ export const ChatInterface = () => {
                 placeholder="Digite sua mensagem..."
                 disabled={isLoading}
                 rows={1}
-                className="scrollbar-none max-h-[120px] flex-1 resize-none border-none bg-transparent py-1.5 text-base text-gray-900 outline-none placeholder:text-gray-400"
+                className="scrollbar-none max-h-[120px] flex-1 resize-none border-none bg-transparent py-1.5 text-base text-foreground outline-none placeholder:text-muted-foreground"
               />
               <Button
                 onClick={handleSendMessage}
@@ -331,7 +318,7 @@ export const ChatInterface = () => {
               </Button>
             </div>
           </div>
-
+        </div>
       </div>
 
       <AIConsentDialog
