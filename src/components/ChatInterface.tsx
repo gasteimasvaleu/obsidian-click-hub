@@ -52,21 +52,6 @@ export const ChatInterface = () => {
     autoResize();
   }, [input, autoResize]);
 
-  const handleFocus = useCallback(() => {
-    setKeyboardOpen(true);
-    document.body.classList.add("keyboard-open");
-  }, []);
-
-  const handleBlur = useCallback(() => {
-    setKeyboardOpen(false);
-    document.body.classList.remove("keyboard-open");
-  }, []);
-
-  useEffect(() => {
-    return () => {
-      document.body.classList.remove("keyboard-open");
-    };
-  }, []);
 
   const doSendMessage = async (message: string) => {
     const userMessage: Message = { role: "user", content: message };
