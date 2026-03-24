@@ -1,19 +1,29 @@
 
 
-## Corrigir header verde e composer branco no celular
+## Restaurar bordas arredondadas e ajustar espaçamentos
 
-### Problemas visíveis na screenshot
-1. **Header verde**: tem um espaço vazio enorme acima do título — o `safe-area-inset-top` no dispositivo real é grande, e ainda tem `pt-3` no wrapper externo somando
-2. **Composer branco**: tem espaço excessivo abaixo do input — `safe-area-inset-bottom` + `pb-3` do wrapper externo + `0.75rem` extra
+### Problema
+O chat ficou totalmente quadrado (sem border-radius) e o header verde continua com espaço excessivo no topo por causa do safe-area-inset-top somado ao padding.
 
-### Causa raiz
-O wrapper intermediário (linha 200) tem `px-3 pb-3 pt-3` e `rounded-2xl` no card interno. Isso cria margens desnecessárias ao redor do card, desperdiçando espaço em todos os lados.
+### Solução
+Manter o layout `fixed inset-0` mas adicionar um wrapper interno com `rounded-2xl overflow-hidden` e margens pequenas (`mx-3 my-2`) para dar o visual de card com bordas. Ajustar o safe-area no container externo em vez de dentro do header.
 
-### Correções em `src/components/ChatInterface.tsx`
+### Alterações em `src/components/ChatInterface.tsx`
 
-1. **Remover wrapper intermediário** — eliminar o `div` da linha 200 com `px-3 pb-3 pt-3`, fazendo o card interno preencher toda a tela
-2. **Card interno full-screen** — remover `rounded-2xl`, `mx-auto`, `max-w-3xl` e usar `flex h-full flex-col`
-3. **Header** — remover `rounded-t-2xl` (não precisa mais), manter apenas `safe-area-inset-top` sem padding extra
-4. **Composer** — remover `rounded-b-2xl`, reduzir padding bottom para apenas `safe-area-inset-bottom` sem o `0.75rem` adicional excessivo
-5. **Textarea text color** — corrigir para `text-gray-900` já que o fundo do composer é branco
+1. **Container raiz** — manter `fixed inset-0 z-50 bg-background` mas adicionar padding com safe-areas:
+   - `paddingTop: env(safe-area-inset-top)`
+   - `paddingBottom: env(safe-area-inset-bottom)`
+   - Adicionar `p-3` para margem visual ao redor do card
+
+2. **Adicionar wrapper card** — um `div` filho com `flex-1 flex flex-col rounded-2xl overflow-hidden min-h-0` que contém header, mensagens e composer. Isso restaura as bordas arredondadas.
+
+3. **Header verde** — remover o `paddingTop` com safe-area (já tratado no container pai). Manter apenas `px-4 py-3`.
+
+4. **Composer branco** — remover o `paddingBottom` com safe-area (já tratado no container pai). Adicionar `rounded-b-2xl` implícito via overflow do wrapper.
+
+### Resultado
+- Card com bordas arredondadas bonitas
+- Safe areas tratadas no container externo
+- Header e composer encaixados sem espaço extra
+- Scroll apenas na área de mensagens
 
