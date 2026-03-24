@@ -34,7 +34,6 @@ export const ChatInterface = () => {
   const { showConsent, setShowConsent, acceptConsent, requireConsent } = useAIConsent();
   const pendingMessageRef = useRef<string | null>(null);
   const { showLoading, hideLoading } = useLoading();
-  const [keyboardOpen, setKeyboardOpen] = useState(false);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -53,21 +52,6 @@ export const ChatInterface = () => {
     autoResize();
   }, [input, autoResize]);
 
-  const handleFocus = useCallback(() => {
-    setKeyboardOpen(true);
-    document.body.classList.add("keyboard-open");
-  }, []);
-
-  const handleBlur = useCallback(() => {
-    setKeyboardOpen(false);
-    document.body.classList.remove("keyboard-open");
-  }, []);
-
-  useEffect(() => {
-    return () => {
-      document.body.classList.remove("keyboard-open");
-    };
-  }, []);
 
   const doSendMessage = async (message: string) => {
     const userMessage: Message = { role: "user", content: message };
@@ -148,8 +132,8 @@ export const ChatInterface = () => {
     }
   };
 
-  return (
-    <div className="min-h-screen bg-background flex flex-col pt-28">
+    return (
+    <div className="min-h-screen bg-background relative pb-24 overflow-x-hidden">
       <FuturisticNavbar />
 
       {/* Sub-header */}
@@ -174,9 +158,8 @@ export const ChatInterface = () => {
         </div>
       </div>
 
-      {/* Chat area — sem GlassCard, mensagens flutuam direto */}
-      <div className="flex-1 overflow-y-auto scrollbar-none px-3">
-        <div className="max-w-3xl mx-auto py-4">
+      <div className="pt-28 px-3">
+        <div className="max-w-3xl mx-auto">
           {/* Estado vazio com sugestões */}
           {messages.length === 0 && !isLoading && (
             <div className="flex flex-col items-center justify-center py-10 animate-fade-in">
@@ -201,7 +184,7 @@ export const ChatInterface = () => {
           )}
 
           {/* Mensagens */}
-          <div className="space-y-3">
+          <div className="space-y-3 py-4">
             {messages.map((message, index) => (
               <div
                 key={index}
@@ -252,37 +235,33 @@ export const ChatInterface = () => {
           </div>
 
           <div ref={scrollRef} />
-        </div>
-      </div>
 
-      {/* Input redesenhado */}
-      <div className={`sticky bottom-0 backdrop-blur-xl bg-background/80 border-t border-border/30 ${keyboardOpen ? "pb-4" : "pb-28"}`}>
-        <div className="max-w-3xl mx-auto px-3 pt-3">
-          <div className="flex items-end gap-2 bg-muted/20 border border-border/40 rounded-2xl px-3 py-2 focus-within:border-primary/40 transition-colors">
-            <textarea
-              ref={textareaRef}
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={handleKeyDown}
-              onFocus={handleFocus}
-              onBlur={handleBlur}
-              placeholder="Digite sua mensagem..."
-              disabled={isLoading}
-              rows={1}
-              className="flex-1 bg-transparent border-none outline-none resize-none text-base text-foreground placeholder:text-muted-foreground py-1.5 max-h-[120px] scrollbar-none"
-            />
-            <Button
-              onClick={handleSendMessage}
-              disabled={isLoading || !input.trim()}
-              size="icon"
-              className="h-9 w-9 rounded-full bg-primary hover:bg-primary/80 transition-all duration-200 active:scale-90 disabled:opacity-30 shrink-0"
-            >
-              {isLoading ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Send className="h-4 w-4" />
-              )}
-            </Button>
+          {/* Input no fluxo normal */}
+          <div className="py-3">
+            <div className="flex items-end gap-2 bg-muted/20 border border-border/40 rounded-2xl px-3 py-2 focus-within:border-primary/40 transition-colors">
+              <textarea
+                ref={textareaRef}
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Digite sua mensagem..."
+                disabled={isLoading}
+                rows={1}
+                className="flex-1 bg-transparent border-none outline-none resize-none text-base text-foreground placeholder:text-muted-foreground py-1.5 max-h-[120px] scrollbar-none"
+              />
+              <Button
+                onClick={handleSendMessage}
+                disabled={isLoading || !input.trim()}
+                size="icon"
+                className="h-9 w-9 rounded-full bg-primary hover:bg-primary/80 transition-all duration-200 active:scale-90 disabled:opacity-30 shrink-0"
+              >
+                {isLoading ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Send className="h-4 w-4" />
+                )}
+              </Button>
+            </div>
           </div>
         </div>
       </div>
