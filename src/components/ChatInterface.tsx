@@ -332,6 +332,8 @@ export const ChatInterface = () => {
             </div>
           </div>
 
+      </div>
+
       <AIConsentDialog
         open={showConsent}
         onAccept={handleConsentAccepted}
