@@ -38,7 +38,7 @@ import NotFound from "./pages/NotFound";
 import PoliticaFamilia from "./pages/PoliticaFamilia";
 import TermosDeUso from "./pages/TermosDeUso";
 import { ExternalFrame } from "./components/ExternalFrame";
-import { ChatInterface } from "./components/ChatInterface";
+
 import { ProtectedRoute } from "./components/admin/ProtectedRoute";
 
 
