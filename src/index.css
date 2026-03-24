@@ -241,7 +241,3 @@ All colors MUST be HSL.
   }
 }
 
-/* Hide bottom navbar when keyboard is open (iOS Capacitor) */
-body.keyboard-open .fixed.bottom-0.z-50 {
-  display: none !important;
-}
