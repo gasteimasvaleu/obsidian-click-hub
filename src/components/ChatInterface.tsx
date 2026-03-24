@@ -132,12 +132,12 @@ export const ChatInterface = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background relative overflow-x-hidden" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 1rem)' }}>
+    <div className="h-screen flex flex-col bg-background overflow-hidden">
       <FuturisticNavbar />
 
       {/* Card container: header + messages + composer */}
-      <div className="pt-16 px-3 pb-2">
-        <div className="max-w-3xl mx-auto overflow-hidden">
+      <div className="pt-16 px-3 flex-1 flex flex-col min-h-0" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 0.5rem)' }}>
+        <div className="max-w-3xl mx-auto flex-1 flex flex-col min-h-0 overflow-hidden w-full">
           {/* Green header */}
           <div className="bg-primary rounded-t-2xl px-4">
             <div className="flex items-center gap-3 py-3">
