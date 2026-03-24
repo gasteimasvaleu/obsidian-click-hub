@@ -194,11 +194,9 @@ export const ChatInterface = () => {
 
   return (
     <div
-      className="fixed inset-0 z-50 overflow-hidden bg-background"
+      className="fixed inset-0 z-50 flex flex-col overflow-hidden bg-background"
       style={{ height: viewportHeight ? `${viewportHeight}px` : "100dvh" }}
     >
-      <div className="flex h-full flex-col px-3 pb-3 pt-3">
-        <div className="mx-auto flex h-full w-full max-w-3xl flex-col overflow-hidden rounded-2xl">
           {/* Green header */}
           <div
             className="shrink-0 bg-primary px-4"
@@ -306,8 +304,8 @@ export const ChatInterface = () => {
 
           {/* Composer — white bottom */}
           <div
-            className="shrink-0 rounded-b-2xl bg-white px-3 pt-3"
-            style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 0.75rem)" }}
+            className="shrink-0 bg-white px-3 pt-3"
+            style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 0.25rem)" }}
           >
             <div className="flex items-end gap-2 rounded-2xl border border-input bg-secondary px-3 py-2 transition-colors focus-within:border-primary">
               <textarea
@@ -318,7 +316,7 @@ export const ChatInterface = () => {
                 placeholder="Digite sua mensagem..."
                 disabled={isLoading}
                 rows={1}
-                className="scrollbar-none max-h-[120px] flex-1 resize-none border-none bg-transparent py-1.5 text-base text-foreground outline-none placeholder:text-muted-foreground"
+                className="scrollbar-none max-h-[120px] flex-1 resize-none border-none bg-transparent py-1.5 text-base text-gray-900 outline-none placeholder:text-gray-400"
               />
               <Button
                 onClick={handleSendMessage}
@@ -334,8 +332,6 @@ export const ChatInterface = () => {
               </Button>
             </div>
           </div>
-        </div>
-      </div>
 
       <AIConsentDialog
         open={showConsent}
