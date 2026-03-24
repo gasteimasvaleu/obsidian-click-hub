@@ -316,7 +316,7 @@ export const ChatInterface = () => {
                 placeholder="Digite sua mensagem..."
                 disabled={isLoading}
                 rows={1}
-                className="scrollbar-none max-h-[120px] flex-1 resize-none border-none bg-transparent py-1.5 text-base text-foreground outline-none placeholder:text-muted-foreground"
+                className="scrollbar-none max-h-[120px] flex-1 resize-none border-none bg-transparent py-1.5 text-base text-gray-900 outline-none placeholder:text-gray-400"
               />
               <Button
                 onClick={handleSendMessage}
