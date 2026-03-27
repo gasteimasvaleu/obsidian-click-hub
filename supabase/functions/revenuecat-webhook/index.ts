@@ -48,6 +48,18 @@ Deno.serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  // Validate Authorization header
+  const authHeader = req.headers.get("Authorization");
+  const expectedSecret = Deno.env.get("REVENUECAT_WEBHOOK_SECRET");
+
+  if (!expectedSecret || authHeader !== `Bearer ${expectedSecret}`) {
+    console.warn("Unauthorized webhook call attempt");
+    return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      status: 401,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
+
   try {
     const body = await req.json();
     console.log("RevenueCat webhook received:", JSON.stringify(body));
