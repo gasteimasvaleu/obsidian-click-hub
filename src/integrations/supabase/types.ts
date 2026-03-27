@@ -1274,6 +1274,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      expire_overdue_subscriptions: { Args: never; Returns: undefined }
       get_random_verse: {
         Args: never
         Returns: {
