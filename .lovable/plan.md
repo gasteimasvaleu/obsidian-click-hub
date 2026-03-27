@@ -1,32 +1,57 @@
 
 
-## Adicionar validação de Authorization Header no webhook RevenueCat
+## Implementar expiração automática de assinaturas (excluindo admins)
 
 ### Problema
-O endpoint `revenuecat-webhook` está aberto — qualquer pessoa com a URL pode enviar eventos falsos.
+Assinaturas expiradas permanecem com status `active` indefinidamente. Admins devem manter acesso independente da assinatura.
 
 ### Solução
-1. **Criar secret `REVENUECAT_WEBHOOK_SECRET`** via ferramenta de secrets
-2. **Adicionar validação no início da função** `supabase/functions/revenuecat-webhook/index.ts`
 
-### Alteração técnica
+#### 1. Migration — Função + Cron Job (via pg_cron + pg_net)
 
-**Arquivo:** `supabase/functions/revenuecat-webhook/index.ts`
+Criar função `expire_overdue_subscriptions()` que ignora usuários com role `admin`:
 
-Após o bloco OPTIONS, antes do `try`, adicionar validação do header `Authorization: Bearer <secret>`:
-
-```typescript
-const authHeader = req.headers.get("Authorization");
-const expectedSecret = Deno.env.get("REVENUECAT_WEBHOOK_SECRET");
-
-if (!expectedSecret || authHeader !== `Bearer ${expectedSecret}`) {
-  return new Response(JSON.stringify({ error: "Unauthorized" }), {
-    status: 401,
-    headers: { ...corsHeaders, "Content-Type": "application/json" },
-  });
-}
+```sql
+CREATE OR REPLACE FUNCTION public.expire_overdue_subscriptions()
+RETURNS void
+LANGUAGE sql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+  UPDATE subscribers
+  SET subscription_status = 'expired',
+      updated_at = now()
+  WHERE subscription_status = 'active'
+    AND subscription_expires_at IS NOT NULL
+    AND subscription_expires_at < now()
+    AND NOT EXISTS (
+      SELECT 1 FROM user_roles
+      WHERE user_roles.user_id = subscribers.user_id
+        AND user_roles.role = 'admin'
+    );
+$$;
 ```
 
-### Configuração no RevenueCat Dashboard
-Após implementar, o usuário precisará configurar o mesmo secret como Authorization Header no painel do RevenueCat em **Project Settings → Webhooks → Authorization Header**.
+O cron job será agendado via SQL insert (não migration) chamando a edge function ou diretamente via `cron.schedule`, rodando diariamente às 03:00 UTC.
+
+#### 2. Agendar via pg_cron (SQL insert no banco)
+
+Usando `pg_net` para chamar a função diretamente:
+
+```sql
+SELECT cron.schedule(
+  'expire-overdue-subscriptions',
+  '0 3 * * *',
+  'SELECT public.expire_overdue_subscriptions()'
+);
+```
+
+### Resultado
+- Assinaturas vencidas são automaticamente marcadas como `expired` diariamente
+- Admins nunca têm suas assinaturas expiradas
+- Sua assinatura permanece ativa
+
+### Arquivos alterados
+- **Nova migration SQL** — cria a função `expire_overdue_subscriptions`
+- **SQL insert** — agenda o cron job
 
