@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-import { Loader2, CheckCircle, XCircle, AlertTriangle, Mail, ShieldCheck } from 'lucide-react';
+import { Loader2, CheckCircle, XCircle, AlertTriangle, ShieldCheck, Crown } from 'lucide-react';
 
 type TokenStatus = 'loading' | 'valid' | 'invalid' | 'expired' | 'success' | 'admin-mode' | 'revenuecat';
 
@@ -436,12 +436,13 @@ const Cadastro = () => {
       case 'valid':
         return (
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-3">
-              <p className="text-blue-400 text-sm flex items-start gap-2">
-                <Mail className="w-4 h-4 mt-0.5 flex-shrink-0" />
-                <span>
-                  Não recebeu o email? Verifique sua caixa de <strong>spam</strong> ou <strong>lixo eletrônico</strong>.
-                </span>
+            <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4 text-center">
+              <Crown className="w-8 h-8 text-yellow-500 mx-auto mb-2" />
+              <p className="text-yellow-400 font-semibold text-base">
+                🎉 Parabéns! Você recebeu acesso VIP ao BíbliaTooon Club!
+              </p>
+              <p className="text-yellow-400/70 text-sm mt-1">
+                Complete seu cadastro abaixo para ativar sua conta exclusiva.
               </p>
             </div>
 
