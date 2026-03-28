@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-import { Loader2, CheckCircle, XCircle, AlertTriangle, Mail, ShieldCheck } from 'lucide-react';
+import { Loader2, CheckCircle, XCircle, AlertTriangle, ShieldCheck, Crown } from 'lucide-react';
 
 type TokenStatus = 'loading' | 'valid' | 'invalid' | 'expired' | 'success' | 'admin-mode' | 'revenuecat';
 
