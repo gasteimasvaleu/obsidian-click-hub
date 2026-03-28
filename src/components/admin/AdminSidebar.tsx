@@ -8,6 +8,7 @@ const navItems = [
   { name: 'Jogos', url: '/admin/games', icon: Gamepad2 },
   { name: 'Colorir', url: '/admin/colorir', icon: Palette },
   { name: 'Lançamentos', url: '/admin/highlights', icon: Sparkles },
+  { name: 'Tokens VIP', url: '/admin/vip-tokens', icon: Gift },
 ];
 
 const plataformaItems = [
