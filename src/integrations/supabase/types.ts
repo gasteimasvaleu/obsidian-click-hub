@@ -788,15 +788,14 @@ export type Database = {
           created_at: string | null
           email: string
           full_name: string | null
-          hotmart_offer_id: string | null
-          hotmart_product_id: string | null
-          hotmart_transaction_id: string | null
           id: string
           phone: string | null
+          product_source: string | null
           signup_token: string | null
           signup_token_expires_at: string | null
           subscription_expires_at: string | null
           subscription_status: Database["public"]["Enums"]["subscription_status"]
+          transaction_id: string | null
           updated_at: string | null
           user_id: string | null
           whatsapp_optin: boolean | null
@@ -806,15 +805,14 @@ export type Database = {
           created_at?: string | null
           email: string
           full_name?: string | null
-          hotmart_offer_id?: string | null
-          hotmart_product_id?: string | null
-          hotmart_transaction_id?: string | null
           id?: string
           phone?: string | null
+          product_source?: string | null
           signup_token?: string | null
           signup_token_expires_at?: string | null
           subscription_expires_at?: string | null
           subscription_status?: Database["public"]["Enums"]["subscription_status"]
+          transaction_id?: string | null
           updated_at?: string | null
           user_id?: string | null
           whatsapp_optin?: boolean | null
@@ -824,15 +822,14 @@ export type Database = {
           created_at?: string | null
           email?: string
           full_name?: string | null
-          hotmart_offer_id?: string | null
-          hotmart_product_id?: string | null
-          hotmart_transaction_id?: string | null
           id?: string
           phone?: string | null
+          product_source?: string | null
           signup_token?: string | null
           signup_token_expires_at?: string | null
           subscription_expires_at?: string | null
           subscription_status?: Database["public"]["Enums"]["subscription_status"]
+          transaction_id?: string | null
           updated_at?: string | null
           user_id?: string | null
           whatsapp_optin?: boolean | null

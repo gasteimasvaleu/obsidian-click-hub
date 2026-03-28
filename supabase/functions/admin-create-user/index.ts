@@ -110,6 +110,7 @@ Deno.serve(async (req) => {
         phone: phone ? normalizePhone(phone) : null,
         user_id: newUser.user.id,
         subscription_status: 'active',
+        product_source: 'admin',
       }, {
         onConflict: 'email',
       });

@@ -56,6 +56,7 @@ import CarouselsManager from "./pages/admin/plataforma/CarouselsManager";
 import PrayersManager from "./pages/admin/PrayersManager";
 import ColoringManager from "./pages/admin/ColoringManager";
 import HighlightsManager from "./pages/admin/HighlightsManager";
+import VipTokenManager from "./pages/admin/VipTokenManager";
 
 // Comunidade
 import Comunidade from "./pages/Comunidade";
@@ -175,6 +176,7 @@ const App = () => {
                 <Route path="/admin/oracoes" element={<ProtectedRoute requireAdmin><PrayersManager /></ProtectedRoute>} />
                 <Route path="/admin/colorir" element={<ProtectedRoute requireAdmin><ColoringManager /></ProtectedRoute>} />
                 <Route path="/admin/highlights" element={<ProtectedRoute requireAdmin><HighlightsManager /></ProtectedRoute>} />
+                <Route path="/admin/vip-tokens" element={<ProtectedRoute requireAdmin><VipTokenManager /></ProtectedRoute>} />
                 <Route path="/admin/plataforma/cursos" element={<ProtectedRoute requireAdmin><CoursesManager /></ProtectedRoute>} />
                 <Route path="/admin/plataforma/modulos" element={<ProtectedRoute requireAdmin><ModulesManager /></ProtectedRoute>} />
                 <Route path="/admin/plataforma/aulas" element={<ProtectedRoute requireAdmin><LessonsManager /></ProtectedRoute>} />
