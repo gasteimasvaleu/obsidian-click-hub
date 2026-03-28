@@ -56,6 +56,7 @@ import CarouselsManager from "./pages/admin/plataforma/CarouselsManager";
 import PrayersManager from "./pages/admin/PrayersManager";
 import ColoringManager from "./pages/admin/ColoringManager";
 import HighlightsManager from "./pages/admin/HighlightsManager";
+import VipTokenManager from "./pages/admin/VipTokenManager";
 
 // Comunidade
 import Comunidade from "./pages/Comunidade";
