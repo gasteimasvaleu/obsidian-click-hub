@@ -1,6 +1,5 @@
-import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowRight, LogIn, CheckCircle } from "lucide-react";
+import { CheckCircle } from "lucide-react";
 import { FuturisticNavbar } from "@/components/FuturisticNavbar";
 import { Button } from "@/components/ui/button";
 
