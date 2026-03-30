@@ -1,4 +1,3 @@
-import { Capacitor } from '@capacitor/core';
 import { SocialLogin } from '@capgo/capacitor-social-login';
 
 let initialized = false;
@@ -20,15 +19,18 @@ export async function initGoogleAuth() {
 export async function nativeGoogleSignIn() {
   await initGoogleAuth();
 
-  const result = await SocialLogin.login({
+  const response = await SocialLogin.login({
     provider: 'google',
     options: {
       scopes: ['profile', 'email'],
     },
   });
 
-  const profile = result?.result?.profile;
-  const idToken = result?.result?.idToken;
+  // The response is typed as GoogleLoginResponse
+  // result contains accessToken, idToken, and profile
+  const res = response.result as any;
+  const idToken = res?.idToken;
+  const profile = res?.profile;
 
   if (!idToken) {
     throw new Error('No idToken returned from Google Sign-In');
