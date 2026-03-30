@@ -10,6 +10,7 @@ import { purchaseMonthly, restorePurchases, isNativePlatform, getPlatform } from
 import { supabase } from '@/integrations/supabase/client';
 import { Loader2 } from 'lucide-react';
 import { nativeAppleSignIn } from '@/lib/native-apple-signin';
+import { nativeGoogleSignIn } from '@/lib/native-google-signin';
 
 const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
