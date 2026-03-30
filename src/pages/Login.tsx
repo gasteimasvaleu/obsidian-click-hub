@@ -18,6 +18,7 @@ const Login = () => {
   const [isPurchasing, setIsPurchasing] = useState(false);
   const [isRestoring, setIsRestoring] = useState(false);
   const [isAppleSigningIn, setIsAppleSigningIn] = useState(false);
+  const [isGoogleSigningIn, setIsGoogleSigningIn] = useState(false);
   const { signIn, user } = useAuth();
   const navigate = useNavigate();
 
