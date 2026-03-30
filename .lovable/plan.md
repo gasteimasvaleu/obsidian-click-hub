@@ -1,56 +1,45 @@
 
 
-## Adicionar envio de Token VIP via WhatsApp (Z-API)
+# Google Sign-In no Android — Plano de Implementação
 
-### Resumo
-Adicionar opção no formulário de Tokens VIP para enviar o convite via WhatsApp usando a Z-API, além do email existente. O admin escolhe o canal de envio (Email, WhatsApp ou ambos).
+## Dados coletados
+- **Android Client ID:** `895146984736-2tagq9eepbnib0od1bsqdd9535h2up55.apps.googleusercontent.com`
+- **Web Client ID:** `895146984736-se9con0r5b6qatgtk1mfqcs6qq755m97.apps.googleusercontent.com`
 
-### Mudancas
+## Pre-requisito (ação sua no Supabase Dashboard)
+Antes de eu implementar, confirme que você já habilitou o Google Provider no Supabase Dashboard (Authentication → Providers → Google) com o **Web Client ID** e **Client Secret**.
 
-**1. `src/pages/admin/VipTokenManager.tsx`**
-- Adicionar campo de telefone (com placeholder formato BR: `(11) 99999-9999`)
-- Adicionar seletor de canal: "Email", "WhatsApp" ou "Ambos"
-- Email obrigatório quando canal inclui Email; telefone obrigatório quando inclui WhatsApp
-- Passar `phone` e `sendVia` no body da request
+## Passos de implementação
 
-**2. `supabase/functions/send-vip-token/index.ts`**
-- Receber `phone` e `sendVia` (`email`, `whatsapp`, `both`) no body
-- Após criar/atualizar subscriber e gerar token:
-  - Se `sendVia` inclui `whatsapp`: enviar mensagem via Z-API com texto formatado e amigável, incluindo link de cadastro
-  - Se `sendVia` inclui `email`: enviar email via Resend (logica existente)
-- Mensagem WhatsApp sera algo como:
+### 1. Instalar dependência
+- `@codetrix-studio/capacitor-google-auth` — plugin Capacitor para Google Sign-In nativo no Android
 
-```
-🎉 *Parabéns, {nome}!*
+### 2. Criar `src/lib/native-google-signin.ts`
+Módulo seguindo o mesmo padrão do `native-apple-signin.ts`:
+- Importa `GoogleAuth` do plugin
+- Inicializa o plugin
+- Função `nativeGoogleSignIn()` que retorna o `idToken` do Google
 
-Você recebeu um *Acesso VIP* ao *BíbliaTooon Kids*! 🌟
-
-O BíbliaTooon Kids é um app cristão feito com carinho para crianças aprenderem sobre a Bíblia de forma divertida e interativa! 📖✨
-
-Aqui você encontra:
-📚 Histórias bíblicas animadas
-🎮 Jogos educativos
-🎨 Desenhos para colorir
-🙏 Orações e devocionais diários
-
-👉 Complete seu cadastro agora e ative seu acesso VIP:
-{signupUrl}
-
-⚠️ Este link expira em *48 horas*.
-
-Com carinho,
-Equipe BíbliaTooon Kids 💜
+### 3. Atualizar `capacitor.config.ts`
+Adicionar configuração do plugin GoogleAuth:
+```ts
+GoogleAuth: {
+  scopes: ['profile', 'email'],
+  serverClientId: '895146984736-se9con0r5b6qatgtk1mfqcs6qq755m97.apps.googleusercontent.com',
+  forceCodeForRefreshToken: true,
+}
 ```
 
-- Usa os secrets Z-API existentes: `ZAPI_INSTANCE`, `ZAPI_TOKEN`, `ZAPI_CLIENT_TOKEN`
+### 4. Atualizar `src/pages/Login.tsx`
+- Adicionar botão "Continuar com Google" visível quando `platform === 'android'` (e opcionalmente na web)
+- No Android nativo: usar `nativeGoogleSignIn()` → pegar `idToken` → `supabase.auth.signInWithIdToken({ provider: 'google', token: idToken })`
+- Na web: usar `supabase.auth.signInWithOAuth({ provider: 'google' })`
+- Salvar nome do Google no perfil (similar ao fluxo Apple)
 
-### Arquivos afetados
+### 5. Atualizar `android/app/src/main/res/values/strings.xml`
+Adicionar `server_client_id` como string resource para o plugin nativo.
 
-| Arquivo | Mudanca |
-|---------|---------|
-| `src/pages/admin/VipTokenManager.tsx` | Adicionar campo telefone + seletor de canal |
-| `supabase/functions/send-vip-token/index.ts` | Adicionar logica de envio WhatsApp via Z-API |
-
-### Secrets
-Os secrets `ZAPI_INSTANCE`, `ZAPI_TOKEN` e `ZAPI_CLIENT_TOKEN` ja existem no projeto (usados pelo `send-whatsapp`).
+### 6. Pós-implementação (ação sua)
+- `git pull` + `npm install` + `npx cap sync android`
+- Rebuild o app Android
 
