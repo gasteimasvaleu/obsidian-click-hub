@@ -279,7 +279,7 @@ const Login = () => {
           )}
 
           {/* Sign in with Google - visible on Android and web */}
-          {platform !== 'ios' && (
+          {platform === 'android' && (
             <div className="space-y-2">
               <Button
                 type="button"
