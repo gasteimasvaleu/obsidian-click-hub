@@ -1,45 +1,55 @@
 
 
-# Google Sign-In no Android — Plano de Implementação
+# Fix: Substituir plugin Google Auth incompatível com Capacitor 8
 
-## Dados coletados
-- **Android Client ID:** `895146984736-2tagq9eepbnib0od1bsqdd9535h2up55.apps.googleusercontent.com`
-- **Web Client ID:** `895146984736-se9con0r5b6qatgtk1mfqcs6qq755m97.apps.googleusercontent.com`
+## Problema
+O plugin `@codetrix-studio/capacitor-google-auth` requer `@capacitor/core@^6.0.0`, mas o projeto usa Capacitor 8. O plugin está descontinuado.
 
-## Pre-requisito (ação sua no Supabase Dashboard)
-Antes de eu implementar, confirme que você já habilitou o Google Provider no Supabase Dashboard (Authentication → Providers → Google) com o **Web Client ID** e **Client Secret**.
+## Solucao
+Substituir por `@capgo/capacitor-social-login` (v8), que e o fork oficial mantido e compatível com Capacitor 8.
 
-## Passos de implementação
+## Passos
 
-### 1. Instalar dependência
-- `@codetrix-studio/capacitor-google-auth` — plugin Capacitor para Google Sign-In nativo no Android
+### 1. Trocar dependência no `package.json`
+- Remover `@codetrix-studio/capacitor-google-auth`
+- Adicionar `@capgo/capacitor-social-login@^8.3.9`
 
-### 2. Criar `src/lib/native-google-signin.ts`
-Módulo seguindo o mesmo padrão do `native-apple-signin.ts`:
-- Importa `GoogleAuth` do plugin
-- Inicializa o plugin
-- Função `nativeGoogleSignIn()` que retorna o `idToken` do Google
+### 2. Reescrever `src/lib/native-google-signin.ts`
+Usar a nova API:
+```typescript
+import { SocialLogin } from '@capgo/capacitor-social-login';
+
+// Initialize once
+await SocialLogin.initialize({
+  google: {
+    webClientId: '895146984736-se9con0r5b6qatgtk1mfqcs6qq755m97.apps.googleusercontent.com',
+  },
+});
+
+// Login returns result with idToken
+const res = await SocialLogin.login({
+  provider: 'google',
+  options: { scopes: ['profile', 'email'] },
+});
+```
 
 ### 3. Atualizar `capacitor.config.ts`
-Adicionar configuração do plugin GoogleAuth:
-```ts
-GoogleAuth: {
-  scopes: ['profile', 'email'],
-  serverClientId: '895146984736-se9con0r5b6qatgtk1mfqcs6qq755m97.apps.googleusercontent.com',
-  forceCodeForRefreshToken: true,
+- Remover bloco `GoogleAuth`
+- Adicionar bloco `SocialLogin` com providers habilitados:
+```typescript
+SocialLogin: {
+  providers: {
+    google: true,
+    apple: false,
+    facebook: false,
+  },
 }
 ```
 
-### 4. Atualizar `src/pages/Login.tsx`
-- Adicionar botão "Continuar com Google" visível quando `platform === 'android'` (e opcionalmente na web)
-- No Android nativo: usar `nativeGoogleSignIn()` → pegar `idToken` → `supabase.auth.signInWithIdToken({ provider: 'google', token: idToken })`
-- Na web: usar `supabase.auth.signInWithOAuth({ provider: 'google' })`
-- Salvar nome do Google no perfil (similar ao fluxo Apple)
+### 4. Atualizar `Login.tsx`
+- Trocar import de `nativeGoogleSignIn` para usar a nova implementação (a interface publica nao muda, so o interno)
 
-### 5. Atualizar `android/app/src/main/res/values/strings.xml`
-Adicionar `server_client_id` como string resource para o plugin nativo.
-
-### 6. Pós-implementação (ação sua)
+### 5. Pos-implementacao (acao sua)
 - `git pull` + `npm install` + `npx cap sync android`
 - Rebuild o app Android
 
