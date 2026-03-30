@@ -131,6 +131,67 @@ const Login = () => {
     }
   };
 
+  const handleGoogleSignIn = async () => {
+    setIsGoogleSigningIn(true);
+    try {
+      if (isNativePlatform()) {
+        const result = await nativeGoogleSignIn();
+        
+        const { data, error } = await supabase.auth.signInWithIdToken({
+          provider: 'google',
+          token: result.idToken,
+        });
+
+        if (error) {
+          console.error('Supabase signInWithIdToken (Google) error:', error);
+          toast.error(error.message || 'Erro ao autenticar com Google');
+        } else {
+          toast.success('Login realizado com sucesso!');
+          if (data?.user) {
+            const displayName = result.displayName || result.email || 'Usuário Google';
+            
+            const { data: profile } = await supabase
+              .from('profiles')
+              .select('full_name')
+              .eq('id', data.user.id)
+              .maybeSingle();
+            
+            if (!profile?.full_name || profile.full_name === 'Usuário' || profile.full_name === 'Usuário Google') {
+              await supabase
+                .from('profiles')
+                .update({ full_name: displayName })
+                .eq('id', data.user.id);
+              
+              await supabase.auth.updateUser({
+                data: { full_name: displayName },
+              });
+            }
+          }
+          navigate('/');
+        }
+      } else {
+        const { error } = await supabase.auth.signInWithOAuth({
+          provider: 'google',
+          options: {
+            redirectTo: window.location.origin,
+          },
+        });
+        if (error) {
+          toast.error(error.message || 'Erro ao fazer login com Google');
+        }
+      }
+    } catch (error: any) {
+      console.error('Google Sign In error:', error);
+      if (error?.message?.includes('canceled') || error?.message?.includes('cancelled')) {
+        // User cancelled
+      } else {
+        toast.error('Erro ao fazer login com Google');
+      }
+    } finally {
+      setIsGoogleSigningIn(false);
+    }
+  };
+
   const handleAppStorePurchase = async () => {
     if (!isNativePlatform()) {
       toast.info('Assinaturas só estão disponíveis no app nativo (iOS).');
