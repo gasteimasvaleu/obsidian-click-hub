@@ -29,10 +29,12 @@ const config: CapacitorConfig = {
     ]
   },
   plugins: {
-    GoogleAuth: {
-      scopes: ['profile', 'email'],
-      serverClientId: '895146984736-se9con0r5b6qatgtk1mfqcs6qq755m97.apps.googleusercontent.com',
-      forceCodeForRefreshToken: true,
+    SocialLogin: {
+      providers: {
+        google: true,
+        apple: false,
+        facebook: false,
+      },
     },
     LiveUpdates: {
       appId: '688c8cc6', // <--- COLOQUE O SEU APP ID DO IONIC AQUI
