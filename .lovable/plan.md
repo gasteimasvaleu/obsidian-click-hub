@@ -1,56 +1,57 @@
 
-Objetivo: concluir a ativação do Google Sign-In agora que o Google Cloud e o Supabase já estão configurados.
+Objetivo: seguir para a etapa de assinaturas Android. Sim, o próximo passo é criar/configurar a Conta de Serviço, mas ela é para Google Play + RevenueCat, não para o login Google.
 
 Plano
-1. Atualizar o novo Web Client ID no app
-   - Trocar o ID antigo em `src/lib/native-google-signin.ts`
-   - Trocar o mesmo ID antigo em `android/app/src/main/res/values/strings.xml`
-   - Usar o novo valor:
-     `135684784512-nt1jcoscltu5lh758l3evc2lrl7amdug.apps.googleusercontent.com`
+1. Criar a Conta de Serviço no Google Cloud
+- Use o mesmo projeto do Google Play/assinaturas.
+- Vá em IAM & Admin > Service Accounts.
+- Crie uma conta dedicada, por exemplo: `revenuecat-play-sync`.
+- Gere a chave JSON dessa conta.
+- Se o Google bloquear criação de chave por política da organização, use um projeto “sem organização” ou ajuste a política antes.
 
-2. Revisar o lado Android nativo
-   - Confirmar se o `google-services.json` novo precisa substituir o atual em `android/app/`
-   - Validar que o package Android continua sendo:
-     `br.com.caio.bibliatoonkids`
-   - Confirmar que o client Android foi criado com o SHA-1 correto do app
+2. Dar acesso no Google Play Console
+- No Play Console, convide essa service account como usuária/API access.
+- Conceda as permissões mínimas necessárias para assinaturas:
+  - Dados financeiros
+  - Gerenciar pedidos e assinaturas
+- Vincule o app correto da Play Store.
 
-3. Validar o fluxo já existente
-   - O projeto já está preparado para:
-     - fazer login nativo com `@capgo/capacitor-social-login`
-     - pegar o `idToken`
-     - autenticar no Supabase com `supabase.auth.signInWithIdToken({ provider: 'google' })`
-   - Não há necessidade de criar service key para essa etapa
+3. Conectar no RevenueCat
+- No dashboard do RevenueCat, adicione a credencial da Google Play.
+- Faça upload do JSON da service account.
+- Confirme que o app Android e o produto de assinatura estão mapeados corretamente.
 
-4. Conferir a tela de login
-   - Garantir que o botão Google continue aparecendo apenas no Android
-   - Manter o fallback web via OAuth apenas se ainda fizer sentido para seu fluxo
+4. Validar o cadastro do produto Android
+- Confirmar no Google Play Console se a assinatura Android correspondente existe e está ativa.
+- Garantir alinhamento entre:
+  - produto no app
+  - produto no RevenueCat
+  - entitlement/offering já usados no projeto
 
-5. Teste ponta a ponta
-   - Abrir o app Android
-   - Tocar em “Continuar com Google”
-   - Selecionar conta
-   - Confirmar login/criação do usuário no Supabase
-   - Confirmar atualização do perfil/nome
-   - Confirmar redirecionamento para `/`
+5. Depois da Conta de Serviço
+- A próxima etapa técnica no projeto será habilitar Android no fluxo de assinatura.
+- Hoje o código ainda bloqueia Android em `src/lib/revenuecat.ts` e mostra “Assinaturas via Google Play estarão disponíveis em breve!”.
+- Depois que a service account estiver funcionando, o plano seguinte deve ser:
+  - configurar a chave pública Android do RevenueCat (`goog_...`)
+  - habilitar RevenueCat no Android
+  - testar compra, restauração e sincronização com o webhook no Supabase
 
-O que encontrei no código atual
-- `src/lib/native-google-signin.ts` ainda usa o Client ID antigo
-- `android/app/src/main/res/values/strings.xml` ainda usa o Client ID antigo
-- `src/pages/Login.tsx` já faz o fluxo correto com `signInWithIdToken` para Google
+O que já está separado corretamente
+- Google Auth/Supabase: já configurado para login
+- Service Account: é outra trilha, usada só para compras/assinaturas Google Play
 
 Detalhes técnicos
 ```text
-Google Cloud
-- Web Client ID + Secret -> ficam no Supabase
-- Android Client ID -> identifica o app nativo via package + SHA-1
+Login Google
+- Usa OAuth Web/Android + Supabase
+- Não depende de service account
 
-Projeto
-- native-google-signin.ts -> inicializa o plugin com o Web Client ID
-- Login.tsx -> recebe idToken e autentica no Supabase
-- strings.xml -> expõe o server_client_id no Android nativo
+Assinatura Android
+- Depende de Google Play Console + RevenueCat
+- Precisa de service account JSON com permissões no Play Console
+- Só depois disso faz sentido liberar o Android no código
 ```
 
-Resultado esperado após implementar
-- O login Google volta a funcionar no Android com o novo projeto OAuth
-- O Supabase aceita o token emitido pelo novo client
-- O usuário entra/cria conta normalmente sem mexer em banco ou edge functions
+Resultado esperado
+- RevenueCat consegue ler/validar compras da Google Play
+- O projeto fica pronto para a próxima implementação: ativar assinaturas Android no app sem quebrar o fluxo atual
