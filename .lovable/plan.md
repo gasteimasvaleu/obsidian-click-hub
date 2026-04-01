@@ -1,25 +1,26 @@
 
-Use JSON.
 
-O que selecionar agora:
-- Tipo de chave: JSON
-- Não escolha P12
+# Fluxo correto para gerar o AAB sem recriar arquivos duplicados
 
-Por quê:
-- RevenueCat usa a credencial da service account em arquivo JSON
-- P12 é formato antigo e não é o que você precisa para esse fluxo
+Você tem razão em se preocupar. O `npx cap sync` é o comando que copia arquivos e pode recriar duplicatas. O fluxo seguro é:
 
-Então faça assim:
-1. Adicionar chave
-2. Criar nova chave
-3. Selecionar JSON
-4. Criar
-5. Baixar o arquivo
+## Passos no terminal local
 
-Se aparecer bloqueio para criar JSON, o problema não é o formato: é política do projeto Google Cloud.
-
-Resumo:
 ```text
-Correto: JSON
-Errado para esse caso: P12
+1. git pull origin main
+2. npm install
+3. npm run build
+4. npx cap sync android
+5. node fix-android-appid.cjs
+6. find android/ -name "* *" -delete      ← remove duplicatas com espaço
+7. Abrir Android Studio e gerar o AAB
 ```
+
+**O `cap sync android` sincroniza apenas o Android** — não toca no iOS. É o comando certo.
+
+Os arquivos duplicados (como `config 2.xml`) são gerados pelo macOS quando já existe um arquivo com o mesmo nome no destino, não pelo `cap sync` em si. O `find ... -delete` no passo 6 garante a limpeza.
+
+## Sobre o versionCode
+
+Eu vou alterar o `versionCode` de 35 para 36 no `build.gradle` agora, assim quando você fizer o `git pull` já vem atualizado.
+
