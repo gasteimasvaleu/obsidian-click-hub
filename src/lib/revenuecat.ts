@@ -1,8 +1,9 @@
 import { Capacitor } from '@capacitor/core';
 import { supabase } from '@/integrations/supabase/client';
 
-// RevenueCat API key (publishable - safe in client code)
-const REVENUECAT_API_KEY = 'appl_rDJWtfWfVugefZjBugxiJIISOcR';
+// RevenueCat API keys (publishable - safe in client code)
+const REVENUECAT_IOS_KEY = 'appl_rDJWtfWfVugefZjBugxiJIISOcR';
+const REVENUECAT_ANDROID_KEY = 'goog_TdisBiQciqEnylaoXGDwMAKebIl';
 const PRODUCT_ID = 'BIBLIATOONKIDS2';
 
 // App version marker for debugging Live Updates bundles
