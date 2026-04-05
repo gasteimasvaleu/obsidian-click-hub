@@ -38,8 +38,9 @@ export const initRevenueCat = async (): Promise<void> => {
   }
   try {
     const { Purchases } = await import('@revenuecat/purchases-capacitor');
-    await Purchases.configure({ apiKey: REVENUECAT_API_KEY });
-    console.log('RevenueCat: Initialized successfully');
+    const apiKey = getPlatform() === 'android' ? REVENUECAT_ANDROID_KEY : REVENUECAT_IOS_KEY;
+    await Purchases.configure({ apiKey });
+    console.log(`RevenueCat: Initialized successfully (${getPlatform()}, key: ${apiKey.substring(0, 8)}...)`);
   } catch (error) {
     console.error('RevenueCat: Failed to initialize', error);
   }

@@ -394,7 +394,7 @@ const Login = () => {
             </div>
 
             {/* Restore purchases - required by Apple Guideline 3.1.1 */}
-            {platform !== 'android' && (
+            {isNativePlatform() && (
               <div className="text-center">
                 <Button
                   variant="link"
