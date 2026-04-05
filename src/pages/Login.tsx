@@ -278,13 +278,13 @@ const Login = () => {
             </div>
           )}
 
-          {/* Sign in with Google - visible on Android and web */}
+          {/* Sign in with Google - visible on Android */}
           {platform === 'android' && (
             <div className="space-y-2">
               <Button
                 type="button"
                 className="w-full h-12 gap-3 bg-white text-black hover:bg-white/90 font-medium text-base rounded-lg disabled:opacity-50"
-                disabled={isGoogleSigningIn}
+                disabled={isGoogleSigningIn || !hasPurchased}
                 onClick={handleGoogleSignIn}
               >
                 {isGoogleSigningIn ? (
@@ -299,6 +299,11 @@ const Login = () => {
                 )}
                 Continuar com Google
               </Button>
+              {!hasPurchased && (
+                <p className="text-xs text-center text-muted-foreground">
+                  Assine primeiro abaixo para habilitar o login com Google
+                </p>
+              )}
             </div>
           )}
 
@@ -363,11 +368,16 @@ const Login = () => {
                 <Button
                   variant="outline"
                   className="flex-1 h-12 gap-2 border-muted-foreground/30"
-                  onClick={() => toast.info('Assinaturas via Google Play estarão disponíveis em breve!')}
+                  disabled={isPurchasing}
+                  onClick={handleAppStorePurchase}
                 >
-                  <svg viewBox="0 0 24 24" className="h-5 w-5 fill-current">
-                    <path d="M3.18 23.67c-.56-.56-.97-1.33-1.22-2.29L1.87 18l5.23-3.03L3.18 23.67zm7.78-4.52L5.74 22.2l8.1-14.03 2.2 1.27-5.06 10.71zM20.16 18l-.09 3.38c-.25.96-.66 1.73-1.22 2.29L15 14.97l5.16-2.99V18zm1.97-7.27L4.67.55C5.23-.01 6-.29 6.96-.04l14.24 8.22c.96.55 1.53 1.22 1.53 2.04v.51h-.6zM2.04 5.27C1.67 5.83 1.44 6.55 1.44 7.44V16.56c0 .89.23 1.61.6 2.17l6.2-10.74L2.04 5.27z"/>
-                  </svg>
+                  {isPurchasing ? (
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                  ) : (
+                    <svg viewBox="0 0 24 24" className="h-5 w-5 fill-current">
+                      <path d="M3.18 23.67c-.56-.56-.97-1.33-1.22-2.29L1.87 18l5.23-3.03L3.18 23.67zm7.78-4.52L5.74 22.2l8.1-14.03 2.2 1.27-5.06 10.71zM20.16 18l-.09 3.38c-.25.96-.66 1.73-1.22 2.29L15 14.97l5.16-2.99V18zm1.97-7.27L4.67.55C5.23-.01 6-.29 6.96-.04l14.24 8.22c.96.55 1.53 1.22 1.53 2.04v.51h-.6zM2.04 5.27C1.67 5.83 1.44 6.55 1.44 7.44V16.56c0 .89.23 1.61.6 2.17l6.2-10.74L2.04 5.27z"/>
+                    </svg>
+                  )}
                   Google Play
                 </Button>
               )}
@@ -379,12 +389,12 @@ const Login = () => {
                 BíbliaToon Club Premium — Assinatura Mensal
               </p>
               <p className="text-xs text-muted-foreground/70">
-                Renovação automática. Cancele a qualquer momento nas configurações da App Store.
+                Renovação automática. Cancele a qualquer momento nas configurações da {platform === 'android' ? 'Google Play' : 'App Store'}.
               </p>
             </div>
 
             {/* Restore purchases - required by Apple Guideline 3.1.1 */}
-            {platform !== 'android' && (
+            {isNativePlatform() && (
               <div className="text-center">
                 <Button
                   variant="link"
