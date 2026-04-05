@@ -278,13 +278,13 @@ const Login = () => {
             </div>
           )}
 
-          {/* Sign in with Google - visible on Android and web */}
+          {/* Sign in with Google - visible on Android */}
           {platform === 'android' && (
             <div className="space-y-2">
               <Button
                 type="button"
                 className="w-full h-12 gap-3 bg-white text-black hover:bg-white/90 font-medium text-base rounded-lg disabled:opacity-50"
-                disabled={isGoogleSigningIn}
+                disabled={isGoogleSigningIn || !hasPurchased}
                 onClick={handleGoogleSignIn}
               >
                 {isGoogleSigningIn ? (
@@ -299,6 +299,11 @@ const Login = () => {
                 )}
                 Continuar com Google
               </Button>
+              {!hasPurchased && (
+                <p className="text-xs text-center text-muted-foreground">
+                  Assine primeiro abaixo para habilitar o login com Google
+                </p>
+              )}
             </div>
           )}
 
