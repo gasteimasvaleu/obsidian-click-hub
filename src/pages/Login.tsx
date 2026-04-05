@@ -389,7 +389,7 @@ const Login = () => {
                 BíbliaToon Club Premium — Assinatura Mensal
               </p>
               <p className="text-xs text-muted-foreground/70">
-                Renovação automática. Cancele a qualquer momento nas configurações da App Store.
+                Renovação automática. Cancele a qualquer momento nas configurações da {platform === 'android' ? 'Google Play' : 'App Store'}.
               </p>
             </div>
 
