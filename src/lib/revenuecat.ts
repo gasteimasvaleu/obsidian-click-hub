@@ -26,7 +26,8 @@ export const getPlatform = (): string => {
 };
 
 const isRevenueCatSupported = (): boolean => {
-  return isNativePlatform() && getPlatform() === 'ios';
+  const platform = getPlatform();
+  return isNativePlatform() && (platform === 'ios' || platform === 'android');
 };
 
 export const initRevenueCat = async (): Promise<void> => {
