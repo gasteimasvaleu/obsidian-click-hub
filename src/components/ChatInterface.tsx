@@ -68,18 +68,33 @@ export const ChatInterface = ({ open, onClose }: ChatInterfaceProps) => {
     };
   }, [open]);
 
-  // Lock body scroll while modal is open (minimal approach)
+  // Lock body + #root scroll while modal is open; reset viewport on close
   useEffect(() => {
     if (!open) return;
 
-    const originalOverflow = document.body.style.overflow;
-    const originalOverscroll = document.body.style.overscrollBehavior;
+    const rootEl = document.getElementById('root');
+
+    const originalBodyOverflow = document.body.style.overflow;
+    const originalBodyOverscroll = document.body.style.overscrollBehavior;
+    const originalRootOverflow = rootEl?.style.overflow ?? '';
+    const originalRootOverscroll = rootEl?.style.overscrollBehavior ?? '';
+
     document.body.style.overflow = "hidden";
     document.body.style.overscrollBehavior = "none";
+    if (rootEl) {
+      rootEl.style.overflow = "hidden";
+      rootEl.style.overscrollBehavior = "none";
+    }
 
     return () => {
-      document.body.style.overflow = originalOverflow;
-      document.body.style.overscrollBehavior = originalOverscroll;
+      document.body.style.overflow = originalBodyOverflow;
+      document.body.style.overscrollBehavior = originalBodyOverscroll;
+      if (rootEl) {
+        rootEl.style.overflow = originalRootOverflow;
+        rootEl.style.overscrollBehavior = originalRootOverscroll;
+        rootEl.scrollTop = 0;
+      }
+      window.scrollTo(0, 0);
     };
   }, [open]);
 
