@@ -1,4 +1,4 @@
-package br.com.caio.bibliatoonkids;
+package com.bibliatoonkids.app;
 
 import com.getcapacitor.BridgeActivity;
 
