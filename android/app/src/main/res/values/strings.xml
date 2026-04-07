@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">BíbliaToon Club</string>
     <string name="title_activity_main">BíbliaToon Club</string>
-    <string name="package_name">br.com.caio.bibliatoonkids</string>
-    <string name="custom_url_scheme">br.com.caio.bibliatoonkids</string>
+    <string name="package_name">com.bibliatoonkids.app</string>
+    <string name="custom_url_scheme">com.bibliatoonkids.app</string>
     <string name="server_client_id">135684784512-nt1jcoscltu5lh758l3evc2lrl7amdug.apps.googleusercontent.com</string>
 </resources>
