@@ -99,4 +99,18 @@ if (fs.existsSync(wrongFile)) {
   console.log("✅ MainActivity.java recriado automaticamente");
 }
 
+// Final verification — fail loudly if MainActivity.java is still missing
+if (!fs.existsSync(correctFile)) {
+  console.error("❌ ERRO CRÍTICO: MainActivity.java NÃO existe após a correção!");
+  console.error("   Caminho esperado:", correctFile);
+  process.exit(1);
+} else {
+  const finalContent = fs.readFileSync(correctFile, "utf8");
+  if (!finalContent.includes("BridgeActivity")) {
+    console.error("❌ ERRO CRÍTICO: MainActivity.java existe mas está corrompido!");
+    process.exit(1);
+  }
+  console.log("✅ Verificação final: MainActivity.java OK");
+}
+
 console.log("🎉 Correção do Android concluída!");
