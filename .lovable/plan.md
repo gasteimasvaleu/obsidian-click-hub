@@ -1,77 +1,64 @@
 
-Problema encontrado
 
-O erro não é mais do Capacitor nem do Android Studio. O problema está no próprio script `fix-android-appid.cjs`.
+## Plano
 
-Pelo código atual:
-- `CORRECT_PACKAGE_DIR = "com/bibliatoonkids/app"`
-- `CAPACITOR_PACKAGE_DIR = "com/bibliatoonkids/app"`
+1. **Atualizar `fix-android-appid.cjs`** para forçar `package` e nome completo da activity no manifest automaticamente em futuros syncs.
 
-Ou seja:
-- `wrongFile` e `correctFile` apontam para o mesmo arquivo:
-  `android/app/src/main/java/com/bibliatoonkids/app/MainActivity.java`
+2. **Conteúdo completo do `AndroidManifest.xml`** para você substituir manualmente:
 
-Então acontece esta sequência:
-1. o script entra no bloco `if (fs.existsSync(wrongFile))`
-2. regrava o conteúdo em `correctFile`
-3. executa `fs.unlinkSync(wrongFile)`
-4. como `wrongFile === correctFile`, ele apaga o próprio `MainActivity.java`
-5. a verificação final falha com:
-   `MainActivity.java NÃO existe após a correção`
+```xml
+<?xml version="1.0" encoding="utf-8" ?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.bibliatoonkids.app">
 
-O que precisa ser alterado
+    <!-- Permissions -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
 
-1. Ajustar a lógica do `fix-android-appid.cjs` para não tratar o arquivo atual como “errado”.
-2. Só mover/apagar arquivo quando o caminho antigo for diferente do caminho correto.
-3. Priorizar esta ordem:
-   - se o arquivo já existe no caminho correto, apenas sobrescrever com conteúdo canônico
-   - senão, se existir em caminho antigo diferente, mover
-   - senão, recriar do zero
-4. Manter a verificação final no fim do script.
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
 
-Implementação proposta
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode|navigation|density"
+            android:name="com.bibliatoonkids.app.MainActivity"
+            android:label="@string/title_activity_main"
+            android:theme="@style/AppTheme.NoActionBarLaunch"
+            android:launchMode="singleTask"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
-No arquivo `fix-android-appid.cjs`:
-- criar uma checagem como:
-  ```js
-  const samePath = wrongFile === correctFile;
-  ```
-- reorganizar os blocos para algo equivalente a:
-  ```js
-  if (fs.existsSync(correctFile)) {
-    // sobrescreve com conteúdo canônico
-  } else if (!samePath && fs.existsSync(wrongFile)) {
-    // move do caminho antigo para o correto e remove o antigo
-  } else {
-    // recria o arquivo
-  }
-  ```
-- garantir que `fs.unlinkSync(wrongFile)` só rode quando `wrongFile !== correctFile`
-
-Resultado esperado
-
-Depois dessa correção:
-- `npm run sync:android` não apagará mais o `MainActivity.java`
-- o arquivo continuará existindo em:
-  `android/app/src/main/java/com/bibliatoonkids/app/MainActivity.java`
-- a verificação final do script passará
-- o próximo passo será testar novamente no emulador para validar se o erro da activity desapareceu
-
-Detalhe técnico importante
-
-O bug surgiu porque o script foi pensado para migrar de um pacote antigo para um novo, mas hoje ambos os identificadores estão iguais:
-```text
-CAPACITOR_PACKAGE_DIR === CORRECT_PACKAGE_DIR
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/file_paths" />
+        </provider>
+    </application>
+</manifest>
 ```
-Então a lógica de “mover do lugar errado para o certo” deixou de fazer sentido e passou a apagar o arquivo correto.
 
-Fluxo depois da correção
+### Mudanças em relação ao atual
 
-```text
-1. Atualizar o fix-android-appid.cjs
-2. Rodar npm run build
-3. Rodar npm run sync:android
-4. Confirmar a mensagem: Verificação final: MainActivity.java OK
-5. Abrir/rebuildar no Android Studio
-6. Testar no emulador
-```
+- Adicionado `package="com.bibliatoonkids.app"` no `<manifest>`
+- Trocado `android:name=".MainActivity"` por `android:name="com.bibliatoonkids.app.MainActivity"` (nome completo)
+- Permissões movidas para antes do `<application>` (compliance Google Play)
+- Adicionado `android:maxSdkVersion="32"` nas permissões de storage
+- Adicionado `<uses-feature>` para camera com `required="false"`
+
+### Alteração no código
+
+Atualizar `fix-android-appid.cjs` para que em futuros syncs o script force essas correções automaticamente no manifest.
+
