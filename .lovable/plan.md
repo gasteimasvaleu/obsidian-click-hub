@@ -1,85 +1,21 @@
 
-Objetivo: parar de perseguir o `manifest` e atacar a causa real do erro.
 
-Diagnóstico revisado
+# Ajustar Product ID por plataforma (iOS vs Android)
 
-Do I know what the issue is? Sim.
+## O que muda
+Uma única alteração mínima no arquivo `src/lib/revenuecat.ts`: trocar a constante fixa `PRODUCT_ID` por uma função que retorna o ID correto conforme a plataforma.
 
-Pelo que revisei, os arquivos do projeto estão consistentes:
-- `capacitor.config.ts`: `appId = com.bibliatoonkids.app`
-- `android/app/build.gradle`: `applicationId` e `namespace` = `com.bibliatoonkids.app`
-- `android/app/src/main/AndroidManifest.xml`: package e `MainActivity` corretos
-- `android/app/src/main/java/com/bibliatoonkids/app/MainActivity.java`: correto
-- `android/app/src/main/res/values/strings.xml`: correto
+## Detalhes técnicos
 
-A mensagem do emulador confirma outra coisa:
-```text
-{br.com.caio.bibliatoonkids/com.bibliatoonkids.app.MainActivity}
-```
+**Arquivo:** `src/lib/revenuecat.ts`
 
-Isso é um “nome híbrido”:
-- antes da barra: app antigo
-- depois da barra: activity nova
+- Remover: `const PRODUCT_ID = 'BIBLIATOONKIDS2';`
+- Adicionar: função `getProductId()` que retorna `'BIBLIATOONKIDS2'` no iOS e `'bibliatoonkids2'` no Android
+- Atualizar a única referência ao `PRODUCT_ID` na função `purchaseMonthly` para usar `getProductId()`
 
-Esse valor não está vindo do código atual. Está vindo de metadados antigos do Android Studio/ADB/emulador.
+**Nenhuma outra alteração.** O comportamento no iOS permanece 100% idêntico — a função simplesmente retorna o mesmo valor que já existia (`BIBLIATOONKIDS2`). Apenas no Android o valor muda para minúsculo, como exigido pelo Google Play.
 
-Plano
+## Escopo
+- 1 arquivo, ~3 linhas alteradas
+- Zero impacto no fluxo iOS
 
-1. Resetar a configuração de execução do Android Studio
-- abrir `Run > Edit Configurations`
-- apagar a configuração atual do app
-- criar uma nova configuração Android App apontando para o módulo `app`
-
-2. Forçar reimport do projeto Android
-- `File > Sync Project with Gradle Files`
-- depois `File > Invalidate Caches / Restart`
-- reiniciar o Android Studio
-
-3. Limpar o estado do app antigo no emulador
-- desinstalar qualquer app antigo relacionado
-- se houver dúvida, fazer `Wipe Data` no AVD e subir um emulador limpo
-
-4. Validar o manifest realmente usado pelo Android Studio
-- abrir `AndroidManifest.xml` no Android Studio
-- ir na aba `Merged Manifest`
-- confirmar que o package final e a launcher activity estão em `com.bibliatoonkids.app`
-
-5. Se o erro persistir, tratar como problema de projeto nativo cacheado
-- fechar o Android Studio
-- reabrir o projeto Android do zero
-- se necessário, remover configurações locais do IDE do projeto (`.idea` local, não versionadas) e deixar o Android Studio recriá-las
-
-6. Hardening recomendado no próximo ajuste de código
-- atualizar `activity_main.xml` para usar:
-```xml
-tools:context="com.bibliatoonkids.app.MainActivity"
-```
-Isso não resolve o launch sozinho, mas elimina referência relativa e ajuda o Android Studio a parar de inferir nomes antigos.
-
-O que eu isolaria como foco agora
-
-Arquivos já verificados e aparentemente corretos:
-- `android/app/src/main/AndroidManifest.xml`
-- `android/app/build.gradle`
-- `android/app/src/main/java/com/bibliatoonkids/app/MainActivity.java`
-- `android/app/src/main/res/values/strings.xml`
-- `capacitor.config.ts`
-
-Então o foco não é mais editar esses arquivos, e sim limpar:
-- Run Configuration
-- cache do Gradle/IDE
-- estado instalado no emulador
-- manifest merge efetivo
-
-Resultado esperado
-
-Depois desse reset, o comando de launch deve parar de usar:
-```text
-br.com.caio.bibliatoonkids/...
-```
-e passar a usar somente:
-```text
-com.bibliatoonkids.app/com.bibliatoonkids.app.MainActivity
-```
-
-Se você quiser, no próximo passo eu monto um checklist curto e exato, tela por tela do Android Studio, para você seguir sem ambiguidade.
