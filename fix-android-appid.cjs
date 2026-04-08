@@ -87,15 +87,10 @@ if (fs.existsSync(wrongFile)) {
 
   console.log("✅ MainActivity.java movido para o pacote correto");
 } else if (fs.existsSync(correctFile)) {
-  // Already in correct location, just fix package declaration
-  let content = fs.readFileSync(correctFile, "utf8");
-  const fixed = content.replace(/^package\s+[^;]+;/m, `package ${CORRECT_PACKAGE};`);
-  if (fixed !== content) {
-    fs.writeFileSync(correctFile, fixed);
-    console.log("✅ MainActivity.java package corrigido");
-  } else {
-    console.log("✅ MainActivity.java já está correto");
-  }
+  // Always overwrite with canonical content to fix any corruption
+  const mainActivityContent = `package ${CORRECT_PACKAGE};\n\nimport com.getcapacitor.BridgeActivity;\n\npublic class MainActivity extends BridgeActivity {}\n`;
+  fs.writeFileSync(correctFile, mainActivityContent);
+  console.log("✅ MainActivity.java reescrito com conteúdo canônico");
 } else {
   // File missing entirely — recreate it
   fs.mkdirSync(correctDir, { recursive: true });
