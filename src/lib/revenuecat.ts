@@ -4,7 +4,9 @@ import { supabase } from '@/integrations/supabase/client';
 // RevenueCat API keys (publishable - safe in client code)
 const REVENUECAT_IOS_KEY = 'appl_rDJWtfWfVugefZjBugxiJIISOcR';
 const REVENUECAT_ANDROID_KEY = 'goog_TdisBiQciqEnylaoXGDwMAKebIl';
-const PRODUCT_ID = 'BIBLIATOONKIDS2';
+const getProductId = (): string => {
+  return getPlatform() === 'android' ? 'bibliatoonkids2' : 'BIBLIATOONKIDS2';
+};
 
 // App version marker for debugging Live Updates bundles
 const APP_BUNDLE_VERSION = '2026-03-12-v3';
