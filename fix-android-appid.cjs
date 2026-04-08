@@ -38,17 +38,29 @@ if (fs.existsSync(stringsPath)) {
   console.warn("⚠️ strings.xml não encontrado");
 }
 
-// 3. Fix AndroidManifest.xml — ensure activity name points to correct package
+// 3. Fix AndroidManifest.xml — ensure package and fully-qualified activity name
 const manifestPath = path.join(__dirname, "android", "app", "src", "main", "AndroidManifest.xml");
 if (fs.existsSync(manifestPath)) {
   let content = fs.readFileSync(manifestPath, "utf8");
-  // Replace any fully qualified MainActivity reference or relative one
+
+  // Ensure package attribute exists on <manifest>
+  if (content.includes('package="')) {
+    content = content.replace(/package="[^"]+"/g, `package="${CORRECT_PACKAGE}"`);
+  } else {
+    content = content.replace(
+      /<manifest\s+xmlns:android="http:\/\/schemas\.android\.com\/apk\/res\/android"/,
+      `<manifest xmlns:android="http://schemas.android.com/apk/res/android"\n    package="${CORRECT_PACKAGE}"`
+    );
+  }
+
+  // Force fully-qualified MainActivity name
   content = content.replace(
     /android:name="[^"]*MainActivity"/g,
-    `android:name=".MainActivity"`
+    `android:name="${CORRECT_PACKAGE}.MainActivity"`
   );
+
   fs.writeFileSync(manifestPath, content);
-  console.log("✅ AndroidManifest.xml corrigido");
+  console.log("✅ AndroidManifest.xml corrigido (package + MainActivity FQN)");
 } else {
   console.warn("⚠️ AndroidManifest.xml não encontrado");
 }
