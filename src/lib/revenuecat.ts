@@ -108,7 +108,7 @@ export const purchaseMonthly = async (): Promise<{
 
     const monthlyPackage =
       offerings.current.availablePackages.find(
-        (pkg) => pkg.product?.identifier === PRODUCT_ID
+        (pkg) => pkg.product?.identifier === getProductId()
       ) || offerings.current.availablePackages[0];
 
     const { customerInfo } = await Purchases.purchasePackage({ aPackage: monthlyPackage });
