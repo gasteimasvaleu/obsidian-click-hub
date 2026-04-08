@@ -97,7 +97,11 @@ if (fs.existsSync(wrongFile)) {
     console.log("✅ MainActivity.java já está correto");
   }
 } else {
-  console.warn("⚠️ MainActivity.java não encontrado em nenhum local esperado");
+  // File missing entirely — recreate it
+  fs.mkdirSync(correctDir, { recursive: true });
+  const mainActivityContent = `package ${CORRECT_PACKAGE};\n\nimport com.getcapacitor.BridgeActivity;\n\npublic class MainActivity extends BridgeActivity {}\n`;
+  fs.writeFileSync(correctFile, mainActivityContent);
+  console.log("✅ MainActivity.java recriado automaticamente");
 }
 
 console.log("🎉 Correção do Android concluída!");
