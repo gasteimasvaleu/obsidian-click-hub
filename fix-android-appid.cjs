@@ -53,26 +53,25 @@ if (fs.existsSync(manifestPath)) {
   console.warn("⚠️ AndroidManifest.xml não encontrado");
 }
 
-// 4. Move MainActivity.java to correct package directory
+// 4. Ensure MainActivity.java exists in the correct package directory
 const javaBase = path.join(__dirname, "android", "app", "src", "main", "java");
 const wrongDir = path.join(javaBase, ...CAPACITOR_PACKAGE_DIR.split("/"));
 const correctDir = path.join(javaBase, ...CORRECT_PACKAGE_DIR.split("/"));
 const wrongFile = path.join(wrongDir, "MainActivity.java");
 const correctFile = path.join(correctDir, "MainActivity.java");
+const samePath = wrongFile === correctFile;
+const mainActivityContent = `package ${CORRECT_PACKAGE};\n\nimport com.getcapacitor.BridgeActivity;\n\npublic class MainActivity extends BridgeActivity {}\n`;
 
-if (fs.existsSync(wrongFile)) {
-  // Ensure correct directory exists
+if (fs.existsSync(correctFile)) {
+  // File already in the right place — overwrite with canonical content
+  fs.writeFileSync(correctFile, mainActivityContent);
+  console.log("✅ MainActivity.java reescrito com conteúdo canônico");
+} else if (!samePath && fs.existsSync(wrongFile)) {
+  // File exists in old location — move it
   fs.mkdirSync(correctDir, { recursive: true });
-
-  // Read, fix package declaration, write to correct location
-  let content = fs.readFileSync(wrongFile, "utf8");
-  content = content.replace(/^package\s+[^;]+;/m, `package ${CORRECT_PACKAGE};`);
-  fs.writeFileSync(correctFile, content);
-
-  // Remove wrong file and clean up empty dirs
+  fs.writeFileSync(correctFile, mainActivityContent);
   fs.unlinkSync(wrongFile);
   try {
-    // Remove empty directories up the chain
     let dir = wrongDir;
     while (dir !== javaBase) {
       const files = fs.readdirSync(dir);
@@ -84,17 +83,10 @@ if (fs.existsSync(wrongFile)) {
       }
     }
   } catch (e) { /* ignore cleanup errors */ }
-
   console.log("✅ MainActivity.java movido para o pacote correto");
-} else if (fs.existsSync(correctFile)) {
-  // Always overwrite with canonical content to fix any corruption
-  const mainActivityContent = `package ${CORRECT_PACKAGE};\n\nimport com.getcapacitor.BridgeActivity;\n\npublic class MainActivity extends BridgeActivity {}\n`;
-  fs.writeFileSync(correctFile, mainActivityContent);
-  console.log("✅ MainActivity.java reescrito com conteúdo canônico");
 } else {
   // File missing entirely — recreate it
   fs.mkdirSync(correctDir, { recursive: true });
-  const mainActivityContent = `package ${CORRECT_PACKAGE};\n\nimport com.getcapacitor.BridgeActivity;\n\npublic class MainActivity extends BridgeActivity {}\n`;
   fs.writeFileSync(correctFile, mainActivityContent);
   console.log("✅ MainActivity.java recriado automaticamente");
 }
