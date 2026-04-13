@@ -138,7 +138,7 @@ const App = () => {
                 <Route path="/audiofy" element={<ProtectedRoute><Audiofy /></ProtectedRoute>} />
                 <Route path="/amigodivino" element={<ProtectedRoute><AmigoDivino /></ProtectedRoute>} />
                 
-                <Route path="/sobre" element={<ProtectedRoute><Sobre /></ProtectedRoute>} />
+                <Route path="/sobre" element={<Sobre />} />
                 <Route path="/guia-pais" element={<ProtectedRoute><GuiaPais /></ProtectedRoute>} />
                 <Route path="/games" element={<ProtectedRoute><Games /></ProtectedRoute>} />
                 <Route path="/games/:id/play" element={<ProtectedRoute><GamePlayer /></ProtectedRoute>} />
