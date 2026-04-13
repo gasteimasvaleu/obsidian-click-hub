@@ -1,17 +1,20 @@
 
+## Add Google Site Verification Meta Tag
 
-## Plan: Make /sobre page publicly accessible
+**Objective:** Add the Google Search Console verification meta tag to enable URL prefix verification for `bibliatoonclub.com`.
 
-**Why**: Google's OAuth verification team needs to access the homepage URL (`app.bibliatoonkids.com/sobre`) without being logged in. Currently, the route is wrapped in `<ProtectedRoute>`, which redirects unauthenticated users to login.
+**Changes needed:**
 
-**Change**: In `src/App.tsx`, change the `/sobre` route from:
-```tsx
-<Route path="/sobre" element={<ProtectedRoute><Sobre /></ProtectedRoute>} />
-```
-to:
-```tsx
-<Route path="/sobre" element={<Sobre />} />
-```
+1. **File:** `index.html`
+   - **Action:** Add the provided Google site verification meta tag inside the `<head>` section, alongside other meta tags.
+   - **Content to add:**
+     ```html
+     <meta name="google-site-verification" content="6YNg5edOYShYKVEpw8SHnzlZ30HFMPavwWFO_NCdy5E" />
+     ```
 
-This is a single-line change. No other files need modification.
+**Verification steps:**
+- After adding the tag, publish the project.
+- Go to Google Search Console and verify the `https://bibliatoonclub.com/` URL prefix property.
+- The meta tag will be publicly accessible and Google will be able to verify domain ownership.
 
+**Note:** This meta tag only works for URL prefix verification (e.g., `https://bibliatoonclub.com/`). If you later want to verify the entire domain (all subdomains), you'll still need the DNS TXT method.
