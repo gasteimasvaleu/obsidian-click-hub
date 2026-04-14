@@ -1,20 +1,35 @@
 
-## Add Google Site Verification Meta Tag
 
-**Objective:** Add the Google Search Console verification meta tag to enable URL prefix verification for `bibliatoonclub.com`.
+## Plano: Suportar dois secrets no webhook do RevenueCat (iOS + Android)
 
-**Changes needed:**
+### Problema
+- O `REVENUECAT_WEBHOOK_SECRET` atual já funciona para o projeto iOS
+- O projeto Android do RevenueCat usa um secret diferente
+- A Edge Function só aceita um secret hoje
 
-1. **File:** `index.html`
-   - **Action:** Add the provided Google site verification meta tag inside the `<head>` section, alongside other meta tags.
-   - **Content to add:**
-     ```html
-     <meta name="google-site-verification" content="6YNg5edOYShYKVEpw8SHnzlZ30HFMPavwWFO_NCdy5E" />
-     ```
+### Solução
+1. **Adicionar novo secret** `REVENUECAT_WEBHOOK_SECRET_ANDROID` no Supabase com o valor `f98b03f5b63df6a307cae95f89b11ee6a7188628bb54ac2b0e93e3f9b808c54c`
 
-**Verification steps:**
-- After adding the tag, publish the project.
-- Go to Google Search Console and verify the `https://bibliatoonclub.com/` URL prefix property.
-- The meta tag will be publicly accessible and Google will be able to verify domain ownership.
+2. **Atualizar a Edge Function** `revenuecat-webhook/index.ts` para aceitar qualquer um dos dois secrets:
 
-**Note:** This meta tag only works for URL prefix verification (e.g., `https://bibliatoonclub.com/`). If you later want to verify the entire domain (all subdomains), you'll still need the DNS TXT method.
+```typescript
+const expectedSecret = Deno.env.get("REVENUECAT_WEBHOOK_SECRET");
+const expectedSecretAndroid = Deno.env.get("REVENUECAT_WEBHOOK_SECRET_ANDROID");
+
+const token = authHeader?.replace("Bearer ", "");
+
+if (!token || (token !== expectedSecret && token !== expectedSecretAndroid)) {
+  return new Response(JSON.stringify({ error: "Unauthorized" }), {
+    status: 401,
+    headers: { ...corsHeaders, "Content-Type": "application/json" },
+  });
+}
+```
+
+3. **Testar** enviando o webhook de teste novamente do RevenueCat Android
+
+### Resultado
+- iOS continua funcionando com o secret original
+- Android funciona com o novo secret
+- Nenhuma alteração no banco de dados
+
