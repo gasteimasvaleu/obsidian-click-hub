@@ -34,9 +34,11 @@ Deno.serve(async (req) => {
   }
 
   const authHeader = req.headers.get("Authorization");
+  const token = authHeader?.replace("Bearer ", "");
   const expectedSecret = Deno.env.get("REVENUECAT_WEBHOOK_SECRET");
+  const expectedSecretAndroid = Deno.env.get("REVENUECAT_WEBHOOK_SECRET_ANDROID");
 
-  if (!expectedSecret || authHeader !== `Bearer ${expectedSecret}`) {
+  if (!token || (token !== expectedSecret && token !== expectedSecretAndroid)) {
     return new Response(JSON.stringify({ error: "Unauthorized" }), {
       status: 401,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
