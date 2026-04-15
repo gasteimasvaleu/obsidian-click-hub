@@ -1,85 +1,76 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 interface SplashScreenProps {
   onComplete: () => void;
 }
 
+const SPLASH_IMAGE_URL = "https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/image.png";
+const SPLASH_VIDEO_URL = "https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/novosplash.mp4";
+const MIN_DISPLAY_MS = 2000;
+const MAX_DISPLAY_MS = 6000;
+
 export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
-  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
   const [fadeOut, setFadeOut] = useState(false);
-  const [showSplash, setShowSplash] = useState(true);
-  const [minTimeElapsed, setMinTimeElapsed] = useState(false);
+  const [videoReady, setVideoReady] = useState(false);
+  const completedRef = useRef(false);
+  const mountTimeRef = useRef(Date.now());
 
-  useEffect(() => {
-    console.log("SplashScreen mounted, showSplash:", showSplash);
-    
-    // Minimum time before allowing any transition
-    const minTimer = setTimeout(() => {
-      console.log("Minimum time elapsed (2s)");
-      setMinTimeElapsed(true);
-    }, 2000);
-    
-    // Fallback timer in case video doesn't load or end event fails
-    const fallbackTimer = setTimeout(() => {
-      console.log("Fallback timer triggered (8s)");
-      handleComplete();
-    }, 8000);
+  const triggerExit = () => {
+    if (completedRef.current) return;
+    const elapsed = Date.now() - mountTimeRef.current;
+    const remaining = Math.max(0, MIN_DISPLAY_MS - elapsed);
 
-    return () => {
-      clearTimeout(minTimer);
-      clearTimeout(fallbackTimer);
-    };
-  }, []);
-
-  const handleComplete = () => {
-    console.log("handleComplete called, minTimeElapsed:", minTimeElapsed);
-    if (!minTimeElapsed) {
-      console.log("Minimum time not elapsed, ignoring complete request");
-      return;
-    }
-    
-    console.log("Starting fade out");
-    setFadeOut(true);
     setTimeout(() => {
-      console.log("Calling onComplete");
-      onComplete();
-    }, 500);
+      if (completedRef.current) return;
+      completedRef.current = true;
+      setFadeOut(true);
+      setTimeout(() => onComplete(), 400);
+    }, remaining);
   };
 
+  useEffect(() => {
+    // Absolute max timeout — always exits no matter what
+    const maxTimer = setTimeout(() => {
+      console.log("SplashScreen: max timeout reached, forcing exit");
+      triggerExit();
+    }, MAX_DISPLAY_MS);
+
+    return () => clearTimeout(maxTimer);
+  }, []);
+
   const handleVideoEnd = () => {
-    console.log("Video ended");
-    handleComplete();
+    console.log("SplashScreen: video ended");
+    triggerExit();
   };
 
   const handleVideoLoad = () => {
-    console.log("Video loaded");
-    setIsVideoLoaded(true);
+    console.log("SplashScreen: video loaded");
+    setVideoReady(true);
   };
-
-  console.log("SplashScreen rendering, fadeOut:", fadeOut, "isVideoLoaded:", isVideoLoaded);
 
   return (
     <div
       className={cn(
-        "fixed inset-0 z-[9999] bg-black flex items-center justify-center overflow-hidden transition-opacity duration-500",
-        fadeOut ? "opacity-0" : "opacity-100"
+        "fixed inset-0 z-[9999] bg-black flex items-center justify-center overflow-hidden transition-opacity duration-400",
+        fadeOut ? "opacity-0 pointer-events-none" : "opacity-100"
       )}
-      style={{ display: 'block' }}
     >
-      {/* Loading indicator while video loads */}
-      {!isVideoLoaded && (
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-        </div>
-      )}
+      {/* Always show branding image as base layer */}
+      <img
+        src={SPLASH_IMAGE_URL}
+        alt="BíbliaToon Club"
+        className={cn(
+          "absolute inset-0 w-full h-full object-contain transition-opacity duration-300",
+          videoReady ? "opacity-0" : "opacity-100"
+        )}
+      />
 
-      {/* Video Element */}
+      {/* Video as enhancement layer — not a dependency */}
       <video
         className={cn(
-          "transition-opacity duration-300",
-          "w-full h-full object-contain",
-          isVideoLoaded ? "opacity-100" : "opacity-0"
+          "w-full h-full object-contain transition-opacity duration-300",
+          videoReady ? "opacity-100" : "opacity-0"
         )}
         autoPlay
         muted
@@ -88,25 +79,11 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
         onLoadedData={handleVideoLoad}
         onEnded={handleVideoEnd}
         onError={() => {
-          console.error("Video failed to load, will use fallback timer");
-          setIsVideoLoaded(true); // Show the fallback content
+          console.warn("SplashScreen: video failed to load, using image fallback");
         }}
       >
-        <source
-          src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/novosplash.mp4"
-          type="video/mp4"
-        />
-        {/* Fallback for browsers that don't support video */}
-        <div className="flex items-center justify-center h-full">
-          <img
-            src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/image.png"
-            alt="BíbliaToon Club"
-            className="max-w-sm max-h-96 object-contain"
-            onLoad={handleComplete}
-          />
-        </div>
+        <source src={SPLASH_VIDEO_URL} type="video/mp4" />
       </video>
-
     </div>
   );
 };
