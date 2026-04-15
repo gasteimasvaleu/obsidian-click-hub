@@ -1,44 +1,57 @@
 
-## Diagnóstico
+Objetivo: fazer só o necessário para o Android release, sem mexer no fluxo de geração do AAB no Android Studio.
 
-O app **não está travando no splash React** — ele está travando **antes** de chegar ao React.
+Plano
 
-### Causa raiz
+1. Atualizar apenas a versão Android
+- Alterar `android/app/build.gradle`
+  - `versionCode 4` → `5`
+  - `versionName "2.1"` → `"2.2.0"`
 
-O `@capgo/capacitor-social-login` está no `package.json`, mas **não foi registrado** nos arquivos nativos do Android:
+2. Blindar o sync para não “bagunçar” os arquivos locais
+- Ajustar o script `sync:android` no `package.json` para seguir o fluxo correto:
+  - `npm run build`
+  - `npx cap sync android`
+  - `node fix-android-appid.cjs`
+- Isso evita copiar assets/web desatualizados para o projeto nativo.
 
-- `android/capacitor.settings.gradle` — **não inclui** `capgo-capacitor-social-login`
-- `android/app/capacitor.build.gradle` — **não inclui** `capgo-capacitor-social-login` nas dependencies
+3. Tornar o `fix-android-appid.cjs` realmente seguro
+- Manter o foco do script só no que precisa para o auth nativo:
+  - `MainActivity.java`
+  - `AndroidManifest.xml`
+  - `strings.xml`
+  - presença do plugin social login nos arquivos gerados
+- Garantir que ele:
+  - não altere `versionCode` nem `versionName`
+  - não reescreva arquivos sem necessidade
+  - não gere diffs desnecessários quando o conteúdo já estiver correto
+  - continue idempotente, para poder rodar várias vezes sem efeito colateral
 
-Porém, o `MainActivity.java` importa classes desse plugin:
+4. Reduzir ruído de Git/local
+- Expandir `.gitignore` para artefatos locais que não deveriam entrar no fluxo:
+  - arquivos de estado do Xcode/IDE
+  - certificados/keystores locais (`*.jks`, `*.pem`)
+  - outros arquivos locais temporários de ambiente nativo
+- Objetivo: evitar novo cenário de `stash/pop` trazendo lixo local de volta.
+
+5. Deixar o fluxo de atualização local previsível
+Depois da implementação, o caminho seguro fica:
+```bash
+git pull --rebase --autostash
+npm run sync:android
 ```
-import ee.forgr.capacitor.social.login.GoogleProvider;
-import ee.forgr.capacitor.social.login.SocialLoginPlugin;
-import ee.forgr.capacitor.social.login.ModifiedMainActivityForSocialLoginPlugin;
-```
 
-Resultado: o Android **compila com erro** (ou falha silenciosamente no runtime), a `MainActivity` não inicia, o WebView nunca carrega, e o app fica preso na tela nativa de splash (aquele ícone de play genérico do Capacitor).
+6. Resultado esperado
+- Android em `2.2.0 (build 5)`
+- você continua gerando o `.aab` pelo Android Studio
+- o comando de atualização/sync deixa de sobrescrever versão/build ou sair recriando mudanças desnecessárias
+- menos chance de conflito/local drift nos arquivos nativos
 
-**Antes funcionava** porque o `MainActivity.java` original não tinha essas importações — era um `BridgeActivity` simples. As alterações que fizemos para o plugin de auth adicionaram imports e código que dependem do plugin estar registrado nativamente, mas o `npx cap sync` aparentemente não registrou o plugin no Gradle.
-
-### Plano de correção
-
-1. **Adicionar o plugin social-login aos arquivos Gradle do Android**
-   - `android/capacitor.settings.gradle`: adicionar `include ':capgo-capacitor-social-login'` com o path correto
-   - `android/app/capacitor.build.gradle`: adicionar `implementation project(':capgo-capacitor-social-login')` nas dependencies
-
-2. **Verificar que o `MainActivity.java` está consistente** com o plugin registrado (já está correto no código atual)
-
-3. **Atualizar o script `fix-android-appid.cjs`** para incluir essas linhas caso precise recriar os arquivos nativos no futuro
-
-### Instruções para o usuário após a correção
-
-Depois de aprovar, você precisará:
-1. `git pull`
-2. `npm install` (para garantir que o `@capgo/capacitor-social-login` está instalado)
-3. `npx cap sync android`
-4. Reabrir no Android Studio e rodar
-
-### Por que isso resolve
-
-O `MainActivity.java` poderá resolver as classes `ee.forgr.capacitor.social.login.*`, a Activity iniciará normalmente, o WebView carregará o bundle React, e o splash React (já corrigido com `useRef` + timeout de 6s) seguirá para a tela de login.
+Detalhes técnicos
+- Arquivos a ajustar:
+  - `android/app/build.gradle`
+  - `package.json`
+  - `fix-android-appid.cjs`
+  - `.gitignore`
+- Observação importante:
+  - hoje `android/capacitor.settings.gradle` e `android/app/capacitor.build.gradle` já estão corretos com o plugin social login; então o script deve apenas verificar e preservar, não “forçar” mudanças toda vez.
