@@ -185,7 +185,7 @@ const Login = () => {
       if (error?.message?.includes('canceled') || error?.message?.includes('cancelled')) {
         // User cancelled
       } else {
-        toast.error('Erro ao fazer login com Google');
+        toast.error(`Erro Google: ${error?.message || JSON.stringify(error)}`);
       }
     } finally {
       setIsGoogleSigningIn(false);
