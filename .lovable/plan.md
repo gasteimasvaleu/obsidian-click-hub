@@ -1,57 +1,63 @@
 
-Objetivo: fazer só o necessário para o Android release, sem mexer no fluxo de geração do AAB no Android Studio.
+Objetivo: eliminar a causa do erro recorrente no Android e blindar o fluxo de terminal para que arquivos locais duplicados não voltem a quebrar o build.
+
+Diagnóstico
+- O erro do screenshot não vem do código React.
+- O build quebra por causa de um arquivo local inválido: `android/app/src/main/res/xml/config 2.xml`.
+- O Android trata isso como resource name inválido porque nomes de arquivos em `res/` não podem ter espaço.
+- Hoje o repositório só tem `file_paths.xml` nessa pasta; então esse `config 2.xml` está sendo recriado ou sobrevivendo localmente fora do fluxo controlado.
+- O problema é de “drift” nativo local: arquivos duplicados tipo `config 2.xml`, `config 2.xml` no iOS, etc.
 
 Plano
+1. Blindar o script de correção Android
+- Ajustar `fix-android-appid.cjs` para fazer uma limpeza preventiva em diretórios nativos sensíveis antes de validar `Manifest`, `strings` e `MainActivity`.
+- Remover automaticamente arquivos duplicados com padrão de cópia local, como:
+  - `config 2.xml`
+  - `file_paths 2.xml`
+  - variantes com espaço + número em `android/app/src/main/res/xml`
+  - variantes equivalentes em `ios/App/App`
+- Limitar essa limpeza só a arquivos duplicados óbvios, para não tocar em arquivos legítimos.
 
-1. Atualizar apenas a versão Android
-- Alterar `android/app/build.gradle`
-  - `versionCode 4` → `5`
-  - `versionName "2.1"` → `"2.2.0"`
+2. Tornar o sync ainda mais seguro
+- Manter `sync:android` como fluxo único oficial:
+  - build web
+  - `cap sync android`
+  - script corretivo
+- Garantir que a limpeza rode sempre após o sync, para apagar lixo local que o Git/IDE tenha deixado para trás.
 
-2. Blindar o sync para não “bagunçar” os arquivos locais
-- Ajustar o script `sync:android` no `package.json` para seguir o fluxo correto:
-  - `npm run build`
-  - `npx cap sync android`
-  - `node fix-android-appid.cjs`
-- Isso evita copiar assets/web desatualizados para o projeto nativo.
+3. Reduzir chance de recorrência no Git
+- Expandir ignores para arquivos duplicados locais em áreas geradas/configuradas dos projetos nativos.
+- Foco principal:
+  - `android/app/src/main/res/xml`
+  - `ios/App/App`
+- Isso reduz a chance de `stash/pop`, Finder, Xcode ou Android Studio deixarem cópias “2” aparecendo no status.
 
-3. Tornar o `fix-android-appid.cjs` realmente seguro
-- Manter o foco do script só no que precisa para o auth nativo:
-  - `MainActivity.java`
-  - `AndroidManifest.xml`
-  - `strings.xml`
-  - presença do plugin social login nos arquivos gerados
-- Garantir que ele:
-  - não altere `versionCode` nem `versionName`
-  - não reescreva arquivos sem necessidade
-  - não gere diffs desnecessários quando o conteúdo já estiver correto
-  - continue idempotente, para poder rodar várias vezes sem efeito colateral
+4. Preservar o que já está funcionando
+- Não mexer no fluxo de geração do AAB no Android Studio.
+- Não alterar `versionCode`/`versionName` de novo.
+- Não tocar em login, splash ou lógica web.
+- Manter o script focado só em sanear arquivos nativos frágeis.
 
-4. Reduzir ruído de Git/local
-- Expandir `.gitignore` para artefatos locais que não deveriam entrar no fluxo:
-  - arquivos de estado do Xcode/IDE
-  - certificados/keystores locais (`*.jks`, `*.pem`)
-  - outros arquivos locais temporários de ambiente nativo
-- Objetivo: evitar novo cenário de `stash/pop` trazendo lixo local de volta.
+5. Deixar um procedimento seguro de uso
+- Padronizar o fluxo para você usar sempre:
+  - `git pull --rebase --autostash`
+  - `npm run sync:android`
+- E evitar `git stash pop` manual em cima de arquivos nativos gerados.
 
-5. Deixar o fluxo de atualização local previsível
-Depois da implementação, o caminho seguro fica:
-```bash
-git pull --rebase --autostash
-npm run sync:android
-```
+Arquivos que vou ajustar
+- `fix-android-appid.cjs`
+- `package.json` (apenas se precisar reforçar a ordem/segurança do fluxo)
+- `android/.gitignore`
+- `ios/.gitignore`
+- possivelmente `.gitignore` raiz, se houver padrão útil para bloquear duplicatas locais
 
-6. Resultado esperado
-- Android em `2.2.0 (build 5)`
-- você continua gerando o `.aab` pelo Android Studio
-- o comando de atualização/sync deixa de sobrescrever versão/build ou sair recriando mudanças desnecessárias
-- menos chance de conflito/local drift nos arquivos nativos
+Resultado esperado
+- o erro de `config 2.xml` para de voltar
+- o Android não quebra mais por arquivo inválido em `res/xml`
+- o terminal deixa de “bagunçar tudo” por causa de duplicatas locais
+- você continua podendo abrir no Android Studio e gerar o `.aab` normalmente
 
 Detalhes técnicos
-- Arquivos a ajustar:
-  - `android/app/build.gradle`
-  - `package.json`
-  - `fix-android-appid.cjs`
-  - `.gitignore`
-- Observação importante:
-  - hoje `android/capacitor.settings.gradle` e `android/app/capacitor.build.gradle` já estão corretos com o plugin social login; então o script deve apenas verificar e preservar, não “forçar” mudanças toda vez.
+- Regra principal da correção: limpar apenas arquivos com cara de cópia local acidental (`" 2"`, `" copy"`, etc.) dentro de diretórios nativos gerados/auxiliares.
+- Não vou usar essa limpeza em diretórios amplos do projeto para evitar apagar algo legítimo.
+- A causa exata vista agora é consistente com o screenshot: `android/app/src/main/res/xml/config 2.xml`.
