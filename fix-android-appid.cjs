@@ -20,7 +20,77 @@ const writeIfChanged = (filePath, nextContent, successMessage, unchangedMessage)
   return true;
 };
 
+const getCanonicalDuplicateName = (fileName) => {
+  const duplicatePatterns = [
+    /(.+?) copy(?: \d+)?(\.[^.]+)$/i,
+    /(.+?) - copy(?: \d+)?(\.[^.]+)$/i,
+    /(.+?) cópia(?: \d+)?(\.[^.]+)$/i,
+    /(.+?) \((?:copy|\d+)\)(\.[^.]+)$/i,
+    /(.+?) \d+(\.[^.]+)$/i,
+  ];
+
+  for (const pattern of duplicatePatterns) {
+    if (pattern.test(fileName)) {
+      return fileName.replace(pattern, "$1$2");
+    }
+  }
+
+  return null;
+};
+
+const cleanupDuplicateFiles = (targetDir, { recursive = false, label = targetDir } = {}) => {
+  if (!fs.existsSync(targetDir)) {
+    console.log(`ℹ️ ${label}: diretório não encontrado, limpeza ignorada`);
+    return;
+  }
+
+  let removedCount = 0;
+  const skippedDirs = new Set([".git", ".gradle", "build", "DerivedData"]);
+
+  const visit = (currentDir) => {
+    const entries = fs.readdirSync(currentDir, { withFileTypes: true });
+
+    for (const entry of entries) {
+      const fullPath = path.join(currentDir, entry.name);
+
+      if (entry.isDirectory()) {
+        if (recursive && !skippedDirs.has(entry.name)) {
+          visit(fullPath);
+        }
+        continue;
+      }
+
+      const canonicalName = getCanonicalDuplicateName(entry.name);
+      if (!canonicalName) continue;
+
+      const canonicalPath = path.join(currentDir, canonicalName);
+      if (!fs.existsSync(canonicalPath)) continue;
+
+      fs.unlinkSync(fullPath);
+      removedCount += 1;
+      console.log(`🧹 Removido duplicado local: ${path.relative(__dirname, fullPath)}`);
+    }
+  };
+
+  visit(targetDir);
+
+  if (removedCount === 0) {
+    console.log(`ℹ️ ${label}: nenhum duplicado local encontrado`);
+    return;
+  }
+
+  console.log(`✅ ${label}: ${removedCount} duplicado(s) local(is) removido(s)`);
+};
+
 console.log("🔧 Corrigindo appId do Android após cap sync...");
+
+cleanupDuplicateFiles(path.join(__dirname, "android", "app", "src", "main", "res", "xml"), {
+  label: "Android res/xml",
+});
+cleanupDuplicateFiles(path.join(__dirname, "ios", "App", "App"), {
+  recursive: true,
+  label: "iOS App/App",
+});
 
 // 1. Fix strings.xml
 const stringsPath = path.join(__dirname, "android", "app", "src", "main", "res", "values", "strings.xml");

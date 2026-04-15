@@ -14,3 +14,9 @@ capacitor-cordova-ios-plugins
 # Generated Config files
 App/App/capacitor.config.json
 App/App/config.xml
+
+# Local duplicate copies from Finder/Xcode
+App/App/* *
+App/App/**/* *
+App/App/*copy*
+App/App/**/*copy*
