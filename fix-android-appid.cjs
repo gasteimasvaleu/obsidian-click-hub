@@ -149,4 +149,37 @@ if (!fs.existsSync(correctFile)) {
   console.log("✅ Verificação final: MainActivity.java OK");
 }
 
+// 5. Ensure capacitor.settings.gradle includes capgo-capacitor-social-login
+const settingsGradlePath = path.join(__dirname, "android", "capacitor.settings.gradle");
+if (fs.existsSync(settingsGradlePath)) {
+  let content = fs.readFileSync(settingsGradlePath, "utf8");
+  if (!content.includes("capgo-capacitor-social-login")) {
+    content += `\ninclude ':capgo-capacitor-social-login'\nproject(':capgo-capacitor-social-login').projectDir = new File('../node_modules/@capgo/capacitor-social-login/android')\n`;
+    fs.writeFileSync(settingsGradlePath, content);
+    console.log("✅ capacitor.settings.gradle: capgo-capacitor-social-login adicionado");
+  } else {
+    console.log("✅ capacitor.settings.gradle: capgo-capacitor-social-login já presente");
+  }
+} else {
+  console.warn("⚠️ capacitor.settings.gradle não encontrado");
+}
+
+// 6. Ensure capacitor.build.gradle includes capgo-capacitor-social-login dependency
+const capBuildGradlePath = path.join(__dirname, "android", "app", "capacitor.build.gradle");
+if (fs.existsSync(capBuildGradlePath)) {
+  let content = fs.readFileSync(capBuildGradlePath, "utf8");
+  if (!content.includes("capgo-capacitor-social-login")) {
+    content = content.replace(
+      /implementation project\(':revenuecat-purchases-capacitor'\)/,
+      `implementation project(':revenuecat-purchases-capacitor')\n    implementation project(':capgo-capacitor-social-login')`
+    );
+    fs.writeFileSync(capBuildGradlePath, content);
+    console.log("✅ capacitor.build.gradle: capgo-capacitor-social-login adicionado");
+  } else {
+    console.log("✅ capacitor.build.gradle: capgo-capacitor-social-login já presente");
+  }
+} else {
+  console.warn("⚠️ capacitor.build.gradle não encontrado");
+}
+
 console.log("🎉 Correção do Android concluída!");
