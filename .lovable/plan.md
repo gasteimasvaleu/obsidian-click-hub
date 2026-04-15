@@ -1,52 +1,59 @@
 
-Plano:
 
-1. Destravar o `git pull` tratando apenas o arquivo que mudou localmente:
-   - O diff mostra que o bloqueio está no `android/app/src/main/AndroidManifest.xml`.
-   - Essa mudança local veio do fluxo Android (`npm run sync:android` + `fix-android-appid.cjs`), não de Xcode.
+## Diagnóstico
 
-2. Recuperar a base mais recente do projeto:
-   - Opção segura: guardar temporariamente esse manifest com `git stash` só para esse arquivo e depois rodar `git pull`.
-   - Opção rápida: descartar só o manifest local com `git restore` e então rodar `git pull`.
+A `MainActivity.java` atual chama `GoogleProvider.Companion.handleOnActivityResult(...)` na linha 12, mas essa API não existe no plugin `@capgo/capacitor-social-login`. A documentação oficial do Capgo mostra um padrão diferente que usa `GoogleProvider.REQUEST_AUTHORIZE_GOOGLE_MIN/MAX` e `SocialLoginPlugin.handleGoogleLoginIntent()`.
 
-3. Confirmar que a pasta local ficou alinhada com a versão correta:
-   - `package.json` deve continuar com `"version": "2.1.0"`.
-   - `android/app/build.gradle` deve estar com `versionCode 4` e `versionName "2.1"`.
+## Plano
 
-4. Regerar o Android do zero:
-   - Rodar `npm run build`
-   - Rodar `npm run sync:android`
-   - Rodar `./gradlew clean bundleRelease` dentro de `android`
+Atualizar a `MainActivity.java` e o script `fix-android-appid.cjs` para usar o código correto da documentação oficial:
 
-5. Validar o bundle antes do upload:
-   - Conferir o horário do arquivo gerado em `android/app/build/outputs/bundle/release/`
-   - Subir exatamente o `.aab` recém-gerado, para evitar reenviar um bundle antigo
+### Arquivo 1: `android/app/src/main/java/com/bibliatoonkids/app/MainActivity.java`
 
-Detalhe técnico:
-- O `git diff` confirmou que o manifest local foi alterado pelo fluxo Android ao adicionar:
-  - `package="com.bibliatoonkids.app"`
-  - permissões (`INTERNET`, `CAMERA`, storage)
-  - `MainActivity` com nome totalmente qualificado
-- Isso explica por que o `git pull` foi barrado.
-- Como o projeto atual já está configurado para `2.1.0` e Android `build 4`, o problema mais provável continua sendo pasta local desatualizada ou bundle antigo sendo enviado.
-- Nenhuma ação em iOS/Xcode é necessária para esse ajuste.
+Substituir o conteúdo por:
 
-Comandos que eu vou orientar a executar na próxima etapa, sem mexer em Xcode:
-```bash
-git stash push -m "temp-android-manifest" -- android/app/src/main/AndroidManifest.xml
-git pull
-cat package.json | grep '"version"'
-grep -n "versionCode\|versionName" android/app/build.gradle
-npm run build
-npm run sync:android
-cd android && ./gradlew clean bundleRelease && cd ..
-ls -lh android/app/build/outputs/bundle/release/
+```java
+package com.bibliatoonkids.app;
+
+import android.content.Intent;
+import android.util.Log;
+import com.getcapacitor.BridgeActivity;
+import com.getcapacitor.Plugin;
+import com.getcapacitor.PluginHandle;
+import ee.forgr.capacitor.social.login.GoogleProvider;
+import ee.forgr.capacitor.social.login.SocialLoginPlugin;
+import ee.forgr.capacitor.social.login.ModifiedMainActivityForSocialLoginPlugin;
+
+public class MainActivity extends BridgeActivity implements ModifiedMainActivityForSocialLoginPlugin {
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode >= GoogleProvider.REQUEST_AUTHORIZE_GOOGLE_MIN && requestCode < GoogleProvider.REQUEST_AUTHORIZE_GOOGLE_MAX) {
+            PluginHandle pluginHandle = getBridge().getPlugin("SocialLogin");
+            if (pluginHandle == null) {
+                Log.i("Google Activity Result", "SocialLogin login handle is null");
+                return;
+            }
+            Plugin plugin = pluginHandle.getInstance();
+            if (!(plugin instanceof SocialLoginPlugin)) {
+                return;
+            }
+            ((SocialLoginPlugin) plugin).handleGoogleLoginIntent(requestCode, data);
+        }
+    }
+
+    @Override
+    public void IHaveModifiedTheMainActivityForTheUseWithSocialLoginPlugin() {}
+}
 ```
 
-Fallback:
-- Se não quiser preservar a mudança local do manifest:
-```bash
-git restore android/app/src/main/AndroidManifest.xml
-git pull
-```
-- Se depois de tudo a Play Store ainda acusar código 2, aí o próximo ajuste será subir o `versionCode` para 5.
+### Arquivo 2: `fix-android-appid.cjs`
+
+Atualizar o template `mainActivityContent` dentro do script com o mesmo código acima, para que futuras execuções de `npm run sync:android` gerem o arquivo correto.
+
+### Por que isso resolve
+
+- O código antigo chamava `GoogleProvider.Companion` (API Kotlin que não existe na versão atual do plugin)
+- O código novo usa a API documentada: verifica o range do `requestCode` e delega para `SocialLoginPlugin.handleGoogleLoginIntent()`
+- Após essa correção, o build no Android Studio deve compilar sem erros
+
