@@ -1,32 +1,41 @@
 
 
-## Plan: Add detailed error logging to Google Sign-In
+## Plan: Fix Android MainActivity for Google Sign-In
 
-**Problem**: The catch block at line 188 shows a generic "Erro ao fazer login com Google" without the actual error details, making it impossible to diagnose the real issue.
+**Problem**: The `@capgo/capacitor-social-login` plugin requires the Android `MainActivity.java` to implement a specific interface and override `onActivityResult`. Without this, the plugin throws "You cannot use scopes without modifying the main activity."
 
-**Solution**: Update the catch block in `handleGoogleSignIn` to display the actual error message in the toast, so you can see exactly what's failing (whether it's the native Google SDK or Supabase rejecting the token).
+**Solution**: Update `MainActivity.java` to implement the required interface.
 
 ### Changes
 
-**File: `src/pages/Login.tsx`**
+**File: `android/app/src/main/java/com/bibliatoonkids/app/MainActivity.java`**
 
-Update the catch block (lines 183-189) to include the real error message:
+Replace with:
 
-```typescript
-} catch (error: any) {
-  console.error('Google Sign In error:', error);
-  if (error?.message?.includes('canceled') || error?.message?.includes('cancelled')) {
-    // User cancelled
-  } else {
-    toast.error(`Erro ao fazer login com Google: ${error?.message || JSON.stringify(error)}`);
-  }
+```java
+package com.bibliatoonkids.app;
+
+import android.content.Intent;
+import com.getcapacitor.BridgeActivity;
+import ee.forgr.capacitor.social.login.GoogleProvider;
+import ee.forgr.capacitor.social.login.ModifiedMainActivityForSocialLoginPlugin;
+
+public class MainActivity extends BridgeActivity implements ModifiedMainActivityForSocialLoginPlugin {
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        GoogleProvider.Companion.handleOnActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void IHaveModifiedTheMainActivityForTheUseWithSocialLoginPlugin() {}
 }
 ```
 
-This will show the exact error on screen next time you try, so we can identify if it's:
-- A native Google SDK issue (token not returned)
-- Supabase rejecting the token (wrong Client ID/Secret config)
-- A network error
+**File: `fix-android-appid.cjs`** — Also update the script that regenerates `MainActivity.java` to include this new code, so future builds don't overwrite it with the bare version.
 
-After seeing the real error, we can apply the correct fix.
+### After approval
+
+1. I'll update both files
+2. You'll need to rebuild the Android app (`npm run build && npx cap sync android`) and redeploy — this is a **native code change**, so Live Update won't work. You need to rebuild the APK/AAB in Android Studio.
 
