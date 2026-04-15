@@ -1,35 +1,32 @@
 
 
-## Plano: Suportar dois secrets no webhook do RevenueCat (iOS + Android)
+## Plan: Add detailed error logging to Google Sign-In
 
-### Problema
-- O `REVENUECAT_WEBHOOK_SECRET` atual já funciona para o projeto iOS
-- O projeto Android do RevenueCat usa um secret diferente
-- A Edge Function só aceita um secret hoje
+**Problem**: The catch block at line 188 shows a generic "Erro ao fazer login com Google" without the actual error details, making it impossible to diagnose the real issue.
 
-### Solução
-1. **Adicionar novo secret** `REVENUECAT_WEBHOOK_SECRET_ANDROID` no Supabase com o valor `f98b03f5b63df6a307cae95f89b11ee6a7188628bb54ac2b0e93e3f9b808c54c`
+**Solution**: Update the catch block in `handleGoogleSignIn` to display the actual error message in the toast, so you can see exactly what's failing (whether it's the native Google SDK or Supabase rejecting the token).
 
-2. **Atualizar a Edge Function** `revenuecat-webhook/index.ts` para aceitar qualquer um dos dois secrets:
+### Changes
+
+**File: `src/pages/Login.tsx`**
+
+Update the catch block (lines 183-189) to include the real error message:
 
 ```typescript
-const expectedSecret = Deno.env.get("REVENUECAT_WEBHOOK_SECRET");
-const expectedSecretAndroid = Deno.env.get("REVENUECAT_WEBHOOK_SECRET_ANDROID");
-
-const token = authHeader?.replace("Bearer ", "");
-
-if (!token || (token !== expectedSecret && token !== expectedSecretAndroid)) {
-  return new Response(JSON.stringify({ error: "Unauthorized" }), {
-    status: 401,
-    headers: { ...corsHeaders, "Content-Type": "application/json" },
-  });
+} catch (error: any) {
+  console.error('Google Sign In error:', error);
+  if (error?.message?.includes('canceled') || error?.message?.includes('cancelled')) {
+    // User cancelled
+  } else {
+    toast.error(`Erro ao fazer login com Google: ${error?.message || JSON.stringify(error)}`);
+  }
 }
 ```
 
-3. **Testar** enviando o webhook de teste novamente do RevenueCat Android
+This will show the exact error on screen next time you try, so we can identify if it's:
+- A native Google SDK issue (token not returned)
+- Supabase rejecting the token (wrong Client ID/Secret config)
+- A network error
 
-### Resultado
-- iOS continua funcionando com o secret original
-- Android funciona com o novo secret
-- Nenhuma alteração no banco de dados
+After seeing the real error, we can apply the correct fix.
 
