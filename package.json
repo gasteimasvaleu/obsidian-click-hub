@@ -9,7 +9,7 @@
     "build:ios": "tsc && vite build && cd ios/App && pod install && cd ../.. && node fix-signing.cjs",
     "build:dev": "vite build",
     "preview": "vite preview",
-    "sync:android": "npx cap sync android && node fix-android-appid.cjs"
+    "sync:android": "npm run build && npx cap sync android && node fix-android-appid.cjs"
   },
   "dependencies": {
     "@capacitor/android": "^8.1.0",

@@ -6,21 +6,23 @@ const CORRECT_PACKAGE_DIR = "com/bibliatoonkids/app";
 const CAPACITOR_PACKAGE = "com.bibliatoonkids.app";
 const CAPACITOR_PACKAGE_DIR = "com/bibliatoonkids/app";
 
+const writeIfChanged = (filePath, nextContent, successMessage, unchangedMessage) => {
+  const currentContent = fs.existsSync(filePath) ? fs.readFileSync(filePath, "utf8") : null;
+
+  if (currentContent === nextContent) {
+    console.log(unchangedMessage);
+    return false;
+  }
+
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
+  fs.writeFileSync(filePath, nextContent);
+  console.log(successMessage);
+  return true;
+};
+
 console.log("🔧 Corrigindo appId do Android após cap sync...");
 
-// 1. Fix build.gradle
-const buildGradlePath = path.join(__dirname, "android", "app", "build.gradle");
-if (fs.existsSync(buildGradlePath)) {
-  let content = fs.readFileSync(buildGradlePath, "utf8");
-  content = content.replace(/namespace\s*=\s*"[^"]+"/g, `namespace = "${CORRECT_PACKAGE}"`);
-  content = content.replace(/applicationId\s+"[^"]+"/g, `applicationId "${CORRECT_PACKAGE}"`);
-  fs.writeFileSync(buildGradlePath, content);
-  console.log("✅ build.gradle corrigido");
-} else {
-  console.warn("⚠️ build.gradle não encontrado");
-}
-
-// 2. Fix strings.xml
+// 1. Fix strings.xml
 const stringsPath = path.join(__dirname, "android", "app", "src", "main", "res", "values", "strings.xml");
 if (fs.existsSync(stringsPath)) {
   let content = fs.readFileSync(stringsPath, "utf8");
@@ -32,18 +34,16 @@ if (fs.existsSync(stringsPath)) {
     /<string name="custom_url_scheme">[^<]+<\/string>/,
     `<string name="custom_url_scheme">${CORRECT_PACKAGE}</string>`
   );
-  fs.writeFileSync(stringsPath, content);
-  console.log("✅ strings.xml corrigido");
+  writeIfChanged(stringsPath, content, "✅ strings.xml corrigido", "ℹ️ strings.xml já estava correto");
 } else {
   console.warn("⚠️ strings.xml não encontrado");
 }
 
-// 3. Fix AndroidManifest.xml — ensure package and fully-qualified activity name
+// 2. Fix AndroidManifest.xml — ensure package and fully-qualified activity name
 const manifestPath = path.join(__dirname, "android", "app", "src", "main", "AndroidManifest.xml");
 if (fs.existsSync(manifestPath)) {
   let content = fs.readFileSync(manifestPath, "utf8");
 
-  // Ensure package attribute exists on <manifest>
   if (content.includes('package="')) {
     content = content.replace(/package="[^"]+"/g, `package="${CORRECT_PACKAGE}"`);
   } else {
@@ -53,19 +53,22 @@ if (fs.existsSync(manifestPath)) {
     );
   }
 
-  // Force fully-qualified MainActivity name
   content = content.replace(
     /android:name="[^"]*MainActivity"/g,
     `android:name="${CORRECT_PACKAGE}.MainActivity"`
   );
 
-  fs.writeFileSync(manifestPath, content);
-  console.log("✅ AndroidManifest.xml corrigido (package + MainActivity FQN)");
+  writeIfChanged(
+    manifestPath,
+    content,
+    "✅ AndroidManifest.xml corrigido (package + MainActivity FQN)",
+    "ℹ️ AndroidManifest.xml já estava correto"
+  );
 } else {
   console.warn("⚠️ AndroidManifest.xml não encontrado");
 }
 
-// 4. Ensure MainActivity.java exists in the correct package directory
+// 3. Ensure MainActivity.java exists in the correct package directory
 const javaBase = path.join(__dirname, "android", "app", "src", "main", "java");
 const wrongDir = path.join(javaBase, ...CAPACITOR_PACKAGE_DIR.split("/"));
 const correctDir = path.join(javaBase, ...CORRECT_PACKAGE_DIR.split("/"));
@@ -107,14 +110,21 @@ public class MainActivity extends BridgeActivity implements ModifiedMainActivity
 `;
 
 if (fs.existsSync(correctFile)) {
-  // File already in the right place — overwrite with canonical content
-  fs.writeFileSync(correctFile, mainActivityContent);
-  console.log("✅ MainActivity.java reescrito com conteúdo canônico");
+  writeIfChanged(
+    correctFile,
+    mainActivityContent,
+    "✅ MainActivity.java corrigido com conteúdo canônico",
+    "ℹ️ MainActivity.java já estava correto"
+  );
 } else if (!samePath && fs.existsSync(wrongFile)) {
-  // File exists in old location — move it
-  fs.mkdirSync(correctDir, { recursive: true });
-  fs.writeFileSync(correctFile, mainActivityContent);
+  writeIfChanged(
+    correctFile,
+    mainActivityContent,
+    "✅ MainActivity.java movido para o pacote correto",
+    "ℹ️ MainActivity.java já existia no pacote correto"
+  );
   fs.unlinkSync(wrongFile);
+
   try {
     let dir = wrongDir;
     while (dir !== javaBase) {
@@ -126,45 +136,44 @@ if (fs.existsSync(correctFile)) {
         break;
       }
     }
-  } catch (e) { /* ignore cleanup errors */ }
-  console.log("✅ MainActivity.java movido para o pacote correto");
+  } catch (e) {}
 } else {
-  // File missing entirely — recreate it
-  fs.mkdirSync(correctDir, { recursive: true });
-  fs.writeFileSync(correctFile, mainActivityContent);
-  console.log("✅ MainActivity.java recriado automaticamente");
+  writeIfChanged(correctFile, mainActivityContent, "✅ MainActivity.java recriado automaticamente", "ℹ️ MainActivity.java já estava correto");
 }
 
-// Final verification — fail loudly if MainActivity.java is still missing
 if (!fs.existsSync(correctFile)) {
   console.error("❌ ERRO CRÍTICO: MainActivity.java NÃO existe após a correção!");
   console.error("   Caminho esperado:", correctFile);
   process.exit(1);
-} else {
-  const finalContent = fs.readFileSync(correctFile, "utf8");
-  if (!finalContent.includes("BridgeActivity")) {
-    console.error("❌ ERRO CRÍTICO: MainActivity.java existe mas está corrompido!");
-    process.exit(1);
-  }
-  console.log("✅ Verificação final: MainActivity.java OK");
 }
 
-// 5. Ensure capacitor.settings.gradle includes capgo-capacitor-social-login
+const finalContent = fs.readFileSync(correctFile, "utf8");
+if (!finalContent.includes("BridgeActivity")) {
+  console.error("❌ ERRO CRÍTICO: MainActivity.java existe mas está corrompido!");
+  process.exit(1);
+}
+console.log("✅ Verificação final: MainActivity.java OK");
+
+// 4. Ensure capacitor.settings.gradle includes capgo-capacitor-social-login
 const settingsGradlePath = path.join(__dirname, "android", "capacitor.settings.gradle");
 if (fs.existsSync(settingsGradlePath)) {
   let content = fs.readFileSync(settingsGradlePath, "utf8");
   if (!content.includes("capgo-capacitor-social-login")) {
     content += `\ninclude ':capgo-capacitor-social-login'\nproject(':capgo-capacitor-social-login').projectDir = new File('../node_modules/@capgo/capacitor-social-login/android')\n`;
-    fs.writeFileSync(settingsGradlePath, content);
-    console.log("✅ capacitor.settings.gradle: capgo-capacitor-social-login adicionado");
+    writeIfChanged(
+      settingsGradlePath,
+      content,
+      "✅ capacitor.settings.gradle: capgo-capacitor-social-login adicionado",
+      "ℹ️ capacitor.settings.gradle já estava correto"
+    );
   } else {
-    console.log("✅ capacitor.settings.gradle: capgo-capacitor-social-login já presente");
+    console.log("ℹ️ capacitor.settings.gradle: capgo-capacitor-social-login já presente");
   }
 } else {
   console.warn("⚠️ capacitor.settings.gradle não encontrado");
 }
 
-// 6. Ensure capacitor.build.gradle includes capgo-capacitor-social-login dependency
+// 5. Ensure capacitor.build.gradle includes capgo-capacitor-social-login dependency
 const capBuildGradlePath = path.join(__dirname, "android", "app", "capacitor.build.gradle");
 if (fs.existsSync(capBuildGradlePath)) {
   let content = fs.readFileSync(capBuildGradlePath, "utf8");
@@ -173,10 +182,14 @@ if (fs.existsSync(capBuildGradlePath)) {
       /implementation project\(':revenuecat-purchases-capacitor'\)/,
       `implementation project(':revenuecat-purchases-capacitor')\n    implementation project(':capgo-capacitor-social-login')`
     );
-    fs.writeFileSync(capBuildGradlePath, content);
-    console.log("✅ capacitor.build.gradle: capgo-capacitor-social-login adicionado");
+    writeIfChanged(
+      capBuildGradlePath,
+      content,
+      "✅ capacitor.build.gradle: capgo-capacitor-social-login adicionado",
+      "ℹ️ capacitor.build.gradle já estava correto"
+    );
   } else {
-    console.log("✅ capacitor.build.gradle: capgo-capacitor-social-login já presente");
+    console.log("ℹ️ capacitor.build.gradle: capgo-capacitor-social-login já presente");
   }
 } else {
   console.warn("⚠️ capacitor.build.gradle não encontrado");
