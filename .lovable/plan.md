@@ -1,77 +1,93 @@
 
+Objetivo: corrigir de forma definitiva o erro local do Xcode “The sandbox is not in sync with the Podfile.lock”.
 
-## Bump de versão iOS para reenvio à App Store
+Diagnóstico
+- O problema não parece ser o `Podfile.lock` em si.
+- O arquivo `ios/App/App.xcodeproj/project.pbxproj` está sem a integração esperada do CocoaPods:
+  - não há `PBXShellScriptBuildPhase`
+  - não há fase `[CP] Check Pods Manifest.lock`
+  - não há referências `Pods-App.debug.xcconfig` / `Pods-App.release.xcconfig`
+  - só existe `ios/debug.xcconfig`; `ios/release.xcconfig` não existe
+- Também há dois gatilhos que reaplicam `fix-signing.cjs` depois do sync:
+  - `package.json` em `build:ios` e `sync:ios`
+  - `ios/App/App/capacitor.config.json` com `"cap-sync-after": "node fix-signing.cjs"`
+- Isso explica por que o erro “sandbox” permanece: o projeto iOS local fica fora do formato esperado pelo CocoaPods, mesmo quando `Podfile.lock` e `Manifest.lock` batem.
 
-A correção do autoplay de vídeos (`allowsInlineMediaPlayback: true`) é uma mudança **nativa** que **não passa via Live Update**. Precisa novo binário.
+O que será alterado
+1. Ajustar a ordem do workflow iOS
+- Fazer `fix-signing.cjs` rodar antes da reinstalação final dos pods.
+- Garantir que o último passo estrutural no iOS seja o CocoaPods, não o script de signing.
 
-### Versões atuais (iOS)
-
-Lidos em `ios/App/App.xcodeproj/project.pbxproj` (Debug e Release):
-
-- `MARKETING_VERSION = 1.1` (versão exibida ao usuário)
-- `CURRENT_PROJECT_VERSION = 35` (build number — precisa ser único por upload)
-
-> Observação: o `Info.plist` referencia `$(MARKETING_VERSION)` e `$(CURRENT_PROJECT_VERSION)`, então a fonte da verdade é o `project.pbxproj`.
-
-### Bump proposto
-
-| Campo | De | Para |
-|---|---|---|
-| `MARKETING_VERSION` | `1.1` | `1.2` |
-| `CURRENT_PROJECT_VERSION` | `35` | `36` |
-
-Aplicar em **ambas** as configurações (Debug e Release) — linhas 322, 331, 353, 362 do `project.pbxproj`.
-
-### Mudança no arquivo `ios/App/App.xcodeproj/project.pbxproj`
-
-```diff
-- CURRENT_PROJECT_VERSION = 35;
-+ CURRENT_PROJECT_VERSION = 36;
-...
-- MARKETING_VERSION = 1.1;
-+ MARKETING_VERSION = 1.2;
-...
-- CURRENT_PROJECT_VERSION = 35;
-+ CURRENT_PROJECT_VERSION = 36;
-...
-- MARKETING_VERSION = 1.1;
-+ MARKETING_VERSION = 1.2;
-```
-
-### O que NÃO muda
-
-- Android (já está em `versionCode 7 / versionName 2.2.2`)
-- `capacitor.config.ts` / `capacitor.config.json` (já têm `allowsInlineMediaPlayback: true`)
-- Componentes de vídeo (já com `webkit-playsinline` + `play()` defensivo)
-- Bundle ID, certificados, provisioning profile, entitlements
-
-### Pós-edição (local no Mac)
-
-```bash
-git pull
+2. Corrigir os scripts do `package.json`
+- Atualizar:
+  - `build:ios`
+  - `sync:ios`
+- Nova ordem:
+```text
 npm run build
-npx cap sync ios
+→ npx cap sync ios
+→ node fix-signing.cjs
+→ cd ios/App && pod install
 ```
 
-No Xcode:
-1. Abrir `ios/App/App.xcworkspace`
-2. Selecionar target **App** → conferir General → Identity:
-   - Version: `1.2`
-   - Build: `36`
-3. Selecionar destino **Any iOS Device (arm64)**
-4. Product → **Archive**
-5. Organizer → **Distribute App** → App Store Connect → Upload
-6. Em App Store Connect: criar nova versão `1.2` apontando para o build `36`
-7. (Opcional recomendado) Disponibilizar no **TestFlight Internal** primeiro e validar autoplay no aparelho antes de submeter para revisão
+3. Remover o gatilho duplicado de pós-sync
+- Remover o hook `"cap-sync-after": "node fix-signing.cjs"` de `ios/App/App/capacitor.config.json`.
+- Isso evita que o arquivo do Xcode seja reescrito novamente depois que o CocoaPods terminar.
 
-### Validação no aparelho antes de submeter
+4. Restaurar compatibilidade de configuração do Xcode com CocoaPods
+- Criar `ios/release.xcconfig`.
+- Atualizar `ios/debug.xcconfig` para incluir o xcconfig do Pods.
+- Fazer `ios/release.xcconfig` incluir o xcconfig de Release do Pods.
 
-1. Cold start do app (matar e reabrir)
-2. Splash deve rodar **sem botão de play**
-3. Hero da home deve rodar **automaticamente**
-4. LoadingOverlay e ResponsiveHeroBanner também devem rodar inline
+Estrutura esperada:
+```text
+ios/debug.xcconfig
+#include? "App/Pods/Target Support Files/Pods-App/Pods-App.debug.xcconfig"
+CAPACITOR_DEBUG = true
 
-### Risco
+ios/release.xcconfig
+#include? "App/Pods/Target Support Files/Pods-App/Pods-App.release.xcconfig"
+```
 
-Mínimo. Apenas bump de números de versão. Se a App Store rejeitar por qualquer motivo não relacionado, basta novo bump de `CURRENT_PROJECT_VERSION` (ex: `37`) — `MARKETING_VERSION` pode permanecer `1.2`.
+5. Ajustar `project.pbxproj`
+- Adicionar referência ao `release.xcconfig`.
+- Garantir que:
+  - Project Debug → `debug.xcconfig`
+  - Project Release → `release.xcconfig`
+  - Target Debug → `debug.xcconfig`
+  - Target Release → `release.xcconfig`
+- Preservar assinatura manual já válida:
+  - bundle id
+  - team id
+  - provisioning profile
+  - signing certificate
 
+6. Endurecer `fix-signing.cjs`
+- Limitar o script para alterar apenas campos de signing do target do app.
+- Não mexer em:
+  - `baseConfigurationReference`
+  - build phases
+  - blocos de CocoaPods/SPM
+  - configurações globais que o CocoaPods usa
+- Isso evita que futuros `sync:ios` quebrem a integração outra vez.
+
+7. Recuperação local após as mudanças
+- Depois de implementar, o fluxo recomendado no Mac ficará:
+```text
+git pull
+npm install
+npm run sync:ios
+abrir ios/App/App.xcworkspace
+```
+- Se o projeto local já estiver “quebrado”, fazer uma limpeza única dos Pods/DerivedData antes de testar novamente.
+
+Resultado esperado
+- O Xcode volta a reconhecer corretamente a instalação do CocoaPods.
+- O erro “sandbox is not in sync with the Podfile.lock” desaparece.
+- O projeto continua com assinatura manual compatível com seu Appflow/App Store.
+- O fluxo iOS fica previsível para os próximos syncs.
+
+Detalhes técnicos
+- O erro atual é coerente com um `project.pbxproj` sem integração completa do CocoaPods, não com falta de `pod install`.
+- A ausência de `PBXShellScriptBuildPhase` e de `Pods-App.*.xcconfig` no projeto é o indício mais forte.
+- O problema provavelmente “funcionava antes” porque existia um estado local antigo válido no Xcode/Pods; depois algum sync reaplicou o script de signing e deixou o projeto num estado híbrido.
