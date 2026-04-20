@@ -1,23 +1,23 @@
 
 
-## Atualizar versão Android para novo upload na Play Console
+## Bump de versão Android (novo upload)
 
-A Play Console exige `versionCode` único e maior a cada upload. A versão atual é `versionCode 5` / `versionName "2.2.0"`.
+A Play Console rejeita reenvio com mesmo `versionCode`. Vamos subir de `6 / 2.2.1` para `7 / 2.2.2`.
 
 ## Mudança
 
 ### Arquivo: `android/app/build.gradle`
 
 ```diff
--        versionCode 5
--        versionName "2.2.0"
-+        versionCode 6
-+        versionName "2.2.1"
+-        versionCode 6
+-        versionName "2.2.1"
++        versionCode 7
++        versionName "2.2.2"
 ```
 
 ## O que NÃO muda
-- Nenhum arquivo iOS, web, Supabase ou Capacitor
-- `WEB_CLIENT_ID` permanece a correção anterior
+- iOS, web, Supabase, Capacitor
+- `WEB_CLIENT_ID` (correção anterior preservada)
 
 ## Pós-edição (local no seu Mac)
 
@@ -30,7 +30,4 @@ Depois no Android Studio:
 1. Build → Generate Signed Bundle (AAB)
 2. Upload para Internal Testing na Play Console
 3. Atualizar via Play Store no aparelho e testar "Continuar com Google"
-
-## Observação
-Se preferir outro `versionName` (ex: `2.3.0` para sinalizar correção de auth), me avise antes de aprovar. Mantive `2.2.1` por ser uma correção pontual (patch).
 
