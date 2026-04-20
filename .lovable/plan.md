@@ -1,93 +1,51 @@
 
-Objetivo: corrigir de forma definitiva o erro local do Xcode “The sandbox is not in sync with the Podfile.lock”.
 
-Diagnóstico
-- O problema não parece ser o `Podfile.lock` em si.
-- O arquivo `ios/App/App.xcodeproj/project.pbxproj` está sem a integração esperada do CocoaPods:
-  - não há `PBXShellScriptBuildPhase`
-  - não há fase `[CP] Check Pods Manifest.lock`
-  - não há referências `Pods-App.debug.xcconfig` / `Pods-App.release.xcconfig`
-  - só existe `ios/debug.xcconfig`; `ios/release.xcconfig` não existe
-- Também há dois gatilhos que reaplicam `fix-signing.cjs` depois do sync:
-  - `package.json` em `build:ios` e `sync:ios`
-  - `ios/App/App/capacitor.config.json` com `"cap-sync-after": "node fix-signing.cjs"`
-- Isso explica por que o erro “sandbox” permanece: o projeto iOS local fica fora do formato esperado pelo CocoaPods, mesmo quando `Podfile.lock` e `Manifest.lock` batem.
+## Diagnóstico: imagens já substituídas localmente, mas ícone antigo continua aparecendo
 
-O que será alterado
-1. Ajustar a ordem do workflow iOS
-- Fazer `fix-signing.cjs` rodar antes da reinstalação final dos pods.
-- Garantir que o último passo estrutural no iOS seja o CocoaPods, não o script de signing.
+Se você já trocou os 6 PNGs em `ios/App/App/Assets.xcassets/Splash.imageset/` pela imagem nova e o ícone verde antigo continua aparecendo na abertura do app, o problema **não é mais o arquivo** — é cache. Há 3 camadas de cache que precisam ser invalidadas:
 
-2. Corrigir os scripts do `package.json`
-- Atualizar:
-  - `build:ios`
-  - `sync:ios`
-- Nova ordem:
+### Camada 1 — Cache do Xcode (DerivedData)
+O Xcode mantém uma cópia compilada dos assets. Mesmo trocando o PNG, o build reaproveita a versão antiga.
+
+**Resolver:**
 ```text
-npm run build
-→ npx cap sync ios
-→ node fix-signing.cjs
-→ cd ios/App && pod install
+Xcode → Product → Clean Build Folder (Shift+Cmd+K)
+rm -rf ~/Library/Developer/Xcode/DerivedData
 ```
 
-3. Remover o gatilho duplicado de pós-sync
-- Remover o hook `"cap-sync-after": "node fix-signing.cjs"` de `ios/App/App/capacitor.config.json`.
-- Isso evita que o arquivo do Xcode seja reescrito novamente depois que o CocoaPods terminar.
+### Camada 2 — Cache do iOS no device (o mais agressivo)
+O iOS armazena um **snapshot do LaunchScreen** por bundle ID. Esse snapshot só é regenerado quando o app é desinstalado completamente. Reinstalar por cima NÃO resolve.
 
-4. Restaurar compatibilidade de configuração do Xcode com CocoaPods
-- Criar `ios/release.xcconfig`.
-- Atualizar `ios/debug.xcconfig` para incluir o xcconfig do Pods.
-- Fazer `ios/release.xcconfig` incluir o xcconfig de Release do Pods.
+**Resolver:**
+1. No iPhone: segurar ícone do app → "Remover App" → "Apagar App".
+2. Reiniciar o iPhone (importante — força limpeza do cache de snapshots).
+3. Rodar build novo no Xcode.
 
-Estrutura esperada:
-```text
-ios/debug.xcconfig
-#include? "App/Pods/Target Support Files/Pods-App/Pods-App.debug.xcconfig"
-CAPACITOR_DEBUG = true
+### Camada 3 — Capacitor sync sobrescrevendo
+Quando você roda `npx cap sync ios`, o Capacitor pode estar copiando assets de algum lugar e sobrescrevendo. Vamos verificar se há algum asset fonte que precisa ser atualizado também (ex: `resources/splash.png` ou config `@capacitor/assets`).
 
-ios/release.xcconfig
-#include? "App/Pods/Target Support Files/Pods-App/Pods-App.release.xcconfig"
-```
+### Plano de ação
 
-5. Ajustar `project.pbxproj`
-- Adicionar referência ao `release.xcconfig`.
-- Garantir que:
-  - Project Debug → `debug.xcconfig`
-  - Project Release → `release.xcconfig`
-  - Target Debug → `debug.xcconfig`
-  - Target Release → `release.xcconfig`
-- Preservar assinatura manual já válida:
-  - bundle id
-  - team id
-  - provisioning profile
-  - signing certificate
+1. **Verificar os arquivos atuais**: ler tamanho/dimensões dos 6 PNGs em `ios/App/App/Assets.xcassets/Splash.imageset/` para confirmar se realmente foram substituídos pela imagem nova (1080×1920) ou se ainda têm o conteúdo antigo.
 
-6. Endurecer `fix-signing.cjs`
-- Limitar o script para alterar apenas campos de signing do target do app.
-- Não mexer em:
-  - `baseConfigurationReference`
-  - build phases
-  - blocos de CocoaPods/SPM
-  - configurações globais que o CocoaPods usa
-- Isso evita que futuros `sync:ios` quebrem a integração outra vez.
+2. **Verificar fonte do Capacitor**: procurar por `capacitor-assets.config.json`, pasta `resources/`, ou referências a `@capacitor/assets` no `package.json` que possam estar regerando os splashes a partir de uma imagem fonte antiga.
 
-7. Recuperação local após as mudanças
-- Depois de implementar, o fluxo recomendado no Mac ficará:
-```text
-git pull
-npm install
-npm run sync:ios
-abrir ios/App/App.xcworkspace
-```
-- Se o projeto local já estiver “quebrado”, fazer uma limpeza única dos Pods/DerivedData antes de testar novamente.
+3. **Verificar `Contents.json`**: confirmar que o JSON do imageset aponta corretamente para os arquivos substituídos (nomes batem).
 
-Resultado esperado
-- O Xcode volta a reconhecer corretamente a instalação do CocoaPods.
-- O erro “sandbox is not in sync with the Podfile.lock” desaparece.
-- O projeto continua com assinatura manual compatível com seu Appflow/App Store.
-- O fluxo iOS fica previsível para os próximos syncs.
+4. **Se tudo estiver correto no código** → o problema é 100% cache do iOS. Procedimento obrigatório:
+   - Desinstalar app do iPhone.
+   - Reiniciar o iPhone.
+   - No Mac: `rm -rf ~/Library/Developer/Xcode/DerivedData`
+   - Xcode → Clean Build Folder.
+   - Build & Run.
 
-Detalhes técnicos
-- O erro atual é coerente com um `project.pbxproj` sem integração completa do CocoaPods, não com falta de `pod install`.
-- A ausência de `PBXShellScriptBuildPhase` e de `Pods-App.*.xcconfig` no projeto é o indício mais forte.
-- O problema provavelmente “funcionava antes” porque existia um estado local antigo válido no Xcode/Pods; depois algum sync reaplicou o script de signing e deixou o projeto num estado híbrido.
+5. **Se houver fonte do Capacitor sobrescrevendo** → atualizar a imagem fonte também e re-rodar `npx cap sync ios`.
+
+### O que vou fazer ao aprovar
+- Listar `ios/App/App/Assets.xcassets/Splash.imageset/` e verificar dimensões reais dos PNGs lá.
+- Procurar por configurações do `@capacitor/assets` ou pasta `resources/` no projeto.
+- Te dar um diagnóstico definitivo: ou (a) o arquivo está certo e é só cache do iOS, ou (b) há uma fonte sobrescrevendo que precisa ser atualizada.
+
+### Risco
+Zero — é puramente investigação read-only seguida de instruções para você executar no Mac/device.
+
