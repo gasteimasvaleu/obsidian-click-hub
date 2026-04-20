@@ -1,44 +1,77 @@
 
 
-## Por que antes funcionava e agora não?
+## Bump de versão iOS para reenvio à App Store
 
-Resposta direta: **o código React dos vídeos não mudou**. O que mudou foi o **ambiente nativo iOS** entre o build anterior e o build atual. Três fatores combinados explicam a regressão:
+A correção do autoplay de vídeos (`allowsInlineMediaPlayback: true`) é uma mudança **nativa** que **não passa via Live Update**. Precisa novo binário.
 
-### 1. Rebuild nativo regenerou `capacitor.config.json` com defaults atuais
+### Versões atuais (iOS)
 
-Nos últimos dias rodamos `npm run sync:ios` várias vezes (correções da Play Store, bump de versão, fix do safe-area). Cada `cap sync` regenera `ios/App/App/capacitor.config.json` a partir do `capacitor.config.ts`.
+Lidos em `ios/App/App.xcodeproj/project.pbxproj` (Debug e Release):
 
-Como **`allowsInlineMediaPlayback` nunca esteve declarado** no `capacitor.config.ts`, o valor aplicado é o default da versão do `@capacitor/ios` instalada. Em versões recentes do Capacitor + iOS 17/18, o default ficou mais restritivo — autoplay inline passou a exigir declaração explícita.
+- `MARKETING_VERSION = 1.1` (versão exibida ao usuário)
+- `CURRENT_PROJECT_VERSION = 35` (build number — precisa ser único por upload)
 
-O build antigo no aparelho herdava um `capacitor.config.json` gerado em outra época, com comportamento diferente. Ao reinstalar via Xcode, o novo config sobrescreveu o antigo.
+> Observação: o `Info.plist` referencia `$(MARKETING_VERSION)` e `$(CURRENT_PROJECT_VERSION)`, então a fonte da verdade é o `project.pbxproj`.
 
-### 2. Atualização do iOS no aparelho
+### Bump proposto
 
-WebKit/WKWebView recebe atualizações de política de autoplay junto com cada versão do iOS. Apple endureceu a regra de "user gesture required" para `<video autoplay>` mesmo `muted` quando o atributo `webkit-playsinline` não está presente como atributo HTML literal. React converte `playsInline` (camelCase) para `playsinline` minúsculo, mas **não emite `webkit-playsinline`** — esse atributo legado precisa ser passado manualmente em JSX.
+| Campo | De | Para |
+|---|---|---|
+| `MARKETING_VERSION` | `1.1` | `1.2` |
+| `CURRENT_PROJECT_VERSION` | `35` | `36` |
 
-Builds antigos rodando em iOS mais antigo toleravam a ausência. iOS atual não tolera mais.
+Aplicar em **ambas** as configurações (Debug e Release) — linhas 322, 331, 353, 362 do `project.pbxproj`.
 
-### 3. Service Worker / cache do app
+### Mudança no arquivo `ios/App/App.xcodeproj/project.pbxproj`
 
-A remoção do `padding-bottom` do body forçou o app a baixar novo HTML/CSS via `NetworkFirst`. Isso disparou um ciclo de atualização que também invalidou caches do WKWebView, fazendo o WebKit reavaliar permissões de mídia "do zero" — sem o gesto de instalação anterior que vinha dando "permissão herdada".
+```diff
+- CURRENT_PROJECT_VERSION = 35;
++ CURRENT_PROJECT_VERSION = 36;
+...
+- MARKETING_VERSION = 1.1;
++ MARKETING_VERSION = 1.2;
+...
+- CURRENT_PROJECT_VERSION = 35;
++ CURRENT_PROJECT_VERSION = 36;
+...
+- MARKETING_VERSION = 1.1;
++ MARKETING_VERSION = 1.2;
+```
 
----
+### O que NÃO muda
 
-### Por que "funciona ao trocar de página"?
+- Android (já está em `versionCode 7 / versionName 2.2.2`)
+- `capacitor.config.ts` / `capacitor.config.json` (já têm `allowsInlineMediaPlayback: true`)
+- Componentes de vídeo (já com `webkit-playsinline` + `play()` defensivo)
+- Bundle ID, certificados, provisioning profile, entitlements
 
-Quando você navega (tap na navbar), o WebKit registra um **user gesture**. A próxima chamada de `play()` dentro daquela janela de gesto é autorizada. Como o `<video>` da splash e do hero remontam ao trocar rotas, eles "pegam carona" no gesto e tocam. No primeiro mount após cold start, não há gesto — daí o botão de play.
+### Pós-edição (local no Mac)
 
----
+```bash
+git pull
+npm run build
+npx cap sync ios
+```
 
-### Em resumo
+No Xcode:
+1. Abrir `ios/App/App.xcworkspace`
+2. Selecionar target **App** → conferir General → Identity:
+   - Version: `1.2`
+   - Build: `36`
+3. Selecionar destino **Any iOS Device (arm64)**
+4. Product → **Archive**
+5. Organizer → **Distribute App** → App Store Connect → Upload
+6. Em App Store Connect: criar nova versão `1.2` apontando para o build `36`
+7. (Opcional recomendado) Disponibilizar no **TestFlight Internal** primeiro e validar autoplay no aparelho antes de submeter para revisão
 
-| Antes | Agora |
-|---|---|
-| Config nativa antiga + iOS antigo | Config nativa regenerada + iOS atualizado |
-| WebKit tolerava ausência de `webkit-playsinline` | WebKit exige o atributo legado |
-| Cache do WKWebView com permissão herdada | Cache invalidado, regras reaplicadas do zero |
+### Validação no aparelho antes de submeter
 
-Não houve "quebra de código" — houve **endurecimento de política do iOS** que expôs três configurações ausentes que sempre estiveram lá, mas eram toleradas.
+1. Cold start do app (matar e reabrir)
+2. Splash deve rodar **sem botão de play**
+3. Hero da home deve rodar **automaticamente**
+4. LoadingOverlay e ResponsiveHeroBanner também devem rodar inline
 
-A correção proposta no plano anterior (`allowsInlineMediaPlayback: true` + `webkit-playsinline=""` + `play()` defensivo via ref) ataca exatamente as três causas e devolve o comportamento anterior — agora de forma explícita e à prova de futuras atualizações do iOS.
+### Risco
+
+Mínimo. Apenas bump de números de versão. Se a App Store rejeitar por qualquer motivo não relacionado, basta novo bump de `CURRENT_PROJECT_VERSION` (ex: `37`) — `MARKETING_VERSION` pode permanecer `1.2`.
 
