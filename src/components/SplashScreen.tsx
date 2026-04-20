@@ -15,6 +15,7 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
   const [videoReady, setVideoReady] = useState(false);
   const completedRef = useRef(false);
   const mountTimeRef = useRef(Date.now());
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   const triggerExit = () => {
     if (completedRef.current) return;
@@ -37,6 +38,16 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
     }, MAX_DISPLAY_MS);
 
     return () => clearTimeout(maxTimer);
+  }, []);
+
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    const tryPlay = () => v.play().catch(() => {});
+    tryPlay();
+    const onTap = () => { tryPlay(); };
+    document.addEventListener('touchstart', onTap, { once: true, passive: true });
+    return () => document.removeEventListener('touchstart', onTap);
   }, []);
 
   const handleVideoEnd = () => {
@@ -68,6 +79,7 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
 
       {/* Video as enhancement layer — not a dependency */}
       <video
+        ref={videoRef}
         className={cn(
           "w-full h-full object-contain transition-opacity duration-300",
           videoReady ? "opacity-100" : "opacity-0"
@@ -75,6 +87,8 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
         autoPlay
         muted
         playsInline
+        // @ts-ignore - iOS WKWebView legacy attribute
+        webkit-playsinline=""
         preload="auto"
         onLoadedData={handleVideoLoad}
         onEnded={handleVideoEnd}
