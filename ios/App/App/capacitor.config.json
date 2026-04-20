@@ -4,7 +4,8 @@
 	"webDir": "dist",
 	"ios": {
 		"contentInset": "always",
-		"backgroundColor": "#000000"
+		"backgroundColor": "#000000",
+		"allowsInlineMediaPlayback": true
 	},
 	"server": {
 		"hostname": "app.bibliatoonkids.com",

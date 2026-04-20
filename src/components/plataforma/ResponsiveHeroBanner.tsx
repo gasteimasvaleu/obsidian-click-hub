@@ -68,6 +68,8 @@ export function ResponsiveHeroBanner({
             muted
             loop
             playsInline
+            // @ts-ignore - iOS WKWebView legacy attribute
+            webkit-playsinline=""
             preload="metadata"
             className="w-full h-full object-cover"
             onError={(e) => console.error("Banner video error:", e)}

@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { GlassCard } from "@/components/GlassCard";
 import { FuturisticNavbar } from "@/components/FuturisticNavbar";
 import { Package, Book, Heart, HandHeart, Music, Palette, Users, Gamepad2, MessagesSquare, UserCircle, Sparkles, ShieldCheck } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import useEmblaCarousel from "embla-carousel-react";
@@ -10,6 +10,7 @@ import Autoplay from "embla-carousel-autoplay";
 
 const Index = () => {
   const navigate = useNavigate();
+  const heroVideoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     const returnUrl = localStorage.getItem('returnUrl');
@@ -17,6 +18,16 @@ const Index = () => {
       localStorage.removeItem('returnUrl');
       localStorage.removeItem('appState');
     }
+  }, []);
+
+  useEffect(() => {
+    const v = heroVideoRef.current;
+    if (!v) return;
+    const tryPlay = () => v.play().catch(() => {});
+    tryPlay();
+    const onTap = () => { tryPlay(); };
+    document.addEventListener('touchstart', onTap, { once: true, passive: true });
+    return () => document.removeEventListener('touchstart', onTap);
   }, []);
 
   const { data: highlights = [] } = useQuery({
@@ -62,15 +73,19 @@ const Index = () => {
       <div className="flex justify-center w-full pt-20 pb-4 px-4">
         <GlassCard className="w-full max-w-[500px] p-0 overflow-hidden">
           <video 
+            ref={heroVideoRef}
             src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/video_517d0687_1763117222774.mp4"
             className="w-full h-auto"
             style={{ maxHeight: '300px' }}
             autoPlay
             muted
             playsInline
+            // @ts-ignore - iOS WKWebView legacy attribute
+            webkit-playsinline=""
             onEnded={(e) => {
               const video = e.currentTarget;
               video.currentTime = 0;
+              video.play().catch(() => {});
             }}
           />
         </GlassCard>

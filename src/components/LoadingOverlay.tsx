@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface LoadingOverlayProps {
   visible: boolean;
@@ -8,6 +8,7 @@ interface LoadingOverlayProps {
 export const LoadingOverlay = ({ visible, message }: LoadingOverlayProps) => {
   const [show, setShow] = useState(false);
   const [render, setRender] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     if (visible) {
@@ -22,6 +23,13 @@ export const LoadingOverlay = ({ visible, message }: LoadingOverlayProps) => {
     }
   }, [visible]);
 
+  useEffect(() => {
+    if (!render) return;
+    const v = videoRef.current;
+    if (!v) return;
+    v.play().catch(() => {});
+  }, [render]);
+
   if (!render) return null;
 
   return (
@@ -32,11 +40,14 @@ export const LoadingOverlay = ({ visible, message }: LoadingOverlayProps) => {
     >
       {/* Video */}
       <video
+        ref={videoRef}
         src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/loading3.mp4"
         className="w-64 h-64 object-contain"
         autoPlay
         muted
         playsInline
+        // @ts-ignore - iOS WKWebView legacy attribute
+        webkit-playsinline=""
         loop
       />
 
