@@ -29,9 +29,6 @@
 			"maxVersions": 3
 		}
 	},
-	"hooks": {
-		"cap-sync-after": "node fix-signing.cjs"
-	},
 	"packageClassList": [
 		"CAPCameraPlugin",
 		"CAPLiveUpdatesPlugin",
