@@ -7,6 +7,7 @@ const config: CapacitorConfig = {
   ios: {
     contentInset: 'always',
     backgroundColor: '#000000',
+    allowsInlineMediaPlayback: true,
     packageClassList: [
       'CAPCameraPlugin',
       'CAPLiveUpdatesPlugin',
