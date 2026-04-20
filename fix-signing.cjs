@@ -4,39 +4,30 @@ const path = require("path");
 const projectPath = path.join(process.cwd(), "ios", "App", "App.xcodeproj", "project.pbxproj");
 
 if (fs.existsSync(projectPath)) {
-    console.log("🔧 Ajustando configurações do Xcode para assinatura...");
+    console.log("🔧 Ajustando assinatura do App target (modo seguro - preserva CocoaPods)...");
     let content = fs.readFileSync(projectPath, "utf8");
 
-    // Regex para encontrar todos os blocos de buildSettings
-    const buildSettingsRegex = /(isa = XCBuildConfiguration;\s*(?:baseConfigurationReference = [^;]+;\s*)?buildSettings = \{[^}]*\})/gs;
+    // SOMENTE blocos que pertencem ao App target (contêm PRODUCT_BUNDLE_IDENTIFIER ou APPICON).
+    // NÃO tocamos em baseConfigurationReference, build phases, nem blocos de Pods/SPM.
+    const buildSettingsRegex = /(buildSettings = \{[^}]*\})/gs;
 
     content = content.replace(buildSettingsRegex, (match) => {
         const isAppTarget = match.includes("PRODUCT_BUNDLE_IDENTIFIER") || match.includes("ASSETCATALOG_COMPILER_APPICON_NAME");
+        if (!isAppTarget) return match; // não toca em ninguém mais
 
         let modified = match;
-
-        // Remove qualquer CODE_SIGNING_ALLOWED existente para reinjetar
-        modified = modified.replace(/\s*CODE_SIGNING_ALLOWED = [^;]+;/g, "");
-
-        if (isAppTarget) {
-            // App target: assinatura manual + CODE_SIGNING_ALLOWED = YES
+        // Garante assinatura manual + team correto. NÃO mexe em CODE_SIGNING_ALLOWED, identity, profile.
+        if (/CODE_SIGN_STYLE = [^;]+;/.test(modified)) {
             modified = modified.replace(/CODE_SIGN_STYLE = [^;]+;/g, "CODE_SIGN_STYLE = Manual;");
-            modified = modified.replace(/DEVELOPMENT_TEAM = [^;]*;/g, "DEVELOPMENT_TEAM = CASJQDDA7L;");
-            modified = modified.replace("buildSettings = {", "buildSettings = {\n\t\t\t\tCODE_SIGNING_ALLOWED = YES;");
-        } else {
-            // Outros targets (projeto global, pods, SPM): CODE_SIGNING_ALLOWED = NO
-            // Tambem limpar CODE_SIGN_IDENTITY e PROVISIONING_PROFILE_SPECIFIER
-            modified = modified.replace(/\s*CODE_SIGN_IDENTITY = [^;]+;/g, "");
-            modified = modified.replace(/\s*"CODE_SIGN_IDENTITY\[sdk=iphoneos\*\]" = [^;]+;/g, "");
-            modified = modified.replace(/\s*PROVISIONING_PROFILE_SPECIFIER = [^;]+;/g, "");
-            modified = modified.replace("buildSettings = {", "buildSettings = {\n\t\t\t\tCODE_SIGNING_ALLOWED = NO;");
         }
-
+        if (/DEVELOPMENT_TEAM = [^;]*;/.test(modified)) {
+            modified = modified.replace(/DEVELOPMENT_TEAM = [^;]*;/g, "DEVELOPMENT_TEAM = CASJQDDA7L;");
+        }
         return modified;
     });
 
     fs.writeFileSync(projectPath, content);
-    console.log("✅ Sucesso: CODE_SIGNING_ALLOWED configurado (YES=App target, NO=outros). Identity/Profile limpos de targets globais.");
+    console.log("✅ Signing OK. CocoaPods/SPM intactos (baseConfigurationReference preservado).");
 } else {
     console.error("❌ Erro: Projeto não encontrado em " + projectPath);
     process.exit(1);
