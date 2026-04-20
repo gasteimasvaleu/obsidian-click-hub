@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FuturisticNavbar } from "@/components/FuturisticNavbar";
 import { GlassCard } from "@/components/GlassCard";
 import { ParentsGuideForm } from "@/components/guia-pais/ParentsGuideForm";
@@ -74,6 +74,21 @@ const GuiaPais = () => {
   const { toast } = useToast();
   const { showConsent, setShowConsent, acceptConsent, requireConsent } = useAIConsent();
   const { showLoading, hideLoading } = useLoading();
+
+  useEffect(() => {
+    const handleBlur = (e: FocusEvent) => {
+      const target = e.target as HTMLElement;
+      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          document.documentElement.scrollTop = 0;
+          document.body.scrollTop = 0;
+        }, 50);
+      }
+    };
+    document.addEventListener('focusout', handleBlur);
+    return () => document.removeEventListener('focusout', handleBlur);
+  }, []);
 
   const doGenerateGuide = async () => {
     setIsGenerating(true);
