@@ -1,102 +1,44 @@
 
 
-## Diagnóstico: faixa preta extra abaixo do tubelight no iOS após fechar teclado
+## Por que antes funcionava e agora não?
 
-### Causa raiz
+Resposta direta: **o código React dos vídeos não mudou**. O que mudou foi o **ambiente nativo iOS** entre o build anterior e o build atual. Três fatores combinados explicam a regressão:
 
-No iOS (WKWebView/Capacitor), quando o teclado abre num `<input>`/`<textarea>`:
-1. O sistema "promove" `env(safe-area-inset-bottom)` para acomodar a barra de previsões e o teclado.
-2. Ao fechar o teclado, o WKWebView **frequentemente não reseta** esse valor de imediato — o body (e qualquer `padding-bottom: env(safe-area-inset-bottom)`) permanece inflado por 1+ frame, criando a "faixa preta" abaixo do tubelight navbar.
+### 1. Rebuild nativo regenerou `capacitor.config.json` com defaults atuais
 
-A situação está agravada porque o padding inferior está sendo aplicado em **dois lugares** ao mesmo tempo:
+Nos últimos dias rodamos `npm run sync:ios` várias vezes (correções da Play Store, bump de versão, fix do safe-area). Cada `cap sync` regenera `ios/App/App/capacitor.config.json` a partir do `capacitor.config.ts`.
 
-- `src/index.css` linha 100: `body { padding-bottom: env(safe-area-inset-bottom); }`
-- `src/components/ui/tubelight-navbar.tsx` linha 109: `<div className="... pb-[env(safe-area-inset-bottom)]">`
+Como **`allowsInlineMediaPlayback` nunca esteve declarado** no `capacitor.config.ts`, o valor aplicado é o default da versão do `@capacitor/ios` instalada. Em versões recentes do Capacitor + iOS 17/18, o default ficou mais restritivo — autoplay inline passou a exigir declaração explícita.
 
-Isso já produz padding duplo. Quando o iOS infla o valor após o teclado, o efeito visual fica muito perceptível (a "nova safe-area" descrita pelo usuário).
+O build antigo no aparelho herdava um `capacitor.config.json` gerado em outra época, com comportamento diferente. Ao reinstalar via Xcode, o novo config sobrescreveu o antigo.
 
-Há também um padrão menor: `src/pages/GuiaPais.tsx` envolve o conteúdo com `overflow-x-hidden` e o input não tem nenhum guard contra reset de scroll após o blur — mesmo padrão que o memo `mem://style/ios-keyboard-viewport-reset` já corrige no Amigo Divino.
+### 2. Atualização do iOS no aparelho
 
----
+WebKit/WKWebView recebe atualizações de política de autoplay junto com cada versão do iOS. Apple endureceu a regra de "user gesture required" para `<video autoplay>` mesmo `muted` quando o atributo `webkit-playsinline` não está presente como atributo HTML literal. React converte `playsInline` (camelCase) para `playsinline` minúsculo, mas **não emite `webkit-playsinline`** — esse atributo legado precisa ser passado manualmente em JSX.
 
-## Correções
+Builds antigos rodando em iOS mais antigo toleravam a ausência. iOS atual não tolera mais.
 
-### 1. Remover padding-bottom duplicado do `body` (`src/index.css`)
+### 3. Service Worker / cache do app
 
-O navbar tubelight já cuida do safe-area inferior. Manter no body cria padding duplicado e é exatamente o que infla quando o teclado abre.
-
-```diff
-   body {
-     @apply bg-background text-foreground min-h-screen;
-     background: #000000;
-     padding-top: env(safe-area-inset-top);
-     padding-left: env(safe-area-inset-left);
-     padding-right: env(safe-area-inset-right);
--    padding-bottom: env(safe-area-inset-bottom);
-   }
-```
-
-O `pb-24` já presente nas páginas + `pb-[env(safe-area-inset-bottom)]` do navbar continuam protegendo o conteúdo de ficar atrás do navbar.
-
-### 2. Reset de viewport ao fechar teclado em `GuiaPais.tsx`
-
-Aplicar o mesmo padrão do memo `ios-keyboard-viewport-reset`: forçar `window.scrollTo(0, 0)` em todo `blur` de input/textarea da página. Adicionar um `useEffect` global ao componente:
-
-```tsx
-useEffect(() => {
-  const handleBlur = (e: FocusEvent) => {
-    const target = e.target as HTMLElement;
-    if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
-      // iOS WKWebView: force viewport reset after keyboard dismiss
-      setTimeout(() => {
-        window.scrollTo(0, 0);
-        document.documentElement.scrollTop = 0;
-        document.body.scrollTop = 0;
-      }, 50);
-    }
-  };
-  document.addEventListener('focusout', handleBlur);
-  return () => document.removeEventListener('focusout', handleBlur);
-}, []);
-```
-
-### 3. Garantir `font-size: 16px` no `Input` para evitar zoom adicional do iOS
-
-O `Input` (`src/components/ui/input.tsx`) tem `text-base` (16px) por padrão e `md:text-sm` apenas em desktop — já está correto. Nenhuma mudança necessária aqui.
-
-### 4. (Opcional, defensivo) Forçar `touch-action: manipulation` no body
-
-Reduz comportamentos de zoom/scroll inesperados do WebKit ao focar inputs. Pode ser adicionado ao `index.css` se a correção 1+2 não bastar — não aplicar agora, apenas como plano B caso o problema persista após o teste no aparelho.
+A remoção do `padding-bottom` do body forçou o app a baixar novo HTML/CSS via `NetworkFirst`. Isso disparou um ciclo de atualização que também invalidou caches do WKWebView, fazendo o WebKit reavaliar permissões de mídia "do zero" — sem o gesto de instalação anterior que vinha dando "permissão herdada".
 
 ---
 
-## Arquivos modificados
+### Por que "funciona ao trocar de página"?
 
-1. `src/index.css` — remover `padding-bottom: env(safe-area-inset-bottom)` do `body`
-2. `src/pages/GuiaPais.tsx` — adicionar `useEffect` de reset de viewport no blur
+Quando você navega (tap na navbar), o WebKit registra um **user gesture**. A próxima chamada de `play()` dentro daquela janela de gesto é autorizada. Como o `<video>` da splash e do hero remontam ao trocar rotas, eles "pegam carona" no gesto e tocam. No primeiro mount após cold start, não há gesto — daí o botão de play.
 
-## O que NÃO muda
+---
 
-- Navbar tubelight (mantém `pb-[env(safe-area-inset-bottom)]`)
-- Outras páginas (a mudança no `body` é global e benéfica para todas)
-- iOS native config, Capacitor, Supabase
+### Em resumo
 
-## Pós-correção (local no Mac)
+| Antes | Agora |
+|---|---|
+| Config nativa antiga + iOS antigo | Config nativa regenerada + iOS atualizado |
+| WebKit tolerava ausência de `webkit-playsinline` | WebKit exige o atributo legado |
+| Cache do WKWebView com permissão herdada | Cache invalidado, regras reaplicadas do zero |
 
-```bash
-git pull
-npm run sync:ios       # ou npm run build && npx cap sync ios
-```
+Não houve "quebra de código" — houve **endurecimento de política do iOS** que expôs três configurações ausentes que sempre estiveram lá, mas eram toleradas.
 
-Abrir Xcode → build → testar em aparelho real:
-1. Ir em `/guia-pais`
-2. Tocar no input "Digite o nome ou apelido"
-3. Fechar teclado (tap fora ou botão "Concluído")
-4. Verificar que a faixa preta extra **não persiste** abaixo do navbar tubelight
-
-Repetir o teste nos textareas dos passos 7, 8 e 9.
-
-## Risco
-
-Baixo. A remoção do `padding-bottom` do body é compensada pelo `pb-24` das páginas + `pb-[env(safe-area-inset-bottom)]` do navbar. Se algum conteúdo solto (sem navbar) precisar do safe-area, podemos adicionar pontualmente — mas todas as rotas usam `FuturisticNavbar` (topo) + `NavBar` tubelight (base), que já cobrem.
+A correção proposta no plano anterior (`allowsInlineMediaPlayback: true` + `webkit-playsinline=""` + `play()` defensivo via ref) ataca exatamente as três causas e devolve o comportamento anterior — agora de forma explícita e à prova de futuras atualizações do iOS.
 
