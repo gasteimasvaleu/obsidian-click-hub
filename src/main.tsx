@@ -3,8 +3,28 @@ import App from "./App.tsx";
 import "./index.css";
 import { registerSW } from 'virtual:pwa-register';
 
-// Registra o Service Worker e escuta por atualizações
-const updateSW = registerSW({
+// Detecta preview do Lovable / iframe — não registrar SW nesses contextos
+const isInIframe = (() => {
+  try {
+    return window.self !== window.top;
+  } catch (e) {
+    return true;
+  }
+})();
+
+const isPreviewHost =
+  window.location.hostname.includes("id-preview--") ||
+  window.location.hostname.includes("lovableproject.com") ||
+  window.location.hostname.includes("lovable.app");
+
+if (isPreviewHost || isInIframe) {
+  // Desregistra qualquer SW pré-existente no preview para evitar cache obsoleto
+  navigator.serviceWorker?.getRegistrations().then((registrations) => {
+    registrations.forEach((r) => r.unregister());
+  });
+} else {
+  // Registra o Service Worker apenas em produção (app nativo / site publicado)
+  const updateSW = registerSW({
   onNeedRefresh() {
     console.log('🔄 Nova versão disponível! Atualizando automaticamente...');
     updateSW(true);
@@ -14,8 +34,6 @@ const updateSW = registerSW({
   },
   onRegistered(registration) {
     console.log('✅ Service Worker registrado com sucesso!');
-    
-    // Verifica por atualizações a cada 1 hora
     if (registration) {
       setInterval(() => {
         registration.update();
@@ -26,6 +44,7 @@ const updateSW = registerSW({
     console.error('❌ Erro ao registrar Service Worker:', error);
   },
   immediate: true
-});
+  });
+}
 
 createRoot(document.getElementById("root")!).render(<App />);
