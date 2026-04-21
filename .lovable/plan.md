@@ -1,30 +1,23 @@
 
 
-## Igualar padding superior da página inicial às demais
+## Aumentar padding inferior em /colorir
 
-Na página `/` (Index), o espaço entre a navbar tubelight e o primeiro card (vídeo hero) está maior que nas outras páginas. Vou alinhar o valor.
+O grid de desenhos na página `/colorir` está terminando muito próximo da faixa preta da navbar tubelight inferior.
 
-### Comparação atual
+### Mudança em `src/pages/colorir/ColorirPage.tsx`
 
-| Página | Padding-top do container | Resultado |
-|---|---|---|
-| `/` (Index) | `pt-20` (80px) no wrapper do vídeo | Maior espaço |
-| `/plataforma`, demais | `pt-16` (64px) via `PlataformaLayout` / equivalente | Menor espaço |
-
-### Mudança em `src/pages/Index.tsx`
-
-Alterar o wrapper do card de vídeo:
+Alterar a classe do container raiz:
 
 ```tsx
 // Antes
-<div className="flex justify-center w-full pt-20 pb-4 px-4">
+<div className="min-h-screen bg-background pb-24">
 
 // Depois
-<div className="flex justify-center w-full pt-16 pb-4 px-4">
+<div className="min-h-screen bg-background pb-32">
 ```
 
-`pt-20` (80px) → `pt-16` (64px) — agora idêntico ao espaçamento das outras páginas.
+`pb-24` (96px) → `pb-32` (128px) — pequeno acréscimo de 32px, deixando o último card de desenho com respiro acima da navbar.
 
 ### Risco
-Mínimo — alteração de uma classe Tailwind em um único elemento.
+Mínimo — alteração de uma classe Tailwind.
 
