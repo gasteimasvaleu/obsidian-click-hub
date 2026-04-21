@@ -5,7 +5,7 @@ interface SplashScreenProps {
   onComplete: () => void;
 }
 
-const SPLASH_IMAGE_URL = "https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/image.png";
+const SPLASH_IMAGE_URL = "https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/videoframe_0%2018.32.25.png";
 const SPLASH_VIDEO_URL = "https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/novosplash.mp4";
 const MIN_DISPLAY_MS = 2000;
 const MAX_DISPLAY_MS = 6000;
