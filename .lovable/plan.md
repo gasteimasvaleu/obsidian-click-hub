@@ -1,22 +1,20 @@
 
 
-## Aumentar padding inferior em /colorir
+## Igualar padding superior da página /devocional
 
-O grid de desenhos na página `/colorir` está terminando muito próximo da faixa preta da navbar tubelight inferior.
+A página `/devocional` está usando `pt-20` (80px) no container, deixando o card de vídeo mais distante da navbar do que nas outras páginas (que usam `pt-16` / 64px).
 
-### Mudança em `src/pages/colorir/ColorirPage.tsx`
-
-Alterar a classe do container raiz:
+### Mudança em `src/pages/devocional/DailyDevotionalPage.tsx`
 
 ```tsx
 // Antes
-<div className="min-h-screen bg-background pb-24">
+<div className="container mx-auto px-4 pt-20 max-w-3xl">
 
 // Depois
-<div className="min-h-screen bg-background pb-32">
+<div className="container mx-auto px-4 pt-16 max-w-3xl">
 ```
 
-`pb-24` (96px) → `pb-32` (128px) — pequeno acréscimo de 32px, deixando o último card de desenho com respiro acima da navbar.
+`pt-20` (80px) → `pt-16` (64px) — mesmo espaçamento das demais páginas.
 
 ### Risco
 Mínimo — alteração de uma classe Tailwind.
