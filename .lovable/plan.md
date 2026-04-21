@@ -1,17 +1,17 @@
 
 
-## Igualar padding superior da página /devocional
+## Igualar padding superior da página /amigodivino
 
-A página `/devocional` está usando `pt-20` (80px) no container, deixando o card de vídeo mais distante da navbar do que nas outras páginas (que usam `pt-16` / 64px).
+A página `/amigodivino` está usando `pt-20` (80px), deixando o card de vídeo mais distante da navbar do que nas demais páginas (que usam `pt-16` / 64px).
 
-### Mudança em `src/pages/devocional/DailyDevotionalPage.tsx`
+### Mudança em `src/pages/AmigoDivino.tsx`
 
 ```tsx
 // Antes
-<div className="container mx-auto px-4 pt-20 max-w-3xl">
+<div className="pt-20 px-4">
 
 // Depois
-<div className="container mx-auto px-4 pt-16 max-w-3xl">
+<div className="pt-16 px-4">
 ```
 
 `pt-20` (80px) → `pt-16` (64px) — mesmo espaçamento das demais páginas.
