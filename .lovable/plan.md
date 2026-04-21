@@ -1,23 +1,30 @@
 
 
-## Adicionar padding inferior em /guia-pais
+## Igualar padding superior da página inicial às demais
 
-O botão "Próximo" está sendo coberto pela faixa preta inferior do menu tubelight. Vou aumentar levemente o padding inferior do container da página.
+Na página `/` (Index), o espaço entre a navbar tubelight e o primeiro card (vídeo hero) está maior que nas outras páginas. Vou alinhar o valor.
 
-### Mudança em `src/pages/GuiaPais.tsx`
+### Comparação atual
 
-Alterar a classe do container raiz:
+| Página | Padding-top do container | Resultado |
+|---|---|---|
+| `/` (Index) | `pt-20` (80px) no wrapper do vídeo | Maior espaço |
+| `/plataforma`, demais | `pt-16` (64px) via `PlataformaLayout` / equivalente | Menor espaço |
+
+### Mudança em `src/pages/Index.tsx`
+
+Alterar o wrapper do card de vídeo:
 
 ```tsx
 // Antes
-<div className="min-h-screen bg-black relative pb-24 overflow-x-hidden">
+<div className="flex justify-center w-full pt-20 pb-4 px-4">
 
 // Depois
-<div className="min-h-screen bg-black relative pb-32 overflow-x-hidden">
+<div className="flex justify-center w-full pt-16 pb-4 px-4">
 ```
 
-`pb-24` (96px) → `pb-32` (128px) — pequeno acréscimo de 32px, suficiente para o botão "Próximo" ficar acima da faixa preta da navbar tubelight sem alterar o restante do layout.
+`pt-20` (80px) → `pt-16` (64px) — agora idêntico ao espaçamento das outras páginas.
 
 ### Risco
-Mínimo — alteração de uma classe Tailwind.
+Mínimo — alteração de uma classe Tailwind em um único elemento.
 
