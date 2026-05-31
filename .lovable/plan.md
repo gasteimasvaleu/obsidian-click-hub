@@ -1,33 +1,25 @@
-## Corrigir autoplay do Splash e Loading no iOS
+## Criar usuário VIP: Bernardo
 
-**Causa**: WKWebView do iOS (especialmente iOS 17/18) está ignorando os atributos `muted`/`playsInline` aplicados pelo React no primeiro render dos `<video>`. Resultado: o autoplay é bloqueado até o usuário tocar na tela. As outras animações funcionam porque são CSS puro — só os dois `<video>` são afetados.
+Vou criar o usuário diretamente no banco como assinante VIP ativo.
 
-`capacitor.config.ts` já tem `allowsInlineMediaPlayback: true`, então a correção é no front.
+**Dados:**
+- Nome: Bernardo
+- Email: bernardorodrigues.13j@gmail.com
+- Senha: 685213
+- Status: assinante VIP ativo
 
-### Mudanças
+**Passos:**
 
-**1. `src/components/SplashScreen.tsx`**
-No `useEffect` que faz `tryPlay`, antes do `v.play()`:
-- `v.muted = true`
-- `v.defaultMuted = true`
-- `v.playsInline = true`
-- `v.setAttribute('muted', '')`
-- `v.setAttribute('playsinline', '')`
-- `v.setAttribute('webkit-playsinline', '')`
-- `v.load()` (força WebKit a reconhecer os atributos antes do play)
-- depois `v.play().catch(...)`
+1. Criar o usuário no `auth.users` via Supabase Admin API (email já confirmado, senha definida).
+2. O trigger `handle_new_user` cria automaticamente o registro em `profiles` e `user_roles` (role `user`).
+3. Inserir/atualizar registro em `subscribers` com:
+   - `email`: bernardorodrigues.13j@gmail.com
+   - `full_name`: Bernardo
+   - `user_id`: id do novo usuário
+   - `subscription_status`: `active`
+   - `product_source`: `vip`
+   - `subscription_expires_at`: 1 ano a partir de hoje
 
-Manter fallback de `touchstart` como rede de segurança.
+**Como vou executar:** rodarei um script Node usando a `SUPABASE_SERVICE_ROLE_KEY` para chamar `auth.admin.createUser` e fazer o upsert em `subscribers`. Sem alteração de código da aplicação, sem migration.
 
-**2. `src/components/LoadingOverlay.tsx`**
-Mesmo tratamento no `useEffect` que chama `v.play()`.
-
-### Não muda
-- Nada em AppDelegate.swift / Info.plist (Capacitor já configura `mediaTypesRequiringUserActionForPlayback` corretamente quando `allowsInlineMediaPlayback: true`).
-- Nada em `capacitor.config.ts`.
-- Nenhuma outra animação ou tela.
-
-### Verificação
-Após aplicar: `npm run build && npx cap sync ios`, gerar novo build TestFlight, abrir e confirmar que:
-- O vídeo do splash inicia automaticamente do frame 1 sem precisar tocar.
-- O `LoadingOverlay` mostra o vídeo rodando assim que aparece.
+**Resultado esperado:** Bernardo poderá fazer login com email/senha e terá acesso VIP imediato.
