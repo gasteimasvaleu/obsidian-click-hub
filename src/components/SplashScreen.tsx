@@ -43,7 +43,19 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
   useEffect(() => {
     const v = videoRef.current;
     if (!v) return;
-    const tryPlay = () => v.play().catch(() => {});
+    const primeAndPlay = () => {
+      // iOS WKWebView (iOS 17/18) ignora atributos React no 1º render.
+      // Forçamos os atributos imperativamente antes do play().
+      v.muted = true;
+      v.defaultMuted = true;
+      v.playsInline = true;
+      v.setAttribute('muted', '');
+      v.setAttribute('playsinline', '');
+      v.setAttribute('webkit-playsinline', '');
+      try { v.load(); } catch {}
+      return v.play().catch(() => {});
+    };
+    const tryPlay = () => primeAndPlay();
     tryPlay();
     const onTap = () => { tryPlay(); };
     document.addEventListener('touchstart', onTap, { once: true, passive: true });

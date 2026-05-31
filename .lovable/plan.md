@@ -1,27 +1,33 @@
+## Corrigir autoplay do Splash e Loading no iOS
 
-## Corrigir erro em /colorir/transformar
+**Causa**: WKWebView do iOS (especialmente iOS 17/18) está ignorando os atributos `muted`/`playsInline` aplicados pelo React no primeiro render dos `<video>`. Resultado: o autoplay é bloqueado até o usuário tocar na tela. As outras animações funcionam porque são CSS puro — só os dois `<video>` são afetados.
 
-### Diagnóstico
-- O cliente envia foto para a edge function `photo-transform` e espera receber `{ success: true, transformedImageUrl }`.
-- Os logs do servidor mostram que a função processa com sucesso (usando Runware) e retorna a imagem.
-- Porém, a versão deployada da função é **antiga** e retorna outro formato (sem o campo `success`), enquanto o código atual em `supabase/functions/photo-transform/index.ts` já usa Lovable AI Gateway (Gemini) e o formato correto.
-- O cliente, ao não encontrar `data.success`, lança "Erro na transformação".
+`capacitor.config.ts` já tem `allowsInlineMediaPlayback: true`, então a correção é no front.
 
-### Causa raiz
-A função no projeto está fora de sincronia com a função efetivamente deployada no Supabase.
+### Mudanças
 
-### Solução
-Reescrever `supabase/functions/photo-transform/index.ts` com o conteúdo já correto (Gemini via Lovable AI Gateway, upload para `photo-transforms/transformed/`, retorno `{ success: true, transformedImageUrl }`), forçando o redeploy automático.
+**1. `src/components/SplashScreen.tsx`**
+No `useEffect` que faz `tryPlay`, antes do `v.play()`:
+- `v.muted = true`
+- `v.defaultMuted = true`
+- `v.playsInline = true`
+- `v.setAttribute('muted', '')`
+- `v.setAttribute('playsinline', '')`
+- `v.setAttribute('webkit-playsinline', '')`
+- `v.load()` (força WebKit a reconhecer os atributos antes do play)
+- depois `v.play().catch(...)`
 
-A função final terá:
-- CORS habilitado.
-- Validação de `imageUrl` e `fileName`.
-- Chamada ao Lovable AI Gateway (`google/gemini-2.5-flash-image-preview`) com prompt para página de colorir.
-- Tratamento de 429 (rate limit) e 402 (créditos) com mensagens em português.
-- Conversão do base64 retornado, upload no bucket `photo-transforms` e retorno da URL pública no campo `transformedImageUrl`.
+Manter fallback de `touchstart` como rede de segurança.
 
-### Sem mudanças no frontend
-O cliente em `PhotoUploader.tsx` já está correto — não será alterado.
+**2. `src/components/LoadingOverlay.tsx`**
+Mesmo tratamento no `useEffect` que chama `v.play()`.
 
-### Risco
-Baixo. A função volta a usar o fluxo Gemini já presente no repositório; o redeploy acontece automaticamente.
+### Não muda
+- Nada em AppDelegate.swift / Info.plist (Capacitor já configura `mediaTypesRequiringUserActionForPlayback` corretamente quando `allowsInlineMediaPlayback: true`).
+- Nada em `capacitor.config.ts`.
+- Nenhuma outra animação ou tela.
+
+### Verificação
+Após aplicar: `npm run build && npx cap sync ios`, gerar novo build TestFlight, abrir e confirmar que:
+- O vídeo do splash inicia automaticamente do frame 1 sem precisar tocar.
+- O `LoadingOverlay` mostra o vídeo rodando assim que aparece.
