@@ -27,6 +27,14 @@ export const LoadingOverlay = ({ visible, message }: LoadingOverlayProps) => {
     if (!render) return;
     const v = videoRef.current;
     if (!v) return;
+    // iOS WKWebView pode ignorar atributos do React no 1º render — forçamos imperativamente.
+    v.muted = true;
+    v.defaultMuted = true;
+    v.playsInline = true;
+    v.setAttribute('muted', '');
+    v.setAttribute('playsinline', '');
+    v.setAttribute('webkit-playsinline', '');
+    try { v.load(); } catch {}
     v.play().catch(() => {});
   }, [render]);
 
