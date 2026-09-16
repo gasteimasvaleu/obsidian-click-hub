@@ -1,25 +1,22 @@
-## Criar usuário VIP: Bernardo
+# Teste de envio do devocional pelo WhatsApp
 
-Vou criar o usuário diretamente no banco como assinante VIP ativo.
+Disparar agora, manualmente, o mesmo envio que acontece todo dia às 06:00.
 
-**Dados:**
-- Nome: Bernardo
-- Email: bernardorodrigues.13j@gmail.com
-- Senha: 685213
-- Status: assinante VIP ativo
+## Situação atual (verificada)
 
-**Passos:**
+- O devocional de hoje já existe e está disponível — o envio tem conteúdo para mandar.
+- Hoje há **1 destinatário** na lista (assinante ativo, com telefone e com o aviso de WhatsApp ligado). Ou seja, o teste envia 1 mensagem real.
 
-1. Criar o usuário no `auth.users` via Supabase Admin API (email já confirmado, senha definida).
-2. O trigger `handle_new_user` cria automaticamente o registro em `profiles` e `user_roles` (role `user`).
-3. Inserir/atualizar registro em `subscribers` com:
-   - `email`: bernardorodrigues.13j@gmail.com
-   - `full_name`: Bernardo
-   - `user_id`: id do novo usuário
-   - `subscription_status`: `active`
-   - `product_source`: `vip`
-   - `subscription_expires_at`: 1 ano a partir de hoje
+## O que vou fazer
 
-**Como vou executar:** rodarei um script Node usando a `SUPABASE_SERVICE_ROLE_KEY` para chamar `auth.admin.createUser` e fazer o upsert em `subscribers`. Sem alteração de código da aplicação, sem migration.
+1. Chamar a rotina de envio diário manualmente (a mesma do horário automático).
+2. Ler o resultado: quantas mensagens saíram, quantas falharam e o motivo de cada falha.
+3. Se a Z-API recusar (instância desconectada, telefone inválido, token), te mostro a mensagem exata do erro em português e o que precisa ser ajustado.
 
-**Resultado esperado:** Bernardo poderá fazer login com email/senha e terá acesso VIP imediato.
+Nada no app ou na programação diária é alterado — é só um disparo extra agora.
+
+## Detalhes técnicos
+
+- Invocar `send-daily-devotional-whatsapp` via curl da edge function.
+- A função busca o devocional de `daily_devotionals` da data de hoje (America/Sao_Paulo), lista `subscribers` com `whatsapp_optin = true` e `subscription_status = 'active'`, e envia via `https://api.z-api.io/instances/{ZAPI_INSTANCE}/token/{ZAPI_TOKEN}/send-text` com header `Client-Token`.
+- Resposta esperada: `{ total, sent, failed, errors? }` — reportar esses números e erros.
