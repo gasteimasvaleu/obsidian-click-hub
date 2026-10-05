@@ -5,6 +5,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useAIConsent } from "@/hooks/useAIConsent";
 import { AIConsentDialog } from "@/components/AIConsentDialog";
 import { useLoading } from "@/contexts/LoadingContext";
+import { supabase } from "@/integrations/supabase/client";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import ReactMarkdown from "react-markdown";
 
@@ -116,22 +117,14 @@ export const ChatInterface = ({ open, onClose }: ChatInterfaceProps) => {
     showLoading('Enviando mensagem...');
 
     try {
-      const response = await fetch("https://hook.us2.make.com/f2v3uj2teps5wg8xirjjlcicqbqpcvy6", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message }),
+      const history = messages.slice(-20);
+      const { data, error } = await supabase.functions.invoke("amigo-divino-chat", {
+        body: { message, history },
       });
 
-      if (!response.ok) throw new Error("Falha ao comunicar com o servidor");
+      if (error) throw new Error("Falha ao comunicar com o servidor");
 
-      const responseText = await response.text();
-      let assistantContent: string;
-      try {
-        const data = JSON.parse(responseText);
-        assistantContent = data.response || responseText;
-      } catch {
-        assistantContent = responseText;
-      }
+      const assistantContent: string = data?.response || "";
 
       setMessages((prev) => [...prev, {
         role: "assistant",
