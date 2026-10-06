@@ -1,18 +1,21 @@
-## Login com Apple de liviafrade@icloud.com entrou sem pagar
+## Login com Apple de liviafrade@icloud.com: o que aconteceu
 
 ### O que foi verificado
-- Nenhuma conta nova foi criada hoje: o cadastro mais recente é de 24/09.
-- Quando alguém entra com a Apple escolhendo "ocultar meu e-mail", o app recebe um e-mail @privaterelay.appleid.com, não o @icloud.com. Por isso a busca por liviafrade@icloud.com não achou nada.
-- Existe uma conta Apple "Usuário Apple" (nc79b9qkwy@privaterelay...) com **assinatura ativa até 14/10/2026** (compra real pela App Store, transação 160003251054192).
+- A conta Apple liviafrade@icloud.com entra no app com o e-mail oculto **nc79b9qkwy@privaterelay.appleid.com**.
+- Essa conta Apple já tem uma **assinatura paga e ativa até 14/10/2026** (compra real pela App Store, transação 160003251054192).
+- Logins de hoje:
+  - 11:26: login com a conta antiga.
+  - 11:34: a conta foi **excluída** (opção "Excluir conta" do app).
+  - 11:34: novo login com a Apple criou uma conta nova com o mesmo e-mail.
+- O registro da assinatura continua ativo, mas ficou **sem vínculo** com a conta nova.
 
-### Diagnóstico mais provável (ainda não confirmado)
-Esse Apple ID já tinha assinado antes. Ao entrar com a Apple, o app reconheceu a conta e a assinatura ativa e liberou o acesso. É o comportamento esperado, não uma falha. A assinatura de quem usa a mesma conta Apple vale em qualquer celular.
+### Conclusão
+Não é uma falha. O app não pediu pagamento porque essa conta Apple já é assinante. A Apple reconhece a assinatura em qualquer celular onde a pessoa entre com o mesmo Apple ID.
 
-### Passos
-1. Confirmar o vínculo: comparar o registro de login da Apple de hoje (horário do teste) com a conta nc79b9qkwy e com o RevenueCat (ID da transação).
-2. Se for essa conta: nada a corrigir. Para testar a tela de pagamento, use outro Apple ID que nunca assinou, ou uma conta de teste (Sandbox) da Apple.
-3. Se NÃO for essa conta (o acesso foi liberado sem assinatura): revisar a verificação de assinatura na tela de login (`src/pages/Login.tsx`, `src/lib/revenuecat.ts`) e bloquear a entrada até a assinatura ser confirmada, mostrando a tela de compra.
+### O que proponho
+1. Ligar de novo o registro da assinatura à conta nova, para manter tudo consistente (painel, relatórios, renovação).
+2. Para testar a tela de pagamento, use um Apple ID que nunca assinou ou uma conta de teste (Sandbox) da Apple.
 
 ### Detalhes técnicos
-- Consultar `auth.users` (last_sign_in_at, raw_user_meta_data) e `auth.identities` provider `apple` perto das 11:00 UTC de hoje.
-- Revisar o fluxo de restaurar compras no carregamento da tela, que libera o login com a Apple quando encontra um entitlement ativo.
+- Atualizar `subscribers.user_id` para `a17ef814-d7eb-4197-ba7a-4d824056b122` onde o e-mail é `nc79b9qkwy@privaterelay.appleid.com`.
+- Opcional: na exclusão de conta, apagar ou desvincular o registro em `subscribers` de forma consistente, e no login vincular de novo pelo e-mail ou pelo `transaction_id`.
