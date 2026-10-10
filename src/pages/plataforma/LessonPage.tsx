@@ -1,4 +1,6 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import { useLessonAccess } from "@/hooks/useLessonAccess";
+import { Paywall } from "@/components/Paywall";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { LessonPlayer } from "@/components/plataforma/LessonPlayer";
@@ -32,6 +34,8 @@ interface LessonMaterial {
 
 export default function LessonPage() {
   const { lessonId } = useParams();
+  const navigate = useNavigate();
+  const access = useLessonAccess(lessonId);
 
   const { data: lesson, isLoading: loadingLesson } = useQuery({
     queryKey: ["module_lesson", lessonId],
@@ -103,10 +107,34 @@ export default function LessonPage() {
     );
   }
 
+  if (access.status === 'loading') {
+    return (
+      <PlataformaLayout>
+        <div className="p-4"><Skeleton className="w-full aspect-video" /></div>
+      </PlataformaLayout>
+    );
+  }
+
+  if (access.status === 'blocked') {
+    return (
+      <Paywall
+        onUnlocked={access.unlock}
+        onClose={() => navigate(`/plataforma/modulo/${lesson.module_id}`)}
+      />
+    );
+  }
+
   return (
     <PlataformaLayout>
       {/* Back button */}
       <div className="p-4">
+        {!access.isSubscriber && access.remaining !== null && (
+          <div className="mb-3 rounded-lg border border-primary/30 bg-primary/10 px-3 py-2 text-sm text-foreground">
+            {access.remaining > 0
+              ? `Você ainda tem ${access.remaining} aula${access.remaining > 1 ? 's' : ''} grátis.`
+              : 'Esta foi sua última aula grátis.'}
+          </div>
+        )}
         <Link to={`/plataforma/modulo/${lesson.module_id}`}>
           <Button variant="ghost" size="sm" className="gap-2 mb-4">
             <ChevronLeft className="h-4 w-4" />
