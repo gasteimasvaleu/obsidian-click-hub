@@ -16,4 +16,5 @@
 - Atualizar memórias: fluxo "compra antes do login" deixa de valer; registrar regra freemium (só Cursos pagos).
 
 ### Atenção
-- Exige novo build nativo (iOS e Android) e nova revisão nas lojas. Na revisão, informar à Apple que o app agora é freemium com compra dentro do app.
+- Nenhuma mudança nativa: tecnicamente pode ir por atualização ao vivo.
+- Recomendado: enviar para revisão nas lojas mesmo assim, porque mudar o modelo de venda e a tela de compra sem revisão vai contra as regras da Apple (2.5.2 / 3.3.2) e pode tirar o app da loja. Na revisão, avisar que o app agora é freemium com compra dentro do app.
