@@ -6,7 +6,9 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Trophy, Star, Target, Activity, LogOut, Camera, BookOpen, StickyNote, Music, Trash2, Lock } from 'lucide-react';
+import { Trophy, Star, Target, Activity, LogOut, Camera, BookOpen, StickyNote, Music, Trash2, Lock, Crown } from 'lucide-react';
+import { useSubscription } from '@/hooks/useSubscription';
+import { Paywall } from '@/components/Paywall';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { AvatarUpload } from '@/components/profile/AvatarUpload';
@@ -28,6 +30,9 @@ const Profile = () => {
   const [showAvatarUpload, setShowAvatarUpload] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState<string>('');
   const [deleting, setDeleting] = useState(false);
+  const { isActive: isPremium, loading: subLoading, refresh: refreshSubscription } = useSubscription();
+  const [showPaywall, setShowPaywall] = useState(false);
+  const [expiresAt, setExpiresAt] = useState<string | null>(null);
 
   const handleLogout = async () => {
     await signOut();
@@ -65,20 +70,36 @@ const Profile = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       if (!user) return;
-      
+
       const { data } = await supabase
         .from('profiles')
         .select('avatar_url')
         .eq('id', user.id)
         .single();
-      
+
       if (data?.avatar_url) {
         setAvatarUrl(data.avatar_url);
       }
     };
-    
+
     fetchProfile();
   }, [user]);
+
+  // Fetch subscription expiry date for premium users
+  useEffect(() => {
+    const fetchExpiry = async () => {
+      if (!user || !isPremium) return;
+      const { data } = await supabase
+        .from('subscribers')
+        .select('subscription_expires_at')
+        .or(`user_id.eq.${user.id}${user.email ? `,email.eq.${user.email}` : ''}`)
+        .eq('subscription_status', 'active')
+        .order('subscription_expires_at', { ascending: false })
+        .limit(1);
+      setExpiresAt(data?.[0]?.subscription_expires_at ?? null);
+    };
+    fetchExpiry();
+  }, [user, isPremium]);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -209,6 +230,42 @@ const Profile = () => {
             </div>
           </CardContent>
         </Card>
+
+        {!subLoading && (
+          isPremium ? (
+            <Card className="glass border-primary/20 mb-6">
+              <CardContent className="pt-6 flex items-center gap-4">
+                <div className="h-12 w-12 rounded-full bg-primary/15 flex items-center justify-center shrink-0">
+                  <Crown className="h-6 w-6 text-primary" />
+                </div>
+                <div>
+                  <p className="font-semibold text-white">Assinante Premium</p>
+                  <p className="text-sm text-muted-foreground">
+                    Acesso completo a todas as aulas
+                    {expiresAt && ` · Renova em ${new Date(expiresAt).toLocaleDateString('pt-BR')}`}
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          ) : (
+            <Card className="glass border-primary/40 mb-6">
+              <CardContent className="pt-6 flex flex-col sm:flex-row items-center gap-4">
+                <div className="h-12 w-12 rounded-full bg-primary/15 flex items-center justify-center shrink-0">
+                  <Crown className="h-6 w-6 text-primary" />
+                </div>
+                <div className="flex-1 text-center sm:text-left">
+                  <p className="font-semibold text-white">Seja Premium</p>
+                  <p className="text-sm text-muted-foreground">
+                    Aulas em vídeo ilimitadas, novos cursos e materiais de apoio para pais e catequistas.
+                  </p>
+                </div>
+                <Button className="w-full sm:w-auto" onClick={() => setShowPaywall(true)}>
+                  Assinar agora
+                </Button>
+              </CardContent>
+            </Card>
+          )
+        )}
 
         <AppearanceSection />
 
@@ -360,6 +417,14 @@ const Profile = () => {
           onOpenChange={setShowAvatarUpload}
           onUploadSuccess={handleAvatarUploadSuccess}
         />
+
+        {/* Paywall Premium */}
+        {showPaywall && (
+          <Paywall
+            onUnlocked={() => { setShowPaywall(false); refreshSubscription(); }}
+            onClose={() => setShowPaywall(false)}
+          />
+        )}
       </div>
     </div>
   );
