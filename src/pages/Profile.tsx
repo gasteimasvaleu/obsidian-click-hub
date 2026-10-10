@@ -231,6 +231,42 @@ const Profile = () => {
           </CardContent>
         </Card>
 
+        {!subLoading && (
+          isPremium ? (
+            <Card className="glass border-primary/20 mb-6">
+              <CardContent className="pt-6 flex items-center gap-4">
+                <div className="h-12 w-12 rounded-full bg-primary/15 flex items-center justify-center shrink-0">
+                  <Crown className="h-6 w-6 text-primary" />
+                </div>
+                <div>
+                  <p className="font-semibold text-white">Assinante Premium</p>
+                  <p className="text-sm text-muted-foreground">
+                    Acesso completo a todas as aulas
+                    {expiresAt && ` · Renova em ${new Date(expiresAt).toLocaleDateString('pt-BR')}`}
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          ) : (
+            <Card className="glass border-primary/40 mb-6">
+              <CardContent className="pt-6 flex flex-col sm:flex-row items-center gap-4">
+                <div className="h-12 w-12 rounded-full bg-primary/15 flex items-center justify-center shrink-0">
+                  <Crown className="h-6 w-6 text-primary" />
+                </div>
+                <div className="flex-1 text-center sm:text-left">
+                  <p className="font-semibold text-white">Seja Premium</p>
+                  <p className="text-sm text-muted-foreground">
+                    Aulas em vídeo ilimitadas, novos cursos e materiais de apoio para pais e catequistas.
+                  </p>
+                </div>
+                <Button className="w-full sm:w-auto" onClick={() => setShowPaywall(true)}>
+                  Assinar agora
+                </Button>
+              </CardContent>
+            </Card>
+          )
+        )}
+
         <AppearanceSection />
 
         <WhatsAppOptinSection userId={user.id} />
