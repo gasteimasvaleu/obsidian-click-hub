@@ -70,20 +70,36 @@ const Profile = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       if (!user) return;
-      
+
       const { data } = await supabase
         .from('profiles')
         .select('avatar_url')
         .eq('id', user.id)
         .single();
-      
+
       if (data?.avatar_url) {
         setAvatarUrl(data.avatar_url);
       }
     };
-    
+
     fetchProfile();
   }, [user]);
+
+  // Fetch subscription expiry date for premium users
+  useEffect(() => {
+    const fetchExpiry = async () => {
+      if (!user || !isPremium) return;
+      const { data } = await supabase
+        .from('subscribers')
+        .select('subscription_expires_at')
+        .or(`user_id.eq.${user.id}${user.email ? `,email.eq.${user.email}` : ''}`)
+        .eq('subscription_status', 'active')
+        .order('subscription_expires_at', { ascending: false })
+        .limit(1);
+      setExpiresAt(data?.[0]?.subscription_expires_at ?? null);
+    };
+    fetchExpiry();
+  }, [user, isPremium]);
 
   useEffect(() => {
     if (!authLoading && !user) {
