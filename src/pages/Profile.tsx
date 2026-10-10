@@ -417,6 +417,14 @@ const Profile = () => {
           onOpenChange={setShowAvatarUpload}
           onUploadSuccess={handleAvatarUploadSuccess}
         />
+
+        {/* Paywall Premium */}
+        {showPaywall && (
+          <Paywall
+            onUnlocked={() => { setShowPaywall(false); refreshSubscription(); }}
+            onClose={() => setShowPaywall(false)}
+          />
+        )}
       </div>
     </div>
   );
