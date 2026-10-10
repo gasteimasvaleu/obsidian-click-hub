@@ -30,6 +30,9 @@ const Profile = () => {
   const [showAvatarUpload, setShowAvatarUpload] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState<string>('');
   const [deleting, setDeleting] = useState(false);
+  const { isActive: isPremium, loading: subLoading, refresh: refreshSubscription } = useSubscription();
+  const [showPaywall, setShowPaywall] = useState(false);
+  const [expiresAt, setExpiresAt] = useState<string | null>(null);
 
   const handleLogout = async () => {
     await signOut();
