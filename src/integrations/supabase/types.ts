@@ -453,6 +453,27 @@ export type Database = {
         }
         Relationships: []
       }
+      free_lesson_views: {
+        Row: {
+          created_at: string
+          id: string
+          lesson_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          lesson_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          lesson_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       games: {
         Row: {
           available: boolean | null
