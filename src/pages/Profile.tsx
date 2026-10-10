@@ -1,4 +1,5 @@
 import { useAuth } from '@/contexts/AuthContext';
+// Paywall overlay rendered below near the AvatarUpload modal
 import { useUserProgress } from '@/hooks/useUserProgress';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
