@@ -1,21 +1,19 @@
-## Login com Apple de liviafrade@icloud.com: o que aconteceu
+## Tornar o app freemium (só Cursos pagos)
 
-### O que foi verificado
-- A conta Apple liviafrade@icloud.com entra no app com o e-mail oculto **nc79b9qkwy@privaterelay.appleid.com**.
-- Essa conta Apple já tem uma **assinatura paga e ativa até 14/10/2026** (compra real pela App Store, transação 160003251054192).
-- Logins de hoje:
-  - 11:26: login com a conta antiga.
-  - 11:34: a conta foi **excluída** (opção "Excluir conta" do app).
-  - 11:34: novo login com a Apple criou uma conta nova com o mesmo e-mail.
-- O registro da assinatura continua ativo, mas ficou **sem vínculo** com a conta nova.
-
-### Conclusão
-Não é uma falha. O app não pediu pagamento porque essa conta Apple já é assinante. A Apple reconhece a assinatura em qualquer celular onde a pessoa entre com o mesmo Apple ID.
-
-### O que proponho
-1. Ligar de novo o registro da assinatura à conta nova, para manter tudo consistente (painel, relatórios, renovação).
-2. Para testar a tela de pagamento, use um Apple ID que nunca assinou ou uma conta de teste (Sandbox) da Apple.
+### O que muda para o usuário
+- **Tela de login:** fica só com "Continuar com Apple" (iPhone) / "Continuar com Google" (Android) e e-mail/senha — sem exigir assinatura antes. Os botões "Assinar com App Store / Google Play" saem dessa tela.
+- **Tudo grátis**, exceto **Cursos e vídeos** (página Cursos, cursos, módulos e aulas).
+- **Paywall em tela cheia:** ao abrir Cursos sem assinatura, aparece uma tela com benefícios, nome do plano, preço (vindo da loja), botão **Assinar**, **Restaurar Compras**, Termos e Privacidade (exigências da Apple).
+- Assinantes ativos e VIPs entram direto nos Cursos.
+- No Perfil, um atalho "Seja Premium" para quem não assina.
 
 ### Detalhes técnicos
-- Atualizar `subscribers.user_id` para `a17ef814-d7eb-4197-ba7a-4d824056b122` onde o e-mail é `nc79b9qkwy@privaterelay.appleid.com`.
-- Opcional: na exclusão de conta, apagar ou desvincular o registro em `subscribers` de forma consistente, e no login vincular de novo pelo e-mail ou pelo `transaction_id`.
+- `Login.tsx`: remover gate `hasPurchased` dos botões Apple/Google, remover restore silencioso no mount e o bloco de compra; manter links legais.
+- Novo hook `useSubscription`: considera ativo se `subscribers` (por user_id/email) tem `subscription_status='active'` e não expirado (cobre VIP/Hotmart) OU RevenueCat `checkSubscriptionStatus()` ativo no nativo.
+- Novo componente `PremiumGate` + `Paywall` (tela cheia): usa `purchaseMonthly`, `restorePurchases`, e após compra chama `syncSubscriptionAfterLogin` com o usuário logado (assim a assinatura já nasce ligada à conta, eliminando os registros "órfãos").
+- Envolver rotas `/plataforma`, `/plataforma/curso/:id`, `/plataforma/modulo/:id`, `/plataforma/aula/:id` em `App.tsx` com `PremiumGate`.
+- Preço exibido via `Purchases.getOfferings()` (`priceString`), com o `ParentalGate` antes da compra, como já é regra.
+- Atualizar memórias: fluxo "compra antes do login" deixa de valer; registrar regra freemium (só Cursos pagos).
+
+### Atenção
+- Exige novo build nativo (iOS e Android) e nova revisão nas lojas. Na revisão, informar à Apple que o app agora é freemium com compra dentro do app.
