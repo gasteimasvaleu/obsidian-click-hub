@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Link, useLocation, useNavigate } from "react-router-dom"
-import { LucideIcon, Users, User, Info, Shield, FileText, X, BookOpen, Heart, HandHeart, Music, Gamepad2 } from "lucide-react"
+import { LucideIcon, Users, User, Info, Shield, FileText, X, Bot, Heart, HandHeart, Music, Gamepad2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface NavItem {
@@ -18,7 +18,7 @@ interface NavBarProps {
 }
 
 const moreMenuItems = [
-  { name: 'Bíblia', url: '/biblia', icon: BookOpen },
+  { name: 'Amigo Divino', url: '/amigodivino', icon: Bot },
   { name: 'Devocional', url: '/devocional', icon: Heart },
   { name: 'Orações', url: '/oracoes', icon: HandHeart },
   { name: 'Bíbliafy', url: '/audiofy', icon: Music },
