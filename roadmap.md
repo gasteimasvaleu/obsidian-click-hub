@@ -4,4 +4,4 @@
 - [x] Mover o carrossel para abaixo de Acessar Cursos.
 - [x] Atualizar os acessos principais do menu inferior.
 - [x] Simplificar o conteúdo do menu Mais.
-- [ ] Validar a tela inicial autenticada em um aparelho real ou sessão disponível.
+- [x] Tirar o link de Política de Famílias da home (fica só no menu Mais).
