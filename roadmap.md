@@ -10,4 +10,5 @@
 - [x] Trocar os botões Colorir e Games do menu inferior por Cursos e Colorir.
 - [x] Adicionar Bíblia, Devocional, Orações, Bíbliafy e Games ao menu Mais e igualar suas cores às do tubelight.
 - [x] Trocar o botão Amigo do menu inferior por Bíblia e mover Amigo Divino para o menu Mais.
+- [x] Adicionar border beam animado nos cards com brilho (GlassCard), na cor selecionada em Aparência.
 - [ ] Validar a tela inicial autenticada em um aparelho real ou sessão disponível.
