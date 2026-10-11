@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { GlassCard } from "@/components/GlassCard";
 import { FuturisticNavbar } from "@/components/FuturisticNavbar";
-import { BookOpen, Heart, HandHeart, Music, Sparkles, ShieldCheck, ArrowRight } from "lucide-react";
+import { BookOpen, Heart, HandHeart, Music, Sparkles, ArrowRight } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -162,15 +162,6 @@ const Index = () => {
                 </button>
               );
             })}
-          </div>
-
-          {/* Link Política de Famílias */}
-          <div
-            onClick={() => navigate('/politica-familia')}
-            className="flex items-center justify-center gap-2 cursor-pointer py-3"
-          >
-            <ShieldCheck size={16} className="text-primary" />
-            <span className="text-muted-foreground text-xs underline">Política de Famílias e Privacidade</span>
           </div>
 
         </div>
