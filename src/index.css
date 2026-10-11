@@ -275,8 +275,8 @@ All colors MUST be HSL.
   .border-beam {
     position: absolute;
     inset: 0;
-
     border-radius: inherit;
+
     padding: 1.5px;
     pointer-events: none;
     background: conic-gradient(
