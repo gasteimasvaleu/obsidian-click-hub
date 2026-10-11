@@ -46,6 +46,7 @@ All colors MUST be HSL.
     --feature-friend: 158 84% 38%;
     --feature-parents: 22 92% 52%;
     --feature-games: 95 75% 40%;
+    --feature-community: 245 85% 60%;
     --feature-card-foreground: 0 0% 100%;
     --feature-action: 224 71% 12%;
 
@@ -103,6 +104,7 @@ All colors MUST be HSL.
     --feature-friend: 158 84% 38%;
     --feature-parents: 22 92% 52%;
     --feature-games: 95 75% 40%;
+    --feature-community: 245 85% 60%;
     --feature-card-foreground: 0 0% 100%;
     --feature-action: 224 71% 12%;
   }

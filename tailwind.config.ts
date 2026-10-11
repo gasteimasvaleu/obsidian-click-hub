@@ -48,6 +48,7 @@ export default {
           friend: "hsl(var(--feature-friend))",
           parents: "hsl(var(--feature-parents))",
           games: "hsl(var(--feature-games))",
+          community: "hsl(var(--feature-community))",
           foreground: "hsl(var(--feature-card-foreground))",
           action: "hsl(var(--feature-action))",
         },
