@@ -301,4 +301,11 @@ All colors MUST be HSL.
   inherits: false;
 }
 
+@keyframes border-beam-spin {
+  to {
+    --beam-angle: 360deg;
+  }
+}
+
+
 
