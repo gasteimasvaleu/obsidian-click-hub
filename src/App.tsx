@@ -38,6 +38,7 @@ import NotFound from "./pages/NotFound";
 import PoliticaFamilia from "./pages/PoliticaFamilia";
 import TermosDeUso from "./pages/TermosDeUso";
 import { ExternalFrame } from "./components/ExternalFrame";
+import { useIOSKeyboardReset } from "./hooks/useIOSKeyboardReset";
 
 import { ProtectedRoute } from "./components/admin/ProtectedRoute";
 
@@ -88,6 +89,7 @@ const navItems = [
 ];
 
 const App = () => {
+  useIOSKeyboardReset();
   // Check if splash was already shown in this session
   const [isLoading, setIsLoading] = useState(() => {
     const splashShown = sessionStorage.getItem('splashShown');
