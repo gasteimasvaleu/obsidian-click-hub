@@ -11,4 +11,5 @@
 - [x] Adicionar Bíblia, Devocional, Orações, Bíbliafy e Games ao menu Mais e igualar suas cores às do tubelight.
 - [x] Trocar o botão Amigo do menu inferior por Bíblia e mover Amigo Divino para o menu Mais.
 - [x] Adicionar border beam animado nos cards com brilho (GlassCard), na cor selecionada em Aparência.
+- [x] Colocar a tela de assinatura (paywall) dentro de um card com a borda padrão do app.
 - [ ] Validar a tela inicial autenticada em um aparelho real ou sessão disponível.
