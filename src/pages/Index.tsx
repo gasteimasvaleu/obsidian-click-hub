@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { GlassCard } from "@/components/GlassCard";
 import { FuturisticNavbar } from "@/components/FuturisticNavbar";
-import { BookOpen, Heart, HandHeart, Music, Sparkles, ArrowRight, Palette, Bot, Users, Gamepad2, MessageCircle } from "lucide-react";
+import { BookOpen, Heart, HandHeart, Music, ArrowRight, Palette, Bot, Users, Gamepad2, MessageCircle } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
