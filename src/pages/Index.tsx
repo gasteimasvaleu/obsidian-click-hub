@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { GlassCard } from "@/components/GlassCard";
 import { FuturisticNavbar } from "@/components/FuturisticNavbar";
-import { BookOpen, Heart, HandHeart, Music, Sparkles, ArrowRight, Palette, Bot, Users, Gamepad2 } from "lucide-react";
+import { BookOpen, Heart, HandHeart, Music, Sparkles, ArrowRight, Palette, Bot, Users, Gamepad2, MessageCircle } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -60,6 +60,7 @@ const Index = () => {
     { title: "Amigo Divino", icon: Bot, action: () => navigate('/amigodivino'), color: "bg-feature-friend" },
     { title: "Guia para Pais", icon: Users, action: () => navigate('/guia-pais'), color: "bg-feature-parents" },
     { title: "Games", icon: Gamepad2, action: () => navigate('/games'), color: "bg-feature-games" },
+    { title: "Comunidade", icon: MessageCircle, action: () => navigate('/comunidade'), color: "bg-feature-community" },
   ];
 
   return (
