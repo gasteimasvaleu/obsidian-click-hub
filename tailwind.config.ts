@@ -108,6 +108,14 @@ export default {
           "50%": {
             transform: "translateY(-4px)"
           }
+        },
+        "shine": {
+          "0%": {
+            transform: "translateX(-120%) skewX(-12deg)"
+          },
+          "60%, 100%": {
+            transform: "translateX(220%) skewX(-12deg)"
+          }
         }
       },
       animation: {
@@ -115,6 +123,7 @@ export default {
         "accordion-up": "accordion-up 0.2s ease-out",
         "glow": "glow 2s ease-in-out infinite",
         "float": "float 3s ease-in-out infinite",
+        "shine": "shine 3.6s ease-in-out infinite",
       },
     },
   },

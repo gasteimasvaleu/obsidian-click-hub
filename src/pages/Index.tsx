@@ -144,10 +144,18 @@ const Index = () => {
                   key={action.title}
                   type="button"
                   onClick={action.action}
-                  className={`${action.color} relative ${isLast ? "min-h-[150px] items-start" : "h-[88px] items-center"} flex w-full text-feature-foreground transition-transform duration-200 active:scale-[0.98] ${index > 0 ? "-mt-4" : ""} rounded-t-2xl px-6 py-5 text-left`}
+                  className={`${action.color} relative overflow-hidden ${isLast ? "min-h-[150px] items-start" : "h-[88px] items-center"} flex w-full text-feature-foreground transition-transform duration-200 active:scale-[0.98] ${index > 0 ? "-mt-4" : ""} rounded-t-2xl px-6 py-5 text-left`}
                   style={{ zIndex: index + 1 }}
                   aria-label={`Abrir ${action.title}`}
                 >
+                  <span
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-y-0 -left-1/3 w-1/2 animate-shine motion-reduce:animate-none"
+                    style={{
+                      background: "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.35) 50%, transparent 100%)",
+                      animationDelay: `${1.2 + index * 0.5}s`,
+                    }}
+                  />
                   <div className="flex min-w-0 flex-1 items-center gap-3">
                     <Icon size={26} strokeWidth={2.2} aria-hidden="true" />
                     <span className="truncate text-lg font-bold">{action.title}</span>
