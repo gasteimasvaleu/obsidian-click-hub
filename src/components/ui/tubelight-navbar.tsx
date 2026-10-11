@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Link, useLocation, useNavigate } from "react-router-dom"
-import { LucideIcon, Users, User, Info, Shield, FileText, X } from "lucide-react"
+import { LucideIcon, Users, User, Info, Shield, FileText, X, BookOpen, Heart, HandHeart, Music, Gamepad2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface NavItem {
@@ -18,6 +18,11 @@ interface NavBarProps {
 }
 
 const moreMenuItems = [
+  { name: 'Bíblia', url: '/biblia', icon: BookOpen },
+  { name: 'Devocional', url: '/devocional', icon: Heart },
+  { name: 'Orações', url: '/oracoes', icon: HandHeart },
+  { name: 'Bíbliafy', url: '/audiofy', icon: Music },
+  { name: 'Games', url: '/games', icon: Gamepad2 },
   { name: 'Comunidade', url: '/comunidade', icon: Users },
   { name: 'Meu Perfil', url: '/profile', icon: User },
   { name: 'Sobre', url: '/sobre', icon: Info },
@@ -82,8 +87,8 @@ export function NavBar({ items, className }: NavBarProps) {
                   className={cn(
                     "flex flex-col items-center gap-1.5 p-3 rounded-xl transition-all duration-200 active:scale-95",
                     isCurrentPage
-                      ? "bg-primary/15 text-primary shadow-[0_0_12px_-2px_hsl(var(--primary)/0.4)]"
-                      : "text-foreground/70 hover:bg-muted/60 hover:text-foreground"
+                      ? "bg-primary/10 text-primary shadow-[0_0_12px_-2px_hsl(var(--primary)/0.4)]"
+                      : "text-primary/80 hover:text-primary"
                   )}
                 >
                   <MenuIcon size={26} strokeWidth={1.8} />
