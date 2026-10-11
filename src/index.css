@@ -42,6 +42,10 @@ All colors MUST be HSL.
     --feature-devotional: 270 91% 65%;
     --feature-prayer: 36 100% 50%;
     --feature-music: 347 91% 60%;
+    --feature-coloring: 187 92% 42%;
+    --feature-friend: 158 84% 38%;
+    --feature-parents: 22 92% 52%;
+    --feature-games: 95 75% 40%;
     --feature-card-foreground: 0 0% 100%;
     --feature-action: 224 71% 12%;
 
@@ -95,6 +99,10 @@ All colors MUST be HSL.
     --feature-devotional: 270 91% 65%;
     --feature-prayer: 36 100% 50%;
     --feature-music: 347 91% 60%;
+    --feature-coloring: 187 92% 42%;
+    --feature-friend: 158 84% 38%;
+    --feature-parents: 22 92% 52%;
+    --feature-games: 95 75% 40%;
     --feature-card-foreground: 0 0% 100%;
     --feature-action: 224 71% 12%;
   }
