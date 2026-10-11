@@ -71,23 +71,23 @@ export function Paywall({ onUnlocked, onClose }: PaywallProps) {
 
   return (
     <div className="fixed inset-0 z-[60] bg-background overflow-y-auto flex flex-col px-4 pt-[max(1rem,env(safe-area-inset-top))] pb-[max(1.5rem,env(safe-area-inset-bottom))]">
-      <div className="glass relative rounded-2xl p-6 mx-auto my-auto w-full max-w-md flex flex-col neon-glow-user">
+      <div className="glass relative rounded-2xl p-5 mx-auto my-auto w-full max-w-md flex flex-col neon-glow-user">
         <span aria-hidden className="border-beam" />
-        <div className="flex justify-end -mt-2 -mr-2">
-          <Button variant="ghost" size="icon" aria-label="Fechar" onClick={() => (onClose ? onClose() : navigate(-1))}>
-            <X className="h-5 w-5" />
-          </Button>
-        </div>
+        <Button variant="ghost" size="icon" aria-label="Fechar"
+          className="absolute right-2 top-2 z-10"
+          onClick={() => (onClose ? onClose() : navigate(-1))}>
+          <X className="h-5 w-5" />
+        </Button>
 
-        <div className="flex flex-col items-center text-center mt-4">
-          <div className="h-16 w-16 rounded-full bg-primary/15 flex items-center justify-center mb-4">
+        <div className="flex flex-col items-center text-center">
+          <div className="h-14 w-14 rounded-full bg-primary/15 flex items-center justify-center mb-3 mt-2">
             <Crown className="h-8 w-8 text-primary" />
           </div>
           <h1 className="text-2xl font-bold text-foreground">Você assistiu suas 3 aulas grátis</h1>
           <p className="text-muted-foreground mt-2">Assine o BíbliaToon Club Premium para continuar.</p>
         </div>
 
-        <ul className="mt-8 space-y-3">
+        <ul className="mt-5 space-y-2">
           {benefits.map((b) => (
             <li key={b} className="flex gap-3 items-start">
               <Check className="h-5 w-5 text-primary shrink-0 mt-0.5" />
@@ -96,16 +96,16 @@ export function Paywall({ onUnlocked, onClose }: PaywallProps) {
           ))}
         </ul>
 
-        <div className="mt-8 rounded-xl border border-primary/30 p-4 text-center">
+        <div className="mt-5 rounded-xl border border-primary/30 p-3 text-center">
           <p className="font-semibold text-foreground">BíbliaToon Club Premium — Assinatura Mensal</p>
           <p className="text-2xl font-bold text-primary mt-1">{price ? `${price}/mês` : 'Mensal'}</p>
         </div>
 
-        <Button className="w-full h-12 mt-6 text-base" disabled={purchasing} onClick={() => setGateOpen(true)}>
+        <Button className="w-full h-12 mt-4 text-base" disabled={purchasing} onClick={() => setGateOpen(true)}>
           {purchasing ? <Loader2 className="h-5 w-5 animate-spin" /> : 'Assinar'}
         </Button>
 
-        <p className="text-xs text-muted-foreground text-center mt-3">
+        <p className="text-xs text-muted-foreground text-center mt-2">
           Renovação automática. Cancele a qualquer momento nas configurações da {store}.
         </p>
 
