@@ -53,7 +53,18 @@ export default function BibliaPage() {
     ]
   };
 
-  const BookCard = ({ book }: any) => (
+  const GRADIENT_PALETTE = [
+    'from-blue-500 to-purple-500',
+    'from-purple-500 to-pink-500',
+    'from-yellow-400 to-orange-500',
+    'from-red-500 to-pink-500',
+    'from-lime-400 to-green-500',
+    'from-green-500 to-cyan-500',
+    'from-pink-500 to-red-500',
+    'from-indigo-500 to-blue-500'
+  ];
+
+  const BookCard = ({ book, index }: { book: any; index: number }) => (
     <GlassCard
       hoverable
       pressable
@@ -61,7 +72,7 @@ export default function BibliaPage() {
       className="p-4 cursor-pointer"
     >
       <div className="flex items-center gap-3">
-        <div className="p-3 rounded-lg bg-gradient-to-br from-blue-500 to-purple-500">
+        <div className={`p-3 rounded-lg bg-gradient-to-br ${GRADIENT_PALETTE[index % GRADIENT_PALETTE.length]}`}>
           <BookOpen className="text-white" size={24} />
         </div>
         <div>
