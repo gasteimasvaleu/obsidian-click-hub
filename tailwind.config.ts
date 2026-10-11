@@ -39,6 +39,14 @@ export default {
           DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
         },
+        feature: {
+          bible: "hsl(var(--feature-bible))",
+          devotional: "hsl(var(--feature-devotional))",
+          prayer: "hsl(var(--feature-prayer))",
+          music: "hsl(var(--feature-music))",
+          foreground: "hsl(var(--feature-card-foreground))",
+          action: "hsl(var(--feature-action))",
+        },
         popover: {
           DEFAULT: "hsl(var(--popover))",
           foreground: "hsl(var(--popover-foreground))",

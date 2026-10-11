@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { GlassCard } from "@/components/GlassCard";
 import { FuturisticNavbar } from "@/components/FuturisticNavbar";
-import { Package, Book, Heart, HandHeart, Music, Palette, Users, Gamepad2, MessagesSquare, UserCircle, Sparkles, ShieldCheck } from "lucide-react";
+import { BookOpen, Heart, HandHeart, Music, Sparkles, ShieldCheck, ArrowRight } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -48,22 +48,14 @@ const Index = () => {
 
   const mainAction = {
     title: "Acessar Cursos",
-    icon: Package,
     action: () => navigate('/plataforma'),
-    gradient: "from-pink-500 to-purple-500"
   };
 
-  const gridActions = [
-    { title: "Bíblia Interativa", icon: Book, action: () => navigate('/biblia'), gradient: "from-blue-500 to-indigo-600" },
-    { title: "Devocional Diário", icon: Heart, action: () => navigate('/devocional'), gradient: "from-purple-500 to-pink-500" },
-    { title: "Orações", icon: HandHeart, action: () => navigate('/oracoes'), gradient: "from-blue-500 to-cyan-500" },
-    { title: "Bíbliafy", icon: Music, action: () => navigate('/audiofy'), gradient: "from-green-500 to-emerald-500" },
-    { title: "Colorir", icon: Palette, action: () => navigate('/colorir'), gradient: "from-orange-500 to-yellow-500" },
-    { title: "Amigo Divino", icon: Heart, action: () => navigate('/amigodivino'), gradient: "from-red-500 to-pink-500" },
-    { title: "Guia para Pais", icon: Users, action: () => navigate('/guia-pais'), gradient: "from-yellow-500 to-orange-500" },
-    { title: "Games", icon: Gamepad2, action: () => navigate('/games'), gradient: "from-purple-500 to-indigo-500" },
-    { title: "Comunidade", icon: MessagesSquare, action: () => navigate('/comunidade'), gradient: "from-emerald-500 to-teal-500" },
-    { title: "Meu Perfil", icon: UserCircle, action: () => navigate('/profile'), gradient: "from-teal-500 to-blue-500" },
+  const featureActions = [
+    { title: "Bíblia Interativa", icon: BookOpen, action: () => navigate('/biblia'), color: "bg-feature-bible", tags: ["73 livros", "Leitura"] },
+    { title: "Devocional Diário", icon: Heart, action: () => navigate('/devocional'), color: "bg-feature-devotional", tags: ["Reflexão", "Palavra do dia"] },
+    { title: "Orações", icon: HandHeart, action: () => navigate('/oracoes'), color: "bg-feature-prayer", tags: ["Categorias", "Favoritas"] },
+    { title: "Bíbliafy", icon: Music, action: () => navigate('/audiofy'), color: "bg-feature-music", tags: ["Músicas", "Histórias"] },
   ];
 
   return (
@@ -110,29 +102,6 @@ const Index = () => {
               <span className="text-white font-bold text-base text-center w-full">{mainAction.title}</span>
             </GlassCard>
 
-          {/* Grid de Cards - 2 Colunas */}
-          <div className="grid grid-cols-2 gap-x-4 gap-y-6">
-            {gridActions.map((action, index) => {
-              const Icon = action.icon;
-              return (
-                <GlassCard
-                    key={index}
-                    hoverable
-                    pressable
-                    onClick={action.action}
-                    className="h-[80px] px-4 flex items-center gap-3 cursor-pointer"
-                  >
-                    <div className={`w-12 h-12 min-w-12 rounded-xl bg-gradient-to-br ${action.gradient} flex items-center justify-center`}>
-                      <Icon size={24} className="text-white" />
-                    </div>
-                    <span className="text-white font-semibold text-sm leading-tight">
-                      {action.title}
-                    </span>
-                  </GlassCard>
-              );
-            })}
-          </div>
-
           {/* Carrossel de Lançamentos */}
           {highlights.length > 0 && (
             <>
@@ -160,6 +129,40 @@ const Index = () => {
               </div>
             </>
           )}
+
+          {/* Atalhos principais */}
+          <div className="overflow-hidden rounded-2xl">
+            {featureActions.map((action, index) => {
+              const Icon = action.icon;
+              return (
+                <button
+                  key={action.title}
+                  type="button"
+                  onClick={action.action}
+                  className={`${action.color} relative flex h-[144px] w-full items-start text-feature-foreground transition-transform duration-200 active:scale-[0.98] ${index > 0 ? "-mt-5" : ""} rounded-t-2xl px-6 pb-6 pt-7 text-left`}
+                  style={{ zIndex: index + 1 }}
+                  aria-label={`Abrir ${action.title}`}
+                >
+                  <div className="flex min-w-0 flex-1 flex-col gap-5">
+                    <div className="flex items-center gap-3">
+                      <Icon size={28} strokeWidth={2.2} aria-hidden="true" />
+                      <span className="truncate text-xl font-bold">{action.title}</span>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {action.tags.map((tag) => (
+                        <span key={tag} className="rounded-full border border-feature-foreground/60 px-3 py-1 text-xs font-semibold leading-none">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  <span className="ml-4 mt-1 flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-feature-action text-feature-foreground">
+                    <ArrowRight size={28} aria-hidden="true" />
+                  </span>
+                </button>
+              );
+            })}
+          </div>
 
           {/* Link Política de Famílias */}
           <div
