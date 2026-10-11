@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { GlassCard } from "@/components/GlassCard";
 import { FuturisticNavbar } from "@/components/FuturisticNavbar";
-import { BookOpen, Heart, HandHeart, Music, Sparkles, ArrowRight } from "lucide-react";
+import { BookOpen, Heart, HandHeart, Music, Sparkles, ArrowRight, Palette, Bot, Users, Gamepad2 } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -52,10 +52,14 @@ const Index = () => {
   };
 
   const featureActions = [
-    { title: "Bíblia Interativa", icon: BookOpen, action: () => navigate('/biblia'), color: "bg-feature-bible", tags: ["73 livros", "Leitura"] },
-    { title: "Devocional Diário", icon: Heart, action: () => navigate('/devocional'), color: "bg-feature-devotional", tags: ["Reflexão", "Palavra do dia"] },
-    { title: "Orações", icon: HandHeart, action: () => navigate('/oracoes'), color: "bg-feature-prayer", tags: ["Categorias", "Favoritas"] },
-    { title: "Bíbliafy", icon: Music, action: () => navigate('/audiofy'), color: "bg-feature-music", tags: ["Músicas", "Histórias"] },
+    { title: "Bíblia Interativa", icon: BookOpen, action: () => navigate('/biblia'), color: "bg-feature-bible" },
+    { title: "Devocional Diário", icon: Heart, action: () => navigate('/devocional'), color: "bg-feature-devotional" },
+    { title: "Orações", icon: HandHeart, action: () => navigate('/oracoes'), color: "bg-feature-prayer" },
+    { title: "Bíbliafy", icon: Music, action: () => navigate('/audiofy'), color: "bg-feature-music" },
+    { title: "Colorir", icon: Palette, action: () => navigate('/colorir'), color: "bg-feature-coloring" },
+    { title: "Amigo Divino", icon: Bot, action: () => navigate('/amigodivino'), color: "bg-feature-friend" },
+    { title: "Guia para Pais", icon: Users, action: () => navigate('/guia-pais'), color: "bg-feature-parents" },
+    { title: "Games", icon: Gamepad2, action: () => navigate('/games'), color: "bg-feature-games" },
   ];
 
   return (
