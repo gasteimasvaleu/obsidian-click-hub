@@ -48,9 +48,7 @@ const Index = () => {
 
   const mainAction = {
     title: "Acessar Cursos",
-    icon: Package,
     action: () => navigate('/plataforma'),
-    gradient: "from-pink-500 to-purple-500"
   };
 
   const featureActions = [
