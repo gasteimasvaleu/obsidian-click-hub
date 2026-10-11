@@ -70,9 +70,10 @@ export function Paywall({ onUnlocked, onClose }: PaywallProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-[60] bg-background overflow-y-auto pt-[max(1rem,env(safe-area-inset-top))] pb-[max(1.5rem,env(safe-area-inset-bottom))]">
-      <div className="max-w-md mx-auto px-6 flex flex-col min-h-full">
-        <div className="flex justify-end">
+    <div className="fixed inset-0 z-[60] bg-background overflow-y-auto flex flex-col px-4 pt-[max(1rem,env(safe-area-inset-top))] pb-[max(1.5rem,env(safe-area-inset-bottom))]">
+      <div className="glass relative rounded-2xl p-6 mx-auto my-auto w-full max-w-md flex flex-col neon-glow-user">
+        <span aria-hidden className="border-beam" />
+        <div className="flex justify-end -mt-2 -mr-2">
           <Button variant="ghost" size="icon" aria-label="Fechar" onClick={() => (onClose ? onClose() : navigate(-1))}>
             <X className="h-5 w-5" />
           </Button>
