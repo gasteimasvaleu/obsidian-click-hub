@@ -192,6 +192,10 @@ All colors MUST be HSL.
     box-shadow: 0 8px 24px var(--neon-glow);
   }
   
+  .neon-glow-user {
+    box-shadow: 0 8px 24px var(--user-glow);
+  }
+  
   /* Button hover animation */
   .btn-hover-scale {
     transition: all 0.3s ease;
