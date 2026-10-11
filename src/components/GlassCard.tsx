@@ -1,6 +1,5 @@
 import { ReactNode } from "react";
 import { cn } from "@/lib/utils";
-import { useThemePreferences } from "@/contexts/ThemePreferencesContext";
 
 interface GlassCardProps {
   children: ReactNode;
