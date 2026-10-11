@@ -5,3 +5,4 @@
 - [x] Atualizar os acessos principais do menu inferior.
 - [x] Simplificar o conteúdo do menu Mais.
 - [x] Tirar o link de Política de Famílias da home (fica só no menu Mais).
+- [ ] Validar a tela inicial autenticada em um aparelho real ou sessão disponível.
