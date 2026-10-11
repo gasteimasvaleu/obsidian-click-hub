@@ -139,25 +139,16 @@ const Index = () => {
                   key={action.title}
                   type="button"
                   onClick={action.action}
-                  className={`${action.color} relative flex h-[144px] w-full items-start text-feature-foreground transition-transform duration-200 active:scale-[0.98] ${index > 0 ? "-mt-5" : ""} rounded-t-2xl px-6 pb-6 pt-7 text-left`}
+                  className={`${action.color} relative flex h-[88px] w-full items-center text-feature-foreground transition-transform duration-200 active:scale-[0.98] ${index > 0 ? "-mt-4" : ""} rounded-t-2xl px-6 py-5 text-left`}
                   style={{ zIndex: index + 1 }}
                   aria-label={`Abrir ${action.title}`}
                 >
-                  <div className="flex min-w-0 flex-1 flex-col gap-5">
-                    <div className="flex items-center gap-3">
-                      <Icon size={28} strokeWidth={2.2} aria-hidden="true" />
-                      <span className="truncate text-xl font-bold">{action.title}</span>
-                    </div>
-                    <div className="flex flex-wrap gap-2">
-                      {action.tags.map((tag) => (
-                        <span key={tag} className="rounded-full border border-feature-foreground/60 px-3 py-1 text-xs font-semibold leading-none">
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
+                  <div className="flex min-w-0 flex-1 items-center gap-3">
+                    <Icon size={26} strokeWidth={2.2} aria-hidden="true" />
+                    <span className="truncate text-lg font-bold">{action.title}</span>
                   </div>
-                  <span className="ml-4 mt-1 flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-feature-action text-feature-foreground">
-                    <ArrowRight size={28} aria-hidden="true" />
+                  <span className="ml-4 flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-feature-action text-feature-foreground">
+                    <ArrowRight size={24} aria-hidden="true" />
                   </span>
                 </button>
               );
