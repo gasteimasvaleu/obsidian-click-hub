@@ -8,4 +8,5 @@
 - [x] Encolher os cards, remover as etiquetas e acrescentar Colorir, Amigo Divino, Guia para Pais e Games.
 - [x] Adicionar card Comunidade como último atalho, esticado até o menu tubelight.
 - [x] Trocar os botões Colorir e Games do menu inferior por Cursos e Colorir.
+- [x] Adicionar Bíblia, Devocional, Orações, Bíbliafy e Games ao menu Mais e igualar suas cores às do tubelight.
 - [ ] Validar a tela inicial autenticada em um aparelho real ou sessão disponível.
