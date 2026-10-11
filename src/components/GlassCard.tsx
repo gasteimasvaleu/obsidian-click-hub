@@ -26,13 +26,14 @@ export const GlassCard = ({
       onClick={onClick}
       style={style}
       className={cn(
-        "glass rounded-2xl p-6",
+        "glass relative overflow-hidden rounded-2xl p-6",
         glowClass,
         hoverable && `transition-all duration-300 hover:scale-105 ${hoverShadow} cursor-pointer`,
         pressable && "active:scale-[0.98]",
         className
       )}
     >
+      <span aria-hidden className="border-beam" />
       {children}
     </div>
   );

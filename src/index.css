@@ -58,6 +58,8 @@ All colors MUST be HSL.
     /* User-selectable card glow (updated by ThemePreferencesContext) */
     --user-glow: hsl(146 100% 50% / 0.4);
     --user-glow-hover: hsl(146 100% 50% / 0.3);
+    --user-glow-color: hsl(146 100% 50%);
+
     
     --radius: 1rem;
 
@@ -269,5 +271,46 @@ All colors MUST be HSL.
     width: 30%;
     animation: loading-bar-slide 1.5s ease-in-out infinite;
   }
+
+  /* Animated border beam — color follows the user-selected card glow */
+  @property --beam-angle {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+  }
+
+  @keyframes border-beam-spin {
+    to {
+      --beam-angle: 360deg;
+    }
+  }
+
+  .border-beam {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1.5px;
+    pointer-events: none;
+    background: conic-gradient(
+      from var(--beam-angle),
+      transparent 0%,
+      transparent 70%,
+      var(--user-glow-color) 85%,
+      transparent 100%
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: border-beam-spin 4s linear infinite;
+  }
 }
+
+/* @property must live at the top level (outside @layer) */
+@property --beam-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
 
