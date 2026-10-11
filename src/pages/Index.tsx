@@ -111,7 +111,6 @@ const Index = () => {
           {highlights.length > 0 && (
             <>
               <GlassCard className="h-[50px] flex items-center justify-center gap-2 p-0">
-                <Sparkles size={18} className="text-primary" />
                 <span className="text-white font-bold text-sm">Confira nossos Lançamentos</span>
               </GlassCard>
 
