@@ -48,9 +48,11 @@ const ThemePreferencesContext = createContext<ThemePreferencesContextType>(defau
 
 const applyGlowCssVars = (color: GlowColor) => {
   const item = GLOW_PALETTE.find((c) => c.id === color) ?? GLOW_PALETTE[0];
+  document.documentElement.style.setProperty('--user-glow-color', `hsl(${item.hsl})`);
   document.documentElement.style.setProperty('--user-glow', `hsl(${item.hsl} / 0.4)`);
   document.documentElement.style.setProperty('--user-glow-hover', `hsl(${item.hsl} / 0.3)`);
 };
+
 
 export const ThemePreferencesProvider = ({ children }: { children: ReactNode }) => {
   const [glowColor, setGlowColorState] = useState<GlowColor>(getStoredGlowColor);
