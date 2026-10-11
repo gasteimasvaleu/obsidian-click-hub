@@ -272,22 +272,10 @@ All colors MUST be HSL.
     animation: loading-bar-slide 1.5s ease-in-out infinite;
   }
 
-  /* Animated border beam — color follows the user-selected card glow */
-  @property --beam-angle {
-    syntax: '<angle>';
-    initial-value: 0deg;
-    inherits: false;
-  }
-
-  @keyframes border-beam-spin {
-    to {
-      --beam-angle: 360deg;
-    }
-  }
-
   .border-beam {
     position: absolute;
     inset: 0;
+
     border-radius: inherit;
     padding: 1.5px;
     pointer-events: none;

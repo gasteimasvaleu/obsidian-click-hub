@@ -26,7 +26,7 @@ export const GlassCard = ({
       onClick={onClick}
       style={style}
       className={cn(
-        "glass relative overflow-hidden rounded-2xl p-6",
+        "glass relative rounded-2xl p-6",
         glowClass,
         hoverable && `transition-all duration-300 hover:scale-105 ${hoverShadow} cursor-pointer`,
         pressable && "active:scale-[0.98]",
