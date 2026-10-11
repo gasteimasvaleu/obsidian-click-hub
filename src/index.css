@@ -37,6 +37,14 @@ All colors MUST be HSL.
     --input: 0 0% 100% / 0.05;
     --ring: 142 100% 50%;
 
+    /* Home feature cards */
+    --feature-bible: 217 91% 60%;
+    --feature-devotional: 270 91% 65%;
+    --feature-prayer: 36 100% 50%;
+    --feature-music: 347 91% 60%;
+    --feature-card-foreground: 0 0% 100%;
+    --feature-action: 224 71% 12%;
+
     /* Glass Effect Variables */
     --glass-bg: rgba(255, 255, 255, 0.05);
     --glass-border: rgba(255, 255, 255, 0.1);
@@ -83,6 +91,12 @@ All colors MUST be HSL.
     --border: 0 0% 100% / 0.1;
     --input: 0 0% 100% / 0.05;
     --ring: 142 100% 50%;
+    --feature-bible: 217 91% 60%;
+    --feature-devotional: 270 91% 65%;
+    --feature-prayer: 36 100% 50%;
+    --feature-music: 347 91% 60%;
+    --feature-card-foreground: 0 0% 100%;
+    --feature-action: 224 71% 12%;
   }
 }
 

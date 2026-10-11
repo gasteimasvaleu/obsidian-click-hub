@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Link, useLocation, useNavigate } from "react-router-dom"
-import { LucideIcon, Gamepad2, BookOpen, Calendar, Palette, Bot, Users, User, Info, Shield, FileText, X } from "lucide-react"
+import { LucideIcon, Users, User, Info, Shield, FileText, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface NavItem {
@@ -18,11 +18,6 @@ interface NavBarProps {
 }
 
 const moreMenuItems = [
-  { name: 'Games', url: '/games', icon: Gamepad2 },
-  { name: 'Bíblia Interativa', url: '/biblia', icon: BookOpen },
-  { name: 'Devocional Diário', url: '/devocional', icon: Calendar },
-  { name: 'Colorir', url: '/colorir', icon: Palette },
-  { name: 'Amigo Divino', url: '/amigodivino', icon: Bot },
   { name: 'Comunidade', url: '/comunidade', icon: Users },
   { name: 'Meu Perfil', url: '/profile', icon: User },
   { name: 'Sobre', url: '/sobre', icon: Info },
@@ -107,8 +102,8 @@ export function NavBar({ items, className }: NavBarProps) {
         )}
       >
         <div className="bg-black/90 backdrop-blur-lg pb-[env(safe-area-inset-bottom)]">
-          <div className="flex justify-center px-3 pt-2 pb-2">
-            <div className="flex items-center gap-1.5 md:gap-3 glass border border-primary/20 backdrop-blur-lg py-2 px-2 rounded-2xl shadow-lg">
+          <div className="flex justify-center px-2 pt-2 pb-2">
+            <div className="grid w-full max-w-xl grid-cols-6 glass border border-primary/20 backdrop-blur-lg py-1.5 px-1 rounded-2xl shadow-lg">
               {items.map((item) => {
                 const Icon = item.icon
                 const isActive = item.isMenu ? moreOpen : activeTab === item.name
@@ -124,22 +119,16 @@ export function NavBar({ items, className }: NavBarProps) {
                         }
                       }}
                       className={cn(
-                        "relative cursor-pointer text-sm font-semibold rounded-full transition-all duration-300",
-                        "min-w-[48px] min-h-[48px] flex items-center justify-center",
-                        "px-3 py-3 md:px-6 md:py-2",
+                        "relative min-w-0 cursor-pointer rounded-xl transition-all duration-300",
+                        "h-[52px] flex flex-col items-center justify-center gap-0.5 px-0.5",
                         "text-primary/80 hover:text-primary",
                         "active:scale-95",
                         isActive && "bg-primary/10 text-primary",
                       )}
                     >
-                      <span className="flex items-center gap-2">
-                        {moreOpen ? <X size={24} strokeWidth={2.5} /> : <Icon size={24} strokeWidth={2.5} />}
-                        <span className={cn(
-                          "transition-all duration-200 overflow-hidden whitespace-nowrap",
-                          isActive ? "inline max-w-[200px] opacity-100" : "hidden md:inline md:max-w-[200px] md:opacity-100"
-                        )}>
-                          {item.shortName || item.name}
-                        </span>
+                      {moreOpen ? <X size={21} strokeWidth={2.5} /> : <Icon size={21} strokeWidth={2.5} />}
+                      <span className="w-full truncate text-center text-[9px] font-semibold leading-none">
+                        {item.shortName || item.name}
                       </span>
                       {isActive && (
                         <motion.div
@@ -171,22 +160,16 @@ export function NavBar({ items, className }: NavBarProps) {
                       }
                     }}
                     className={cn(
-                      "relative cursor-pointer text-sm font-semibold rounded-full transition-all duration-300",
-                      "min-w-[48px] min-h-[48px] flex items-center justify-center",
-                      "px-3 py-3 md:px-6 md:py-2",
+                      "relative min-w-0 cursor-pointer rounded-xl transition-all duration-300",
+                      "h-[52px] flex flex-col items-center justify-center gap-0.5 px-0.5",
                       "text-primary/80 hover:text-primary",
                       "active:scale-95",
                       isActive && "bg-primary/10 text-primary",
                     )}
                   >
-                    <span className="flex items-center gap-2">
-                      <Icon size={24} strokeWidth={2.5} />
-                      <span className={cn(
-                        "transition-all duration-200 overflow-hidden whitespace-nowrap",
-                        isActive ? "inline max-w-[200px] opacity-100" : "hidden md:inline md:max-w-[200px] md:opacity-100"
-                      )}>
-                        {item.shortName || item.name}
-                      </span>
+                    <Icon size={21} strokeWidth={2.5} />
+                    <span className="w-full truncate text-center text-[9px] font-semibold leading-none">
+                      {item.shortName || item.name}
                     </span>
                     {isActive && (
                       <motion.div
