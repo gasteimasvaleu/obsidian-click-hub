@@ -88,7 +88,7 @@ const Index = () => {
         </GlassCard>
       </div>
       
-      <div className="flex-1 px-4 pb-8">
+      <div className="flex-1 px-4">
         <div className="w-full max-w-4xl mx-auto space-y-6">
           
           {/* Card Principal - Full Width */}
@@ -139,12 +139,13 @@ const Index = () => {
           <div className="overflow-hidden rounded-2xl">
             {featureActions.map((action, index) => {
               const Icon = action.icon;
+              const isLast = index === featureActions.length - 1;
               return (
                 <button
                   key={action.title}
                   type="button"
                   onClick={action.action}
-                  className={`${action.color} relative flex h-[88px] w-full items-center text-feature-foreground transition-transform duration-200 active:scale-[0.98] ${index > 0 ? "-mt-4" : ""} rounded-t-2xl px-6 py-5 text-left`}
+                  className={`${action.color} relative ${isLast ? "min-h-[150px] items-start" : "h-[88px] items-center"} flex w-full text-feature-foreground transition-transform duration-200 active:scale-[0.98] ${index > 0 ? "-mt-4" : ""} rounded-t-2xl px-6 py-5 text-left`}
                   style={{ zIndex: index + 1 }}
                   aria-label={`Abrir ${action.title}`}
                 >
