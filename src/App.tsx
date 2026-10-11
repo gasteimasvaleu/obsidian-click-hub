@@ -4,7 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-import { Home, Palette, Bot, Users, Gamepad2, Menu } from "lucide-react";
+import { Home, Palette, Bot, Users, GraduationCap, Menu } from "lucide-react";
 import { NavBar } from "@/components/ui/tubelight-navbar";
 import { SplashScreen } from "./components/SplashScreen";
 import { AuthProvider } from "./contexts/AuthContext";
@@ -81,10 +81,10 @@ const NavBarWrapper = ({ items }: { items: typeof navItems }) => {
 
 const navItems = [
   { name: 'Início', url: '/', icon: Home },
-  { name: 'Colorir', url: '/colorir', icon: Palette },
+  { name: 'Cursos', url: '/plataforma', icon: GraduationCap },
   { name: 'Amigo Divino', url: '/amigodivino', icon: Bot, shortName: 'Amigo' },
   { name: 'Guia para Pais', url: '/guia-pais', icon: Users, shortName: 'Guia Pais' },
-  { name: 'Games', url: '/games', icon: Gamepad2 },
+  { name: 'Colorir', url: '/colorir', icon: Palette },
   { name: 'Mais', url: '#more', icon: Menu, isMenu: true }
 ];
 
