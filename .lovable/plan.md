@@ -4,8 +4,9 @@ O app já está pronto para isso: a versão nativa está em **2.2.3 (versionCode
 
 ## O que eu faço (preparar o projeto)
 
-1. Rodar `npm run sync:android` — isso monta a versão web mais recente, copia para dentro do projeto Android e recria a `MainActivity.java` correta (script `fix-android-appid.cjs`).
-2. Conferir que a pasta `android/` está pronta para abrir no Android Studio (versão 2.2.3 / código 8).
+1. Rodar `npm run sync:android` — isso monta a versão web mais recente, copia para dentro do projeto Android e roda o `fix-android-appid.cjs` no final.
+2. **Segurança do sync (confirmado):** o script de correção recria a `MainActivity.java` com o pacote correto (`com.bibliatoonkids.app`) e remove arquivos duplicados — o código nativo não é perdido. A única coisa substituída é a pasta de assets dentro de `android/` (a versão web nova), que é exatamente o desejado.
+3. Conferir que a pasta `android/` está pronta para abrir no Android Studio (versão 2.2.3 / código 8, MainActivity correta).
 
 ## O que você faz no Android Studio
 
