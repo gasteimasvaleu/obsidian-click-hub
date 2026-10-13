@@ -10,6 +10,7 @@ O app já está pronto para isso: a versão nativa está em **2.2.3 (versionCode
 
 ## O que você faz no Android Studio
 
+0. **Antes de tudo: atualize o projeto no Mac** — o aviso "código de versão 7 já foi usado" mostra que sua cópia local está antiga. No terminal, dentro da pasta do projeto: `git pull`, depois `npm install`, depois `npm run sync:android`. Só então gere o .aab (ele sairá com código 8).
 1. Abra o projeto Android no Android Studio (pasta `android` do projeto, depois do meu passo acima).
 2. Menu **Build → Generate Signed App Bundle or APK...** (é exatamente o item do seu screenshot).
 3. Escolha **Android App Bundle** (não APK).
