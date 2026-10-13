@@ -13,6 +13,7 @@ O app já está pronto para isso: a versão nativa está em **2.2.3 (versionCode
 0. **Antes de tudo: atualize o projeto no Mac** — o aviso "código de versão 7 já foi usado" mostra que sua cópia local está antiga. No terminal, dentro da pasta do projeto: `git pull`, depois `npm install`, depois `npm run sync:android`. Só então gere o .aab (ele sairá com código 8).
 0.1. **Apague arquivos duplicados** — o erro de build "config 2.xml" é uma cópia criada pelo Finder em `android/app/src/main/res/xml/`. Delete `config 2.xml` (e qualquer arquivo com espaço/cópia no nome) no Finder ou rode `npm run sync:android`, que limpa essas duplicatas automaticamente.
 0.2. **Não rode o AGP Upgrade Assistant** — o aviso do Android Studio para atualizar o plugin Gradle deve ser ignorado; atualizar quebra a compatibilidade com o Capacitor.
+0.3. **Erro "is defined multiple times" / arquivos "... 2.jar"** — causado pelo iCloud duplicando arquivos porque o projeto está na Mesa. Corrigir: Build → Clean Project, fechar o Android Studio, apagar `android/app/build`, reabrir e gerar de novo. Para evitar: mover a pasta do projeto para fora da Mesa (ex.: `~/Projetos`) ou desligar "Mesa e Documentos" no iCloud Drive.
 1. Abra o projeto Android no Android Studio (pasta `android` do projeto, depois do meu passo acima).
 2. Menu **Build → Generate Signed App Bundle or APK...** (é exatamente o item do seu screenshot).
 3. Escolha **Android App Bundle** (não APK).
