@@ -48,3 +48,20 @@ if (isPreviewHost || isInIframe) {
 }
 
 createRoot(document.getElementById("root")!).render(<App />);
+
+// Atualização ao vivo: no app nativo, baixa e aplica a versão nova na hora (uma vez por sessão)
+(async () => {
+  try {
+    const { Capacitor } = await import('@capacitor/core');
+    if (!Capacitor.isNativePlatform()) return;
+    if (sessionStorage.getItem('lu-synced')) return;
+    sessionStorage.setItem('lu-synced', '1');
+    const LiveUpdates = await import('@capacitor/live-updates');
+    const result = await LiveUpdates.sync();
+    if (result?.activeApplicationPathChanged) {
+      await LiveUpdates.reload();
+    }
+  } catch (e) {
+    console.warn('Live update sync falhou:', e);
+  }
+})();
