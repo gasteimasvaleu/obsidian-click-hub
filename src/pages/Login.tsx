@@ -283,8 +283,7 @@ const Login = () => {
                 )}
                 Continuar com Google
               </Button>
-            </div>
-          )}
+          </div>
 
           <div className="relative py-2">
             <div className="absolute inset-0 flex items-center">
