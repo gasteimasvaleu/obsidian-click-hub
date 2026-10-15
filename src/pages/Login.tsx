@@ -263,9 +263,8 @@ const Login = () => {
             </div>
           )}
 
-          {/* Sign in with Google - visible on Android */}
-          {platform === 'android' && (
-            <div className="space-y-2">
+          {/* Sign in with Google - Android uses native plugin, web uses OAuth */}
+          <div className="space-y-2">
               <Button
                 type="button"
                 className="w-full h-12 gap-3 bg-white text-black hover:bg-white/90 font-medium text-base rounded-lg disabled:opacity-50"
