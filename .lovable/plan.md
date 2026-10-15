@@ -1,18 +1,31 @@
-# Corrigir login Google no navegador (erro localhost:3000)
+# Por que os logins com Google não aparecem no Google Cloud
 
 ## Diagnóstico
-O código do app está correto: o login Google usa `redirectTo: window.location.origin` (src/pages/Login.tsx, linhas 102-105 e 163-166). O erro acontece porque no painel do Supabase o "Site URL" está configurado como `http://localhost:3000`. Como o endereço do site publicado (bibliatoonclub.com) não está na lista de endereços permitidos, o Supabase ignora o retorno correto e manda o usuário para localhost:3000 — que não existe no computador, daí o erro "Safari não pode conectar-se ao servidor".
 
-## Correção (no painel do Supabase, sem mexer no código)
-1. Abrir: https://supabase.com/dashboard/project/fnksvazibtekphseknob/auth/url-configuration
-2. Em **Site URL**, trocar `http://localhost:3000` por `https://bibliatoonclub.com`
-3. Em **Redirect URLs**, adicionar (uma por linha):
-   - `https://bibliatoonclub.com/**`
-   - `https://www.bibliatoonclub.com/**`
-   - `https://app.bibliatoonkids.com/**`
-   - `http://localhost:3000/**` (manter, para testes locais)
-   - `capacitor://localhost/**` (app nativo)
-4. Salvar e testar o login Google novamente no navegador.
+Não é problema de tempo nem de configuração errada — é o esperado. O Google Cloud Console **não é o painel de usuários do app**. Ele só registra chamadas técnicas às APIs do Google, e o nosso login funciona assim:
+
+- O usuário clica em "Continuar com Google"
+- O Google só **autentica** (confirma quem é a pessoa) e devolve um token
+- Quem cria e guarda a conta do usuário é o **Supabase**, não o Google Cloud
+
+Ou seja: o Google Cloud no máximo mostra estatísticas agregadas da tela de consentimento OAuth, e mesmo essas costumam aparecer com atraso de horas/dias e de forma resumida — não uma lista de logins.
+
+## Onde verificar os logins de verdade
+
+1. **Supabase** (é aqui que os usuários moram):
+   - https://supabase.com/dashboard/project/fnksvazibtekphseknob/auth/users
+   - Lista todos os usuários, provedor usado (google, apple, email) e data do último login.
+2. **Google Cloud** (opcional, só estatística):
+   - APIs e serviços → Tela de permissão OAuth → métricas de uso (agregadas, com atraso).
+
+## Ação proposta
+
+Nenhuma mudança de código. Apenas verificação:
+
+1. Abrir a lista de usuários no Supabase e confirmar que os logins de hoje (computador e Android) aparecem lá com provedor "google".
+2. Se aparecerem, está tudo funcionando — o Google Cloud simplesmente não é o lugar certo para olhar.
+3. Se algum login NÃO aparecer no Supabase, aí sim investigamos (possível falha no callback OAuth).
 
 ## Validação
-- Entrar em bibliatoonclub.com/login, clicar "Continuar com Google", escolher a conta e confirmar que volta logado para a tela inicial.
+
+Confirmar visualmente na lista do Supabase que os dois logins de hoje constam com provider `google` e timestamps corretos.
