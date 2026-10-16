@@ -29,10 +29,15 @@ export function WhatsAppOptinSection({ userId }: WhatsAppOptinSectionProps) {
 
   const fetchSubscriberData = async () => {
     try {
+      // Busca por user_id OU e-mail (mesma regra do useSubscription),
+      // pois há assinantes ativos com user_id vazio (ex.: login Apple).
+      const filters = [`user_id.eq.${userId}`];
+      if (userEmail) filters.push(`email.eq.${userEmail}`);
+
       const { data, error } = await supabase
         .from('subscribers')
-        .select('phone, whatsapp_optin')
-        .eq('user_id', userId)
+        .select('phone, whatsapp_optin, subscription_expires_at')
+        .or(filters.join(','))
         .eq('subscription_status', 'active')
         .maybeSingle();
 
@@ -41,7 +46,12 @@ export function WhatsAppOptinSection({ userId }: WhatsAppOptinSectionProps) {
         return;
       }
 
-      if (data) {
+      const isActive =
+        !!data &&
+        (!data.subscription_expires_at ||
+          new Date(data.subscription_expires_at) > new Date());
+
+      if (isActive) {
         setHasSubscription(true);
         setOptedIn(data.whatsapp_optin ?? false);
         setPhone(data.phone ?? '');
