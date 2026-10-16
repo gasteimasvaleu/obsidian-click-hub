@@ -82,12 +82,15 @@ const Profile = () => {
 
       const { data } = await supabase
         .from('profiles')
-        .select('avatar_url')
+        .select('avatar_url, full_name')
         .eq('id', user.id)
         .single();
 
       if (data?.avatar_url) {
         setAvatarUrl(data.avatar_url);
+      }
+      if (data?.full_name) {
+        setProfileName(data.full_name);
       }
     };
 
