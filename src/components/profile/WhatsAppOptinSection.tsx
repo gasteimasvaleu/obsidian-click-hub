@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { MessageCircle, Check, Loader2, AlertCircle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 
 interface WhatsAppOptinSectionProps {
@@ -13,6 +14,8 @@ interface WhatsAppOptinSectionProps {
 }
 
 export function WhatsAppOptinSection({ userId }: WhatsAppOptinSectionProps) {
+  const { user } = useAuth();
+  const userEmail = user?.email ?? '';
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [optedIn, setOptedIn] = useState(false);
