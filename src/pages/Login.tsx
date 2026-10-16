@@ -263,7 +263,8 @@ const Login = () => {
             </div>
           )}
 
-          {/* Sign in with Google - Android uses native plugin, web uses OAuth */}
+          {/* Sign in with Google - Android uses native plugin, web uses OAuth; hidden on iOS app */}
+          {platform !== 'ios' && (
           <div className="space-y-2">
               <Button
                 type="button"
@@ -284,6 +285,7 @@ const Login = () => {
                 Continuar com Google
               </Button>
           </div>
+          )}
 
           <div className="relative py-2">
             <div className="absolute inset-0 flex items-center">
