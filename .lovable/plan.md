@@ -1,29 +1,24 @@
-# Aviso do Google Cloud: cliente OAuth "Bibliatoonclub[web]" inativo
+# Corrigir card "Devocional no WhatsApp" que nega acesso a assinante ativo
 
-## O que o aviso diz
+## Problema
 
-Nas capturas, o Google Cloud mostra um alerta no cliente **Bibliatoonclub[web]** (ID `135684784512-u67o...`):
+No Perfil, o usuário vê "Assinante Premium" mas o card "Devocional no WhatsApp" mostra "Esta funcionalidade está disponível apenas para assinantes ativos."
 
-> "Este cliente OAuth não foi usado. Clientes OAuth inativos que não sejam usados por 6 meses poderão ser excluídos."
+## Causa confirmada
 
-O cliente **Android** (`135684784512-nt1j...`) está sem alerta.
+- O selo "Assinante Premium" usa `useSubscription`, que busca em `subscribers` por **user_id OU e-mail** e verifica a data de expiração.
+- O `WhatsAppOptinSection` busca em `subscribers` **somente por user_id** e sem checar expiração.
+- Consulta ao banco confirmou: há assinantes ativos (ex.: logins Apple com e-mail oculto `@privaterelay.appleid.com`) cujo registro em `subscribers` tem `user_id` vazio — só o e-mail bate. Para esses usuários, o card do WhatsApp não encontra a assinatura e mostra o aviso de bloqueio.
 
-## Diagnóstico
+## Correção proposta (somente frontend, `src/components/profile/WhatsAppOptinSection.tsx`)
 
-- O prazo real é **6 meses de inatividade**, não 30 dias.
-- Esse cliente web **está em uso**: ele é o `webClientId` do plugin de login nativo no Android (`src/lib/native-google-signin.ts`) e também atende o login Google via navegador (configurado no Supabase).
-- Os logins de hoje (computador e Android) **contam como uso** e zeram o contador de inatividade.
-- O painel do Google Cloud **demora dias para atualizar** esse status — por isso o alerta ainda aparece mesmo após os logins de hoje.
-
-## Ação proposta
-
-Nenhuma mudança de código e nenhuma ação urgente:
-
-1. **Não excluir** nenhum dos dois clientes OAuth — os dois são necessários (web: navegador + plugin Android; Android: app nativo).
-2. Aguardar alguns dias: com os logins de hoje registrados, o alerta deve sumir sozinho.
-3. Se o alerta persistir por mais de ~2 semanas mesmo com logins acontecendo, fazer um login de teste com Google no navegador (bibliatoonclub.com) para forçar uso do cliente web e re-verificar.
-4. Lembrete permanente: nunca excluir o projeto `135684784512` nem essas credenciais — o botão "Continuar com Google" depende delas.
+1. Receber também o `email` do usuário (prop nova ou via `useAuth`).
+2. Na busca `fetchSubscriberData`, trocar o filtro `.eq('user_id', userId)` por `.or('user_id.eq.<id>,email.eq.<email>')` com `subscription_status = 'active'`, e considerar assinatura válida apenas se `subscription_expires_at` for nula ou futura — mesma regra do `useSubscription`.
+3. Nas atualizações (`handleToggleOptin` e `handleSavePhone`), usar o mesmo filtro (user_id OU e-mail) para gravar no registro correto.
+4. Manter todo o resto igual (visual, textos, formatação de telefone).
 
 ## Validação
 
-Reabrir a página de credenciais do Google Cloud em alguns dias e confirmar que o alerta do cliente web desapareceu.
+- Consultar o banco antes/depois com um usuário afetado (e-mail privaterelay ativo sem user_id).
+- No preview, confirmar que o card mostra o seletor de recebimento e o campo de telefone para assinante ativo, e o aviso apenas para quem não tem assinatura.
+- Build OK.
