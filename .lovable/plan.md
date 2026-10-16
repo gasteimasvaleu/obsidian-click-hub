@@ -16,7 +16,7 @@ Nada mais muda: produto do RevenueCat, chaves e live update continuam iguais.
 4. Notas de versão sugeridas: "Novo modelo gratuito com 3 aulas grátis, assinatura direto pela loja, nova tela inicial e correções."
 
 ## Atenção na revisão da Apple
-- Como o app passou de pago para freemium, atualize na App Store Connect a descrição/textos que dizem que é preciso assinar para entrar.
+- Na App Store Connect e no Play Console, revise a descrição para refletir o modelo atual: entrada e uso livres; a assinatura só é pedida depois dos 3 vídeos grátis. Se algum texto antigo da loja ainda disser que é preciso assinar para entrar, troque-o.
 - Mantenha a China continental fora da disponibilidade (rejeição anterior 2.1).
 - Certificados/perfis válidos até 18/02/2027 — ok para este envio.
 
