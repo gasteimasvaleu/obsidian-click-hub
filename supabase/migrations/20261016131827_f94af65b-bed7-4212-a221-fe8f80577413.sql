@@ -1,0 +1,1 @@
+UPDATE public.subscribers SET subscription_status = 'expired' WHERE id = '9ea58b99-aa2b-481b-8a3b-ec0fccaa6461';

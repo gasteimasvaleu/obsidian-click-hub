@@ -9,7 +9,7 @@ const getProductId = (): string => {
 };
 
 // App version marker for debugging Live Updates bundles
-const APP_BUNDLE_VERSION = '2026-03-12-v3';
+export const APP_BUNDLE_VERSION = '2026-10-16-v1';
 
 export const isNativePlatform = (): boolean => {
   try {
