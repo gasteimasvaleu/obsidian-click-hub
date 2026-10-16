@@ -7,7 +7,6 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { ShieldCheck } from "lucide-react";
 
 interface ParentalGateProps {
@@ -19,22 +18,28 @@ interface ParentalGateProps {
 export function ParentalGate({ open, onOpenChange, onSuccess }: ParentalGateProps) {
   const [numA, setNumA] = useState(0);
   const [numB, setNumB] = useState(0);
-  const [answer, setAnswer] = useState("");
+  const [options, setOptions] = useState<number[]>([]);
   const [error, setError] = useState(false);
 
-  // Generate new challenge when modal opens
   useEffect(() => {
     if (open) {
-      setNumA(Math.floor(Math.random() * 13) + 3); // 3-15
-      setNumB(Math.floor(Math.random() * 13) + 3);
-      setAnswer("");
+      const a = Math.floor(Math.random() * 13) + 3;
+      const b = Math.floor(Math.random() * 13) + 3;
+      const sum = a + b;
+      const set = new Set<number>([sum]);
+      while (set.size < 4) {
+        const d = sum + (Math.floor(Math.random() * 9) - 4);
+        if (d > 0) set.add(d);
+      }
+      setNumA(a);
+      setNumB(b);
+      setOptions([...set].sort(() => Math.random() - 0.5));
       setError(false);
     }
   }, [open]);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (parseInt(answer, 10) === numA + numB) {
+  const choose = (value: number) => {
+    if (value === numA + numB) {
       onOpenChange(false);
       onSuccess();
     } else {
@@ -55,34 +60,23 @@ export function ParentalGate({ open, onOpenChange, onSuccess }: ParentalGateProp
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="space-y-4">
           <p className="text-center text-2xl font-bold text-foreground">
             Quanto é {numA} + {numB}?
           </p>
-
-          <Input
-            type="number"
-            inputMode="numeric"
-            value={answer}
-            onChange={(e) => {
-              setAnswer(e.target.value);
-              setError(false);
-            }}
-            placeholder="Digite a resposta"
-            className="text-center text-lg"
-            autoFocus
-          />
-
+          <div className="grid grid-cols-2 gap-2">
+            {options.map((o) => (
+              <Button key={o} variant="outline" className="h-12 text-lg" onClick={() => choose(o)}>
+                {o}
+              </Button>
+            ))}
+          </div>
           {error && (
             <p className="text-center text-sm text-destructive">
               Resposta incorreta, tente novamente.
             </p>
           )}
-
-          <Button type="submit" className="w-full" disabled={!answer}>
-            Confirmar
-          </Button>
-        </form>
+        </div>
       </DialogContent>
     </Dialog>
   );
