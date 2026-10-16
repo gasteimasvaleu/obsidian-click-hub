@@ -1,15 +1,10 @@
 # Roadmap
 
-- [x] Reorganizar os destaques da página inicial em quatro cards.
-- [x] Mover o carrossel para abaixo de Acessar Cursos.
-- [x] Atualizar os acessos principais do menu inferior.
-- [x] Simplificar o conteúdo do menu Mais.
-- [x] Tirar o link de Política de Famílias da home (fica só no menu Mais).
-- [x] Encolher os cards, remover as etiquetas e acrescentar Colorir, Amigo Divino, Guia para Pais e Games.
-- [x] Adicionar card Comunidade como último atalho, esticado até o menu tubelight.
-- [x] Trocar os botões Colorir e Games do menu inferior por Cursos e Colorir.
-- [x] Adicionar Bíblia, Devocional, Orações, Bíbliafy e Games ao menu Mais e igualar suas cores às do tubelight.
-- [x] Trocar o botão Amigo do menu inferior por Bíblia e mover Amigo Divino para o menu Mais.
-- [x] Adicionar border beam animado nos cards com brilho (GlassCard), na cor selecionada em Aparência.
-- [x] Colocar a tela de assinatura (paywall) dentro de um card com a borda padrão do app.
-- [ ] Validar a tela inicial autenticada em um aparelho real ou sessão disponível.
+Tudo verificado no repositório: iPhone 1.3 (build 37) e Android 2.2.4 (código 9) já estão no GitHub.
+
+- [ ] (usuário) AppFlow: build iOS do commit mais novo → conferir que reporta 1.3 / build 37 → TestFlight → submeter para revisão
+- [ ] (usuário) Mac: atualizar a pasta do projeto e gerar o `app-release.aab` (2.2.4 / código 9) → Play Console
+- [ ] (usuário) Publicar o live update no canal Production → conferir "versão 2026-10-16-v1" no rodapé do Perfil
+- [ ] (usuário) Testar com conta sem assinatura: 3 aulas abrem, a 4ª bloqueia, card "Seja Premium" aparece
+- [ ] (usuário) RevenueCat: Restore Behavior = "Keep with original App User ID" nos dois projetos
+- [ ] (usuário) Descrições nas lojas: entrada livre, assinatura só depois dos 3 vídeos; China continental fora da disponibilidade
