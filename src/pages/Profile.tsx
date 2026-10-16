@@ -123,6 +123,44 @@ const Profile = () => {
     setAvatarUrl(url);
   };
 
+  const openNameDialog = () => {
+    setNameInput(displayName);
+    setShowNameDialog(true);
+  };
+
+  const handleSaveName = async () => {
+    const newName = nameInput.trim();
+    if (!newName) {
+      toast.error('Digite um nome válido.');
+      return;
+    }
+    if (newName.length > 60) {
+      toast.error('O nome pode ter no máximo 60 caracteres.');
+      return;
+    }
+
+    setSavingName(true);
+    try {
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .update({ full_name: newName })
+        .eq('id', user!.id);
+      if (profileError) throw profileError;
+
+      // Atualiza também os metadados de auth para refletir na hora
+      await supabase.auth.updateUser({ data: { full_name: newName } });
+
+      setProfileName(newName);
+      setShowNameDialog(false);
+      toast.success('Nome atualizado!');
+    } catch (err) {
+      console.error(err);
+      toast.error('Erro ao atualizar o nome. Tente novamente.');
+    } finally {
+      setSavingName(false);
+    }
+  };
+
   if (authLoading || progressLoading) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
