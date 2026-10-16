@@ -141,11 +141,14 @@ export function WhatsAppOptinSection({ userId }: WhatsAppOptinSectionProps) {
     setSaving(true);
     try {
       const cleanedPhone = normalizePhone(phone);
-      
+
+      const filters = [`user_id.eq.${userId}`];
+      if (userEmail) filters.push(`email.eq.${userEmail}`);
+
       const { error } = await supabase
         .from('subscribers')
         .update({ phone: cleanedPhone })
-        .eq('user_id', userId)
+        .or(filters.join(','))
         .eq('subscription_status', 'active');
 
       if (error) throw error;
