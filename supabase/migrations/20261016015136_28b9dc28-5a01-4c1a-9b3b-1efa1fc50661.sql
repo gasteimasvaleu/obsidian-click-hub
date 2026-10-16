@@ -1,0 +1,1 @@
+REVOKE EXECUTE ON FUNCTION public.link_subscriber_user_id() FROM PUBLIC, anon, authenticated;
