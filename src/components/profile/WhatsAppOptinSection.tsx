@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { MessageCircle, Check, Loader2, AlertCircle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 
 interface WhatsAppOptinSectionProps {
@@ -13,6 +14,8 @@ interface WhatsAppOptinSectionProps {
 }
 
 export function WhatsAppOptinSection({ userId }: WhatsAppOptinSectionProps) {
+  const { user } = useAuth();
+  const userEmail = user?.email ?? '';
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [optedIn, setOptedIn] = useState(false);
@@ -26,10 +29,15 @@ export function WhatsAppOptinSection({ userId }: WhatsAppOptinSectionProps) {
 
   const fetchSubscriberData = async () => {
     try {
+      // Busca por user_id OU e-mail (mesma regra do useSubscription),
+      // pois há assinantes ativos com user_id vazio (ex.: login Apple).
+      const filters = [`user_id.eq.${userId}`];
+      if (userEmail) filters.push(`email.eq.${userEmail}`);
+
       const { data, error } = await supabase
         .from('subscribers')
-        .select('phone, whatsapp_optin')
-        .eq('user_id', userId)
+        .select('phone, whatsapp_optin, subscription_expires_at')
+        .or(filters.join(','))
         .eq('subscription_status', 'active')
         .maybeSingle();
 
@@ -38,7 +46,12 @@ export function WhatsAppOptinSection({ userId }: WhatsAppOptinSectionProps) {
         return;
       }
 
-      if (data) {
+      const isActive =
+        !!data &&
+        (!data.subscription_expires_at ||
+          new Date(data.subscription_expires_at) > new Date());
+
+      if (isActive) {
         setHasSubscription(true);
         setOptedIn(data.whatsapp_optin ?? false);
         setPhone(data.phone ?? '');
@@ -85,13 +98,16 @@ export function WhatsAppOptinSection({ userId }: WhatsAppOptinSectionProps) {
 
     setSaving(true);
     try {
+      const filters = [`user_id.eq.${userId}`];
+      if (userEmail) filters.push(`email.eq.${userEmail}`);
+
       const { error } = await supabase
         .from('subscribers')
         .update({
           whatsapp_optin: checked,
           whatsapp_optin_at: new Date().toISOString(),
         })
-        .eq('user_id', userId)
+        .or(filters.join(','))
         .eq('subscription_status', 'active');
 
       if (error) throw error;
@@ -125,11 +141,14 @@ export function WhatsAppOptinSection({ userId }: WhatsAppOptinSectionProps) {
     setSaving(true);
     try {
       const cleanedPhone = normalizePhone(phone);
-      
+
+      const filters = [`user_id.eq.${userId}`];
+      if (userEmail) filters.push(`email.eq.${userEmail}`);
+
       const { error } = await supabase
         .from('subscribers')
         .update({ phone: cleanedPhone })
-        .eq('user_id', userId)
+        .or(filters.join(','))
         .eq('subscription_status', 'active');
 
       if (error) throw error;
