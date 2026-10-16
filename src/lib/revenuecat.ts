@@ -176,77 +176,16 @@ export const restorePurchases = async (): Promise<{
 };
 
 /**
- * Claim orphan subscriber records created by webhook for anonymous RevenueCat purchases.
- */
-const claimOrphanSubscriber = async (
-  userId: string,
-  email: string,
-  status: { isActive: boolean; expiresAt?: string }
-): Promise<boolean> => {
-  try {
-    const { data: orphans } = await supabase
-      .from('subscribers')
-      .select('id, transaction_id')
-      .is('user_id', null)
-      .eq('product_source', 'revenuecat')
-      .eq('subscription_status', 'active')
-      .limit(5);
-
-    if (!orphans?.length) {
-      console.log('RevenueCat: No orphan records found');
-      return false;
-    }
-
-    const orphan = orphans[0];
-    const { error } = await supabase
-      .from('subscribers')
-      .update({
-        user_id: userId,
-        email,
-        subscription_status: status.isActive ? ('active' as const) : ('expired' as const),
-        subscription_expires_at: status.expiresAt ?? null,
-        updated_at: new Date().toISOString(),
-      })
-      .eq('id', orphan.id);
-
-    if (error) {
-      console.error('RevenueCat: Failed to claim orphan', error);
-      return false;
-    }
-
-    console.log(`RevenueCat: Claimed orphan record ${orphan.id} (txn: ${orphan.transaction_id}) for user ${userId}`);
-    return true;
-  } catch (error) {
-    console.error('RevenueCat: claimOrphanSubscriber error', error);
-    return false;
-  }
-};
-
-/**
  * Sync RevenueCat subscription status to Supabase subscribers table.
  */
 export const syncSubscriptionAfterLogin = async (userId: string, email: string): Promise<void> => {
   if (!isRevenueCatSupported()) return;
 
   try {
-    let status: { isActive: boolean; expiresAt?: string } = { isActive: false };
-    for (let attempt = 1; attempt <= 3; attempt++) {
-      status = await checkSubscriptionStatus();
-      console.log(`RevenueCat: sync attempt ${attempt}`, { userId, isActive: status.isActive });
-      if (status.isActive) break;
-      if (attempt < 3) await new Promise(resolve => setTimeout(resolve, 1500));
-    }
-
-    if (!status.isActive) {
-      const restoreResult = await restorePurchases();
-      if (restoreResult.isActive) {
-        status = { isActive: true, expiresAt: restoreResult.expiresAt };
-      } else {
-        return;
-      }
-    }
-
-    await claimOrphanSubscriber(userId, email, status);
+    // Only trust the subscription that already belongs to this identified app user.
+    // No automatic restore here: restoring is an explicit user action (Paywall/Login).
+    const status = await checkSubscriptionStatus();
+    if (!status.isActive) return;
 
     const { data: existingByEmail } = await supabase
       .from('subscribers')
