@@ -12,7 +12,7 @@
 4. **Mesma compra não fica em duas contas.**
 
 ## O que você faz
-1. No RevenueCat: Project Settings → API Keys → criar uma **Secret API key** (uma para o projeto). Vou abrir um campo seguro para você colar.
+1. No RevenueCat: Project Settings → API Keys → criar uma **Secret API key** em cada projeto (uma da Apple, outra do Google Play). Vou abrir um campo seguro com os dois espaços para você colar.
 2. Se ainda não fez: Project Settings → Restore Behavior → **"Keep with original App User ID"**.
 
 Chega por live update, sem build nativo.
@@ -23,8 +23,8 @@ Chega por live update, sem build nativo.
 - VIPs continuam com acesso.
 
 ## Detalhes técnicos
-- Secret `REVENUECAT_SECRET_API_KEY` (pedida via add_secret antes do código).
-- Nova edge function `rc-sync`: valida JWT, chama `GET https://api.revenuecat.com/v1/subscribers/{user_id}`, verifica entitlement ativo, grava com service role; ignora registros `product_source='vip'`.
+- Secrets `REVENUECAT_SECRET_API_KEY_IOS` e `REVENUECAT_SECRET_API_KEY_ANDROID` (pedidas via add_secret antes do código).
+- Nova edge function `rc-sync`: valida JWT, recebe a plataforma (ios/android) e usa a chave correspondente; se não achar, tenta a outra. Chama `GET https://api.revenuecat.com/v1/subscribers/{user_id}`, verifica entitlement ativo, grava com service role; ignora registros `product_source='vip'`.
 - `src/lib/revenuecat.ts`: `syncSubscriptionAfterLogin` passa a chamar `supabase.functions.invoke('rc-sync')`; Paywall usa o mesmo caminho após compra/restauração.
 - `AuthContext.tsx`: sync só no evento `SIGNED_IN`.
 - `WhatsAppOptinSection.tsx`: opt-in/telefone hoje atualizam `subscribers` pelo cliente; mover para RPC `SECURITY DEFINER` que altera só `whatsapp_optin`, `whatsapp_optin_at` e `phone` do próprio usuário.
