@@ -99,11 +99,13 @@ Deno.serve(async (req) => {
     if (resolvedUserId) {
       const { data: existingSub } = await supabase
         .from("subscribers")
-        .select("id")
+        .select("id, product_source")
         .eq("user_id", resolvedUserId)
         .maybeSingle();
 
-      if (existingSub) {
+      if (existingSub?.product_source === "vip") {
+        console.log(`Skipping VIP subscriber ${resolvedUserId}`);
+      } else if (existingSub) {
         await supabase
           .from("subscribers")
           .update({
