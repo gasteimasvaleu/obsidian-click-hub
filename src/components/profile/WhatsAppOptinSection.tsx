@@ -98,13 +98,16 @@ export function WhatsAppOptinSection({ userId }: WhatsAppOptinSectionProps) {
 
     setSaving(true);
     try {
+      const filters = [`user_id.eq.${userId}`];
+      if (userEmail) filters.push(`email.eq.${userEmail}`);
+
       const { error } = await supabase
         .from('subscribers')
         .update({
           whatsapp_optin: checked,
           whatsapp_optin_at: new Date().toISOString(),
         })
-        .eq('user_id', userId)
+        .or(filters.join(','))
         .eq('subscription_status', 'active');
 
       if (error) throw error;
