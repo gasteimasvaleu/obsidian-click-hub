@@ -38,6 +38,10 @@ const Profile = () => {
   const { isActive: isPremium, loading: subLoading, refresh: refreshSubscription } = useSubscription();
   const [showPaywall, setShowPaywall] = useState(false);
   const [expiresAt, setExpiresAt] = useState<string | null>(null);
+  const [profileName, setProfileName] = useState<string>('');
+  const [showNameDialog, setShowNameDialog] = useState(false);
+  const [nameInput, setNameInput] = useState('');
+  const [savingName, setSavingName] = useState(false);
 
   const handleLogout = async () => {
     await signOut();
