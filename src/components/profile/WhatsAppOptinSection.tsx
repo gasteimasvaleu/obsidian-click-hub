@@ -98,17 +98,7 @@ export function WhatsAppOptinSection({ userId }: WhatsAppOptinSectionProps) {
 
     setSaving(true);
     try {
-      const filters = [`user_id.eq.${userId}`];
-      if (userEmail) filters.push(`email.eq.${userEmail}`);
-
-      const { error } = await supabase
-        .from('subscribers')
-        .update({
-          whatsapp_optin: checked,
-          whatsapp_optin_at: new Date().toISOString(),
-        })
-        .or(filters.join(','))
-        .eq('subscription_status', 'active');
+      const { error } = await (supabase.rpc as any)('update_my_whatsapp', { _optin: checked });
 
       if (error) throw error;
 
@@ -142,14 +132,7 @@ export function WhatsAppOptinSection({ userId }: WhatsAppOptinSectionProps) {
     try {
       const cleanedPhone = normalizePhone(phone);
 
-      const filters = [`user_id.eq.${userId}`];
-      if (userEmail) filters.push(`email.eq.${userEmail}`);
-
-      const { error } = await supabase
-        .from('subscribers')
-        .update({ phone: cleanedPhone })
-        .or(filters.join(','))
-        .eq('subscription_status', 'active');
+      const { error } = await (supabase.rpc as any)('update_my_whatsapp', { _phone: cleanedPhone });
 
       if (error) throw error;
 

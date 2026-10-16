@@ -62,7 +62,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
               // RevenueCat: identify + sync (single source of truth)
               import('@/lib/revenuecat').then(async ({ identifyUser, syncSubscriptionAfterLogin }) => {
                 await identifyUser(session.user.id);
-                await syncSubscriptionAfterLogin(session.user.id, session.user.email ?? '');
+                if (event === 'SIGNED_IN') {
+                  await syncSubscriptionAfterLogin(session.user.id, session.user.email ?? '');
+                }
               });
               
               checkAdminStatus(session.user.id);
