@@ -472,6 +472,37 @@ const Profile = () => {
           </CardContent>
         </Card>
 
+        {/* Edit Name Dialog */}
+        <Dialog open={showNameDialog} onOpenChange={setShowNameDialog}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>Editar nome</DialogTitle>
+              <DialogDescription>
+                Esse é o nome exibido no seu perfil.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-2 py-2">
+              <Label htmlFor="profile-name">Nome</Label>
+              <Input
+                id="profile-name"
+                value={nameInput}
+                onChange={(e) => setNameInput(e.target.value)}
+                placeholder="Seu nome"
+                maxLength={60}
+                autoFocus
+              />
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setShowNameDialog(false)} disabled={savingName}>
+                Cancelar
+              </Button>
+              <Button onClick={handleSaveName} disabled={savingName}>
+                {savingName ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Salvar'}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
         {/* Avatar Upload Modal */}
         <AvatarUpload
           currentAvatarUrl={avatarUrl}
