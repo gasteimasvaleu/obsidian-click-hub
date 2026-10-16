@@ -173,6 +173,10 @@ const Profile = () => {
 
   const levelProgress = ((progress.total_points % 100) / 100) * 100;
   const nextLevelPoints = (progress.level * 100) - progress.total_points;
+  const displayName =
+    profileName ||
+    user.user_metadata?.full_name ||
+    (user.email?.includes('privaterelay.appleid.com') ? 'Usuário Apple' : 'Usuário');
 
   return (
     <div className="min-h-screen bg-black p-4 md:p-8 pb-28 md:pb-8">
