@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Trophy, Star, Target, Activity, LogOut, Camera, BookOpen, StickyNote, Music, Trash2, Lock, Crown } from 'lucide-react';
+import { Trophy, Star, Target, Activity, LogOut, Camera, BookOpen, StickyNote, Music, Trash2, Lock, Crown, Pencil, Loader2 } from 'lucide-react';
 import { useSubscription } from '@/hooks/useSubscription';
 import { Paywall } from '@/components/Paywall';
 import { useNavigate } from 'react-router-dom';
@@ -22,6 +22,11 @@ import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import {
+  Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle,
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 const Profile = () => {
   const { user, loading: authLoading, signOut } = useAuth();
@@ -33,6 +38,10 @@ const Profile = () => {
   const { isActive: isPremium, loading: subLoading, refresh: refreshSubscription } = useSubscription();
   const [showPaywall, setShowPaywall] = useState(false);
   const [expiresAt, setExpiresAt] = useState<string | null>(null);
+  const [profileName, setProfileName] = useState<string>('');
+  const [showNameDialog, setShowNameDialog] = useState(false);
+  const [nameInput, setNameInput] = useState('');
+  const [savingName, setSavingName] = useState(false);
 
   const handleLogout = async () => {
     await signOut();
@@ -73,12 +82,15 @@ const Profile = () => {
 
       const { data } = await supabase
         .from('profiles')
-        .select('avatar_url')
+        .select('avatar_url, full_name')
         .eq('id', user.id)
         .single();
 
       if (data?.avatar_url) {
         setAvatarUrl(data.avatar_url);
+      }
+      if (data?.full_name) {
+        setProfileName(data.full_name);
       }
     };
 
@@ -111,6 +123,44 @@ const Profile = () => {
     setAvatarUrl(url);
   };
 
+  const openNameDialog = () => {
+    setNameInput(displayName);
+    setShowNameDialog(true);
+  };
+
+  const handleSaveName = async () => {
+    const newName = nameInput.trim();
+    if (!newName) {
+      toast.error('Digite um nome válido.');
+      return;
+    }
+    if (newName.length > 60) {
+      toast.error('O nome pode ter no máximo 60 caracteres.');
+      return;
+    }
+
+    setSavingName(true);
+    try {
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .update({ full_name: newName })
+        .eq('id', user!.id);
+      if (profileError) throw profileError;
+
+      // Atualiza também os metadados de auth para refletir na hora
+      await supabase.auth.updateUser({ data: { full_name: newName } });
+
+      setProfileName(newName);
+      setShowNameDialog(false);
+      toast.success('Nome atualizado!');
+    } catch (err) {
+      console.error(err);
+      toast.error('Erro ao atualizar o nome. Tente novamente.');
+    } finally {
+      setSavingName(false);
+    }
+  };
+
   if (authLoading || progressLoading) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
@@ -123,6 +173,10 @@ const Profile = () => {
 
   const levelProgress = ((progress.total_points % 100) / 100) * 100;
   const nextLevelPoints = (progress.level * 100) - progress.total_points;
+  const displayName =
+    profileName ||
+    user.user_metadata?.full_name ||
+    (user.email?.includes('privaterelay.appleid.com') ? 'Usuário Apple' : 'Usuário');
 
   return (
     <div className="min-h-screen bg-black p-4 md:p-8 pb-28 md:pb-8">
@@ -130,26 +184,37 @@ const Profile = () => {
         <Card className="glass border-primary/20 mb-6">
           <CardContent className="pt-6">
             <div className="flex flex-col md:flex-row items-center gap-6">
-              <div className="relative group">
+              <div className="relative">
                 <Avatar className="w-24 h-24 border-4 border-primary/30">
                   <AvatarImage src={avatarUrl || user.user_metadata?.avatar_url} />
                   <AvatarFallback className="bg-primary/20 text-primary text-2xl font-bold">
-                    {user.user_metadata?.full_name?.charAt(0) || user.email?.charAt(0).toUpperCase()}
+                    {displayName.charAt(0).toUpperCase() || user.email?.charAt(0).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
                 <button
                   onClick={() => setShowAvatarUpload(true)}
-                  className="absolute inset-0 flex items-center justify-center bg-black/60 rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                  className="absolute -bottom-1 -right-1 flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground border-2 border-background shadow-md cursor-pointer"
                   title="Alterar foto"
+                  aria-label="Alterar foto"
                 >
-                  <Camera className="w-6 h-6 text-white" />
+                  <Camera className="w-4 h-4" />
                 </button>
               </div>
-              
+
               <div className="flex-1 text-center md:text-left">
-                <h1 className="text-3xl font-bold text-white mb-1">
-                  {user.user_metadata?.full_name || (user.email?.includes('privaterelay.appleid.com') ? 'Usuário Apple' : 'Usuário')}
-                </h1>
+                <div className="flex items-center gap-2 justify-center md:justify-start mb-1">
+                  <h1 className="text-3xl font-bold text-white">
+                    {displayName}
+                  </h1>
+                  <button
+                    onClick={openNameDialog}
+                    className="flex items-center justify-center w-7 h-7 rounded-full bg-primary/15 text-primary hover:bg-primary/25 transition-colors cursor-pointer"
+                    title="Editar nome"
+                    aria-label="Editar nome"
+                  >
+                    <Pencil className="w-3.5 h-3.5" />
+                  </button>
+                </div>
                 <p className="text-muted-foreground mb-3 flex items-center gap-1.5 justify-center md:justify-start">
                   {user.email?.includes('privaterelay.appleid.com') ? (
                     <>
@@ -406,6 +471,37 @@ const Profile = () => {
             </Tabs>
           </CardContent>
         </Card>
+
+        {/* Edit Name Dialog */}
+        <Dialog open={showNameDialog} onOpenChange={setShowNameDialog}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>Editar nome</DialogTitle>
+              <DialogDescription>
+                Esse é o nome exibido no seu perfil.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-2 py-2">
+              <Label htmlFor="profile-name">Nome</Label>
+              <Input
+                id="profile-name"
+                value={nameInput}
+                onChange={(e) => setNameInput(e.target.value)}
+                placeholder="Seu nome"
+                maxLength={60}
+                autoFocus
+              />
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setShowNameDialog(false)} disabled={savingName}>
+                Cancelar
+              </Button>
+              <Button onClick={handleSaveName} disabled={savingName}>
+                {savingName ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Salvar'}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
 
         {/* Avatar Upload Modal */}
         <AvatarUpload
