@@ -13,7 +13,7 @@ Nenhum comando é necessário: o AppFlow builda a partir do que está no GitHub,
 
 ## Android — precisa atualizar a pasta uma vez
 
-A pasta no seu Mac ainda está na versão antiga, então o arquivo gerado sairia com o código de versão repetido. Rodar na pasta do projeto (a de dentro, que tem o `package.json`):
+A pasta no seu Mac ainda está na versão antiga, então o arquivo gerado sairia com o código de versão repetido. Rodar tudo na raiz do projeto — a pasta que tem `package.json`, `android` e `ios` lado a lado — e nunca de dentro de `android`. De dentro de `android`, o `git checkout` com o caminho do iPhone não encontra o arquivo, e o script de sincronização pode gravar as coisas no lugar errado.
 
 ```text
 cd "/Users/caioroberto/Desktop/Projetos Bibliatoon Club/BibliaToon Club APP"
