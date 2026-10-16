@@ -1309,6 +1309,10 @@ export type Database = {
         }
         Returns: boolean
       }
+      update_my_whatsapp: {
+        Args: { _optin?: boolean; _phone?: string }
+        Returns: undefined
+      }
     }
     Enums: {
       app_role: "admin" | "user"
