@@ -178,61 +178,13 @@ export const restorePurchases = async (): Promise<{
 /**
  * Sync RevenueCat subscription status to Supabase subscribers table.
  */
-export const syncSubscriptionAfterLogin = async (userId: string, email: string): Promise<void> => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const syncSubscriptionAfterLogin = async (_userId: string, _email: string): Promise<void> => {
   if (!isRevenueCatSupported()) return;
-
   try {
-    // Only trust the subscription that already belongs to this identified app user.
-    // No automatic restore here: restoring is an explicit user action (Paywall/Login).
-    const status = await checkSubscriptionStatus();
-    if (!status.isActive) return;
-
-    const { data: existingByEmail } = await supabase
-      .from('subscribers')
-      .select('id, user_id')
-      .eq('email', email)
-      .maybeSingle();
-
-    if (existingByEmail && !existingByEmail.user_id) {
-      await supabase
-        .from('subscribers')
-        .update({
-          user_id: userId,
-          subscription_status: 'active' as const,
-          subscription_expires_at: status.expiresAt ?? null,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', existingByEmail.id);
-      return;
-    }
-
-    const { data: existingByUserId } = await supabase
-      .from('subscribers')
-      .select('id')
-      .eq('user_id', userId)
-      .maybeSingle();
-
-    if (existingByUserId) {
-      await supabase
-        .from('subscribers')
-        .update({
-          subscription_status: 'active' as const,
-          subscription_expires_at: status.expiresAt ?? null,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', existingByUserId.id);
-    } else {
-      await supabase
-        .from('subscribers')
-        .insert({
-          user_id: userId,
-          email,
-          subscription_status: 'active' as const,
-          subscription_expires_at: status.expiresAt ?? null,
-          product_source: 'revenuecat',
-        });
-    }
+    // The server asks RevenueCat directly and is the only one allowed to write subscriptions.
+    await supabase.functions.invoke('rc-sync', { body: { platform: getPlatform() } });
   } catch (error) {
-    console.error('RevenueCat: syncSubscriptionAfterLogin error', error);
+    console.error('RevenueCat: rc-sync error', error);
   }
 };
