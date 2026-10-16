@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Trophy, Star, Target, Activity, LogOut, Camera, BookOpen, StickyNote, Music, Trash2, Lock, Crown, Pencil, Loader2 } from 'lucide-react';
 import { useSubscription } from '@/hooks/useSubscription';
+import { APP_BUNDLE_VERSION } from '@/lib/revenuecat';
 import { Paywall } from '@/components/Paywall';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
@@ -521,6 +522,10 @@ const Profile = () => {
             onClose={() => setShowPaywall(false)}
           />
         )}
+
+        <p className="text-center text-xs text-muted-foreground/60 mt-6">
+          versão {APP_BUNDLE_VERSION}
+        </p>
       </div>
     </div>
   );
