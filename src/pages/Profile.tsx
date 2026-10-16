@@ -184,26 +184,37 @@ const Profile = () => {
         <Card className="glass border-primary/20 mb-6">
           <CardContent className="pt-6">
             <div className="flex flex-col md:flex-row items-center gap-6">
-              <div className="relative group">
+              <div className="relative">
                 <Avatar className="w-24 h-24 border-4 border-primary/30">
                   <AvatarImage src={avatarUrl || user.user_metadata?.avatar_url} />
                   <AvatarFallback className="bg-primary/20 text-primary text-2xl font-bold">
-                    {user.user_metadata?.full_name?.charAt(0) || user.email?.charAt(0).toUpperCase()}
+                    {displayName.charAt(0).toUpperCase() || user.email?.charAt(0).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
                 <button
                   onClick={() => setShowAvatarUpload(true)}
-                  className="absolute inset-0 flex items-center justify-center bg-black/60 rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                  className="absolute -bottom-1 -right-1 flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground border-2 border-background shadow-md cursor-pointer"
                   title="Alterar foto"
+                  aria-label="Alterar foto"
                 >
-                  <Camera className="w-6 h-6 text-white" />
+                  <Camera className="w-4 h-4" />
                 </button>
               </div>
-              
+
               <div className="flex-1 text-center md:text-left">
-                <h1 className="text-3xl font-bold text-white mb-1">
-                  {user.user_metadata?.full_name || (user.email?.includes('privaterelay.appleid.com') ? 'Usuário Apple' : 'Usuário')}
-                </h1>
+                <div className="flex items-center gap-2 justify-center md:justify-start mb-1">
+                  <h1 className="text-3xl font-bold text-white">
+                    {displayName}
+                  </h1>
+                  <button
+                    onClick={openNameDialog}
+                    className="flex items-center justify-center w-7 h-7 rounded-full bg-primary/15 text-primary hover:bg-primary/25 transition-colors cursor-pointer"
+                    title="Editar nome"
+                    aria-label="Editar nome"
+                  >
+                    <Pencil className="w-3.5 h-3.5" />
+                  </button>
+                </div>
                 <p className="text-muted-foreground mb-3 flex items-center gap-1.5 justify-center md:justify-start">
                   {user.email?.includes('privaterelay.appleid.com') ? (
                     <>
