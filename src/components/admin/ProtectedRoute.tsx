@@ -15,8 +15,7 @@ export const ProtectedRoute = ({ children, requireAdmin = false }: ProtectedRout
   useEffect(() => {
     if (!loading) {
       if (!user) {
-        toast.error('Você precisa estar logado para acessar esta página');
-        navigate('/login');
+        navigate('/login', { replace: true });
       } else if (requireAdmin && !isAdmin) {
         toast.error('Você não tem permissão para acessar esta página');
         navigate('/');
