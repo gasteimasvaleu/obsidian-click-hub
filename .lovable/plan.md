@@ -3,10 +3,12 @@
 ## O que o print mostra
 "AuthorizationError error 1000" é a Apple dizendo que **o app instalado não tem permissão para usar "Entrar com Apple"**. O erro acontece no próprio iPhone, antes de chegar ao nosso servidor — por isso nada aparecia no Supabase.
 
-Conferi o projeto: a permissão está declarada e ligada ao app. Então a permissão se perdeu **na hora de assinar o build** (perfil de distribuição usado no AppFlow/Xcode), e não no código. Nenhuma mudança de código ou live update resolve isso.
+Conferi o histórico: entre a 1.2 (36) e a 1.3 (37) a única mudança na parte do iPhone foi o número da versão. As duas saíram do AppFlow. Então a diferença está **na assinatura do build** (certificado/perfil usado pelo AppFlow naquele build) ou no próprio iPhone — não no código. Live update não resolve.
 
-## Teste rápido antes (1 minuto)
-No iPhone: Ajustes → seu nome no topo. Se não houver uma conta Apple logada, o erro 1000 também aparece. Se estiver logado, siga abaixo.
+## Testes rápidos antes (5 minutos)
+1. iPhone: Ajustes → seu nome no topo. Precisa haver uma conta Apple logada.
+2. AppFlow → Builds: abra o build da 1.2 (36) e o da 1.3 (37) e compare o campo **Signing certificate / profile**. Se forem diferentes, o 37 usou um perfil sem o login Apple — confirma a causa.
+3. Se tiver outro iPhone com a 1.2 ainda instalada, teste lá: se a 1.2 funcionar e a 1.3 não, é a assinatura.
 
 ## O que você faz (no site da Apple e no AppFlow)
 1. developer.apple.com → Certificates, Identifiers & Profiles → **Identifiers** → `com.bibliatoonkids.app` → confirme que **Sign In with Apple** está marcado. Se não estiver, marque e salve.
