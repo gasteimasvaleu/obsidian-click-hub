@@ -1,29 +1,26 @@
-# Login com Apple: gerar o build 1.3.1 com a assinatura corrigida
+# Login com Apple ainda falha: conferir o arquivo do app antes de qualquer outra coisa
 
-## Conclusão do teste
-Mesmo depois de "Parar de usar" no iPhone, o login com Apple continua falhando. Então o problema não é o aparelho: o build 1.3 (37) saiu do AppFlow sem a permissão de login com Apple. Isso só se corrige com um build novo. Live update não resolve.
+## Primeiro: confirmar que você testou o build certo
+Depois do Transporter, a Apple leva de 10 a 30 minutos para liberar o build no TestFlight. O app aberto precisa ter vindo do **TestFlight**: o ícone tem um pontinho laranja ao lado do nome, e dentro do app TestFlight aparece "1.3.1 (38)". Se você testou o app da App Store, ainda é a 1.3 (37) com o problema.
 
-O projeto já está preparado como **1.3.1 (build 38)**. Não preciso mudar nenhum código.
+## Teste definitivo no Mac (2 minutos)
+Esse teste mostra se o arquivo enviado pelo Transporter tem a permissão de login com Apple. No Terminal, troque o caminho pelo do arquivo `.ipa` que você baixou do AppFlow:
 
-## O que você faz
+```
+cd ~/Downloads
+rm -rf ipa-check && mkdir ipa-check && cd ipa-check
+unzip -q "/caminho/para/App.ipa"
+codesign -d --entitlements - Payload/App.app
+```
 
-**1. Gerar o perfil de novo (site da Apple)**
-- developer.apple.com → Certificates, Identifiers & Profiles → **Profiles**
-- Abra `BibliaToonKIDS_AppStore_Final` → **Edit**.
-- Confira que o certificado marcado é o mesmo que está no AppFlow e que, na lista de recursos (Capabilities), aparece **Sign In with Apple**.
-- **Save** → **Download**.
+Me mande o que aparecer.
+- **Aparece `com.apple.developer.applesignin`:** o arquivo está certo e o problema está em outro lugar (configuração da Apple ou do Supabase). Aí sigo por esse caminho.
+- **Não aparece:** o AppFlow continua assinando sem a permissão. O caminho mais seguro passa a ser gerar o build pelo **Xcode no Mac**: Product → Archive → Distribute → App Store Connect, com o número de build 39.
 
-**2. Trocar o perfil no AppFlow**
-- AppFlow → Settings → Certificates → abra o certificado iOS de produção (App Store) → substitua o perfil pelo arquivo baixado → salve.
-- Na tela de build, confira que o build vai usar esse certificado.
+## Também me mande
+- Print da tela do perfil `BibliaToonKIDS_AppStore_Final` no site da Apple (a tela de Edit, mostrando certificado e Capabilities).
+- Print do certificado iOS em AppFlow → Settings → Certificates.
 
-**3. Gerar e testar**
-- Gere o build iOS a partir do commit mais novo. Ele deve aparecer como 1.3.1 (38).
-- Mande para o TestFlight, instale e teste **"Continuar com Apple"**.
-
-**4. Enviar para a Apple**
-- Se o login funcionar: crie a versão 1.3.1 no App Store Connect, escolha o build 38 e envie.
-- Peça revisão acelerada em developer.apple.com/contact/app-store/?topic=expedite, explicando que o login com Apple quebrou na versão publicada.
-
-## Se ainda falhar no TestFlight
-Me mande o print do perfil no site da Apple (a tela de Edit) e a tela de certificados do AppFlow. Aí comparo item por item.
+## O que eu faço depois
+- Se for preciso um build novo, subo o número de 38 para 39.
+- Se o arquivo estiver certo, investigo a configuração do login com Apple no Supabase e no site da Apple (Services ID e chave).
