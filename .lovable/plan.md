@@ -1,26 +1,35 @@
-# Login com Apple ainda falha: conferir o arquivo do app antes de qualquer outra coisa
+# Login com Apple: causa encontrada no jeito como o AppFlow monta o app
 
-## Primeiro: confirmar que você testou o build certo
-Depois do Transporter, a Apple leva de 10 a 30 minutos para liberar o build no TestFlight. O app aberto precisa ter vindo do **TestFlight**: o ícone tem um pontinho laranja ao lado do nome, e dentro do app TestFlight aparece "1.3.1 (38)". Se você testou o app da App Store, ainda é a 1.3 (37) com o problema.
+## O que os prints mostraram
+- O perfil da Apple está certo: o login com Apple aparece em Capabilities, e o certificado é o mesmo cadastrado no AppFlow.
+- Mesmo assim, o arquivo do app (.ipa) saiu sem nenhuma permissão: nem o login com Apple, nem as notificações. Então o perfil não é o problema. O que se perde é o arquivo de permissões do app, durante a montagem.
 
-## Teste definitivo no Mac (2 minutos)
-Esse teste mostra se o arquivo enviado pelo Transporter tem a permissão de login com Apple. No Terminal, troque o caminho pelo do arquivo `.ipa` que você baixou do AppFlow:
+## Causa provável
+O projeto tem um arquivo de instruções que o AppFlow lê na hora de montar o app. Ele manda montar o app **com a assinatura em branco**. Quando o app é montado sem assinatura, o Xcode joga fora o arquivo de permissões. Depois o AppFlow assina com o perfil, mas as permissões já sumiram. É exatamente o resultado que o seu teste mostrou.
 
-```
-cd ~/Downloads
-rm -rf ipa-check && mkdir ipa-check && cd ipa-check
-unzip -q "/caminho/para/App.ipa"
-codesign -d --entitlements - Payload/App.app
-```
+Ainda não sei por que a 1.2 funcionava com essa mesma instrução. Talvez o AppFlow tenha mudado a forma de montar. Por isso o teste no Mac continua sendo a prova final, antes de enviar.
 
-Me mande o que aparecer.
-- **Aparece `com.apple.developer.applesignin`:** o arquivo está certo e o problema está em outro lugar (configuração da Apple ou do Supabase). Aí sigo por esse caminho.
-- **Não aparece:** o AppFlow continua assinando sem a permissão. O caminho mais seguro passa a ser gerar o build pelo **Xcode no Mac**: Product → Archive → Distribute → App Store Connect, com o número de build 39.
+## O que eu faço
+- Corrijo essa instrução: o app passa a ser montado já assinado com o certificado de distribuição e o perfil `BibliaToonKIDS_AppStore_Final`. Assim as permissões entram no app.
+- Subo o build de 38 para **39**, porque o 38 já foi enviado. A versão continua 1.3.1.
 
-## Também me mande
-- Print da tela do perfil `BibliaToonKIDS_AppStore_Final` no site da Apple (a tela de Edit, mostrando certificado e Capabilities).
-- Print do certificado iOS em AppFlow → Settings → Certificates.
+## O que você faz
+1. Gere um novo build iOS no AppFlow a partir do commit mais novo. Ele deve sair como 1.3.1 (39).
+2. **Antes de enviar**, repita o teste no Mac com o novo .ipa:
+   ```
+   rm -rf ~/Downloads/ipa-check && mkdir ~/Downloads/ipa-check && cd ~/Downloads/ipa-check
+   unzip -q "/caminho/do/novo.ipa"
+   codesign -d --entitlements - Payload/App.app
+   ```
+   Agora precisa aparecer `com.apple.developer.applesignin`.
+3. Só se aparecer: envie pelo Transporter, teste no TestFlight e mande para revisão acelerada.
 
-## O que eu faço depois
-- Se for preciso um build novo, subo o número de 38 para 39.
-- Se o arquivo estiver certo, investigo a configuração do login com Apple no Supabase e no site da Apple (Services ID e chave).
+## Plano B, se o AppFlow ignorar a correção
+Monte pelo Xcode no Mac, que respeita o arquivo de permissões:
+- `npm run sync:ios`, abrir `ios/App/App.xcworkspace`, Product → Archive → Distribute App → App Store Connect.
+- Eu te passo o passo a passo detalhado se for preciso.
+
+## Detalhes técnicos
+- `ios/App/Gymfile`: `xcargs` hoje passa `CODE_SIGN_IDENTITY=` (vazio), o que gera um archive sem entitlements. Trocar por `CODE_SIGN_IDENTITY="Apple Distribution" PROVISIONING_PROFILE_SPECIFIER="BibliaToonKIDS_AppStore_Final" DEVELOPMENT_TEAM=CASJQDDA7L CODE_SIGN_STYLE=Manual`.
+- `project.pbxproj`, configuração Release: `DEVELOPMENT_TEAM` vazio → `CASJQDDA7L`, e `CODE_SIGN_IDENTITY` → `Apple Distribution`.
+- `CURRENT_PROJECT_VERSION` 38 → 39 em Debug e Release.
