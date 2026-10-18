@@ -1,20 +1,15 @@
-# Testar o login Apple no build 1.3.1 (39) pelo TestFlight
+# Enviar a versão 1.3.1 (build 39) para revisão da Apple
 
-## Situação
-- Seu print foi tirado no app baixado da **App Store**, que ainda é a versão 1.3 (build 37). Essa versão não tem a permissão do login Apple, então o código 1000 ali era esperado.
-- O TestFlight já mostra o **1.3.1 (39)** disponível. Esse é o primeiro build em que a permissão aparece no IPA, como vimos no resultado do `codesign`.
-- O painel mostra que o último build instalado pelo TestFlight no seu iPhone foi o 1.0 (28), em março. Ou seja, o 39 ainda não foi testado.
+O login com Apple funcionou no build 39 pelo TestFlight. Não precisa mudar nada no app.
 
-Não precisa mudar nada no app.
+## Seus passos
+1. No App Store Connect, abra a aba Distribuição e crie a versão **1.3.1**.
+2. Na seção "Compilação", escolha **1.3.1 (39)**.
+3. Nas notas da versão, escreva algo como: "Correção do login com Apple e melhorias de estabilidade."
+4. Em App Review Information, confira se o login de teste (`mcpixgordo@hotmail.com`) ainda está preenchido.
+5. Mantenha a China continental fora da disponibilidade.
+6. Envie para revisão.
 
-## Passos para testar
-1. No iPhone, abra o app **TestFlight** (ícone azul, não a App Store). Entre com a mesma conta Apple de `caiorobbb@gmail.com`.
-2. Toque em BíbliaToon CLUB, procure **1.3.1 (39)** em "Versões anteriores/Compilações" e toque em **Instalar**. Isso substitui o app da App Store.
-3. Para conferir a versão, abra o TestFlight: ele mostra "1.3.1 (39)" embaixo do nome do app.
-4. Abra o app e toque em "Continuar com Apple".
-5. Se funcionar: no App Store Connect, aba Distribuição, crie a versão 1.3.1, escolha o build 39 e envie para revisão.
-6. Se ainda der o código 1000: me mande o print e eu sigo para o próximo passo (gerar pelo Xcode no Mac).
-
-## Detalhes técnicos
-- Builds 37 e 38: o IPA não tinha `com.apple.developer.applesignin`, então dão erro 1000.
-- Build 39: o IPA tem `com.apple.developer.applesignin` e `aps-environment`, como mostrou o `codesign`.
+## Para as próximas versões
+- Aumente só o número da versão e do build. A configuração de assinatura já está certa.
+- Antes de enviar, confira o IPA com `codesign` e veja se aparece `com.apple.developer.applesignin`.
