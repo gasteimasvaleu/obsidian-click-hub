@@ -1,4 +1,4 @@
-xcargs "DEVELOPMENT_TEAM=CASJQDDA7L CODE_SIGN_IDENTITY= CODE_SIGN_STYLE=Manual"
+xcargs "DEVELOPMENT_TEAM=CASJQDDA7L CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY='Apple Distribution' PROVISIONING_PROFILE_SPECIFIER=BibliaToonKIDS_AppStore_Final CODE_SIGN_ENTITLEMENTS=App/App.entitlements"
 export_method "app-store"
 skip_profile_detection true
 export_options({
