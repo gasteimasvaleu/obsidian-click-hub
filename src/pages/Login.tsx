@@ -114,7 +114,8 @@ const Login = () => {
       if (error?.message?.includes('cancelled') || error?.code === '1001') {
         // User cancelled, do nothing
       } else {
-        toast.error('Erro ao fazer login com Apple');
+        const detail = [error?.code, error?.message || String(error)].filter(Boolean).join(' - ');
+        toast.error(`Erro ao fazer login com Apple: ${detail}`, { duration: 10000 });
       }
     } finally {
       setIsAppleSigningIn(false);
