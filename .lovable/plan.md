@@ -1,12 +1,17 @@
-# Paywall: mostrar o preço em reais (R$ 29,90)
+# Enviar a versão 2.2.4 (código 9) para Produção no Google Play
 
-## O que muda
-- O card do paywall vai mostrar **R$ 29,90/mês** em vez de $4.99.
-- Se a loja informar o preço já em reais (conta brasileira), usamos o valor da loja. Se vier em outra moeda (dólar etc.), mostramos o valor fixo R$ 29,90/mês.
+O arquivo 2.2.4 já subiu e está salvo ("Inativo" quer dizer que ainda não entrou em nenhuma versão). Não precisa enviar de novo. Nada muda no app.
 
-## Aviso importante
-O $4.99 aparece porque a conta Apple/Google desse celular está registrada fora do Brasil (ou é conta de teste/sandbox). Quem tem conta brasileira normalmente já vê o preço em reais. A cobrança é sempre feita pela loja na moeda da conta: uma conta dos EUA continua pagando $4.99, mesmo com o texto em reais. Confira se o preço Brasil está em R$ 29,90 no App Store Connect e no Play Console.
+## Passos no Play Console
+1. Menu da esquerda: **Testar e lançar → Produção** (ícone de foguete).
+2. Clique em **Criar nova versão** (se aparecer um rascunho já iniciado, clique em **Editar versão**).
+3. Em "Pacotes de apps", clique em **Adicionar da biblioteca** e escolha o **9 (2.2.4)**.
+4. Preencha as notas da versão em pt-BR:
+   "Entre grátis e assista 3 aulas sem pagar; assinatura direto pela loja, nova tela inicial e correções."
+5. **Próxima** → confira os avisos → **Salvar** → **Enviar para revisão** (ou vá em "Visão geral da publicação" e clique em "Enviar alterações para revisão").
 
-## Detalhes técnicos
-- `src/components/Paywall.tsx`: ler `product.currencyCode`; se for `BRL`, usar `priceString`; senão usar `'R$ 29,90'`. O valor inicial (antes de carregar) também passa a ser `R$ 29,90/mês` em vez de "Mensal".
-- Chega aos celulares via live update.
+## Atenção: países
+Na sua tela, a versão de Produção aparece em **1 de 178 países/regiões**. Se quiser vender em mais lugares, vá em **Produção → aba Países/regiões → Adicionar países/regiões** antes de enviar. Se o objetivo é só o Brasil, está certo assim.
+
+## Depois
+A revisão do Google costuma levar de algumas horas a ~3 dias. Acompanhe em **Visão geral da publicação**.
