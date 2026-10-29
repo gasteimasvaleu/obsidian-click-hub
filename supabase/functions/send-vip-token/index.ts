@@ -209,14 +209,34 @@ Deno.serve(async (req) => {
         if (!ZAPI_INSTANCE || !ZAPI_TOKEN || !ZAPI_CLIENT_TOKEN) {
           errors.push("Credenciais Z-API não configuradas");
         } else {
+          const zapiBase = `https://api.z-api.io/instances/${ZAPI_INSTANCE}/token/${ZAPI_TOKEN}`;
+          const zapiHeaders = {
+            "Content-Type": "application/json",
+            "Client-Token": ZAPI_CLIENT_TOKEN,
+          };
+
+          // Check the number is on WhatsApp before sending
+          let phoneExists = true;
+          try {
+            const existsRes = await fetch(`${zapiBase}/phone-exists/${normalizedPhone}`, { headers: zapiHeaders });
+            const existsData = await existsRes.json().catch(() => ({}));
+            console.log("Z-API phone-exists:", normalizedPhone, existsRes.status, JSON.stringify(existsData));
+            if (existsRes.ok && existsData?.exists === false) phoneExists = false;
+          } catch (e) {
+            console.error("phone-exists check failed:", e);
+          }
+
+          if (!phoneExists) {
+            errors.push("Este número não tem WhatsApp. Confira o DDD e o 9 extra");
+          } else {
           const whatsappMessage = `🎉 *Parabéns, ${displayName}!*
 
-Você recebeu um *Acesso VIP* ao *BíbliaTooon Kids*! 🌟
+Você recebeu um *Acesso VIP* ao *BíbliaToon Club*! 🌟
 
-O BíbliaTooon Kids é um app cristão feito com carinho para crianças aprenderem sobre a Bíblia de forma divertida e interativa! 📖✨
+O BíbliaToon Club é um app católico feito com carinho para a família viver a fé de forma divertida e interativa! 📖✨
 
 Aqui você encontra:
-📚 Histórias bíblicas animadas
+📚 Cursos e histórias bíblicas animadas
 🎮 Jogos educativos
 🎨 Desenhos para colorir
 🙏 Orações e devocionais diários
@@ -227,28 +247,24 @@ ${signupUrl}
 ⚠️ Este link expira em *48 horas*.
 
 Com carinho,
-Equipe BíbliaTooon Kids 💜`;
+Equipe BíbliaToon Club 💚`;
 
-          const zapiUrl = `https://api.z-api.io/instances/${ZAPI_INSTANCE}/token/${ZAPI_TOKEN}/send-text`;
-
-          const response = await fetch(zapiUrl, {
+          const response = await fetch(`${zapiBase}/send-text`, {
             method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "Client-Token": ZAPI_CLIENT_TOKEN,
-            },
+            headers: zapiHeaders,
             body: JSON.stringify({
               phone: normalizedPhone,
               message: whatsappMessage,
             }),
           });
 
-          if (!response.ok) {
-            const result = await response.json();
-            console.error("Z-API error:", result);
+          const result = await response.json().catch(() => ({}));
+          if (!response.ok || result?.error) {
+            console.error("Z-API error:", response.status, JSON.stringify(result));
             errors.push("Erro ao enviar WhatsApp");
           } else {
-            console.log("WhatsApp VIP message sent to:", normalizedPhone);
+            console.log("WhatsApp VIP message sent to:", normalizedPhone, "result:", JSON.stringify(result));
+          }
           }
         }
       } catch (err) {
