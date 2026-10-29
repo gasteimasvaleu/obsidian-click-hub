@@ -23,6 +23,7 @@ interface CompleteSignupRequest {
   password: string;
   fullName: string;
   phone?: string;
+  email?: string;
 }
 
 type RequestBody = ValidateTokenRequest | CompleteSignupRequest;
@@ -84,6 +85,7 @@ serve(async (req: Request): Promise<Response> => {
             fullName: subscriber.full_name,
             phone: subscriber.phone,
           },
+          needsEmail: subscriber.email.endsWith("@vip.local"),
         }),
         { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
       );
@@ -132,9 +134,30 @@ serve(async (req: Request): Promise<Response> => {
         );
       }
 
+      // VIP via WhatsApp: placeholder email must be replaced by the user's real email
+      let finalEmail: string = subscriber.email;
+      if (subscriber.email.endsWith("@vip.local")) {
+        const typed = (body.email || "").trim().toLowerCase();
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(typed) || typed.length > 255 || typed.endsWith("@vip.local")) {
+          return new Response(
+            JSON.stringify({ success: false, message: "Digite um e-mail válido" }),
+            { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
+          );
+        }
+        const { data: dup } = await supabase
+          .from("subscribers").select("id").eq("email", typed).neq("id", subscriber.id).maybeSingle();
+        if (dup) {
+          return new Response(
+            JSON.stringify({ success: false, message: "Este e-mail já possui uma conta. Faça login." }),
+            { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
+          );
+        }
+        finalEmail = typed;
+      }
+
       // Create user in Supabase Auth
       const { data: authData, error: authError } = await supabase.auth.admin.createUser({
-        email: subscriber.email,
+        email: finalEmail,
         password: body.password,
         email_confirm: true,
         user_metadata: {
@@ -148,7 +171,7 @@ serve(async (req: Request): Promise<Response> => {
         
         if (authError.message.includes("already been registered")) {
           return new Response(
-            JSON.stringify({ success: false, message: "Este email já possui uma conta. Tente fazer login." }),
+            JSON.stringify({ success: false, message: "Este e-mail já possui uma conta. Faça login." }),
             { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
           );
         }
@@ -163,6 +186,7 @@ serve(async (req: Request): Promise<Response> => {
         .from("subscribers")
         .update({
           user_id: authData.user.id,
+          email: finalEmail,
           full_name: body.fullName || subscriber.full_name,
           phone: normalizePhone(body.phone || subscriber.phone || ''),
           subscription_status: "active",
@@ -185,7 +209,7 @@ serve(async (req: Request): Promise<Response> => {
         JSON.stringify({
           success: true,
           message: "Conta criada com sucesso!",
-          email: subscriber.email,
+          email: finalEmail,
         }),
         { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
       );
