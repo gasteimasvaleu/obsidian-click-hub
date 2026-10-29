@@ -181,6 +181,7 @@ const Cadastro = () => {
     }
 
     try {
+      const typedEmail = ((formData.get('email') as string) || '').trim().toLowerCase();
       const { data, error } = await supabase.functions.invoke('complete-signup', {
         body: {
           action: 'complete',
@@ -188,8 +189,16 @@ const Cadastro = () => {
           password,
           fullName,
           phone,
+          email: typedEmail || undefined,
         },
       });
+
+      if (error) {
+        let msg = 'Erro ao criar conta. Tente novamente.';
+        try { msg = (await (error as any).context?.json())?.message || msg; } catch {}
+        toast.error(msg);
+        return;
+      }
 
       if (error) throw error;
 
@@ -448,13 +457,25 @@ const Cadastro = () => {
 
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                value={subscriberData?.email || ''}
-                disabled
-                className="bg-muted"
-              />
+              {subscriberData?.email?.endsWith('@vip.local') ? (
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="Digite seu e-mail"
+                  required
+                  autoComplete="email"
+                  disabled={isLoading}
+                />
+              ) : (
+                <Input
+                  id="email"
+                  type="email"
+                  value={subscriberData?.email || ''}
+                  disabled
+                  className="bg-muted"
+                />
+              )}
             </div>
 
             <div className="space-y-2">
