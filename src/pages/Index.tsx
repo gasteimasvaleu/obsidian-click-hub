@@ -1,3 +1,4 @@
+import homeVideo from "@/assets/home_intro_video.mp4.asset.json";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { FuturisticNavbar } from "@/components/FuturisticNavbar";
@@ -72,7 +73,7 @@ const Index = () => {
           <span aria-hidden className="border-beam" />
           <video
             ref={heroVideoRef}
-            src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/video_517d0687_1763117222774.mp4"
+            src={homeVideo.url}
             className="block w-full max-h-[260px] object-contain"
             autoPlay muted playsInline
             onEnded={(e) => {
