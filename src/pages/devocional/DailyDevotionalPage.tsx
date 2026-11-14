@@ -486,7 +486,7 @@ ${devotional.prayer}
               onClick={() => markAsReadMutation.mutate()}
               disabled={isCompleted}
               aria-label={isCompleted ? "Concluído" : "Marcar como lido"}
-              className="relative z-[2] flex flex-col items-center gap-1 py-3 text-primary-foreground text-xs font-semibold transition-colors hover:bg-primary-foreground/10 active:bg-black/10 disabled:cursor-default disabled:hover:bg-transparent"
+              className="relative z-[2] flex flex-col items-center gap-1 py-3 text-primary-foreground text-xs font-semibold transition-colors hover:bg-primary-foreground/10 active:bg-foreground/10 disabled:cursor-default disabled:hover:bg-transparent"
             >
               <CheckCircle2 size={22} className={isCompleted ? "fill-primary-foreground/30" : ""} />
               {isCompleted ? "Concluído" : "Lido"}
@@ -496,7 +496,7 @@ ${devotional.prayer}
             type="button"
             onClick={handleShare}
             aria-label="Compartilhar"
-            className="relative z-[2] flex flex-col items-center gap-1 py-3 text-primary-foreground text-xs font-semibold transition-colors hover:bg-primary-foreground/10 active:bg-black/10"
+            className="relative z-[2] flex flex-col items-center gap-1 py-3 text-primary-foreground text-xs font-semibold transition-colors hover:bg-primary-foreground/10 active:bg-foreground/10"
           >
             <Share2 size={22} />
             Compartilhar
@@ -505,7 +505,7 @@ ${devotional.prayer}
             type="button"
             onClick={handleGeneratePDF}
             aria-label="Salvar em PDF"
-            className="relative z-[2] flex flex-col items-center gap-1 py-3 text-primary-foreground text-xs font-semibold transition-colors hover:bg-primary-foreground/10 active:bg-black/10"
+            className="relative z-[2] flex flex-col items-center gap-1 py-3 text-primary-foreground text-xs font-semibold transition-colors hover:bg-primary-foreground/10 active:bg-foreground/10"
           >
             <FileDown size={22} />
             PDF
