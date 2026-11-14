@@ -11,8 +11,12 @@ import {
   Repeat,
   Repeat1,
   X,
-  Music
+  Music,
+  ChevronDown
 } from "lucide-react";
+import { SectionHeader } from "@/components/plataforma/CourseCarousel";
+import { GlassCard } from "@/components/GlassCard";
+import { stripEmoji } from "@/lib/stripEmoji";
 import { cn } from "@/lib/utils";
 import { AudioEqualizer } from "./AudioEqualizer";
 export interface Track {
@@ -213,6 +217,9 @@ export const AudioPlayer = ({
     setRepeat(modes[(currentIdx + 1) % modes.length]);
   };
 
+  const [expanded, setExpanded] = useState(false);
+  const [showFullDesc, setShowFullDesc] = useState(false);
+
   const formatTime = (time: number): string => {
     if (isNaN(time)) return "0:00";
     const minutes = Math.floor(time / 60);
@@ -222,150 +229,152 @@ export const AudioPlayer = ({
 
   if (!currentTrack) return null;
 
-  return (
-    <div className="fixed bottom-20 left-0 right-0 z-40 px-4 pb-4 animate-fade-in">
-      <div className="max-w-2xl mx-auto glass rounded-2xl p-4 shadow-[0_0_30px_rgba(0,255,102,0.15)] border border-primary/20">
-        <audio
-          ref={audioRef}
-          onTimeUpdate={handleTimeUpdate}
-          onLoadedMetadata={handleLoadedMetadata}
-          onEnded={handleEnded}
-          onPlay={() => setIsPlaying(true)}
-          onPause={() => setIsPlaying(false)}
-        />
+  const progress = duration ? (currentTime / duration) * 100 : 0;
+  const description = stripEmoji(currentTrack.description || "");
 
-        {/* Track Info & Close */}
-        <div className="flex flex-col gap-2 mb-3">
-          <div className="flex items-start justify-between gap-3">
-            <div className="flex items-start gap-3 flex-1">
-              <div className="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center flex-shrink-0">
-                <Music className="w-5 h-5 text-primary" />
-              </div>
-              <div className="flex-1">
-                <h4 className="text-sm font-semibold text-foreground leading-tight">
-                  {currentTrack.title}
-                </h4>
-                <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
-                  {currentTrack.description}
-                </p>
-              </div>
+  const Cover = ({ className, iconClass }: { className: string; iconClass: string }) =>
+    currentTrack.thumbnail_url ? (
+      <img src={currentTrack.thumbnail_url} alt="" className={cn("object-cover", className)} />
+    ) : (
+      <div className={cn("flex items-center justify-center bg-primary/15", className)}>
+        <Music className={cn("text-primary", iconClass)} />
+      </div>
+    );
+
+  const PlayButton = ({ size }: { size: "sm" | "lg" }) => (
+    <button
+      onClick={(e) => { e.stopPropagation(); togglePlay(); }}
+      aria-label={isPlaying ? "Pausar" : "Tocar"}
+      className={cn(
+        "flex items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg shadow-primary/30 transition-transform active:scale-95",
+        size === "lg" ? "h-16 w-16" : "h-11 w-11"
+      )}
+    >
+      {isPlaying ? <Pause className={size === "lg" ? "h-7 w-7" : "h-5 w-5"} /> : <Play className={cn("ml-0.5", size === "lg" ? "h-7 w-7" : "h-5 w-5")} />}
+    </button>
+  );
+
+  return (
+    <>
+      <audio
+        ref={audioRef}
+        onTimeUpdate={handleTimeUpdate}
+        onLoadedMetadata={handleLoadedMetadata}
+        onEnded={handleEnded}
+        onPlay={() => setIsPlaying(true)}
+        onPause={() => setIsPlaying(false)}
+      />
+
+      {!expanded && (
+        <div className="fixed bottom-20 left-0 right-0 z-40 px-4 pb-4 animate-fade-in">
+          <div
+            role="button"
+            tabIndex={0}
+            onClick={() => setExpanded(true)}
+            className="relative mx-auto flex max-w-[58rem] items-center gap-3 overflow-hidden rounded-2xl border border-primary/30 bg-card p-2.5 pr-3 shadow-lg shadow-primary/20"
+          >
+            <Cover className="h-12 w-12 shrink-0 rounded-xl" iconClass="h-5 w-5" />
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-sm font-semibold text-foreground">{currentTrack.title}</p>
+              <p className="text-xs text-muted-foreground">{formatTime(currentTime)} / {formatTime(duration)}</p>
             </div>
+            <PlayButton size="sm" />
+            <button
+              onClick={(e) => { e.stopPropagation(); handleNext(); }}
+              aria-label="Próxima"
+              className="rounded-full p-2 text-primary hover:bg-primary/10"
+            >
+              <SkipForward className="h-5 w-5" />
+            </button>
             {onClose && (
               <button
-                onClick={onClose}
-                className="p-1.5 rounded-full hover:bg-muted/50 transition-colors flex-shrink-0"
+                onClick={(e) => { e.stopPropagation(); onClose(); }}
+                aria-label="Fechar"
+                className="rounded-full p-1.5 text-muted-foreground hover:bg-muted/50"
               >
-                <X className="w-4 h-4 text-muted-foreground" />
+                <X className="h-4 w-4" />
               </button>
             )}
+            <div className="absolute bottom-0 left-0 h-1 bg-primary transition-[width]" style={{ width: `${progress}%` }} />
           </div>
-          
-          {/* Equalizer Visualizer */}
-          <div className="flex items-center justify-between">
-            <AudioEqualizer isPlaying={isPlaying} />
-            <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <span>{formatTime(currentTime)}</span>
-              <span>/</span>
-              <span>{formatTime(duration)}</span>
+        </div>
+      )}
+
+      {expanded && (
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-background animate-in slide-in-from-bottom duration-300">
+          <div className="mx-auto flex min-h-full max-w-[58rem] flex-col px-4 pb-10 pt-[calc(env(safe-area-inset-top)+1rem)]">
+            <div className="mb-4 flex items-center justify-between">
+              <button onClick={() => setExpanded(false)} aria-label="Minimizar" className="rounded-full p-2 text-primary hover:bg-primary/10">
+                <ChevronDown className="h-7 w-7" />
+              </button>
+              {onClose && (
+                <button onClick={() => { setExpanded(false); onClose(); }} aria-label="Fechar" className="rounded-full p-2 text-muted-foreground hover:bg-muted/50">
+                  <X className="h-5 w-5" />
+                </button>
+              )}
             </div>
-          </div>
-        </div>
 
-        {/* Progress Bar */}
-        <div className="mb-4">
-          <Slider
-            value={[currentTime]}
-            max={duration || 100}
-            step={0.1}
-            onValueChange={handleSeek}
-            className="cursor-pointer"
-          />
-        </div>
+            <div className="relative mx-auto mb-6 w-full max-w-sm">
+              <Cover className="aspect-square w-full rounded-3xl border border-primary/30 shadow-xl shadow-primary/20" iconClass="h-20 w-20" />
+              <div className="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-card/90 px-3 py-1.5">
+                <AudioEqualizer isPlaying={isPlaying} />
+              </div>
+            </div>
 
-        {/* Controls */}
-        <div className="flex items-center justify-between">
-          {/* Left Controls */}
-          <div className="flex items-center gap-1">
-            <button
-              onClick={() => setShuffle(!shuffle)}
-              className={cn(
-                "p-2 rounded-full transition-colors",
-                shuffle 
-                  ? "text-primary bg-primary/20" 
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-              )}
-            >
-              <Shuffle className="w-4 h-4" />
-            </button>
-          </div>
+            <SectionHeader title={currentTrack.title} className="mb-6" />
 
-          {/* Center Controls */}
-          <div className="flex items-center gap-2">
-            <button
-              onClick={handlePrev}
-              className="p-2 rounded-full text-foreground hover:bg-muted/50 transition-colors"
-            >
-              <SkipBack className="w-5 h-5" />
-            </button>
-            <button
-              onClick={togglePlay}
-              className="p-3 rounded-full bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
-            >
-              {isPlaying ? (
-                <Pause className="w-6 h-6" />
-              ) : (
-                <Play className="w-6 h-6 ml-0.5" />
-              )}
-            </button>
-            <button
-              onClick={handleNext}
-              className="p-2 rounded-full text-foreground hover:bg-muted/50 transition-colors"
-            >
-              <SkipForward className="w-5 h-5" />
-            </button>
-          </div>
+            <div className="mb-2">
+              <Slider value={[currentTime]} max={duration || 100} step={0.1} onValueChange={handleSeek} className="cursor-pointer" />
+              <div className="mt-2 flex justify-between text-xs text-muted-foreground">
+                <span>{formatTime(currentTime)}</span>
+                <span>{formatTime(duration)}</span>
+              </div>
+            </div>
 
-          {/* Right Controls */}
-          <div className="flex items-center gap-1">
-            <button
-              onClick={cycleRepeat}
-              className={cn(
-                "p-2 rounded-full transition-colors",
-                repeat !== 'none'
-                  ? "text-primary bg-primary/20"
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-              )}
-            >
-              {repeat === 'one' ? (
-                <Repeat1 className="w-4 h-4" />
-              ) : (
-                <Repeat className="w-4 h-4" />
-              )}
-            </button>
-          </div>
-        </div>
+            <div className="mb-6 flex items-center justify-between px-2">
+              <button
+                onClick={() => setShuffle(!shuffle)}
+                aria-label="Aleatório"
+                className={cn("rounded-full p-2.5 transition-colors", shuffle ? "bg-primary/15 text-primary" : "text-muted-foreground hover:text-foreground")}
+              >
+                <Shuffle className="h-5 w-5" />
+              </button>
+              <button onClick={handlePrev} aria-label="Anterior" className="rounded-full p-2.5 text-primary hover:bg-primary/10">
+                <SkipBack className="h-7 w-7" />
+              </button>
+              <PlayButton size="lg" />
+              <button onClick={handleNext} aria-label="Próxima" className="rounded-full p-2.5 text-primary hover:bg-primary/10">
+                <SkipForward className="h-7 w-7" />
+              </button>
+              <button
+                onClick={cycleRepeat}
+                aria-label="Repetir"
+                className={cn("rounded-full p-2.5 transition-colors", repeat !== 'none' ? "bg-primary/15 text-primary" : "text-muted-foreground hover:text-foreground")}
+              >
+                {repeat === 'one' ? <Repeat1 className="h-5 w-5" /> : <Repeat className="h-5 w-5" />}
+              </button>
+            </div>
 
-        {/* Volume Control - Hidden on mobile */}
-        <div className="hidden sm:flex items-center gap-2 mt-4 pt-3 border-t border-primary/10">
-          <button
-            onClick={toggleMute}
-            className="p-1.5 rounded-full text-muted-foreground hover:text-foreground transition-colors"
-          >
-            {isMuted || volume === 0 ? (
-              <VolumeX className="w-4 h-4" />
-            ) : (
-              <Volume2 className="w-4 h-4" />
+            <div className="mb-6 hidden items-center justify-center gap-2 sm:flex">
+              <button onClick={toggleMute} aria-label="Volume" className="rounded-full p-1.5 text-muted-foreground hover:text-foreground">
+                {isMuted || volume === 0 ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+              </button>
+              <Slider value={[isMuted ? 0 : volume]} max={1} step={0.01} onValueChange={handleVolumeChange} className="w-40" />
+            </div>
+
+            {description && (
+              <GlassCard>
+                <p className={cn("whitespace-pre-line text-sm leading-relaxed text-foreground/80", !showFullDesc && "line-clamp-3")}>
+                  {description}
+                </p>
+                <button onClick={() => setShowFullDesc(!showFullDesc)} className="mt-2 text-sm font-semibold text-primary">
+                  {showFullDesc ? "Ver menos" : "Ver mais"}
+                </button>
+              </GlassCard>
             )}
-          </button>
-          <Slider
-            value={[isMuted ? 0 : volume]}
-            max={1}
-            step={0.01}
-            onValueChange={handleVolumeChange}
-            className="w-24"
-          />
+          </div>
         </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 };
