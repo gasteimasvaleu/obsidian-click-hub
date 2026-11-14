@@ -1,6 +1,10 @@
 import { BookOpen, Star, Shield, Heart, UtensilsCrossed, Sparkles, Church, HeartHandshake, Users, GraduationCap, Moon, Sun, Crown, Droplets, Compass, LucideIcon } from "lucide-react";
 import { GlassCard } from "@/components/GlassCard";
 
+const imageModules = import.meta.glob<{ default: { url: string } }>("@/assets/oracoes/categorias/*.png.asset.json", { eager: true });
+const categoryImage = (id: string) =>
+  Object.entries(imageModules).find(([path]) => path.endsWith(`/${id}.png.asset.json`))?.[1].default.url;
+
 export interface Category {
   id: string;
   name: string;
@@ -78,10 +82,11 @@ export const CategoryGrid = ({
         }`}
       >
         <div className="relative">
-          <Star
-            size={28}
-            className={`mb-2 ${showFavorites ? "text-primary fill-primary" : "text-primary"}`}
-          />
+          {categoryImage("favoritos") ? (
+            <img src={categoryImage("favoritos")} alt="" className="mb-2 h-14 w-14 object-contain" loading="lazy" />
+          ) : (
+            <Star size={28} className="mb-2 text-primary" />
+          )}
           {favoritesCount > 0 && (
             <span className="absolute -top-1 -right-2 bg-primary text-primary-foreground text-xs rounded-full w-5 h-5 flex items-center justify-center">
               {favoritesCount}
@@ -108,10 +113,11 @@ export const CategoryGrid = ({
                 : ""
             }`}
           >
-            <IconComponent
-              size={28}
-              className={`mb-2 ${isSelected ? "text-primary" : "text-primary/70"}`}
-            />
+            {categoryImage(category.id) ? (
+              <img src={categoryImage(category.id)} alt="" className="mb-2 h-14 w-14 object-contain" loading="lazy" />
+            ) : (
+              <IconComponent size={28} className={`mb-2 ${isSelected ? "text-primary" : "text-primary/70"}`} />
+            )}
             <span className="text-xs text-center text-foreground/80 font-medium">
               {category.name}
             </span>
