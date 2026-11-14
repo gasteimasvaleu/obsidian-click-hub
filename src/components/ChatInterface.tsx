@@ -1,5 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
-import { ArrowLeft, Send, Loader2, Sparkles } from "lucide-react";
+import { ChevronLeft, Send, Loader2 } from "lucide-react";
+import { BubbleTitleText } from "@/components/ui/bubble-title-text";
+import amigoDivinoImg from "@/assets/more-menu/amigo-divino.png";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useAIConsent } from "@/hooks/useAIConsent";
@@ -201,24 +203,27 @@ export const ChatInterface = ({ open, onClose }: ChatInterfaceProps) => {
         {/* Card */}
         <div className="flex flex-1 flex-col rounded-2xl overflow-hidden min-h-0 border border-border/40 shadow-2xl">
           {/* Header */}
-          <div className="shrink-0 bg-primary px-4">
-            <div className="flex items-center gap-3 py-3">
-              <Button
-                variant="ghost"
-                size="icon"
+          <div className="shrink-0 neon-glow-user feature-bubble bubble-user relative z-[2] rounded-2xl px-4 text-feature-foreground">
+            <span aria-hidden className="border-beam" />
+            <div className="relative z-[2] flex items-center gap-3 py-3">
+              <img src={amigoDivinoImg} alt="" className="h-10 w-10 object-contain shrink-0" />
+              <h1 className="bubble-title"><BubbleTitleText text="Amigo Divino" /></h1>
+              <button
+                type="button"
                 onClick={onClose}
-                className="text-primary-foreground hover:text-primary-foreground/80 hover:bg-black/10"
+                aria-label="Voltar"
+                className="ml-auto flex items-center -space-x-1 p-2"
               >
-                <ArrowLeft className="h-5 w-5" />
-              </Button>
-              <div className="flex items-center gap-2">
-                <Avatar className="h-8 w-8 border border-black/20">
-                  <AvatarFallback className="bg-black/20 text-primary-foreground text-xs">
-                    <Sparkles className="h-4 w-4" />
-                  </AvatarFallback>
-                </Avatar>
-                <h1 className="text-sm font-bold text-primary-foreground">Amigo Divino</h1>
-              </div>
+                {[0, 1, 2, 3].map((i) => (
+                  <ChevronLeft
+                    key={i}
+                    aria-hidden
+                    className="back-arrow h-5 w-5 text-primary-foreground"
+                    strokeWidth={3}
+                    style={{ ["--arrow-opacity" as string]: 0.2 + (0.8 * i) / 3, animationDelay: `${(3 - i) * 0.12}s` }}
+                  />
+                ))}
+              </button>
             </div>
           </div>
 
@@ -229,8 +234,8 @@ export const ChatInterface = ({ open, onClose }: ChatInterfaceProps) => {
           >
             {messages.length === 0 && !isLoading && (
               <div className="flex flex-col items-center justify-center py-10 animate-fade-in">
-                <div className="w-14 h-14 rounded-full bg-primary/15 flex items-center justify-center mb-4">
-                  <Sparkles className="h-7 w-7 text-primary" />
+                <div className="w-14 h-14 flex items-center justify-center mb-4">
+                  <img src={amigoDivinoImg} alt="" className="h-12 w-12 object-contain" />
                 </div>
                 <p className="text-base text-muted-foreground text-center mb-6 max-w-xs">
                   Olá! Sou seu conselheiro espiritual. Como posso ajudar sua família hoje?
@@ -256,9 +261,9 @@ export const ChatInterface = ({ open, onClose }: ChatInterfaceProps) => {
                   className={`flex gap-2 ${message.role === "user" ? "justify-end" : "justify-start"} animate-fade-in`}
                 >
                   {message.role === "assistant" && (
-                    <Avatar className="h-7 w-7 mt-1 shrink-0 border border-primary/30">
-                      <AvatarFallback className="bg-primary/20 text-primary text-[10px]">
-                        <Sparkles className="h-3.5 w-3.5" />
+                    <Avatar className="h-7 w-7 mt-1 shrink-0">
+                      <AvatarFallback className="bg-transparent">
+                        <img src={amigoDivinoImg} alt="" className="h-7 w-7 object-contain" />
                       </AvatarFallback>
                     </Avatar>
                   )}
@@ -282,9 +287,9 @@ export const ChatInterface = ({ open, onClose }: ChatInterfaceProps) => {
 
               {isLoading && (
                 <div className="flex gap-2 justify-start animate-fade-in">
-                  <Avatar className="h-7 w-7 mt-1 shrink-0 border border-primary/30">
-                    <AvatarFallback className="bg-primary/20 text-primary text-[10px]">
-                      <Sparkles className="h-3.5 w-3.5" />
+                  <Avatar className="h-7 w-7 mt-1 shrink-0">
+                    <AvatarFallback className="bg-transparent">
+                      <img src={amigoDivinoImg} alt="" className="h-7 w-7 object-contain" />
                     </AvatarFallback>
                   </Avatar>
                   <div className="bg-muted/40 backdrop-blur-sm border border-border/50 px-5 py-4 rounded-2xl rounded-bl-md">
