@@ -101,8 +101,8 @@ export default function CoursePage() {
         bannerMobile={course.page_image_desktop || course.banner_desktop || course.page_image_mobile || course.banner_mobile || undefined}
         title={course.title}
         description={course.description}
-        aspectRatioDesktop={16 / 9}
-        aspectRatioMobile={16 / 9}
+        aspectRatioDesktop={1440 / 730}
+        aspectRatioMobile={1440 / 730}
         overlay={false}
         card
       />

@@ -99,8 +99,8 @@ export default function ModulePage() {
         bannerMobile={module.banner_desktop || module.banner_mobile || undefined}
         title={module.title}
         description={module.description}
-        aspectRatioDesktop={16 / 9}
-        aspectRatioMobile={16 / 9}
+        aspectRatioDesktop={1440 / 730}
+        aspectRatioMobile={1440 / 730}
         overlay={false}
         card
       />
