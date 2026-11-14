@@ -1,3 +1,4 @@
+import { BubbleTitleText } from "@/components/ui/bubble-title-text";
 import { SectionHeader } from "@/components/plataforma/CourseCarousel";
 import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -407,42 +408,72 @@ ${devotional.prayer}
           />
         </div>
 
-        <GlassCard className="mb-6">
-          <h2 className="text-xl font-semibold text-foreground mb-3">📝 Introdução</h2>
+        <div className="mb-6">
+          <div className="neon-glow-user feature-bubble bubble-user relative z-[2] rounded-2xl px-4 py-3 text-feature-foreground">
+            <span aria-hidden className="border-beam" />
+            <h2 className="bubble-title relative"><BubbleTitleText text="Introdução" /></h2>
+          </div>
+          <GlassCard className="-mt-4 pt-7 rounded-t-none">
           <p className="text-muted-foreground leading-relaxed">{devotional.introduction}</p>
         </GlassCard>
+        </div>
 
-        <GlassCard className="mb-6 bg-gradient-to-br from-blue-500/10 to-purple-500/10 border-blue-400/30">
-          <h2 className="text-xl font-semibold text-foreground mb-3">✨ Versículo do Dia</h2>
+        <div className="mb-6">
+          <div className="neon-glow-user feature-bubble bubble-user relative z-[2] rounded-2xl px-4 py-3 text-feature-foreground">
+            <span aria-hidden className="border-beam" />
+            <h2 className="bubble-title relative"><BubbleTitleText text="Versículo do Dia" /></h2>
+          </div>
+          <GlassCard className="-mt-4 pt-7 rounded-t-none">
           <p className="text-foreground text-lg italic leading-relaxed mb-2">
             "{devotional.verse_text}"
           </p>
-          <p className="text-blue-400">
+          <p className="text-primary">
             - {devotional.book_name} {devotional.chapter}:{devotional.verse_start}
           </p>
         </GlassCard>
+        </div>
 
-        <GlassCard className="mb-6">
-          <h2 className="text-xl font-semibold text-foreground mb-3">💭 Reflexão</h2>
+        <div className="mb-6">
+          <div className="neon-glow-user feature-bubble bubble-user relative z-[2] rounded-2xl px-4 py-3 text-feature-foreground">
+            <span aria-hidden className="border-beam" />
+            <h2 className="bubble-title relative"><BubbleTitleText text="Reflexão" /></h2>
+          </div>
+          <GlassCard className="-mt-4 pt-7 rounded-t-none">
           <p className="text-muted-foreground leading-relaxed whitespace-pre-line">{devotional.reflection}</p>
         </GlassCard>
+        </div>
 
-        <GlassCard className="mb-6 bg-yellow-500/5 border-yellow-400/30">
-          <h2 className="text-xl font-semibold text-foreground mb-3">🤔 Para Refletir</h2>
+        <div className="mb-6">
+          <div className="neon-glow-user feature-bubble bubble-user relative z-[2] rounded-2xl px-4 py-3 text-feature-foreground">
+            <span aria-hidden className="border-beam" />
+            <h2 className="bubble-title relative"><BubbleTitleText text="Para Refletir" /></h2>
+          </div>
+          <GlassCard className="-mt-4 pt-7 rounded-t-none">
           <p className="text-muted-foreground leading-relaxed italic">{devotional.question}</p>
         </GlassCard>
+        </div>
 
-        <GlassCard className="mb-6">
-          <h2 className="text-xl font-semibold text-foreground mb-3">🎯 Aplicações Práticas</h2>
+        <div className="mb-6">
+          <div className="neon-glow-user feature-bubble bubble-user relative z-[2] rounded-2xl px-4 py-3 text-feature-foreground">
+            <span aria-hidden className="border-beam" />
+            <h2 className="bubble-title relative"><BubbleTitleText text="Aplicações Práticas" /></h2>
+          </div>
+          <GlassCard className="-mt-4 pt-7 rounded-t-none">
           <div className="text-muted-foreground leading-relaxed whitespace-pre-line">
             {devotional.practical_applications}
           </div>
         </GlassCard>
+        </div>
 
-        <GlassCard className="mb-6 bg-purple-500/5 border-purple-400/30">
-          <h2 className="text-xl font-semibold text-foreground mb-3">🙏 Oração</h2>
+        <div className="mb-6">
+          <div className="neon-glow-user feature-bubble bubble-user relative z-[2] rounded-2xl px-4 py-3 text-feature-foreground">
+            <span aria-hidden className="border-beam" />
+            <h2 className="bubble-title relative"><BubbleTitleText text="Oração" /></h2>
+          </div>
+          <GlassCard className="-mt-4 pt-7 rounded-t-none">
           <p className="text-muted-foreground leading-relaxed italic">{devotional.prayer}</p>
         </GlassCard>
+        </div>
 
         <div className="flex flex-wrap gap-3 mb-6">
           {user && !isCompleted && (
@@ -474,8 +505,12 @@ ${devotional.prayer}
         </div>
 
         {user && (
-          <GlassCard>
-            <h2 className="text-xl font-semibold text-foreground mb-3">📝 Minhas Anotações</h2>
+          <div className="mb-6">
+            <div className="neon-glow-user feature-bubble bubble-user relative z-[2] rounded-2xl px-4 py-3 text-feature-foreground">
+              <span aria-hidden className="border-beam" />
+              <h2 className="bubble-title relative"><BubbleTitleText text="Minhas Anotações" /></h2>
+            </div>
+            <GlassCard className="-mt-4 pt-7 rounded-t-none">
             <Textarea
               placeholder="Escreva suas reflexões pessoais sobre este devocional..."
               value={userNotes}
@@ -490,6 +525,7 @@ ${devotional.prayer}
               Salvar Anotação
             </Button>
           </GlassCard>
+          </div>
         )}
       </div>
     </div>
