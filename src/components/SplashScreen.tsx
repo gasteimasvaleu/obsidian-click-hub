@@ -9,35 +9,26 @@ interface SplashScreenProps {
 
 const SPLASH_IMAGE_URL = splashImage.url;
 const SPLASH_VIDEO_URL = splashVideo.url;
-const MIN_DISPLAY_MS = 2000;
-const MAX_DISPLAY_MS = 7000;
+const SPLASH_DURATION_MS = 6000;
 
 export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
   const [fadeOut, setFadeOut] = useState(false);
   const [videoReady, setVideoReady] = useState(false);
   const completedRef = useRef(false);
-  const mountTimeRef = useRef(Date.now());
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const triggerExit = () => {
     if (completedRef.current) return;
-    const elapsed = Date.now() - mountTimeRef.current;
-    const remaining = Math.max(0, MIN_DISPLAY_MS - elapsed);
-
-    setTimeout(() => {
-      if (completedRef.current) return;
-      completedRef.current = true;
-      setFadeOut(true);
-      setTimeout(() => onComplete(), 400);
-    }, remaining);
+    completedRef.current = true;
+    setFadeOut(true);
+    setTimeout(() => onComplete(), 400);
   };
 
   useEffect(() => {
     // Absolute max timeout — always exits no matter what
     const maxTimer = setTimeout(() => {
-      console.log("SplashScreen: max timeout reached, forcing exit");
       triggerExit();
-    }, MAX_DISPLAY_MS);
+    }, SPLASH_DURATION_MS);
 
     return () => clearTimeout(maxTimer);
   }, []);
@@ -54,20 +45,24 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
       v.setAttribute('muted', '');
       v.setAttribute('playsinline', '');
       v.setAttribute('webkit-playsinline', '');
-      try { v.load(); } catch {}
-      return v.play().catch(() => {});
+      if (!v.paused && !v.ended) return;
+      if (v.ended) return;
+      v.play().catch(() => {});
     };
     const tryPlay = () => primeAndPlay();
     tryPlay();
-    const onTap = () => { tryPlay(); };
-    document.addEventListener('touchstart', onTap, { once: true, passive: true });
-    return () => document.removeEventListener('touchstart', onTap);
+    const onVis = () => { if (document.visibilityState === 'visible') tryPlay(); };
+    v.addEventListener('loadeddata', tryPlay);
+    v.addEventListener('canplay', tryPlay);
+    document.addEventListener('visibilitychange', onVis);
+    document.addEventListener('touchstart', tryPlay, { once: true, passive: true });
+    return () => {
+      v.removeEventListener('loadeddata', tryPlay);
+      v.removeEventListener('canplay', tryPlay);
+      document.removeEventListener('visibilitychange', onVis);
+      document.removeEventListener('touchstart', tryPlay);
+    };
   }, []);
-
-  const handleVideoEnd = () => {
-    console.log("SplashScreen: video ended");
-    triggerExit();
-  };
 
   const handleVideoLoad = () => {
     console.log("SplashScreen: video loaded");
@@ -105,7 +100,6 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
         webkit-playsinline=""
         preload="auto"
         onLoadedData={handleVideoLoad}
-        onEnded={handleVideoEnd}
         onError={() => {
           console.warn("SplashScreen: video failed to load, using image fallback");
         }}
