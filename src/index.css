@@ -365,10 +365,10 @@ All colors MUST be HSL.
   content: "";
   position: absolute;
   pointer-events: none;
-  left: 6%;
-  right: 30%;
-  top: 6px;
-  height: 38%;
-  border-radius: 9999px;
-  background: radial-gradient(ellipse at 30% 0%, hsl(0 0% 100% / 0.45), hsl(0 0% 100% / 0) 70%);
+  left: 0;
+  top: 0;
+  width: 55%;
+  height: 60%;
+  border-top-left-radius: inherit;
+  background: radial-gradient(ellipse at 0% 0%, hsl(0 0% 100% / 0.5), hsl(0 0% 100% / 0) 70%);
 }
