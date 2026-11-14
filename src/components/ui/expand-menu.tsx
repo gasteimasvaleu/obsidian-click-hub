@@ -16,8 +16,8 @@ export type ExpandMenuProps = {
   className?: string;
 };
 
-/** Round trigger that expands downward (anchored top-right) into a labelled list. */
-export function ExpandMenu({ items, showLabels = true, className }: ExpandMenuProps) {
+/** Round trigger that expands to the left inside the navbar (anchored right). */
+export function ExpandMenu({ items, showLabels = false, className }: ExpandMenuProps) {
   const [open, setOpen] = React.useState(false);
   const ref = React.useRef<HTMLDivElement>(null);
 
@@ -43,12 +43,12 @@ export function ExpandMenu({ items, showLabels = true, className }: ExpandMenuPr
           position: "absolute",
           top: 0,
           right: 0,
-          flexDirection: "column",
+          flexDirection: "row-reverse",
           borderRadius: open ? 20 : 9999,
-          padding: open ? 6 : 0,
+          padding: open ? 2 : 0,
           gap: open ? 4 : 0,
           display: "inline-flex",
-          alignItems: "flex-end",
+          alignItems: "center",
         }}
         className="overflow-hidden border border-border bg-popover text-popover-foreground shadow-md"
         transition={{ type: "spring", stiffness: 380, damping: 30 }}
@@ -86,9 +86,10 @@ export function ExpandMenu({ items, showLabels = true, className }: ExpandMenuPr
                   setOpen(false);
                 }}
                 title={!showLabels ? item.label : undefined}
+                aria-label={item.label}
                 style={{ borderRadius: 14, flexShrink: 0 }}
                 className={cn(
-                  "flex w-full items-center gap-2 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground active:bg-accent",
+                  "flex items-center gap-2 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground active:bg-accent",
                   showLabels ? "justify-start px-3 py-2" : "h-9 w-9 justify-center",
                   item.className,
                 )}
