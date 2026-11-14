@@ -1,3 +1,4 @@
+import { SectionHeader } from "@/components/plataforma/CourseCarousel";
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -56,7 +57,7 @@ const ColorirPage = () => {
       <main className="container mx-auto px-4 pt-16">
         {/* Hero */}
         <div className="flex justify-center mb-6 animate-fade-in">
-          <GlassCard className="w-full max-w-3xl p-0 overflow-hidden">
+          <GlassCard className="w-full max-w-2xl p-0 overflow-hidden">
             <video
               src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/colorir%20novo.mp4"
               autoPlay
@@ -64,23 +65,18 @@ const ColorirPage = () => {
               loop
               playsInline
               preload="metadata"
-              className="w-full h-auto rounded-2xl"
+              className="w-full h-auto object-cover rounded-2xl"
             />
           </GlassCard>
         </div>
 
         {/* Description Card */}
-        <GlassCard className="max-w-3xl mx-auto mb-6 text-center animate-fade-in bg-gradient-to-br from-purple-500/10 to-pink-500/10 border-purple-400/30">
-          <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-primary via-primary to-primary/60 bg-clip-text text-transparent mb-2">
-            Colorir Bíblico
-          </h1>
-          <p className="text-muted-foreground text-base">
-            Pinte desenhos bíblicos incríveis e solte sua criatividade!
-          </p>
-        </GlassCard>
+        <div className="w-full max-w-2xl mx-auto">
+            <SectionHeader title="Colorir Bíblico" description="Pinte desenhos bíblicos incríveis e solte sua criatividade!" className="mb-6" />
+          </div>
 
         {/* Action Cards */}
-        <div className="grid grid-cols-2 gap-4 max-w-3xl mx-auto mb-8 animate-fade-in">
+        <div className="grid grid-cols-2 gap-4 max-w-2xl mx-auto mb-8 animate-fade-in">
           <GlassCard
             hoverable
             pressable
@@ -106,7 +102,7 @@ const ColorirPage = () => {
         </div>
 
         {/* Category Filter */}
-        <GlassCard className="max-w-3xl mx-auto mb-6 animate-fade-in">
+        <GlassCard className="max-w-2xl mx-auto mb-6 animate-fade-in">
           <h3 className="text-sm font-medium text-muted-foreground mb-3">Categoria</h3>
           <CategoryFilter selected={selectedCategory} onChange={setSelectedCategory} />
           <p className="text-xs text-muted-foreground mt-3">
@@ -115,7 +111,7 @@ const ColorirPage = () => {
         </GlassCard>
 
         {/* Drawings Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-3xl mx-auto">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-2xl mx-auto">
           {loading ? (
             Array.from({ length: 6 }).map((_, i) => (
               <GlassCard key={i} className="animate-pulse">

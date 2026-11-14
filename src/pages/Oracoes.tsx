@@ -1,3 +1,4 @@
+import { SectionHeader } from "@/components/plataforma/CourseCarousel";
 import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { FuturisticNavbar } from "@/components/FuturisticNavbar";
@@ -117,11 +118,11 @@ const Oracoes = () => {
       <div className="container mx-auto px-4 pt-16 pb-32">
         {/* Header */}
         <div className="flex justify-center mb-8">
-          <div className="flex flex-col items-center w-full max-w-3xl">
+          <div className="flex flex-col items-center w-full max-w-2xl">
             {/* Video Animation */}
             <div className="flex justify-center w-full mb-6">
-              <GlassCard className="w-full max-w-[500px] p-0 overflow-hidden">
-                <video src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/materials/oracoes.mp4" className="w-full h-auto" style={{
+              <GlassCard className="w-full max-w-2xl p-0 overflow-hidden">
+                <video src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/materials/oracoes.mp4" className="w-full h-auto object-cover" style={{
                 maxHeight: "280px"
               }} autoPlay muted playsInline loop onError={e => {
                 // Hide video container if video fails to load
@@ -130,17 +131,9 @@ const Oracoes = () => {
               </GlassCard>
             </div>
 
-            <GlassCard className="w-full text-center">
-              <div className="flex items-center justify-center gap-3 mb-3">
-                
-                <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-primary via-primary to-primary/60 bg-clip-text text-transparent">
-                  Livrinho de Orações
-                </h1>
-              </div>
-              <p className="text-foreground/80 text-lg">
-                Encontre a oração perfeita para cada momento
-              </p>
-            </GlassCard>
+            <div className="w-full max-w-2xl mx-auto">
+            <SectionHeader title="Livrinho de Orações" description="Encontre a oração perfeita para cada momento" className="mb-0" />
+          </div>
           </div>
         </div>
 

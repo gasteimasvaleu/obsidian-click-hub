@@ -1,3 +1,4 @@
+import { SectionHeader } from "@/components/plataforma/CourseCarousel";
 import { useState } from "react";
 import { FuturisticNavbar } from "@/components/FuturisticNavbar";
 import { GlassCard } from "@/components/GlassCard";
@@ -60,10 +61,10 @@ const Comunidade = () => {
 
       {/* Video Banner */}
       <div className="flex justify-center w-full pt-16 pb-4 px-4">
-        <GlassCard className="w-full max-w-[500px] p-0 overflow-hidden">
+        <GlassCard className="w-full max-w-2xl p-0 overflow-hidden">
           <video 
             src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/bannercomunidade.mp4"
-            className="w-full h-auto"
+            className="w-full h-auto object-cover"
             style={{ maxHeight: '300px' }}
             autoPlay
             muted
@@ -79,12 +80,7 @@ const Comunidade = () => {
       <div className="flex-1 px-4 pb-8">
         <div className="w-full max-w-2xl mx-auto space-y-4">
           {/* Header */}
-          <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500">
-              <MessagesSquare size={24} className="text-white" />
-            </div>
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-primary via-primary to-primary/60 bg-clip-text text-transparent">Comunidade</h1>
-          </div>
+          <SectionHeader title="Comunidade" className="mb-2" />
 
           {/* Post Form */}
           <PostForm />

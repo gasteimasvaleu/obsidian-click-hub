@@ -1,3 +1,4 @@
+import { SectionHeader } from "@/components/plataforma/CourseCarousel";
 import { useEffect, useState, useRef } from "react";
 import { FuturisticNavbar } from "@/components/FuturisticNavbar";
 import { GlassCard } from "@/components/GlassCard";
@@ -109,10 +110,10 @@ const Audiofy = () => {
         <div className="flex flex-col items-center w-full">
           {/* Video animation */}
           <div className="flex justify-center w-full mb-8">
-            <GlassCard className="w-full max-w-[500px] p-0 overflow-hidden">
+            <GlassCard className="w-full max-w-2xl p-0 overflow-hidden">
               <video
                 src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/bannermusical.mp4"
-                className="w-full h-auto"
+                className="w-full h-auto object-cover"
                 style={{ maxHeight: '300px' }}
                 autoPlay
                 muted
@@ -122,13 +123,10 @@ const Audiofy = () => {
             </GlassCard>
           </div>
           
+          <div className="w-full max-w-2xl mx-auto">
+            <SectionHeader title="Bíbliafy" description="Músicas cristãs para crianças" className="mb-6" />
+          </div>
           <GlassCard className="max-w-2xl mx-auto text-center w-full">
-            <h1 className="text-3xl font-bold mb-6 bg-gradient-to-r from-primary via-primary to-primary/60 bg-clip-text text-transparent">
-              Bíbliafy
-            </h1>
-            <p className="text-foreground/80 mb-8 text-lg">
-              Músicas cristãs para crianças
-            </p>
           
             {loading ? (
               <div className="space-y-4">

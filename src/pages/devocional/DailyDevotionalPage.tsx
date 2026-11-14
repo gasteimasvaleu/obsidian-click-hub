@@ -1,3 +1,4 @@
+import { SectionHeader } from "@/components/plataforma/CourseCarousel";
 import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -380,13 +381,13 @@ ${devotional.prayer}
     <div className="min-h-screen bg-background pb-24">
       <FuturisticNavbar />
       
-      <div className="container mx-auto px-4 pt-16 max-w-3xl">
+      <div className="container mx-auto px-4 pt-16 max-w-2xl">
         {/* Video animation */}
         <div className="flex justify-center w-full mb-8">
-          <GlassCard className="w-full max-w-[500px] p-0 overflow-hidden">
+          <GlassCard className="w-full max-w-2xl p-0 overflow-hidden">
             <video
               src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/video_6b50c453_1763462346092.mp4"
-              className="w-full h-auto"
+              className="w-full h-auto object-cover"
               style={{ maxHeight: '300px' }}
               autoPlay
               muted
@@ -398,20 +399,13 @@ ${devotional.prayer}
           </GlassCard>
         </div>
 
-        <GlassCard className="mb-6 text-center bg-gradient-to-br from-purple-500/10 to-blue-500/10 border-purple-400/30">
-          <p className="text-muted-foreground text-sm mb-4">
-            📅 {format(parseISO(devotional.devotional_date), "EEEE, d 'de' MMMM 'de' yyyy", { locale: ptBR })}
-          </p>
-          
-          <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-primary via-primary to-primary/60 bg-clip-text text-transparent mb-3">
-            {devotional.theme}
-          </h1>
-          
-          <p className="text-blue-400 text-lg">
-            📖 {devotional.book_name} {devotional.chapter}:{devotional.verse_start}
-            {devotional.verse_end && `-${devotional.verse_end}`}
-          </p>
-        </GlassCard>
+        <div className="w-full max-w-2xl mx-auto">
+          <SectionHeader
+            title={devotional.theme}
+            description={`📅 ${format(parseISO(devotional.devotional_date), "EEEE, d 'de' MMMM 'de' yyyy", { locale: ptBR })} · 📖 ${devotional.book_name} ${devotional.chapter}:${devotional.verse_start}${devotional.verse_end ? `-${devotional.verse_end}` : ""}`}
+            className="mb-6"
+          />
+        </div>
 
         <GlassCard className="mb-6">
           <h2 className="text-xl font-semibold text-foreground mb-3">📝 Introdução</h2>

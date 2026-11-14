@@ -1,3 +1,4 @@
+import { SectionHeader } from "@/components/plataforma/CourseCarousel";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -88,13 +89,13 @@ const Games = () => {
       <main className="container mx-auto px-4 pt-16">
         {/* Hero Section */}
         <div className="flex justify-center mb-6 animate-fade-in">
-          <div className="flex flex-col items-center w-full max-w-3xl">
+          <div className="flex flex-col items-center w-full max-w-2xl">
         {/* Video Animation */}
         <div className="flex justify-center w-full mb-4">
-          <GlassCard className="w-full max-w-[500px] p-0 overflow-hidden">
+          <GlassCard className="w-full max-w-2xl p-0 overflow-hidden">
                 <video
                   src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/video_be332ed2_1763196148899.mp4"
-                  className="w-full h-auto"
+                  className="w-full h-auto object-cover"
                   style={{ maxHeight: '300px' }}
                   autoPlay
                   muted
@@ -110,14 +111,9 @@ const Games = () => {
               </GlassCard>
             </div>
             
-            <GlassCard className="w-full text-center">
-              <h1 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-primary via-primary-glow to-primary bg-clip-text text-transparent">
-                Jogos & Quizzes
-              </h1>
-              <p className="text-lg md:text-xl text-foreground/80">
-                Aprenda a Bíblia brincando! 🎮
-              </p>
-            </GlassCard>
+            <div className="w-full max-w-2xl mx-auto">
+            <SectionHeader title="Jogos & Quizzes" description="Aprenda a Bíblia brincando! 🎮" className="mb-0" />
+          </div>
           </div>
         </div>
 
