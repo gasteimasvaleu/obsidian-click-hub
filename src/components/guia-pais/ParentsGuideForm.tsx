@@ -1,3 +1,5 @@
+import meninoImg from "@/assets/guia-pais/menino.png";
+import meninaImg from "@/assets/guia-pais/menina.png";
 import { StepProgress } from "@/components/guia-pais/StepProgress";
 import { SectionHeader } from "@/components/plataforma/CourseCarousel";
 import { useState } from "react";
@@ -116,24 +118,28 @@ export const ParentsGuideForm = ({
               <div className="grid grid-cols-2 gap-4">
                 <Card
                   className={cn(
-                    "p-6 cursor-pointer transition-all",
-                    formData.sexo === 'masculino' && "border-primary border-2 bg-primary/10"
+                    "p-3 cursor-pointer transition-all",
+                    formData.sexo === 'masculino' && "border-primary border-2 bg-primary/10",
+                    formData.sexo && formData.sexo !== 'masculino' && "opacity-70"
                   )}
                   onClick={() => updateFormData('sexo', 'masculino')}
                 >
                   <div className="text-center">
-                    <div className="font-medium">Menino</div>
+                    <img src={meninoImg} alt="" width={816} height={816} loading="lazy" className="mx-auto h-28 w-28 object-contain" />
+                    <div className="mt-1 text-sm font-semibold">Menino</div>
                   </div>
                 </Card>
                 <Card
                   className={cn(
-                    "p-6 cursor-pointer transition-all",
-                    formData.sexo === 'feminino' && "border-primary border-2 bg-primary/10"
+                    "p-3 cursor-pointer transition-all",
+                    formData.sexo === 'feminino' && "border-primary border-2 bg-primary/10",
+                    formData.sexo && formData.sexo !== 'feminino' && "opacity-70"
                   )}
                   onClick={() => updateFormData('sexo', 'feminino')}
                 >
                   <div className="text-center">
-                    <div className="font-medium">Menina</div>
+                    <img src={meninaImg} alt="" width={816} height={816} loading="lazy" className="mx-auto h-28 w-28 object-contain" />
+                    <div className="mt-1 text-sm font-semibold">Menina</div>
                   </div>
                 </Card>
               </div>
