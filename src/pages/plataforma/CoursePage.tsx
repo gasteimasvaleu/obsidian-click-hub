@@ -120,8 +120,8 @@ export default function CoursePage() {
         bannerMobile={heroOverride || course.page_image_desktop || course.banner_desktop || course.page_image_mobile || course.banner_mobile || undefined}
         title={course.title}
         description={course.description}
-        aspectRatioDesktop={heroOverride ? 1672 / 941 : 1440 / 730}
-        aspectRatioMobile={heroOverride ? 1672 / 941 : 1440 / 730}
+        aspectRatioDesktop={16 / 9}
+        aspectRatioMobile={16 / 9}
         overlay={false}
         card
       />

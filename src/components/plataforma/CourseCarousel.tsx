@@ -85,7 +85,8 @@ export function CourseCarousel({
   title,
   description,
   className,
-}: CourseCarouselProps) {
+  ratio = 9 / 16,
+}: CourseCarouselProps & { ratio?: number }) {
   if (items.length === 0) {
     return null;
   }
@@ -109,12 +110,12 @@ export function CourseCarousel({
             >
               <Link to={item.linkTo} className="block group">
                 <div className="relative overflow-hidden rounded-lg">
-                  <AspectRatio ratio={9 / 16}>
+                  <AspectRatio ratio={ratio}>
                     {thumbFor(item) ? (
                       <img
                         src={thumbFor(item)!}
                         alt={item.title}
-                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        className="w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
                       />
                     ) : (
                       <div className="w-full h-full bg-gradient-to-br from-primary/30 to-secondary/30 flex items-center justify-center">

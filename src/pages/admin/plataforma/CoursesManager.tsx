@@ -328,7 +328,7 @@ export default function CoursesManager() {
                     setFormData({ ...formData, thumbnail: url })
                   }
                   onRemove={() => setFormData({ ...formData, thumbnail: null })}
-                  dimensions="300x580"
+                  dimensions="1080x1920"
                   aspectRatio={300 / 580}
                   maxSizeMB={5}
                 />
@@ -351,7 +351,7 @@ export default function CoursesManager() {
                     onRemove={() =>
                       setFormData({ ...formData, page_image_desktop: null })
                     }
-                    dimensions="1440x730"
+                    dimensions="1920x1080"
                     aspectRatio={1440 / 730}
                     maxSizeMB={5}
                   />

@@ -198,6 +198,7 @@ export default function PlataformaPage() {
                 thumbnail: module.thumbnail || undefined,
                 linkTo: `/plataforma/modulo/${module.id}`,
               }))}
+              ratio={300 / 580}
               className="px-4"
             />
           );
