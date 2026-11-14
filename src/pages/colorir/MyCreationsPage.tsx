@@ -8,6 +8,7 @@ import { GlassCard } from '@/components/GlassCard';
 import { CreationCard } from '@/components/colorir/CreationCard';
 import { ShareModal } from '@/components/colorir/ShareModal';
 import { EmptyState } from '@/components/EmptyState';
+import criacoesImg from '@/assets/colorir/minhas-criacoes.png.asset.json';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, FolderHeart, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
@@ -73,8 +74,12 @@ const MyCreationsPage = () => {
         <ArrowNavButton direction="left" label="Voltar" onClick={() => navigate('/colorir')} className="mb-4" />
 
         <GlassCard className="text-center mb-6">
-          <div className="p-4 rounded-full bg-gradient-to-br from-teal-500 to-blue-500 w-fit mx-auto mb-4">
-            <FolderHeart size={32} className="text-foreground" />
+          <div className="w-20 h-20 mx-auto mb-4 bg-primary/10 rounded-full flex items-center justify-center backdrop-blur-sm border border-primary/20 animate-float">
+            <img
+              src={criacoesImg.url}
+              alt="Pasta de desenhos coloridos"
+              className="h-full w-full object-contain p-2"
+            />
           </div>
           <h1 className="text-2xl font-bold mb-2 bg-gradient-to-r from-primary via-primary to-primary/60 bg-clip-text text-transparent">Minhas Criações</h1>
           <p className="text-muted-foreground text-sm">
