@@ -11,7 +11,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Slider } from "@/components/ui/slider";
-import { Badge } from "@/components/ui/badge";
+import { TraitCarousel } from "@/components/guia-pais/TraitCarousel";
 import { ArrowLeft, ArrowRight, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { GlassCard } from "@/components/GlassCard";
@@ -178,18 +178,7 @@ export const ParentsGuideForm = ({
               <p className="text-sm text-muted-foreground">
                 Selecione uma ou mais opções
               </p>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                {comportamentoOptions.map((option) => (
-                  <Badge
-                    key={option}
-                    variant={formData.comportamento.includes(option) ? "default" : "outline"}
-                    className="cursor-pointer text-sm py-1.5 px-3 text-center justify-center rounded-lg break-words"
-                    onClick={() => toggleArrayItem('comportamento', option)}
-                  >
-                    {option}
-                  </Badge>
-                ))}
-              </div>
+              <TraitCarousel options={comportamentoOptions} selected={formData.comportamento} onToggle={(o) => toggleArrayItem('comportamento', o)} />
             </div>
           )}
 
@@ -200,18 +189,7 @@ export const ParentsGuideForm = ({
               <p className="text-sm text-muted-foreground">
                 Selecione uma ou mais características
               </p>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                {personalidadeOptions.map((option) => (
-                  <Badge
-                    key={option}
-                    variant={formData.personalidade.includes(option) ? "default" : "outline"}
-                    className="cursor-pointer text-sm py-1.5 px-3 text-center justify-center rounded-lg break-words"
-                    onClick={() => toggleArrayItem('personalidade', option)}
-                  >
-                    {option}
-                  </Badge>
-                ))}
-              </div>
+              <TraitCarousel options={personalidadeOptions} selected={formData.personalidade} onToggle={(o) => toggleArrayItem('personalidade', o)} />
             </div>
           )}
 
