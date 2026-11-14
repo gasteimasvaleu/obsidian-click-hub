@@ -2,7 +2,17 @@ import homeVideo from "@/assets/home_intro_video.mp4.asset.json";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { FuturisticNavbar } from "@/components/FuturisticNavbar";
-import { BookOpen, Heart, HandHeart, Music, ArrowRight, Palette, Bot, Users, Gamepad2, MessageCircle } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import imgBiblia from "@/assets/more-menu/biblia.png";
+import imgDevocional from "@/assets/more-menu/devocional.png";
+import imgOracoes from "@/assets/more-menu/oracoes.png";
+import imgBibliafy from "@/assets/more-menu/bibliafy.png";
+import imgColorir from "@/assets/more-menu/colorir.png";
+import imgAmigoDivino from "@/assets/more-menu/amigo-divino.png";
+import imgGuiaPais from "@/assets/more-menu/guia-pais.png";
+import imgGames from "@/assets/more-menu/games.png";
+import imgComunidade from "@/assets/more-menu/comunidade.png";
+
 import { useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -53,15 +63,15 @@ const Index = () => {
   };
 
   const featureActions = [
-    { title: "Bíblia Interativa", icon: BookOpen, action: () => navigate('/biblia'), color: "bg-feature-bible/75" },
-    { title: "Devocional Diário", icon: Heart, action: () => navigate('/devocional'), color: "bg-feature-devotional/75" },
-    { title: "Orações", icon: HandHeart, action: () => navigate('/oracoes'), color: "bg-feature-prayer/75" },
-    { title: "Bíbliafy", icon: Music, action: () => navigate('/audiofy'), color: "bg-feature-music/75" },
-    { title: "Colorir", icon: Palette, action: () => navigate('/colorir'), color: "bg-feature-coloring/75" },
-    { title: "Amigo Divino", icon: Bot, action: () => navigate('/amigodivino'), color: "bg-feature-friend/75" },
-    { title: "Guia para Pais", icon: Users, action: () => navigate('/guia-pais'), color: "bg-feature-parents/75" },
-    { title: "Games", icon: Gamepad2, action: () => navigate('/games'), color: "bg-feature-games/75" },
-    { title: "Comunidade", icon: MessageCircle, action: () => navigate('/comunidade'), color: "bg-feature-community/75" },
+    { title: "Bíblia Interativa", image: imgBiblia, action: () => navigate('/biblia'), color: "bg-feature-bible/75" },
+    { title: "Devocional Diário", image: imgDevocional, action: () => navigate('/devocional'), color: "bg-feature-devotional/75" },
+    { title: "Orações", image: imgOracoes, action: () => navigate('/oracoes'), color: "bg-feature-prayer/75" },
+    { title: "Bíbliafy", image: imgBibliafy, action: () => navigate('/audiofy'), color: "bg-feature-music/75" },
+    { title: "Colorir", image: imgColorir, action: () => navigate('/colorir'), color: "bg-feature-coloring/75" },
+    { title: "Amigo Divino", image: imgAmigoDivino, action: () => navigate('/amigodivino'), color: "bg-feature-friend/75" },
+    { title: "Guia para Pais", image: imgGuiaPais, action: () => navigate('/guia-pais'), color: "bg-feature-parents/75" },
+    { title: "Games", image: imgGames, action: () => navigate('/games'), color: "bg-feature-games/75" },
+    { title: "Comunidade", image: imgComunidade, action: () => navigate('/comunidade'), color: "bg-feature-community/75" },
   ];
 
   return (
@@ -128,7 +138,6 @@ const Index = () => {
 
         <div className="-mx-4 overflow-hidden rounded-t-2xl sm:mx-0">
           {featureActions.map((action, index) => {
-            const Icon = action.icon;
             const isLast = index === featureActions.length - 1;
             return (
               <button
@@ -148,7 +157,7 @@ const Index = () => {
                   }}
                 />
                 <div className="flex min-w-0 flex-1 items-center gap-3">
-                  <Icon size={26} strokeWidth={2.2} aria-hidden="true" />
+                  <img src={action.image} alt="" aria-hidden="true" width={40} height={40} className="h-10 w-10 shrink-0 object-contain drop-shadow-md" />
                   <span className="truncate text-lg font-bold">{action.title}</span>
                 </div>
                 <span className="ml-4 flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-feature-foreground/40 bg-feature-foreground/20 text-feature-foreground backdrop-blur">
