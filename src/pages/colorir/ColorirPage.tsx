@@ -8,10 +8,11 @@ import { DrawingCard } from '@/components/colorir/DrawingCard';
 import { CategoryFilter } from '@/components/colorir/CategoryFilter';
 import { EmptyState } from '@/components/EmptyState';
 import { Button } from '@/components/ui/button';
-import { Palette, Camera, FolderHeart, Loader2 } from 'lucide-react';
+import { Camera, FolderHeart, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import fotoImg from '@/assets/colorir/transformar-foto.png.asset.json';
 import criacoesImg from '@/assets/colorir/minhas-criacoes.png.asset.json';
+import emptyImg from '@/assets/colorir/nenhum-desenho.png.asset.json';
 
 interface Drawing {
   id: string;
@@ -121,7 +122,8 @@ const ColorirPage = () => {
           ) : filteredDrawings.length === 0 ? (
             <div className="col-span-full">
               <EmptyState
-                icon={<Palette size={40} strokeWidth={1.5} />}
+                image={emptyImg.url}
+                imageAlt="Livro de colorir aberto com giz de cera e paleta de tintas"
                 title="Nenhum desenho disponível"
                 description="Novos desenhos bíblicos estão chegando em breve!"
               />
