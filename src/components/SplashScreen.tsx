@@ -1,14 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
+import splashImage from "@/assets/splash/abertura-frame-inicial.png.asset.json";
+import splashVideo from "@/assets/splash/abertura-bibliatoon.mp4.asset.json";
 
 interface SplashScreenProps {
   onComplete: () => void;
 }
 
-const SPLASH_IMAGE_URL = "https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/videoframe_0%2018.32.25.png";
-const SPLASH_VIDEO_URL = "https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/novosplash.mp4";
+const SPLASH_IMAGE_URL = splashImage.url;
+const SPLASH_VIDEO_URL = splashVideo.url;
 const MIN_DISPLAY_MS = 2000;
-const MAX_DISPLAY_MS = 6000;
+const MAX_DISPLAY_MS = 7000;
 
 export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
   const [fadeOut, setFadeOut] = useState(false);
@@ -75,7 +77,7 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
   return (
     <div
       className={cn(
-        "fixed inset-0 z-[9999] bg-background flex items-center justify-center overflow-hidden transition-opacity duration-400",
+        "fixed inset-0 z-[9999] bg-card flex items-center justify-center overflow-hidden transition-opacity duration-400",
         fadeOut ? "opacity-0 pointer-events-none" : "opacity-100"
       )}
     >
