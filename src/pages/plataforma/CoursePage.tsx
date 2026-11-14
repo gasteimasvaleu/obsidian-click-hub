@@ -2,6 +2,7 @@ import { SectionHeader } from "@/components/plataforma/CourseCarousel";
 import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import cursoTopoF98a from "@/assets/curso_topo_f98a.png.asset.json";
 import { ResponsiveHeroBanner } from "@/components/plataforma/ResponsiveHeroBanner";
 import { ModulePlaylist } from "@/components/plataforma/ModulePlaylist";
 import { PlataformaLayout } from "@/components/plataforma/PlataformaLayout";
@@ -93,16 +94,18 @@ export default function CoursePage() {
     );
   }
 
+  const heroOverride = course.id === "f98a734c-e35f-4bc8-97fb-9d51c7c702c1" ? cursoTopoF98a.url : undefined;
+
   return (
     <PlataformaLayout>
       {/* Hero Banner */}
       <ResponsiveHeroBanner
-        bannerDesktop={course.page_image_desktop || course.banner_desktop || undefined}
-        bannerMobile={course.page_image_desktop || course.banner_desktop || course.page_image_mobile || course.banner_mobile || undefined}
+        bannerDesktop={heroOverride || course.page_image_desktop || course.banner_desktop || undefined}
+        bannerMobile={heroOverride || course.page_image_desktop || course.banner_desktop || course.page_image_mobile || course.banner_mobile || undefined}
         title={course.title}
         description={course.description}
-        aspectRatioDesktop={1440 / 730}
-        aspectRatioMobile={1440 / 730}
+        aspectRatioDesktop={heroOverride ? 1672 / 941 : 1440 / 730}
+        aspectRatioMobile={heroOverride ? 1672 / 941 : 1440 / 730}
         overlay={false}
         card
       />
