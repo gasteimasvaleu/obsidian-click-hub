@@ -11,9 +11,15 @@ import {
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { cn } from "@/lib/utils";
 import contosCapa from "@/assets/contos_biblicos_capa.png.asset.json";
+import parabolasCapa from "@/assets/parabolas_de_jesus_capa.png.asset.json";
+
+const CAPA_POR_TITULO: Array<[string, string]> = [
+  ["Contos Bíblicos", contosCapa.url],
+  ["As Parábolas de Jesus", parabolasCapa.url],
+];
 
 const thumbFor = (item: { title: string; thumbnail?: string | null }) =>
-  item.title?.startsWith("Contos Bíblicos") ? contosCapa.url : item.thumbnail;
+  CAPA_POR_TITULO.find(([prefix]) => item.title?.startsWith(prefix))?.[1] ?? item.thumbnail;
 
 interface CourseCarouselItem {
   id: string;
