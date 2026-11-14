@@ -99,10 +99,10 @@ export default function BibliaPage() {
       <div className="container mx-auto px-4 pt-20">
         {/* Video animation */}
         <div className="flex justify-center w-full mb-8">
-          <GlassCard className="w-full max-w-[500px] p-0 overflow-hidden">
+          <GlassCard className="w-full max-w-2xl p-0 overflow-hidden">
             <video
               src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/video_33032f19_1763462060427.mp4"
-              className="w-full h-auto"
+              className="w-full h-auto object-cover"
               style={{ maxHeight: '300px' }}
               autoPlay
               muted
@@ -117,14 +117,9 @@ export default function BibliaPage() {
           </GlassCard>
         </div>
 
-        <GlassCard className="mb-6 text-center bg-gradient-to-br from-blue-500/10 to-purple-500/10 border-blue-400/30">
-          <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-primary via-primary to-primary/60 bg-clip-text text-transparent mb-2">
-            Bíblia Interativa
-          </h1>
-          <p className="text-muted-foreground text-base">
-            Explore as Sagradas Escrituras de forma interativa e organize seus estudos
-          </p>
-        </GlassCard>
+        <div className="w-full max-w-2xl mx-auto">
+          <SectionHeader title="Bíblia Interativa" description="Explore as Sagradas Escrituras de forma interativa e organize seus estudos" className="mb-6" />
+        </div>
 
         <div className="relative mb-6">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={20} />
