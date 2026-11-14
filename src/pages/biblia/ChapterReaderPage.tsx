@@ -1,3 +1,5 @@
+import { BackArrowButton } from "@/components/plataforma/BackArrowButton";
+import { SectionHeader } from "@/components/plataforma/CourseCarousel";
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -81,24 +83,9 @@ export default function ChapterReaderPage() {
     <div className="min-h-screen bg-background pb-24">
       <FuturisticNavbar />
       
-      <div className="container mx-auto px-4 pt-20">
-        <GlassCard className="mb-6">
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-primary via-primary to-primary/60 bg-clip-text text-transparent mb-3">
-            {book?.name} - Capítulo {chapterNumber}
-          </h1>
-          
-          <div className="flex justify-between items-center">
-            <p className="text-muted-foreground">{verses?.length} versículos</p>
-            
-            <Button
-              variant="ghost"
-              onClick={() => navigate(`/biblia/${bookId}`)}
-              size="sm"
-            >
-              <ChevronLeft size={16} /> Voltar
-            </Button>
-          </div>
-        </GlassCard>
+      <div className="container mx-auto px-4 pt-20 max-w-[58rem]">
+        <BackArrowButton to={`/biblia/${bookId}`} label="Voltar" className="mb-4" />
+        <SectionHeader title={book?.name} description={`Capítulo ${chapterNumber}${verses?.length ? ` · ${verses.length} versículos` : ""}`} className="mb-6" />
 
         <div className="space-y-4 mb-6">
           {paginatedVerses.map(verse => (
