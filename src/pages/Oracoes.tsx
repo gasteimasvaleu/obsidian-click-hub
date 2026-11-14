@@ -1,5 +1,5 @@
 import { SectionHeader } from "@/components/plataforma/CourseCarousel";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { FuturisticNavbar } from "@/components/FuturisticNavbar";
 import { GlassCard } from "@/components/GlassCard";
@@ -25,6 +25,8 @@ const Oracoes = () => {
     user
   } = useAuth();
   const queryClient = useQueryClient();
+  const listRef = useRef<HTMLDivElement>(null);
+  const scrollToList = () => requestAnimationFrame(() => listRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }));
 
   // Fetch prayers
   const {
@@ -101,12 +103,14 @@ const Oracoes = () => {
   const handleSelectCategory = (category: string | null) => {
     setShowFavorites(false);
     setSelectedCategory(category);
+    scrollToList();
   };
   const handleToggleFavorites = () => {
     setShowFavorites(!showFavorites);
     if (!showFavorites) {
       setSelectedCategory(null);
     }
+    scrollToList();
   };
 
   // Filter prayers based on selection
@@ -141,7 +145,7 @@ const Oracoes = () => {
         </div>
 
         {/* Prayers List */}
-        <div className="max-w-4xl mx-auto">
+        <div ref={listRef} className="max-w-4xl mx-auto scroll-mt-24">
           <SectionHeader title={selectedCategoryName} description={`${filteredPrayers.length} ${filteredPrayers.length === 1 ? "oração" : "orações"}`} />
 
           {loadingPrayers || loadingFavorites ? <div className="space-y-4">
