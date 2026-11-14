@@ -54,8 +54,8 @@ export function ModulePlaylist({ items, className }: ModulePlaylistProps) {
             </div>
           </div>
 
-          <div className="flex-1 min-w-0 py-1">
-            <div className="flex items-start gap-2">
+          <div className="flex-1 min-w-0 py-1 self-stretch flex flex-col">
+            <div className="flex items-start gap-2 flex-1 min-h-0">
               <span className="text-sm text-muted-foreground font-medium">
                 {String(index + 1).padStart(2, "0")}
               </span>
@@ -63,7 +63,7 @@ export function ModulePlaylist({ items, className }: ModulePlaylistProps) {
                 <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-1">
                   {item.title}
                 </h3>
-                <p className="text-sm text-muted-foreground line-clamp-2 mt-1">
+                <p className="text-sm text-muted-foreground line-clamp-7 md:line-clamp-[10] mt-1 overflow-hidden">
                   {item.description}
                 </p>
               </div>
