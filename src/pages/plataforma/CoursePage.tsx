@@ -7,6 +7,7 @@ import { ModulePlaylist } from "@/components/plataforma/ModulePlaylist";
 import { PlataformaLayout } from "@/components/plataforma/PlataformaLayout";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ChevronLeft } from "lucide-react";
+import { BackArrowButton } from "@/components/plataforma/BackArrowButton";
 import { Button } from "@/components/ui/button";
 
 interface Course {
@@ -113,12 +114,7 @@ export default function CoursePage() {
 
       {/* Back button and modules */}
       <div className="p-4 space-y-6">
-        <Link to="/plataforma">
-          <Button variant="ghost" size="sm" className="gap-2">
-            <ChevronLeft className="h-4 w-4" />
-            Voltar para Plataforma
-          </Button>
-        </Link>
+        <BackArrowButton to="/plataforma" label="Voltar para Plataforma" />
 
         <div className="space-y-4">
           <SectionHeader title="Módulos do Curso" className="mb-0" />

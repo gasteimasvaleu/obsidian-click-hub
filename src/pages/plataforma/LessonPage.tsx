@@ -7,6 +7,7 @@ import { LessonPlayer } from "@/components/plataforma/LessonPlayer";
 import { PlataformaLayout } from "@/components/plataforma/PlataformaLayout";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ChevronLeft } from "lucide-react";
+import { BackArrowButton } from "@/components/plataforma/BackArrowButton";
 import { Button } from "@/components/ui/button";
 
 interface ModuleLesson {
@@ -135,12 +136,7 @@ export default function LessonPage() {
               : 'Esta foi sua última aula grátis.'}
           </div>
         )}
-        <Link to={`/plataforma/modulo/${lesson.module_id}`}>
-          <Button variant="ghost" size="sm" className="gap-2 mb-4">
-            <ChevronLeft className="h-4 w-4" />
-            Voltar para o Módulo
-          </Button>
-        </Link>
+        <BackArrowButton to={`/plataforma/modulo/${lesson.module_id}`} label="Voltar para o Módulo" className="mb-4" />
 
         <LessonPlayer
           videoUrl={lesson.video_url || undefined}

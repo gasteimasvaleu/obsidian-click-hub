@@ -412,3 +412,16 @@ All colors MUST be HSL.
   background-clip: text;
   color: transparent;
 }
+
+/* Back arrow button flow */
+.back-arrow {
+  opacity: var(--arrow-opacity, 1);
+  animation: back-arrow-flow 1.4s ease-in-out infinite;
+}
+@keyframes back-arrow-flow {
+  0%, 100% { transform: translateX(0); opacity: var(--arrow-opacity, 1); }
+  50% { transform: translateX(-4px); opacity: calc(var(--arrow-opacity, 1) * 0.4); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .back-arrow { animation: none; }
+}
