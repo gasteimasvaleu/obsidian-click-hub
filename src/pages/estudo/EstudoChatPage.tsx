@@ -171,7 +171,7 @@ export default function EstudoChatPage() {
           {sending && (
             <div className="flex items-center gap-3 text-sm text-muted-foreground">
               <img src={topo} alt="" width={256} height={256} className="h-9 w-9 rounded-full border border-border bg-card object-contain" />
-              <Loader2 className="h-4 w-4 animate-spin" /> O Frei está pensando...
+              <Loader2 className="h-4 w-4 animate-spin" /> Preparando a resposta...
             </div>
           )}
         </div>
@@ -237,7 +237,7 @@ export default function EstudoChatPage() {
           <div className="mx-auto flex max-w-[58rem] items-end gap-2 rounded-3xl border border-border bg-card p-2 shadow-lg">
             <Textarea ref={textareaRef} value={input} onChange={(e) => setInput(e.target.value)} maxLength={2000} rows={1}
               onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(input); } }}
-              placeholder="Pergunte ao Frei..." className="max-h-32 min-h-[44px] resize-none border-0 bg-transparent text-base shadow-none focus-visible:ring-0" />
+              placeholder="Faça sua pergunta..." className="max-h-32 min-h-[44px] resize-none border-0 bg-transparent text-base shadow-none focus-visible:ring-0" />
             <button type="submit" disabled={!input.trim() || sending} aria-label="Enviar"
               className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground disabled:opacity-50">
               {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}

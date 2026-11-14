@@ -74,7 +74,7 @@ export default function EstudoListPage() {
           <div className="flex items-center gap-4">
             <img src={topo} alt="" width={256} height={256} className="h-24 w-24 shrink-0 object-contain" />
             <p className="text-sm text-muted-foreground">
-              Converse com o Frei Gilsinho sobre a Bíblia e a fé católica. Escolha um tema, um trecho ou faça sua pergunta.
+              Estude a Bíblia e a fé católica com um guia de IA. Escolha um tema, um trecho ou faça sua pergunta.
             </p>
           </div>
           <p className="mb-2 mt-4 text-xs font-semibold text-foreground">Linguagem do estudo</p>
