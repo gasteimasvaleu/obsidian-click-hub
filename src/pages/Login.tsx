@@ -241,7 +241,7 @@ const Login = () => {
       <div aria-hidden className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 h-80 w-80 rounded-full bg-primary/25 blur-3xl" />
       <div className="relative w-full max-w-md space-y-5">
 
-        <div className="relative mx-auto w-[85%] max-w-sm neon-glow-user feature-bubble bubble-user rounded-3xl px-4 pt-4 overflow-hidden">
+        <div className="relative neon-glow-user feature-bubble bubble-user rounded-3xl px-4 pt-4 overflow-hidden">
           <div className="border-beam" aria-hidden />
           <img src={freiImg.url} alt="Bem-vindo ao BíbliaToon Club" className="mx-auto w-full max-w-[16rem] object-contain" />
         </div>
