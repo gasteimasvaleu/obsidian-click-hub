@@ -218,8 +218,7 @@ export const AudioPlayer = ({
   };
 
   const [expanded, setExpanded] = useState(true);
-  const [showFullDesc, setShowFullDesc] = useState(false);
-  useEffect(() => { setExpanded(true); setShowFullDesc(false); }, [currentTrack?.id]);
+  useEffect(() => { setExpanded(true); }, [currentTrack?.id]);
 
   const formatTime = (time: number): string => {
     if (isNaN(time)) return "0:00";
@@ -305,7 +304,7 @@ export const AudioPlayer = ({
         <div className="fixed inset-0 z-50 bg-background/30 backdrop-blur-md animate-in fade-in duration-200" onClick={() => setExpanded(false)}>
           <div
             onClick={(e) => e.stopPropagation()}
-            className="absolute inset-x-4 bottom-24 top-[calc(env(safe-area-inset-top)+1rem)] mx-auto flex max-h-fit max-w-lg flex-col overflow-y-auto rounded-3xl border border-primary/40 bg-card p-4 shadow-xl shadow-primary/20 animate-in slide-in-from-bottom-4 duration-300"
+            className="absolute inset-x-4 bottom-24 top-[calc(env(safe-area-inset-top)+1rem)] mx-auto flex max-w-lg flex-col overflow-hidden rounded-3xl [&>*]:shrink-0 border border-primary/40 bg-card p-4 shadow-xl shadow-primary/20 animate-in slide-in-from-bottom-4 duration-300"
           >
             <div className="mb-2 flex items-center justify-between">
               <button onClick={() => setExpanded(false)} aria-label="Minimizar" className="rounded-full p-2 text-primary hover:bg-primary/10">
@@ -364,13 +363,10 @@ export const AudioPlayer = ({
             </div>
 
             {description && (
-              <GlassCard>
-                <p className={cn("whitespace-pre-line text-sm leading-relaxed text-foreground/80", !showFullDesc && "line-clamp-3")}>
+              <GlassCard className="min-h-0 flex-1 !shrink overflow-y-auto">
+                <p className="whitespace-pre-line text-sm leading-relaxed text-foreground/80">
                   {description}
                 </p>
-                <button onClick={() => setShowFullDesc(!showFullDesc)} className="mt-2 text-sm font-semibold text-primary">
-                  {showFullDesc ? "Ver menos" : "Ver mais"}
-                </button>
               </GlassCard>
             )}
           </div>
