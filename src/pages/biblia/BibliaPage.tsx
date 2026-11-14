@@ -1,3 +1,4 @@
+import { SectionHeader } from "@/components/plataforma/CourseCarousel";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -149,7 +150,7 @@ export default function BibliaPage() {
               
               return (
                 <div key={category.filter} className="mb-8">
-                  <h2 className="text-xl font-semibold text-foreground mb-4">{category.name}</h2>
+                  <SectionHeader title={category.name} className="mb-4" />
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {categoryBooks.map((book, idx) => <BookCard key={book.id} book={book} index={idx} />)}
                   </div>
@@ -165,7 +166,7 @@ export default function BibliaPage() {
               
               return (
                 <div key={category.filter} className="mb-8">
-                  <h2 className="text-xl font-semibold text-foreground mb-4">{category.name}</h2>
+                  <SectionHeader title={category.name} className="mb-4" />
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {categoryBooks.map((book, idx) => <BookCard key={book.id} book={book} index={idx} />)}
                   </div>
