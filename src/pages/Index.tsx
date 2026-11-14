@@ -113,22 +113,22 @@ const Index = () => {
         </Button>
 
         {highlights.length > 0 && (
-          <section className="mb-10">
+          <section className="mb-6">
             <div className="neon-glow-user feature-bubble bubble-user relative mb-3 flex h-[50px] items-center justify-center rounded-2xl text-feature-foreground">
               <span aria-hidden className="border-beam" />
               <h2 className="text-sm font-bold">Confira nossos Lançamentos</h2>
             </div>
-            <div className="overflow-hidden" ref={emblaRef}>
+            <div className="overflow-hidden pb-2" ref={emblaRef}>
               <div className="flex gap-3">
                 {highlights.map((h: any) => (
                   <Button
                     variant="ghost"
                     key={h.id}
-                    className="h-auto flex-[0_0_auto] overflow-visible rounded-lg p-0"
+                    className="h-auto flex-[0_0_auto] items-start overflow-visible rounded-lg p-0"
                     onClick={() => h.link_to && navigate(h.link_to)}
                     aria-label={h.title || 'Lançamento'}
                   >
-                    <img src={h.image_url} alt={h.title || 'Lançamento'} className="h-[160px] w-[99px] rounded-lg object-cover" />
+                    <img src={h.image_url} alt={h.title || 'Lançamento'} className="h-[175px] w-[108px] rounded-lg object-cover" />
                   </Button>
                 ))}
               </div>
