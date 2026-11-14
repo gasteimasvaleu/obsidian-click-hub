@@ -113,7 +113,7 @@ const Index = () => {
         </Button>
 
         {highlights.length > 0 && (
-          <section className="mb-6">
+          <section className="mb-10">
             <div className="neon-glow-user feature-bubble bubble-user relative mb-3 flex h-[50px] items-center justify-center rounded-2xl text-feature-foreground">
               <span aria-hidden className="border-beam" />
               <h2 className="text-sm font-bold">Confira nossos Lançamentos</h2>
@@ -124,11 +124,11 @@ const Index = () => {
                   <Button
                     variant="ghost"
                     key={h.id}
-                    className="h-auto flex-[0_0_auto] rounded-lg p-0"
+                    className="h-auto flex-[0_0_auto] overflow-visible rounded-lg p-0"
                     onClick={() => h.link_to && navigate(h.link_to)}
                     aria-label={h.title || 'Lançamento'}
                   >
-                    <img src={h.image_url} alt={h.title || 'Lançamento'} className="h-[145px] w-[90px] rounded-lg object-cover" />
+                    <img src={h.image_url} alt={h.title || 'Lançamento'} className="h-[160px] w-[99px] rounded-lg object-cover" />
                   </Button>
                 ))}
               </div>
@@ -144,7 +144,7 @@ const Index = () => {
                 key={action.title}
                 type="button"
                 onClick={action.action}
-                className={`${action.color} feature-bubble relative overflow-hidden ${isLast ? "min-h-[150px] items-start" : "h-[88px] items-center"} flex w-full text-feature-foreground transition-transform duration-200 active:scale-[0.98] ${index > 0 ? "-mt-4" : ""} rounded-t-2xl px-6 py-5 text-left`}
+                className={`${action.color} feature-bubble relative overflow-hidden ${isLast ? "min-h-[120px] items-start" : "h-[88px] items-center"} flex w-full text-feature-foreground transition-transform duration-200 active:scale-[0.98] ${index > 0 ? "-mt-4" : ""} rounded-t-2xl px-6 py-5 text-left`}
                 style={{ zIndex: index + 1 }}
                 aria-label={`Abrir ${action.title}`}
               >
