@@ -115,7 +115,7 @@ const Oracoes = () => {
   return <div className="min-h-screen bg-background relative">
       <FuturisticNavbar />
 
-      <div className="container mx-auto px-4 pt-16 pb-32">
+      <div className="container mx-auto px-4 pt-16 pb-32 max-w-[58rem]">
         {/* Header */}
         <div className="flex justify-center mb-8">
           <div className="flex flex-col items-center w-full max-w-4xl">
@@ -141,7 +141,7 @@ const Oracoes = () => {
         </div>
 
         {/* Prayers List */}
-        <div className="max-w-2xl mx-auto">
+        <div className="max-w-4xl mx-auto">
           <h2 className="text-xl font-bold text-primary mb-4 flex items-center gap-2">
             {selectedCategoryName}
             <span className="text-sm font-normal text-foreground/60">

@@ -106,7 +106,7 @@ export default function BibliaPage() {
     <div className="min-h-screen bg-background pb-24">
       <FuturisticNavbar />
       
-      <div className="container mx-auto px-4 pt-20 max-w-4xl">
+      <div className="container mx-auto px-4 pt-20 max-w-[58rem]">
         {/* Video animation */}
         <div className="flex justify-center w-full mb-8">
           <GlassCard className="w-full max-w-4xl p-0 overflow-hidden">

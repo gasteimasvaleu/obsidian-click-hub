@@ -61,7 +61,7 @@ const Comunidade = () => {
 
       {/* Video Banner */}
       <div className="flex justify-center w-full pt-16 pb-4 px-4">
-        <GlassCard className="w-full max-w-2xl p-0 overflow-hidden">
+        <GlassCard className="w-full max-w-4xl p-0 overflow-hidden">
           <video 
             src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/bannercomunidade.mp4"
             className="aspect-video w-full h-auto object-cover"
@@ -77,7 +77,7 @@ const Comunidade = () => {
       </div>
 
       <div className="flex-1 px-4 pb-8">
-        <div className="w-full max-w-2xl mx-auto space-y-4">
+        <div className="w-full max-w-4xl mx-auto space-y-4">
           {/* Header */}
           <SectionHeader title="Comunidade" className="mb-2" />
 

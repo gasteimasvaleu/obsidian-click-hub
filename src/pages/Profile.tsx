@@ -180,8 +180,8 @@ const Profile = () => {
     (user.email?.includes('privaterelay.appleid.com') ? 'Usuário Apple' : 'Usuário');
 
   return (
-    <div className="min-h-screen bg-background p-4 md:p-8 pb-28 md:pb-8">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-background px-4 pt-4 md:pt-8 pb-28 md:pb-8">
+      <div className="max-w-4xl mx-auto">
         <Card className="glass border-primary/20 mb-6">
           <CardContent className="pt-6">
             <div className="flex flex-col md:flex-row items-center gap-6">

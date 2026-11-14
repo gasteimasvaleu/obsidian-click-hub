@@ -145,7 +145,7 @@ const Sobre = () => {
       
       {/* Hero Section */}
       <div className="relative pt-20 pb-8">
-        <div className="max-w-7xl mx-auto px-4">
+        <div className="max-w-[58rem] mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -164,7 +164,7 @@ const Sobre = () => {
       </div>
 
       {/* Content Container */}
-      <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className="max-w-[58rem] mx-auto px-4 py-8">
         
         {/* Nossa História */}
         <motion.section className="mb-16 md:mb-24" {...fadeInUp}>

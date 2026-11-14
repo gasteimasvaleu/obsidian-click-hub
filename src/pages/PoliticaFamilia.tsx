@@ -40,7 +40,7 @@ const PoliticaFamilia = () => {
       <FuturisticNavbar />
 
       <div className="flex-1 px-4 pt-20 pb-8">
-        <div className="w-full max-w-2xl mx-auto space-y-4">
+        <div className="w-full max-w-4xl mx-auto space-y-4">
           <Button
             variant="ghost"
             size="sm"

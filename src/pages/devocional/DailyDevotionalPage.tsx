@@ -383,10 +383,10 @@ ${stripEmoji(devotional.prayer)}
     <div className="min-h-screen bg-background pb-24">
       <FuturisticNavbar />
       
-      <div className="container mx-auto px-4 pt-16 max-w-2xl">
+      <div className="container mx-auto px-4 pt-16 max-w-[58rem]">
         {/* Video animation */}
         <div className="flex justify-center w-full mb-8">
-          <GlassCard className="w-full max-w-2xl p-0 overflow-hidden">
+          <GlassCard className="w-full max-w-4xl p-0 overflow-hidden">
             <video
               src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/video_6b50c453_1763462346092.mp4"
               className="aspect-video w-full h-auto object-cover"
@@ -400,7 +400,7 @@ ${stripEmoji(devotional.prayer)}
           </GlassCard>
         </div>
 
-        <div className="w-full max-w-2xl mx-auto">
+        <div className="w-full max-w-4xl mx-auto">
           <SectionHeader
             title={stripEmoji(devotional.theme)}
             description={`${format(parseISO(devotional.devotional_date), "EEEE, d 'de' MMMM 'de' yyyy", { locale: ptBR })} · ${devotional.book_name} ${devotional.chapter}:${devotional.verse_start}${devotional.verse_end ? `-${devotional.verse_end}` : ""}`}

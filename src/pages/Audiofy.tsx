@@ -110,7 +110,7 @@ const Audiofy = () => {
         <div className="flex flex-col items-center w-full">
           {/* Video animation */}
           <div className="flex justify-center w-full mb-8">
-            <GlassCard className="w-full max-w-2xl p-0 overflow-hidden">
+            <GlassCard className="w-full max-w-4xl p-0 overflow-hidden">
               <video
                 src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/bannermusical.mp4"
                 className="aspect-video w-full h-auto object-cover"
@@ -122,10 +122,10 @@ const Audiofy = () => {
             </GlassCard>
           </div>
           
-          <div className="w-full max-w-2xl mx-auto">
+          <div className="w-full max-w-4xl mx-auto">
             <SectionHeader title="Bíbliafy" description="Músicas cristãs para crianças" className="mb-6" />
           </div>
-          <GlassCard className="max-w-2xl mx-auto text-center w-full">
+          <GlassCard className="max-w-4xl mx-auto text-center w-full">
           
             {loading ? (
               <div className="space-y-4">

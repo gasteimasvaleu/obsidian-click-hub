@@ -16,7 +16,7 @@ const AmigoDivino = () => {
         <div className="flex flex-col items-center w-full">
           {/* Animação */}
           <div className="flex justify-center w-full mb-8">
-            <GlassCard className="w-full max-w-2xl p-0 overflow-hidden">
+            <GlassCard className="w-full max-w-4xl p-0 overflow-hidden">
               <video
                 src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/jesuslegal.mp4"
                 className="aspect-video w-full h-auto object-cover"
@@ -30,10 +30,10 @@ const AmigoDivino = () => {
             </GlassCard>
           </div>
           
-          <div className="w-full max-w-2xl mx-auto">
+          <div className="w-full max-w-4xl mx-auto">
             <SectionHeader title="Amigo Divino" description="Conexão espiritual e orientação para sua jornada" className="mb-6" />
           </div>
-          <GlassCard className="w-full max-w-2xl mx-auto text-center">
+          <GlassCard className="w-full max-w-4xl mx-auto text-center">
             
             <div className="space-y-6 mb-8">
               <div className="glass rounded-xl p-6">
