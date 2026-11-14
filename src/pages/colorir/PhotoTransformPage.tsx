@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { FuturisticNavbar } from '@/components/FuturisticNavbar';
 import { GlassCard } from '@/components/GlassCard';
 import { PhotoUploader } from '@/components/colorir/PhotoUploader';
-import { Button } from '@/components/ui/button';
-import { ArrowLeft, Camera } from 'lucide-react';
+import { SectionHeader } from '@/components/plataforma/CourseCarousel';
+import fotoImg from '@/assets/colorir/transformar-foto.png.asset.json';
 import { useAIConsent } from '@/hooks/useAIConsent';
 import { AIConsentDialog } from '@/components/AIConsentDialog';
 import { useState } from 'react';
@@ -32,18 +32,18 @@ const PhotoTransformPage = () => {
     <div className="min-h-screen bg-background pb-24">
       <FuturisticNavbar />
 
-      <main className="container mx-auto px-4 pt-16 max-w-lg">
+      <main className="container mx-auto px-4 pt-16 max-w-[58rem]">
         <ArrowNavButton direction="left" label="Voltar" onClick={() => navigate('/colorir')} className="mb-4" />
 
-        <GlassCard className="text-center mb-6">
-          <div className="p-4 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 w-fit mx-auto mb-4">
-            <Camera size={32} className="text-foreground" />
+        <div className="mb-6">
+          <SectionHeader title="Transformar Foto" className="mb-0" />
+          <GlassCard className="-mt-4 rounded-t-none pt-7 text-center">
+            <img src={fotoImg.url} alt="Câmera com uma foto se transformando em desenho" className="mx-auto mb-3 h-24 w-24 object-contain" />
+            <p className="text-muted-foreground text-sm">
+              A inteligência artificial vai transformar sua foto em um desenho para colorir!
+            </p>
+          </GlassCard>
           </div>
-          <h1 className="text-2xl font-bold mb-2 bg-gradient-to-r from-primary via-primary to-primary/60 bg-clip-text text-transparent">Transformar Foto</h1>
-          <p className="text-muted-foreground text-sm">
-            A inteligência artificial vai transformar sua foto em um desenho para colorir!
-          </p>
-        </GlassCard>
 
         <div onClick={handlePageInteraction}>
           <PhotoUploader onTransformed={handleTransformed} />

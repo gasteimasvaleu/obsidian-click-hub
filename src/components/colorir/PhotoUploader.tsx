@@ -1,8 +1,9 @@
 import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { Camera, Upload, Loader2 } from 'lucide-react';
 import { GlassCard } from '@/components/GlassCard';
 import { Button } from '@/components/ui/button';
+import { SectionHeader } from '@/components/plataforma/CourseCarousel';
+import criacoesImg from '@/assets/colorir/minhas-criacoes.png.asset.json';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { useLoading } from '@/contexts/LoadingContext';
@@ -69,17 +70,19 @@ export const PhotoUploader = ({ onTransformed }: PhotoUploaderProps) => {
   });
 
   return (
-    <GlassCard className="text-center">
+    <div>
+      <SectionHeader title="Escolher Foto" className="mb-0" />
+      <GlassCard className="-mt-4 rounded-t-none pt-7 text-center">
       <div
         {...getRootProps()}
-        className={`border-2 border-dashed rounded-xl p-8 transition-all cursor-pointer ${
+        className={`rounded-xl px-2 py-4 transition-colors cursor-pointer sm:px-6 ${
           isDragActive ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/50'
         } ${loading ? 'pointer-events-none opacity-60' : ''}`}
       >
         <input {...getInputProps()} />
         {loading ? (
           <div className="flex flex-col items-center gap-3">
-            <Loader2 size={48} className="text-primary animate-spin" />
+            <img src={criacoesImg.url} alt="" className="h-24 w-24 object-contain animate-pulse motion-reduce:animate-none" />
             <p className="text-foreground font-medium">Transformando sua foto em desenho...</p>
             <p className="text-xs text-muted-foreground">Isso pode levar alguns segundos</p>
           </div>
@@ -90,18 +93,16 @@ export const PhotoUploader = ({ onTransformed }: PhotoUploaderProps) => {
           </div>
         ) : (
           <div className="flex flex-col items-center gap-3">
-            <div className="p-4 rounded-full bg-gradient-to-br from-orange-500 to-yellow-500">
-              <Camera size={32} className="text-foreground" />
-            </div>
+            <img src={criacoesImg.url} alt="Pasta com desenhos e lápis de cor" className="h-24 w-24 object-contain" />
             <p className="text-foreground font-medium">Envie uma foto para transformar em desenho</p>
             <p className="text-xs text-muted-foreground">JPG, PNG ou WEBP • Máximo 10MB</p>
-            <Button variant="outline" size="sm" className="mt-2">
-              <Upload size={16} />
+            <Button type="button" className="mt-2 h-11 w-full">
               Escolher Foto
             </Button>
           </div>
         )}
       </div>
-    </GlassCard>
+      </GlassCard>
+    </div>
   );
 };
