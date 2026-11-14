@@ -529,6 +529,7 @@ ${stripEmoji(devotional.prayer)}
             <Button 
               onClick={() => saveNotesMutation.mutate()}
               disabled={!userNotes.trim()}
+              className="w-full h-11"
             >
               Salvar Anotação
             </Button>
