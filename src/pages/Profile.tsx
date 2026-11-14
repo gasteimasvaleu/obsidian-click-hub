@@ -180,7 +180,7 @@ const Profile = () => {
 
   return (
     <div className="min-h-screen bg-background pb-28 md:pb-8">
-      <div className="container mx-auto px-4 pt-20 max-w-[58rem]">
+      <div className="container mx-auto px-4 pt-4 md:pt-8 max-w-[58rem]">
         <BubbleSection
           as="h1"
           title={displayName}
