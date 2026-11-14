@@ -248,10 +248,24 @@ export function LessonPlayer({
         )}
 
         {/* Materials */}
-        {materials.length > 0 && (
-          <div className="space-y-3">
-            <SectionHeader title="Materiais complementares" className="mb-0" />
-            <MaterialsList materials={materials} />
+        {(materials.length > 0 || (!isMobile && relatedLessons.length > 0)) && (
+          <div className="space-y-4 md:grid md:grid-cols-2 md:gap-4 md:space-y-0 lg:block lg:space-y-4">
+            {materials.length > 0 && (
+              <div className="space-y-3">
+                <SectionHeader title="Materiais complementares" className="mb-0" />
+                <MaterialsList materials={materials} />
+              </div>
+            )}
+            {!isMobile && relatedLessons.length > 0 && (
+              <div className={cn("hidden md:block lg:hidden bg-card rounded-lg p-4 border self-start", materials.length === 0 && "md:col-span-2")}>
+                <SectionHeader title="Próximas aulas" className="mb-3" />
+                <LessonPlaylist
+                  items={relatedLessons}
+                  layout="vertical"
+                  currentLessonId={currentLessonId}
+                />
+              </div>
+            )}
           </div>
         )}
 
@@ -285,7 +299,7 @@ export function LessonPlayer({
 
       {/* Desktop: Sidebar with related lessons */}
       {!isMobile && relatedLessons.length > 0 && (
-        <div className="w-80 flex-shrink-0">
+        <div className="hidden lg:block w-80 flex-shrink-0">
           <div className="sticky top-4 bg-card rounded-lg p-4 border">
             <SectionHeader title="Próximas aulas" className="mb-3" />
             <div className="max-h-[calc(100vh-200px)] overflow-y-auto">
