@@ -5,11 +5,13 @@ import { supabase } from "@/integrations/supabase/client";
 import cursoTopoF98a from "@/assets/curso_topo_f98a.png.asset.json";
 import cursoTopoBfba from "@/assets/curso_topo_bfba.png.asset.json";
 import cursoTopoB4ab from "@/assets/curso_topo_b4ab.png.asset.json";
+import cursoTopoFbb8 from "@/assets/curso_topo_fbb8.png.asset.json";
 
 const HERO_OVERRIDES: Record<string, string> = {
   "f98a734c-e35f-4bc8-97fb-9d51c7c702c1": cursoTopoF98a.url,
   "bfbaefa8-f0bf-46cf-9032-eeb1b6d356f9": cursoTopoBfba.url,
   "b4ab8042-ff4f-4384-9b9a-23a1e6400cb8": cursoTopoB4ab.url,
+  "fbb80bfa-eaa8-4aa0-8b77-8c1c49d153ca": cursoTopoFbb8.url,
 };
 import { ResponsiveHeroBanner } from "@/components/plataforma/ResponsiveHeroBanner";
 import { ModulePlaylist } from "@/components/plataforma/ModulePlaylist";
