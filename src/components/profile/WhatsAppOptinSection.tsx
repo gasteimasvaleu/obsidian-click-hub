@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { BubbleSection } from '@/components/ui/bubble-section';
 import { Switch } from '@/components/ui/switch';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { MessageCircle, Check, Loader2, AlertCircle } from 'lucide-react';
+import { Check, Loader2, AlertCircle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
@@ -148,54 +148,33 @@ export function WhatsAppOptinSection({ userId }: WhatsAppOptinSectionProps) {
 
   if (loading) {
     return (
-      <Card className="glass border-primary/20 mb-6">
-        <CardContent className="pt-6">
+      <BubbleSection title="Devocional no WhatsApp">
           <div className="flex items-center justify-center py-4">
             <Loader2 className="w-6 h-6 animate-spin text-primary" />
           </div>
-        </CardContent>
-      </Card>
+      </BubbleSection>
     );
   }
 
   if (!hasSubscription) {
     return (
-      <Card className="glass border-primary/20 mb-6">
-        <CardHeader>
-          <CardTitle className="text-lg flex items-center gap-2">
-            <MessageCircle className="w-5 h-5 text-green-500" />
-            Devocional no WhatsApp
-          </CardTitle>
-          <CardDescription>
-            Receba o devocional diário no seu WhatsApp
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
+      <BubbleSection title="Devocional no WhatsApp">
+          <p className="mb-3 text-sm text-muted-foreground">Receba o devocional diário no seu WhatsApp</p>
           <div className="flex items-center gap-2 text-muted-foreground">
             <AlertCircle className="w-4 h-4" />
             <p className="text-sm">
               Esta funcionalidade está disponível apenas para assinantes ativos.
             </p>
           </div>
-        </CardContent>
-      </Card>
+      </BubbleSection>
     );
   }
 
   const phoneChanged = phone !== originalPhone && phone !== formatPhoneDisplay(originalPhone);
 
   return (
-    <Card className="glass border-primary/20 mb-6">
-      <CardHeader>
-        <CardTitle className="text-lg flex items-center gap-2">
-          <MessageCircle className="w-5 h-5 text-green-500" />
-          Devocional no WhatsApp
-        </CardTitle>
-        <CardDescription>
-          Receba o devocional diário às 6h da manhã no seu WhatsApp
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
+    <BubbleSection title="Devocional no WhatsApp" cardClassName="space-y-4">
+        <p className="text-sm text-muted-foreground">Receba o devocional diário às 6h da manhã no seu WhatsApp</p>
         <div className="flex items-center justify-between">
           <div className="space-y-0.5">
             <Label htmlFor="whatsapp-optin" className="text-base">
@@ -207,7 +186,7 @@ export function WhatsAppOptinSection({ userId }: WhatsAppOptinSectionProps) {
           </div>
           <div className="flex items-center gap-2">
             {saving && <Loader2 className="w-4 h-4 animate-spin" />}
-            {optedIn && !saving && <Check className="w-4 h-4 text-green-500" />}
+            {optedIn && !saving && <Check className="w-4 h-4 text-primary" />}
             <Switch
               id="whatsapp-optin"
               checked={optedIn}
@@ -231,21 +210,16 @@ export function WhatsAppOptinSection({ userId }: WhatsAppOptinSectionProps) {
               className="flex-1"
               maxLength={16}
             />
-            {phoneChanged && (
-              <Button 
-                onClick={handleSavePhone} 
-                disabled={saving}
-                size="sm"
-              >
-                {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Salvar'}
-              </Button>
-            )}
           </div>
+          {phoneChanged && (
+            <Button onClick={handleSavePhone} disabled={saving} className="h-11 w-full">
+              {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Salvar'}
+            </Button>
+          )}
           <p className="text-xs text-muted-foreground">
             Digite seu número com DDD (ex: 11999999999)
           </p>
         </div>
-      </CardContent>
-    </Card>
+      </BubbleSection>
   );
 }

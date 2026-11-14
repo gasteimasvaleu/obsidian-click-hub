@@ -1,12 +1,10 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { useUserProgress } from '@/hooks/useUserProgress';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Trophy, Star, Target, Activity, LogOut, Camera, BookOpen, StickyNote, Music, Trash2, Lock, Crown, Pencil, Loader2 } from 'lucide-react';
+import { Trophy, Star, Target, Activity, LogOut, Camera, BookOpen, StickyNote, Music, Trash2, Lock, Crown, Pencil, Loader2, Flame } from 'lucide-react';
 import { useSubscription } from '@/hooks/useSubscription';
 import { APP_BUNDLE_VERSION } from '@/lib/revenuecat';
 import { Paywall } from '@/components/Paywall';
@@ -28,6 +26,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { BubbleSection, SPLIT_BAR } from '@/components/ui/bubble-section';
 
 const Profile = () => {
   const { user, loading: authLoading, signOut } = useAuth();
@@ -180,243 +179,164 @@ const Profile = () => {
     (user.email?.includes('privaterelay.appleid.com') ? 'Usuário Apple' : 'Usuário');
 
   return (
-    <div className="min-h-screen bg-background px-4 pt-4 md:pt-8 pb-28 md:pb-8">
-      <div className="max-w-4xl mx-auto">
-        <Card className="glass border-primary/20 mb-6">
-          <CardContent className="pt-6">
-            <div className="flex flex-col md:flex-row items-center gap-6">
-              <div className="relative">
-                <Avatar className="w-24 h-24 border-4 border-primary/30">
-                  <AvatarImage src={avatarUrl || user.user_metadata?.avatar_url} />
-                  <AvatarFallback className="bg-primary/20 text-primary text-2xl font-bold">
-                    {displayName.charAt(0).toUpperCase() || user.email?.charAt(0).toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
-                <button
-                  onClick={() => setShowAvatarUpload(true)}
-                  className="absolute -bottom-1 -right-1 flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground border-2 border-background shadow-md cursor-pointer"
-                  title="Alterar foto"
-                  aria-label="Alterar foto"
-                >
-                  <Camera className="w-4 h-4" />
-                </button>
-              </div>
-
-              <div className="flex-1 text-center md:text-left">
-                <div className="flex items-center gap-2 justify-center md:justify-start mb-1">
-                  <h1 className="text-3xl font-bold text-foreground">
-                    {displayName}
-                  </h1>
-                  <button
-                    onClick={openNameDialog}
-                    className="flex items-center justify-center w-7 h-7 rounded-full bg-primary/15 text-primary hover:bg-primary/25 transition-colors cursor-pointer"
-                    title="Editar nome"
-                    aria-label="Editar nome"
-                  >
-                    <Pencil className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-                <p className="text-muted-foreground mb-3 flex items-center gap-1.5 justify-center md:justify-start">
-                  {user.email?.includes('privaterelay.appleid.com') ? (
-                    <>
-                      <Lock className="w-3.5 h-3.5" />
-                      <span>E-mail protegido pela Apple</span>
-                    </>
-                  ) : (
-                    user.email
-                  )}
-                </p>
-                
-                <div className="flex flex-wrap gap-2 justify-center md:justify-start">
-                  <Badge variant="outline" className="border-primary/50 text-primary">
-                    <Trophy className="w-3 h-3 mr-1" />
-                    Nível {progress.level}
-                  </Badge>
-                  <Badge variant="outline" className="border-primary/50 text-primary">
-                    <Star className="w-3 h-3 mr-1" />
-                    {progress.total_points} pontos
-                  </Badge>
-                  <Badge variant="outline" className="border-primary/50 text-primary">
-                    <Target className="w-3 h-3 mr-1" />
-                    {badges.length} conquistas
-                  </Badge>
-                </div>
-              </div>
-
-              <div className="w-full md:w-64">
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">Próximo nível</span>
-                    <span className="text-primary font-medium">{nextLevelPoints} pts</span>
-                  </div>
-                  <Progress value={levelProgress} className="h-3" />
-                </div>
-              </div>
-            </div>
-            
-            <div className="mt-6 pt-6 border-t border-primary/20 flex flex-col sm:flex-row gap-3">
-              <Button 
-                variant="outline" 
-                className="w-full md:w-auto border-red-500/50 text-red-500 hover:bg-red-500/10 hover:text-red-400"
-                onClick={handleLogout}
+    <div className="min-h-screen bg-background pb-28 md:pb-8">
+      <div className="container mx-auto px-4 pt-20 max-w-[58rem]">
+        <BubbleSection
+          as="h1"
+          title={displayName}
+          titleExtra={
+            <button
+              onClick={openNameDialog}
+              className="flex h-8 w-8 items-center justify-center rounded-full bg-background/20 transition-colors hover:bg-background/30"
+              title="Editar nome"
+              aria-label="Editar nome"
+            >
+              <Pencil className="h-4 w-4" />
+            </button>
+          }
+        >
+          <div className="flex flex-col items-center gap-4 md:flex-row md:items-center">
+            <div className="relative">
+              <Avatar className="h-24 w-24 border-4 border-primary/30">
+                <AvatarImage src={avatarUrl || user.user_metadata?.avatar_url} />
+                <AvatarFallback className="bg-primary/20 text-primary text-2xl font-bold">
+                  {displayName.charAt(0).toUpperCase() || user.email?.charAt(0).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+              <button
+                onClick={() => setShowAvatarUpload(true)}
+                className="absolute -bottom-1 -right-1 flex h-8 w-8 items-center justify-center rounded-full border-2 border-background bg-primary text-primary-foreground shadow-md"
+                title="Alterar foto"
+                aria-label="Alterar foto"
               >
-                <LogOut className="w-4 h-4 mr-2" />
-                Sair da Conta
-              </Button>
-
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button 
-                    variant="outline" 
-                    className="w-full md:w-auto border-red-700/50 text-red-700 hover:bg-red-700/10 hover:text-red-600"
-                    disabled={deleting}
-                  >
-                    <Trash2 className="w-4 h-4 mr-2" />
-                    {deleting ? 'Excluindo...' : 'Excluir Conta'}
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Excluir conta permanentemente?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      Esta ação é irreversível. Todos os seus dados, progresso, conquistas e criações serão permanentemente removidos.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                    <AlertDialogAction
-                      onClick={handleDeleteAccount}
-                      className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                    >
-                      Sim, excluir minha conta
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
+                <Camera className="h-4 w-4" />
+              </button>
             </div>
-          </CardContent>
-        </Card>
+            <div className="w-full flex-1 space-y-3 text-center md:text-left">
+              <p className="flex items-center justify-center gap-1.5 text-sm text-muted-foreground md:justify-start">
+                {user.email?.includes('privaterelay.appleid.com') ? (
+                  <><Lock className="h-3.5 w-3.5" /><span>E-mail protegido pela Apple</span></>
+                ) : (
+                  <span className="truncate">{user.email}</span>
+                )}
+              </p>
+              <div className="flex flex-wrap justify-center gap-1.5 md:justify-start">
+                <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-semibold text-primary"><Trophy className="h-3 w-3" />Nível {progress.level}</span>
+                <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-semibold text-primary"><Star className="h-3 w-3" />{progress.total_points} pontos</span>
+                <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-semibold text-primary"><Target className="h-3 w-3" />{badges.length} conquistas</span>
+              </div>
+              <div className="space-y-1.5">
+                <div className="flex justify-between text-xs">
+                  <span className="text-muted-foreground">Próximo nível</span>
+                  <span className="font-semibold text-primary">{nextLevelPoints} pts</span>
+                </div>
+                <Progress value={levelProgress} className="h-3 rounded-full bg-primary/15" />
+              </div>
+            </div>
+          </div>
+
+          <div className={`${SPLIT_BAR} mt-5`}>
+            <button type="button" onClick={handleLogout} className="flex h-11 flex-1 items-center justify-center gap-2 text-sm font-medium text-destructive transition-colors hover:bg-destructive/10">
+              <LogOut className="h-4 w-4" /> Sair da Conta
+            </button>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <button type="button" disabled={deleting} className="flex h-11 flex-1 items-center justify-center gap-2 text-sm font-medium text-destructive transition-colors hover:bg-destructive/10 disabled:opacity-50">
+                  <Trash2 className="h-4 w-4" /> {deleting ? 'Excluindo...' : 'Excluir Conta'}
+                </button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Excluir conta permanentemente?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Esta ação é irreversível. Todos os seus dados, progresso, conquistas e criações serão permanentemente removidos.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancelar</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleDeleteAccount} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                    Sim, excluir minha conta
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
+        </BubbleSection>
 
         {!subLoading && (
-          isPremium ? (
-            <Card className="glass border-primary/20 mb-6">
-              <CardContent className="pt-6 flex items-center gap-4">
-                <div className="h-12 w-12 rounded-full bg-primary/15 flex items-center justify-center shrink-0">
-                  <Crown className="h-6 w-6 text-primary" />
-                </div>
-                <div>
-                  <p className="font-semibold text-foreground">Assinante Premium</p>
-                  <p className="text-sm text-muted-foreground">
-                    Acesso completo a todas as aulas
-                    {expiresAt && ` · Renova em ${new Date(expiresAt).toLocaleDateString('pt-BR')}`}
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          ) : (
-            <Card className="glass border-primary/40 mb-6">
-              <CardContent className="pt-6 flex flex-col sm:flex-row items-center gap-4">
-                <div className="h-12 w-12 rounded-full bg-primary/15 flex items-center justify-center shrink-0">
-                  <Crown className="h-6 w-6 text-primary" />
-                </div>
-                <div className="flex-1 text-center sm:text-left">
-                  <p className="font-semibold text-foreground">Seja Premium</p>
-                  <p className="text-sm text-muted-foreground">
-                    Aulas em vídeo ilimitadas, novos cursos e materiais de apoio para pais e catequistas.
-                  </p>
-                </div>
-                <Button className="w-full sm:w-auto" onClick={() => setShowPaywall(true)}>
-                  Assinar agora
-                </Button>
-              </CardContent>
-            </Card>
-          )
+          <BubbleSection title={isPremium ? 'Assinante Premium' : 'Seja Premium'}>
+            <div className="flex items-center gap-4">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary/15">
+                <Crown className="h-6 w-6 text-primary" />
+              </div>
+              <p className="text-sm text-muted-foreground">
+                {isPremium
+                  ? <>Acesso completo a todas as aulas{expiresAt && ` · Renova em ${new Date(expiresAt).toLocaleDateString('pt-BR')}`}</>
+                  : 'Aulas em vídeo ilimitadas, novos cursos e materiais de apoio para pais e catequistas.'}
+              </p>
+            </div>
+            {!isPremium && (
+              <Button className="mt-4 h-11 w-full" onClick={() => setShowPaywall(true)}>Assinar agora</Button>
+            )}
+          </BubbleSection>
         )}
 
         <AppearanceSection />
 
         <WhatsAppOptinSection userId={user.id} />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          <Card className="glass border-primary/20">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-lg flex items-center gap-2">
-                <Activity className="w-5 h-5 text-primary" />
-                Jogos
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-3xl font-bold text-primary">{progress.games_completed}</p>
-              <p className="text-sm text-muted-foreground">jogos completados</p>
-            </CardContent>
-          </Card>
+        <BubbleSection title="Seu progresso">
+          <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+            {[
+              { icon: Activity, value: progress.games_completed, label: 'jogos completados', title: 'Jogos' },
+              { icon: Music, value: progress.ebooks_read, label: 'músicas ouvidas', title: 'Músicas' },
+              { icon: BookOpen, value: progress.devotionals_completed ?? 0, label: 'devocionais lidos', title: 'Devocionais' },
+              { icon: Flame, value: progress.streak_days, label: 'dias seguidos', title: 'Sequência' },
+            ].map(({ icon: Icon, value, label, title }) => (
+              <div key={title} className="flex flex-col items-center rounded-2xl border border-border bg-card p-3 text-center">
+                <div className="mb-1 flex h-9 w-9 items-center justify-center rounded-full bg-primary/10">
+                  <Icon className="h-4 w-4 text-primary" />
+                </div>
+                <p className="text-2xl font-black text-primary">{value}</p>
+                <p className="text-xs font-semibold text-foreground">{title}</p>
+                <p className="text-[11px] text-muted-foreground">{label}</p>
+              </div>
+            ))}
+          </div>
+        </BubbleSection>
 
-          <Card className="glass border-primary/20">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-lg flex items-center gap-2">
-                <Music className="w-5 h-5 text-primary" />
-                Músicas
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-3xl font-bold text-primary">{progress.ebooks_read}</p>
-              <p className="text-sm text-muted-foreground">músicas ouvidas</p>
-            </CardContent>
-          </Card>
-
-          <Card className="glass border-primary/20">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-lg flex items-center gap-2">
-                <BookOpen className="w-5 h-5 text-primary" />
-                Devocionais
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-3xl font-bold text-primary">{progress.devotionals_completed ?? 0}</p>
-              <p className="text-sm text-muted-foreground">devocionais lidos</p>
-            </CardContent>
-          </Card>
-
-          <Card className="glass border-primary/20">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-lg flex items-center gap-2">
-                <Activity className="w-5 h-5 text-primary" />
-                Sequência
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-3xl font-bold text-primary">{progress.streak_days}</p>
-              <p className="text-sm text-muted-foreground">dias seguidos</p>
-            </CardContent>
-          </Card>
-        </div>
-
-        <Card className="glass border-primary/20 relative z-10">
-          <CardContent className="pt-6">
-            <Tabs defaultValue="badges">
-              <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 !h-auto gap-1 p-1 overflow-visible">
-                <TabsTrigger value="badges">Conquistas</TabsTrigger>
-                <TabsTrigger value="activities">Atividades</TabsTrigger>
-                <TabsTrigger value="devotionals">Devocionais</TabsTrigger>
-                <TabsTrigger value="notes">
-                  <StickyNote className="w-4 h-4 mr-1 hidden sm:inline" />
-                  Anotações
+        <BubbleSection title="Minha jornada" className="relative z-10">
+          <Tabs defaultValue="badges">
+            <TabsList className={`${SPLIT_BAR} !h-auto p-0`}>
+              {[
+                { v: 'badges', l: 'Conquistas', i: Trophy },
+                { v: 'activities', l: 'Atividades', i: Activity },
+                { v: 'devotionals', l: 'Devocionais', i: BookOpen },
+                { v: 'notes', l: 'Anotações', i: StickyNote },
+              ].map(({ v, l, i: Icon }) => (
+                <TabsTrigger
+                  key={v}
+                  value={v}
+                  className="flex h-14 min-w-0 flex-1 flex-col gap-0.5 rounded-none px-1 text-[10px] text-muted-foreground shadow-none data-[state=active]:bg-primary/10 data-[state=active]:font-semibold data-[state=active]:text-primary data-[state=active]:shadow-none"
+                >
+                  <Icon className="h-[18px] w-[18px]" />
+                  <span className="max-w-full truncate">{l}</span>
                 </TabsTrigger>
-              </TabsList>
-
+              ))}
+            </TabsList>
               <TabsContent value="badges" className="mt-4">
                 {badges.length === 0 ? (
                   <p className="text-center text-muted-foreground py-8">
                     Nenhuma conquista ainda. Continue jogando e aprendendo!
                   </p>
                 ) : (
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                     {badges.map((badge) => (
                       <div
                         key={badge.id}
-                        className="flex flex-col items-center p-4 rounded-lg bg-primary/10 border border-primary/20"
+                        className="flex flex-col items-center rounded-2xl border border-border bg-card p-4"
                       >
-                        <Trophy className="w-8 h-8 text-primary mb-2" />
+                        <div className="mb-2 flex h-11 w-11 items-center justify-center rounded-full bg-primary/10"><Trophy className="h-5 w-5 text-primary" /></div>
                         <p className="text-sm text-center font-medium">
                           {getBadgeName(badge.badge_type)}
                         </p>
@@ -439,7 +359,7 @@ const Profile = () => {
                     {activities.map((activity) => (
                       <div
                         key={activity.id}
-                        className="flex items-center justify-between p-3 rounded-lg bg-primary/5 border border-primary/10"
+                        className="flex items-center justify-between rounded-2xl border border-border bg-card p-3"
                       >
                         <div className="flex items-center gap-3">
                           <Activity className="w-5 h-5 text-primary" />
@@ -469,9 +389,8 @@ const Profile = () => {
               <TabsContent value="notes" className="mt-4">
                 <VerseNotesTab userId={user.id} />
               </TabsContent>
-            </Tabs>
-          </CardContent>
-        </Card>
+          </Tabs>
+        </BubbleSection>
 
         {/* Edit Name Dialog */}
         <Dialog open={showNameDialog} onOpenChange={setShowNameDialog}>
@@ -540,8 +459,13 @@ const getBadgeName = (badgeType: string): string => {
     ebooks_5: '5 Músicas',
     level_5: 'Nível 5',
     level_10: 'Nível 10',
+    first_coloring: 'Primeira Pintura',
+    coloring_5: '5 Pinturas',
+    first_devotional: 'Primeiro Devocional',
+    devotionals_5: '5 Devocionais',
+    streak_7: '7 Dias Seguidos',
   };
-  return names[badgeType] || badgeType;
+  return names[badgeType] || badgeType.replace(/_/g, ' ').replace(/^\w/, (c) => c.toUpperCase());
 };
 
 const getActivityTypeName = (type: string): string => {

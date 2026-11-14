@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ChevronLeft, ChevronRight, Palette } from 'lucide-react';
+import { BubbleSection } from '@/components/ui/bubble-section';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useThemePreferences, GLOW_PALETTE } from '@/contexts/ThemePreferencesContext';
 
 const VISIBLE_COUNT = 5;
@@ -18,14 +18,7 @@ export const AppearanceSection = () => {
   const canGoRight = clampedStart < maxIndex;
 
   return (
-    <Card className="glass border-primary/20 mb-6">
-      <CardHeader className="pb-3">
-        <CardTitle className="text-lg flex items-center gap-2">
-          <Palette className="w-5 h-5 text-primary" />
-          Aparência
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
+    <BubbleSection title="Aparência">
         <div className="flex flex-col gap-4">
           <div className="flex flex-col">
             <span className="font-medium text-foreground">Cor do brilho dos cards</span>
@@ -40,7 +33,7 @@ export const AppearanceSection = () => {
               aria-label="Cores anteriores"
               disabled={!canGoLeft}
               onClick={() => setStartIndex((i) => Math.max(0, Math.min(i, maxIndex)) - VISIBLE_COUNT)}
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-foreground/10 bg-foreground/10 text-foreground/80 backdrop-blur transition-all hover:bg-foreground/20 hover:text-foreground disabled:opacity-30 disabled:hover:bg-foreground/10"
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground transition-opacity disabled:opacity-30"
             >
               <ChevronLeft className="h-5 w-5" />
             </button>
@@ -73,7 +66,7 @@ export const AppearanceSection = () => {
               aria-label="Próximas cores"
               disabled={!canGoRight}
               onClick={() => setStartIndex((i) => Math.min(Math.min(i, maxIndex) + VISIBLE_COUNT, maxIndex))}
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-foreground/10 bg-foreground/10 text-foreground/80 backdrop-blur transition-all hover:bg-foreground/20 hover:text-foreground disabled:opacity-30 disabled:hover:bg-foreground/10"
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground transition-opacity disabled:opacity-30"
             >
               <ChevronRight className="h-5 w-5" />
             </button>
@@ -85,7 +78,6 @@ export const AppearanceSection = () => {
             </span>
           )}
         </div>
-      </CardContent>
-    </Card>
+      </BubbleSection>
   );
 };
