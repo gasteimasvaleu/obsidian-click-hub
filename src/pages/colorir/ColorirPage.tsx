@@ -10,6 +10,8 @@ import { EmptyState } from '@/components/EmptyState';
 import { Button } from '@/components/ui/button';
 import { Palette, Camera, FolderHeart, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import fotoImg from '@/assets/colorir/transformar-foto.png.asset.json';
+import criacoesImg from '@/assets/colorir/minhas-criacoes.png.asset.json';
 
 interface Drawing {
   id: string;
@@ -83,9 +85,7 @@ const ColorirPage = () => {
             onClick={() => navigate('/colorir/transformar')}
             className="flex flex-col items-center justify-center p-6 cursor-pointer min-h-[120px]"
           >
-            <div className="p-3 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 mb-3">
-              <Camera size={24} className="text-white" />
-            </div>
+            <img src={fotoImg.url} alt="" loading="lazy" className="mb-3 h-16 w-16 object-contain" />
             <span className="text-foreground text-center font-semibold text-sm">Transformar Foto</span>
           </GlassCard>
           <GlassCard
@@ -94,9 +94,7 @@ const ColorirPage = () => {
             onClick={() => navigate('/colorir/minhas-criacoes')}
             className="flex flex-col items-center justify-center p-6 cursor-pointer min-h-[120px]"
           >
-            <div className="p-3 rounded-full bg-gradient-to-br from-teal-500 to-blue-500 mb-3">
-              <FolderHeart size={24} className="text-white" />
-            </div>
+            <img src={criacoesImg.url} alt="" loading="lazy" className="mb-3 h-16 w-16 object-contain" />
             <span className="text-foreground text-center font-semibold text-sm">Minhas Criações</span>
           </GlassCard>
         </div>
