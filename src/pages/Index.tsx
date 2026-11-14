@@ -68,10 +68,12 @@ const Index = () => {
       <FuturisticNavbar light />
       <main className="mx-auto w-full max-w-4xl px-4 pt-20 sm:px-6">
         <div className="flex justify-center pb-6">
+          <div className="neon-glow-user relative w-full max-w-[500px] overflow-hidden rounded-2xl border border-border bg-card">
+          <span aria-hidden className="border-beam" />
           <video
             ref={heroVideoRef}
             src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/video_517d0687_1763117222774.mp4"
-            className="w-full max-w-[500px] max-h-[260px] object-contain"
+            className="block w-full max-h-[260px] object-contain"
             autoPlay muted playsInline
             onEnded={(e) => {
               const video = e.currentTarget;
@@ -79,13 +81,15 @@ const Index = () => {
               video.play().catch(() => {});
             }}
           />
+          </div>
         </div>
 
         <Button
           variant="ghost"
           onClick={mainAction.action}
-          className="home-surface relative mb-6 flex h-[100px] w-full justify-between overflow-visible rounded-2xl border border-border bg-card pl-28 pr-5 text-card-foreground hover:bg-secondary"
+          className="neon-glow-user relative mb-6 flex h-[100px] w-full justify-between overflow-visible rounded-2xl border border-border bg-card pl-28 pr-5 text-card-foreground hover:bg-secondary"
         >
+          <span aria-hidden className="border-beam" />
           <img
             src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/botaocursos4.png"
             alt=""
@@ -99,7 +103,10 @@ const Index = () => {
 
         {highlights.length > 0 && (
           <section className="mb-6">
-            <h2 className="mb-3 text-base font-bold">Confira nossos Lançamentos</h2>
+            <div className="neon-glow-user relative mb-3 flex h-[50px] items-center justify-center rounded-2xl border border-border bg-card">
+              <span aria-hidden className="border-beam" />
+              <h2 className="text-sm font-bold">Confira nossos Lançamentos</h2>
+            </div>
             <div className="overflow-hidden" ref={emblaRef}>
               <div className="flex gap-3">
                 {highlights.map((h: any) => (
