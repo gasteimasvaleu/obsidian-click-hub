@@ -63,7 +63,7 @@ export function ModulePlaylist({ items, className }: ModulePlaylistProps) {
                 <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-1">
                   {item.title}
                 </h3>
-                <p className="text-sm text-muted-foreground line-clamp-7 md:line-clamp-[10] mt-1 overflow-hidden">
+                <p className="text-sm text-muted-foreground leading-5 line-clamp-[7] md:line-clamp-[10] mt-1 overflow-hidden">
                   {item.description}
                 </p>
               </div>
