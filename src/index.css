@@ -374,9 +374,12 @@ All colors MUST be HSL.
 }
 
 /* Bubble cards tinted with the user's chosen glow color. */
-.bubble-user,
-.bubble-user:hover {
+.bubble-user {
   background-color: color-mix(in srgb, var(--user-glow-color) 75%, transparent);
+}
+.feature-bubble.bubble-user:hover,
+.feature-bubble.bubble-user:active {
+  background-color: color-mix(in srgb, var(--user-glow-color) 85%, black 15%);
 }
 .home-light .neon-glow-user.feature-bubble {
   box-shadow:

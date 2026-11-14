@@ -88,7 +88,7 @@ const Index = () => {
         <Button
           variant="ghost"
           onClick={mainAction.action}
-          className="neon-glow-user feature-bubble bubble-user relative mb-6 flex h-[100px] w-full justify-between overflow-visible rounded-2xl pl-28 pr-5 text-feature-foreground hover:text-feature-foreground"
+          className="neon-glow-user feature-bubble bubble-user relative mb-6 flex h-[100px] w-full justify-between overflow-visible rounded-2xl pl-28 pr-5 text-feature-foreground hover:bg-transparent hover:text-feature-foreground"
         >
           <span aria-hidden className="border-beam" />
           <img
