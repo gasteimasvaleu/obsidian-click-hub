@@ -106,12 +106,12 @@ export function LessonPlaylist({
           )}
         >
           <div className="flex-shrink-0 w-32 relative">
-            <AspectRatio ratio={16 / 9}>
+            <AspectRatio ratio={1440 / 730} className="bg-muted rounded">
               {item.thumbnail ? (
                 <img
                   src={item.thumbnail}
                   alt={item.title}
-                  className="w-full h-full object-cover rounded"
+                  className="w-full h-full object-contain rounded"
                 />
               ) : (
                 <div className="w-full h-full bg-gradient-to-br from-primary/30 to-secondary/30 rounded flex items-center justify-center">
