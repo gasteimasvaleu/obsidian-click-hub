@@ -11,6 +11,21 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Gamepad2, Brain, Grid3x3, Search, Puzzle, X } from "lucide-react";
 import { EmptyState } from "@/components/EmptyState";
+import { BubbleTitleText } from "@/components/ui/bubble-title-text";
+import { ArrowNavButton } from "@/components/plataforma/BackArrowButton";
+import quizImg from "@/assets/games/quiz.png";
+import memoryImg from "@/assets/games/memory.png";
+import wordsearchImg from "@/assets/games/wordsearch.png";
+import puzzleImg from "@/assets/games/puzzle.png";
+
+const TYPE_IMAGES: Record<string, string> = { quiz: quizImg, memory: memoryImg, wordsearch: wordsearchImg, puzzle: puzzleImg };
+const TYPE_LABELS: Record<string, string> = { quiz: "Quiz", memory: "Memória", wordsearch: "Caça-palavras", puzzle: "Quebra-cabeça" };
+const DIFF_STYLES: Record<string, string> = {
+  "Fácil": "bg-success/10 text-success",
+  "Médio": "bg-warning/10 text-warning",
+  "Difícil": "bg-destructive/10 text-destructive",
+};
+const displayTitle = (t: string) => t.replace(/\bQuizz\b/g, "Quiz");
 
 interface Game {
   id: string;
@@ -27,6 +42,7 @@ const Games = () => {
   const navigate = useNavigate();
   const [games, setGames] = useState<Game[]>([]);
   const [loading, setLoading] = useState(true);
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
   const [selectedType, setSelectedType] = useState<string>("all");
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>("all");
 
@@ -175,7 +191,7 @@ const Games = () => {
         </div>
 
         {/* Games Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-4xl mx-auto">
           {loading ? (
             <>
               {Array.from({ length: 6 }).map((_, i) => (
@@ -204,49 +220,43 @@ const Games = () => {
           ) : (
             filteredGames.map((game) => {
               const IconComponent = (Icons as any)[game.icon_name] || Icons.Gamepad2;
+              const img = TYPE_IMAGES[game.type];
+              const isOpen = !!expanded[game.id];
+              const play = () => navigate(`/games/${game.id}/play`);
               return (
-                <GlassCard
-                  key={game.id}
-                  hoverable
-                  pressable
-                  className="group"
-                >
-                  <div className="flex flex-col h-full">
-                    {/* Icon and Badge */}
-                    <div className="flex items-start justify-between mb-4">
-                      <div className={`p-3 rounded-lg bg-background/50 ${game.color} transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg`}>
-                        <IconComponent size={32} />
-                      </div>
-                      <Badge 
-                        variant="outline" 
-                        className={`${difficultyColors[game.difficulty as keyof typeof difficultyColors]} border transition-all duration-300 group-hover:scale-105`}
-                      >
-                        {game.difficulty}
-                      </Badge>
-                    </div>
-
-                    {/* Content */}
-                    <div className="flex-grow">
-                      <h3 className="text-lg font-bold mb-2 text-foreground">
-                        {game.title}
-                      </h3>
-                      <p className="text-muted-foreground mb-6">
-                        {game.description}
-                      </p>
-                    </div>
-
-                    {/* Action Button */}
-                    <Button 
-                      className="w-full transition-all duration-300 hover:shadow-lg hover:shadow-primary/50 active:scale-95"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        navigate(`/games/${game.id}/play`);
-                      }}
-                    >
-                      Jogar Agora
-                    </Button>
+                <div key={game.id} role="button" tabIndex={0} onClick={play}
+                  onKeyDown={(e) => { if (e.key === "Enter") play(); }}
+                  className="flex cursor-pointer flex-col animate-fade-in">
+                  <div className="neon-glow-user feature-bubble bubble-user relative z-[2] rounded-2xl px-4 py-3 text-feature-foreground">
+                    <span className="border-beam" aria-hidden />
+                    <h3 className="bubble-title relative"><BubbleTitleText text={displayTitle(game.title)} /></h3>
                   </div>
-                </GlassCard>
+                  <GlassCard className="-mt-4 flex flex-1 flex-col rounded-t-none pt-7">
+                    <div className="flex gap-3">
+                      {img ? (
+                        <img src={img} alt="" loading="lazy" width={64} height={64} className="h-16 w-16 shrink-0 object-contain" />
+                      ) : (
+                        <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary"><IconComponent size={28} /></div>
+                      )}
+                      <div className="min-w-0 flex-1">
+                        <div className="mb-2 flex flex-wrap gap-1.5">
+                          <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-[11px] font-semibold text-primary">{TYPE_LABELS[game.type] ?? game.type}</span>
+                          <span className={`rounded-full px-2.5 py-0.5 text-[11px] font-semibold ${DIFF_STYLES[game.difficulty] ?? "bg-muted text-muted-foreground"}`}>{game.difficulty}</span>
+                        </div>
+                        <p className={`text-sm text-muted-foreground ${isOpen ? "" : "line-clamp-3"}`}>{game.description}</p>
+                        {game.description?.length > 120 && (
+                          <button type="button" className="mt-1 text-xs font-semibold text-primary"
+                            onClick={(e) => { e.stopPropagation(); setExpanded((p) => ({ ...p, [game.id]: !isOpen })); }}>
+                            {isOpen ? "Ver menos" : "Ver mais"}
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                    <div className="mt-4" onClick={(e) => e.stopPropagation()}>
+                      <ArrowNavButton direction="right" label="Jogar" onClick={play} className="w-full" />
+                    </div>
+                  </GlassCard>
+                </div>
               );
             })
           )}
