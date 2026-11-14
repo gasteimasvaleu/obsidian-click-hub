@@ -8,3 +8,9 @@ Tudo verificado no repositório: iPhone 1.3 (build 37) e Android 2.2.4 (código 
 - [ ] (usuário) Testar com conta sem assinatura: 3 aulas abrem, a 4ª bloqueia, card "Seja Premium" aparece
 - [ ] (usuário) RevenueCat: Restore Behavior = "Keep with original App User ID" nos dois projetos
 - [ ] (usuário) Descrições nas lojas: entrada livre, assinatura só depois dos 3 vídeos; China continental fora da disponibilidade
+
+## Tela inicial clara
+- [x] Montar fundo cinza suave, cards brancos e atalhos coloridos na home.
+- [x] Adaptar os menus superior, inferior e Mais na home, sem alterar telas internas.
+- [x] Conferir apresentação isolada em celular e computador: imagens carregadas, menus funcionando e sem excesso de largura.
+- [ ] Conferir com conta real: sessão do serviço externo indisponível neste ambiente.

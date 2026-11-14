@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
+import { useEffect, useState } from "react"
+import { motion, useReducedMotion } from "framer-motion"
 import { Link, useLocation, useNavigate } from "react-router-dom"
 import { LucideIcon, Users, User, Info, Shield, FileText, X, Bot, Heart, HandHeart, Music, Gamepad2 } from "lucide-react"
+import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
 interface NavItem {
@@ -34,7 +35,8 @@ export function NavBar({ items, className }: NavBarProps) {
   const location = useLocation()
   const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState(items[0].name)
-  const [isMobile, setIsMobile] = useState(false)
+  const light = location.pathname === "/"
+  const reducedMotion = useReducedMotion()
   const [moreOpen, setMoreOpen] = useState(false)
 
   useEffect(() => {
@@ -43,15 +45,6 @@ export function NavBar({ items, className }: NavBarProps) {
       setActiveTab(currentItem.name)
     }
   }, [location.pathname, items])
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768)
-    }
-    handleResize()
-    window.addEventListener("resize", handleResize)
-    return () => window.removeEventListener("resize", handleResize)
-  }, [])
 
   return (
     <>
@@ -66,7 +59,7 @@ export function NavBar({ items, className }: NavBarProps) {
       {/* More menu panel — floats above navbar */}
       {moreOpen && (
         <div
-          className="fixed left-3 right-3 z-[45] rounded-2xl border border-primary/20 bg-background/80 backdrop-blur-xl shadow-[0_0_30px_-5px_hsl(var(--primary)/0.15)] overflow-hidden"
+          className={cn("fixed left-3 right-3 z-[45] rounded-2xl border border-border bg-popover/95 backdrop-blur-xl shadow-lg overflow-hidden", light && "navigation-light")}
           style={{ bottom: 'calc(env(safe-area-inset-bottom) + 4.5rem)' }}
         >
           <div className="grid grid-cols-3 gap-2 p-3">
@@ -74,7 +67,7 @@ export function NavBar({ items, className }: NavBarProps) {
               const MenuIcon = menuItem.icon
               const isCurrentPage = location.pathname === menuItem.url
               return (
-                 <button
+                 <Button variant="ghost"
                     type="button"
                   key={menuItem.url}
                   onClick={() => {
@@ -85,15 +78,15 @@ export function NavBar({ items, className }: NavBarProps) {
                     }
                   }}
                   className={cn(
-                    "flex flex-col items-center gap-1.5 p-3 rounded-xl transition-all duration-200 active:scale-95",
+                    "h-auto whitespace-normal flex flex-col items-center gap-1.5 p-3 rounded-xl transition-all duration-200 active:scale-95",
                     isCurrentPage
-                      ? "bg-primary/10 text-primary shadow-[0_0_12px_-2px_hsl(var(--primary)/0.4)]"
-                      : "text-primary/80 hover:text-primary"
+                      ? "bg-primary/10 text-primary"
+                      : light ? "text-muted-foreground hover:text-primary" : "text-primary/80 hover:text-primary"
                   )}
                 >
                   <MenuIcon size={26} strokeWidth={1.8} />
                   <span className="text-[11px] font-medium text-center leading-tight">{menuItem.name}</span>
-                </button>
+                </Button>
               )
             })}
           </div>
@@ -104,19 +97,22 @@ export function NavBar({ items, className }: NavBarProps) {
         className={cn(
           "fixed bottom-0 left-0 right-0 z-50",
           className,
+          light && "navigation-light",
         )}
       >
-        <div className="bg-black/90 backdrop-blur-lg pb-[env(safe-area-inset-bottom)]">
+        <div className="navigation-surface bg-background/90 backdrop-blur-lg pb-[env(safe-area-inset-bottom)]">
           <div className="flex justify-center px-2 pt-2 pb-2">
-            <div className="grid w-full max-w-xl grid-cols-6 glass border border-primary/20 backdrop-blur-lg py-1.5 px-1 rounded-2xl shadow-lg">
+            <div className={cn("grid w-full max-w-xl grid-cols-6 py-1.5 px-1", !light && "glass border border-primary/20 backdrop-blur-lg rounded-2xl shadow-lg")}>
               {items.map((item) => {
                 const Icon = item.icon
                 const isActive = item.isMenu ? moreOpen : activeTab === item.name
 
                 if (item.isMenu) {
                   return (
-                    <button
+                    <Button variant="ghost"
                       key={item.name}
+                      aria-expanded={moreOpen}
+                      aria-label="Mais"
                       onClick={() => {
                         setMoreOpen(prev => !prev)
                         if ('vibrate' in navigator && window.innerWidth < 768) {
@@ -125,8 +121,8 @@ export function NavBar({ items, className }: NavBarProps) {
                       }}
                       className={cn(
                         "relative min-w-0 cursor-pointer rounded-xl transition-all duration-300",
-                        "h-[52px] flex flex-col items-center justify-center gap-0.5 px-0.5",
-                        "text-primary/80 hover:text-primary",
+                        "h-[52px] flex flex-col items-center justify-center gap-1 px-0.5 [&_svg]:size-[21px]",
+                        light ? "text-muted-foreground hover:text-primary" : "text-primary/80 hover:text-primary",
                         "active:scale-95",
                         isActive && "bg-primary/10 text-primary",
                       )}
@@ -135,7 +131,7 @@ export function NavBar({ items, className }: NavBarProps) {
                       <span className="w-full truncate text-center text-[9px] font-semibold leading-none">
                         {item.shortName || item.name}
                       </span>
-                      {isActive && (
+                      {isActive && !light && !reducedMotion && (
                         <motion.div
                           layoutId="lamp"
                           className="absolute inset-0 w-full bg-primary/5 rounded-full -z-10"
@@ -149,7 +145,7 @@ export function NavBar({ items, className }: NavBarProps) {
                           </div>
                         </motion.div>
                       )}
-                    </button>
+                    </Button>
                   )
                 }
 
@@ -157,6 +153,7 @@ export function NavBar({ items, className }: NavBarProps) {
                   <Link
                     key={item.name}
                     to={item.url}
+                    aria-current={isActive ? "page" : undefined}
                     onClick={() => {
                       setActiveTab(item.name)
                       setMoreOpen(false)
@@ -166,8 +163,8 @@ export function NavBar({ items, className }: NavBarProps) {
                     }}
                     className={cn(
                       "relative min-w-0 cursor-pointer rounded-xl transition-all duration-300",
-                      "h-[52px] flex flex-col items-center justify-center gap-0.5 px-0.5",
-                      "text-primary/80 hover:text-primary",
+                      "h-[52px] flex flex-col items-center justify-center gap-1 px-0.5 [&_svg]:size-[21px]",
+                      light ? "text-muted-foreground hover:text-primary" : "text-primary/80 hover:text-primary",
                       "active:scale-95",
                       isActive && "bg-primary/10 text-primary",
                     )}
@@ -176,7 +173,7 @@ export function NavBar({ items, className }: NavBarProps) {
                     <span className="w-full truncate text-center text-[9px] font-semibold leading-none">
                       {item.shortName || item.name}
                     </span>
-                    {isActive && (
+                    {isActive && !light && !reducedMotion && (
                       <motion.div
                         layoutId="lamp"
                         className="absolute inset-0 w-full bg-primary/5 rounded-full -z-10"

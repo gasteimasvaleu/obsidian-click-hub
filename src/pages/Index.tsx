@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { GlassCard } from "@/components/GlassCard";
+import { Button } from "@/components/ui/button";
 import { FuturisticNavbar } from "@/components/FuturisticNavbar";
 import { BookOpen, Heart, HandHeart, Music, ArrowRight, Palette, Bot, Users, Gamepad2, MessageCircle } from "lucide-react";
 import { useEffect, useRef } from "react";
@@ -52,125 +52,96 @@ const Index = () => {
   };
 
   const featureActions = [
-    { title: "Bíblia Interativa", icon: BookOpen, action: () => navigate('/biblia'), color: "bg-feature-bible" },
-    { title: "Devocional Diário", icon: Heart, action: () => navigate('/devocional'), color: "bg-feature-devotional" },
-    { title: "Orações", icon: HandHeart, action: () => navigate('/oracoes'), color: "bg-feature-prayer" },
-    { title: "Bíbliafy", icon: Music, action: () => navigate('/audiofy'), color: "bg-feature-music" },
-    { title: "Colorir", icon: Palette, action: () => navigate('/colorir'), color: "bg-feature-coloring" },
-    { title: "Amigo Divino", icon: Bot, action: () => navigate('/amigodivino'), color: "bg-feature-friend" },
-    { title: "Guia para Pais", icon: Users, action: () => navigate('/guia-pais'), color: "bg-feature-parents" },
-    { title: "Games", icon: Gamepad2, action: () => navigate('/games'), color: "bg-feature-games" },
-    { title: "Comunidade", icon: MessageCircle, action: () => navigate('/comunidade'), color: "bg-feature-community" },
+    { title: "Bíblia Interativa", icon: BookOpen, action: () => navigate('/biblia'), color: "text-feature-bible" },
+    { title: "Devocional Diário", icon: Heart, action: () => navigate('/devocional'), color: "text-feature-devotional" },
+    { title: "Orações", icon: HandHeart, action: () => navigate('/oracoes'), color: "text-feature-prayer" },
+    { title: "Bíbliafy", icon: Music, action: () => navigate('/audiofy'), color: "text-feature-music" },
+    { title: "Colorir", icon: Palette, action: () => navigate('/colorir'), color: "text-feature-coloring" },
+    { title: "Amigo Divino", icon: Bot, action: () => navigate('/amigodivino'), color: "text-feature-friend" },
+    { title: "Guia para Pais", icon: Users, action: () => navigate('/guia-pais'), color: "text-feature-parents" },
+    { title: "Games", icon: Gamepad2, action: () => navigate('/games'), color: "text-feature-games" },
+    { title: "Comunidade", icon: MessageCircle, action: () => navigate('/comunidade'), color: "text-feature-community" },
   ];
 
   return (
-    <div className="min-h-screen bg-black relative flex flex-col pb-24">
-      <FuturisticNavbar />
-      
-      <div className="flex justify-center w-full pt-16 pb-4 px-4">
-        <GlassCard className="w-full max-w-[500px] p-0 overflow-hidden">
-          <video 
+    <div className="home-light min-h-screen bg-background text-foreground relative flex flex-col pb-24">
+      <FuturisticNavbar light />
+      <main className="mx-auto w-full max-w-4xl px-4 pt-20 sm:px-6">
+        <div className="flex justify-center pb-6">
+          <video
             ref={heroVideoRef}
             src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/video_517d0687_1763117222774.mp4"
-            className="w-full h-auto"
-            style={{ maxHeight: '300px' }}
-            autoPlay
-            muted
-            playsInline
-            // @ts-ignore - iOS WKWebView legacy attribute
-            webkit-playsinline=""
+            className="w-full max-w-[500px] max-h-[260px] object-contain"
+            autoPlay muted playsInline
             onEnded={(e) => {
               const video = e.currentTarget;
               video.currentTime = 0;
               video.play().catch(() => {});
             }}
           />
-        </GlassCard>
-      </div>
-      
-      <div className="flex-1 px-4">
-        <div className="w-full max-w-4xl mx-auto space-y-6">
-          
-          {/* Card Principal - Full Width */}
-          <GlassCard
-              hoverable
-              pressable
-              onClick={mainAction.action}
-              className="relative h-[100px] pl-[80px] pr-4 flex items-center cursor-pointer"
-              style={{ clipPath: 'inset(-35px 0 0 0 round 0 0 1rem 1rem)' }}
-            >
-              <img
-                src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/botaocursos4.png"
-                alt="Acessar Cursos"
-                className="absolute left-2 bottom-0 h-[130px] w-auto object-contain pointer-events-none z-10"
-              />
-              <span className="text-white font-bold text-base text-center w-full">{mainAction.title}</span>
-            </GlassCard>
-
-          {/* Carrossel de Lançamentos */}
-          {highlights.length > 0 && (
-            <>
-              <GlassCard className="h-[50px] flex items-center justify-center gap-2 p-0">
-                <span className="text-white font-bold text-sm">Confira nossos Lançamentos</span>
-              </GlassCard>
-
-              <div className="overflow-hidden" ref={emblaRef}>
-                <div className="flex gap-3">
-                  {highlights.map((h: any) => (
-                    <div
-                      key={h.id}
-                      className="flex-[0_0_auto] cursor-pointer"
-                      onClick={() => h.link_to && navigate(h.link_to)}
-                    >
-                      <img
-                        src={h.image_url}
-                        alt={h.title || 'Lançamento'}
-                        className="w-[75px] h-[145px] rounded-xl object-cover"
-                      />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </>
-          )}
-
-          {/* Atalhos principais */}
-          <div className="overflow-hidden rounded-2xl">
-            {featureActions.map((action, index) => {
-              const Icon = action.icon;
-              const isLast = index === featureActions.length - 1;
-              return (
-                <button
-                  key={action.title}
-                  type="button"
-                  onClick={action.action}
-                  className={`${action.color} relative overflow-hidden ${isLast ? "min-h-[150px] items-start" : "h-[88px] items-center"} flex w-full text-feature-foreground transition-transform duration-200 active:scale-[0.98] ${index > 0 ? "-mt-4" : ""} rounded-t-2xl px-6 py-5 text-left`}
-                  style={{ zIndex: index + 1 }}
-                  aria-label={`Abrir ${action.title}`}
-                >
-                  <span
-                    aria-hidden="true"
-                    className="pointer-events-none absolute inset-y-0 -left-1/3 w-1/2 animate-shine motion-reduce:animate-none"
-                    style={{
-                      background: "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.35) 50%, transparent 100%)",
-                      animationDelay: `${1.2 + index * 0.5}s`,
-                    }}
-                  />
-                  <div className="flex min-w-0 flex-1 items-center gap-3">
-                    <Icon size={26} strokeWidth={2.2} aria-hidden="true" />
-                    <span className="truncate text-lg font-bold">{action.title}</span>
-                  </div>
-                  <span className="ml-4 flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-feature-action text-feature-foreground">
-                    <ArrowRight size={24} aria-hidden="true" />
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-
         </div>
-      </div>
-      
+
+        <Button
+          variant="ghost"
+          onClick={mainAction.action}
+          className="home-surface relative mb-6 flex h-[100px] w-full justify-between overflow-visible rounded-2xl border border-border bg-card pl-28 pr-5 text-card-foreground hover:bg-secondary"
+        >
+          <img
+            src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/botaocursos4.png"
+            alt=""
+            className="pointer-events-none absolute bottom-0 left-2 h-[125px] w-[95px] object-contain"
+          />
+          <span className="text-base font-bold sm:text-lg">{mainAction.title}</span>
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-secondary text-primary">
+            <ArrowRight className="!h-5 !w-5" aria-hidden="true" />
+          </span>
+        </Button>
+
+        {highlights.length > 0 && (
+          <section className="mb-6">
+            <h2 className="mb-3 text-base font-bold">Confira nossos Lançamentos</h2>
+            <div className="overflow-hidden" ref={emblaRef}>
+              <div className="flex gap-3">
+                {highlights.map((h: any) => (
+                  <Button
+                    variant="ghost"
+                    key={h.id}
+                    className="h-auto flex-[0_0_auto] rounded-lg p-0"
+                    onClick={() => h.link_to && navigate(h.link_to)}
+                    aria-label={h.title || 'Lançamento'}
+                  >
+                    <img src={h.image_url} alt={h.title || 'Lançamento'} className="h-[145px] w-[90px] rounded-lg object-cover" />
+                  </Button>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        <div className="grid grid-cols-2 gap-3 pb-2 sm:grid-cols-3">
+          {featureActions.map((action, index) => {
+            const Icon = action.icon;
+            const isLast = index === featureActions.length - 1;
+            return (
+              <Button
+                key={action.title}
+                variant="ghost"
+                onClick={action.action}
+                aria-label={`Abrir ${action.title}`}
+                className={`home-surface group relative flex h-[112px] flex-col items-start justify-between whitespace-normal rounded-2xl border border-border bg-card p-4 text-card-foreground transition-transform hover:bg-card active:scale-[0.98] motion-reduce:transition-none ${isLast ? 'col-span-2 h-[88px] flex-row items-center sm:col-span-3' : ''}`}
+              >
+                <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${action.color}`}>
+                  <Icon className="!h-7 !w-7" strokeWidth={1.8} aria-hidden="true" />
+                </span>
+                <span className={`flex w-full min-w-0 items-center justify-between gap-1 ${isLast ? 'ml-3' : ''}`}>
+                  <span className="text-left text-sm font-semibold leading-tight">{action.title}</span>
+                  <ArrowRight className="!h-4 !w-4 shrink-0 text-muted-foreground" aria-hidden="true" />
+                </span>
+              </Button>
+            );
+          })}
+        </div>
+      </main>
     </div>
   );
 };
