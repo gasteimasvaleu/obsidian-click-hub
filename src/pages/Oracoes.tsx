@@ -142,12 +142,7 @@ const Oracoes = () => {
 
         {/* Prayers List */}
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-xl font-bold text-primary mb-4 flex items-center gap-2">
-            {selectedCategoryName}
-            <span className="text-sm font-normal text-foreground/60">
-              ({filteredPrayers.length} {filteredPrayers.length === 1 ? "oração" : "orações"})
-            </span>
-          </h2>
+          <SectionHeader title={selectedCategoryName} description={`${filteredPrayers.length} ${filteredPrayers.length === 1 ? "oração" : "orações"}`} />
 
           {loadingPrayers || loadingFavorites ? <div className="space-y-4">
               {[1, 2, 3].map(i => <GlassCard key={i}>
