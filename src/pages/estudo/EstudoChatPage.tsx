@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
-import { Loader2, Send, ListChecks } from "lucide-react";
+import { Loader2, Send, Lightbulb, BookOpen, Heart } from "lucide-react";
 import { FuturisticNavbar } from "@/components/FuturisticNavbar";
 import { BackArrowButton, ArrowNavButton } from "@/components/plataforma/BackArrowButton";
 import { BubbleSection, SPLIT_BAR } from "@/components/ui/bubble-section";
@@ -20,7 +20,11 @@ type Q = { pergunta: string; alternativas: string[]; correta: number; explicacao
 type Book = { id: string; name: string };
 
 const db = supabase as any;
-const SUGESTOES = ["Explique mais simples", "Me dê um exemplo", "Como aplicar no dia a dia?"];
+const SUGESTOES = [
+  { label: "Mais simples", prompt: "Explique mais simples", icon: Lightbulb },
+  { label: "Exemplo", prompt: "Me dê um exemplo", icon: BookOpen },
+  { label: "No dia a dia", prompt: "Como aplicar no dia a dia?", icon: Heart },
+];
 
 async function callStudy(body: Record<string, unknown>) {
   const { data, error } = await supabase.functions.invoke("bible-study-chat", { body });
@@ -178,16 +182,17 @@ export default function EstudoChatPage() {
 
         {hasAssistant && !sending && !quiz && (
           <div className="mt-6 space-y-3">
-            <div className="flex flex-wrap gap-2">
-              {SUGESTOES.map((s) => (
-                <button key={s} type="button" onClick={() => send(s)}
-                  className="rounded-full border border-border bg-card px-3 py-2 text-xs font-medium text-primary hover:bg-primary/10">{s}</button>
+            <div className={SPLIT_BAR}>
+              {SUGESTOES.map(({ label, prompt, icon: Icon }) => (
+                <button key={label} type="button" onClick={() => send(prompt)}
+                  className="flex h-14 min-w-0 flex-1 flex-col items-center justify-center gap-0.5 text-[11px] text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary">
+                  <Icon className="h-[18px] w-[18px]" />
+                  <span className="truncate">{label}</span>
+                </button>
               ))}
             </div>
-            <button type="button" onClick={startQuiz} disabled={quizLoading}
-              className={`${SPLIT_BAR} h-11 items-center justify-center gap-2 text-sm font-semibold text-primary disabled:opacity-50`}>
-              {quizLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <ListChecks className="h-4 w-4" />} Revisar com perguntinhas
-            </button>
+            <ArrowNavButton direction="right" label={quizLoading ? "Preparando perguntas..." : "Revisar com perguntinhas"}
+              disabled={quizLoading} onClick={startQuiz} />
           </div>
         )}
 
