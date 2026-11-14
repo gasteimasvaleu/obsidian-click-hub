@@ -10,7 +10,15 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
-import { CheckCircle2, XCircle, ArrowLeft, RotateCcw } from "lucide-react";
+import { CheckCircle2, XCircle, ArrowLeft, RotateCcw, ListChecks, Trophy } from "lucide-react";
+import { BubbleTitleText } from "@/components/ui/bubble-title-text";
+
+const DIFF_STYLES: Record<string, string> = {
+  "Fácil": "bg-success/10 text-success",
+  "Médio": "bg-warning/10 text-warning",
+  "Difícil": "bg-destructive/10 text-destructive",
+};
+const BUBBLE = "neon-glow-user feature-bubble bubble-user relative z-[2] rounded-2xl px-4 py-3 text-feature-foreground";
 import { fireBasicConfetti, fireRainbowConfetti } from "@/lib/confetti";
 import { useUserProgress } from "@/hooks/useUserProgress";
 import { useAuth } from "@/contexts/AuthContext";
@@ -223,108 +231,76 @@ const QuizPlayer = () => {
       <div className="min-h-screen bg-background pb-32">
       <FuturisticNavbar />
       
-      <main className="container mx-auto px-4 pt-24">
-        <div className="max-w-3xl mx-auto">
+      <main className="container mx-auto px-4 pt-20 max-w-[58rem]">
+        <div className="space-y-6">
+          <ArrowNavButton direction="left" label="Voltar" onClick={() => navigate("/games")} />
+
           {/* Header */}
-          <div className="mb-6">
-            <ArrowNavButton direction="left" label="Voltar" onClick={() => navigate("/games")} />
-            
-            <div className="flex items-center justify-between mb-4">
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-primary via-primary to-primary/60 bg-clip-text text-transparent">{game.title}</h1>
-              <Badge variant="outline" className="bg-primary/20 text-primary border-primary/40">
-                {game.difficulty}
-              </Badge>
+          <div>
+            <div className={BUBBLE}>
+              <span className="border-beam" aria-hidden />
+              <h1 className="bubble-title relative"><BubbleTitleText text={game.title.replace(/\bQuizz\b/g, "Quiz")} /></h1>
             </div>
-            
-            <div className="flex items-center gap-4 text-muted-foreground">
-              <span>Pergunta {currentQuestion + 1} de {questions.length}</span>
-              <span>Pontuação: {score}/{questions.length}</span>
-            </div>
-            
-            <Progress value={progress} className="mt-3" />
+            <GlassCard className="-mt-4 rounded-t-none pt-7 space-y-3">
+              <span className={`inline-block rounded-full px-2.5 py-0.5 text-[11px] font-semibold ${DIFF_STYLES[game.difficulty] ?? "bg-muted text-muted-foreground"}`}>{game.difficulty}</span>
+              <div className="flex w-full overflow-hidden rounded-full border border-border bg-card divide-x divide-border">
+                <div className="flex h-11 flex-1 items-center justify-center gap-2 text-sm text-foreground">
+                  <ListChecks size={18} className="text-primary" /> Pergunta {currentQuestion + 1}/{questions.length}
+                </div>
+                <div className="flex h-11 flex-1 items-center justify-center gap-2 text-sm text-foreground">
+                  <Trophy size={18} className="text-primary" /> Pontos {score}/{questions.length}
+                </div>
+              </div>
+              <Progress value={progress} className="h-3 rounded-full bg-primary/15" />
+            </GlassCard>
           </div>
 
           {/* Question Card */}
-          <GlassCard>
-            <h2 className="text-2xl font-bold mb-6 text-foreground">
-              {currentQ.question}
-            </h2>
-
-            <div className="space-y-3 mb-6">
-              {currentQ.options.map((option, index) => {
-                const isSelected = selectedAnswer === index;
-                const isCorrectAnswer = index === currentQ.correctAnswer;
-                
-                let buttonClass = "";
-                if (showFeedback) {
-                  if (isCorrectAnswer) {
-                    buttonClass = "bg-primary/20 border-primary text-primary";
-                  } else if (isSelected && !isCorrectAnswer) {
-                    buttonClass = "bg-red-500/20 border-red-500 text-red-400";
-                  }
-                }
-
-                return (
-                  <button
-                    key={index}
-                    onClick={() => handleAnswerSelect(index)}
-                    disabled={showFeedback}
-                    className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
-                      showFeedback 
-                        ? buttonClass
-                        : "border-muted hover:border-primary hover:bg-primary/10"
-                    } ${isSelected && !showFeedback ? "border-primary bg-primary/10" : ""}`}
-                  >
-                    <div className="flex items-center gap-3">
-                      <span className="flex-shrink-0 w-8 h-8 rounded-full border-2 flex items-center justify-center">
-                        {String.fromCharCode(65 + index)}
-                      </span>
-                      <span className="flex-grow">{option}</span>
-                      {showFeedback && isCorrectAnswer && (
-                        <CheckCircle2 className="flex-shrink-0 text-primary" />
-                      )}
-                      {showFeedback && isSelected && !isCorrectAnswer && (
-                        <XCircle className="flex-shrink-0 text-red-400" />
-                      )}
-                    </div>
-                  </button>
-                );
-              })}
+          <div>
+            <div className={BUBBLE}>
+              <span className="border-beam" aria-hidden />
+              <h2 className="bubble-title relative text-lg"><BubbleTitleText text={currentQ.question} /></h2>
             </div>
-
-            {/* Feedback */}
-            {showFeedback && (
-              <div className={`p-4 rounded-lg mb-6 ${
-                isCorrect ? "bg-primary/10 border border-primary/30" : "bg-red-500/10 border border-red-500/30"
-              }`}>
-                <div className="flex items-start gap-3 mb-3">
-                  {isCorrect ? (
-                    <CheckCircle2 className="flex-shrink-0 text-primary mt-1" />
-                  ) : (
-                    <XCircle className="flex-shrink-0 text-red-400 mt-1" />
-                  )}
-                  <div>
-                    <p className="font-bold mb-2 text-foreground">
-                      {isCorrect ? "Correto!" : "Ops!"}
-                    </p>
-                    <p className="text-muted-foreground mb-3">{currentQ.explanation}</p>
-                    <p className="text-sm italic text-muted-foreground">{currentQ.verse}</p>
-                  </div>
-                </div>
+            <GlassCard className="-mt-4 rounded-t-none pt-7">
+              <div className="space-y-3">
+                {currentQ.options.map((option, index) => {
+                  const isSelected = selectedAnswer === index;
+                  const isCorrectAnswer = index === currentQ.correctAnswer;
+                  let state = "border-border bg-card hover:border-primary/50 hover:bg-primary/5";
+                  let letter = "bg-primary/10 text-primary";
+                  if (showFeedback && isCorrectAnswer) { state = "border-success bg-success/10 text-success"; letter = "bg-success text-primary-foreground"; }
+                  else if (showFeedback && isSelected) { state = "border-destructive bg-destructive/10 text-destructive"; letter = "bg-destructive text-primary-foreground"; }
+                  else if (showFeedback) state = "border-border bg-card opacity-70";
+                  else if (isSelected) { state = "border-primary bg-primary/10 text-primary"; letter = "bg-primary text-primary-foreground"; }
+                  return (
+                    <button key={index} type="button" onClick={() => handleAnswerSelect(index)} disabled={showFeedback}
+                      className={`flex w-full items-center gap-3 rounded-2xl border px-3 py-3 text-left text-sm font-medium transition-colors ${state}`}>
+                      <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold ${letter}`}>{String.fromCharCode(65 + index)}</span>
+                      <span className="flex-grow">{option}</span>
+                      {showFeedback && isCorrectAnswer && <CheckCircle2 size={20} className="shrink-0" />}
+                      {showFeedback && isSelected && !isCorrectAnswer && <XCircle size={20} className="shrink-0" />}
+                    </button>
+                  );
+                })}
               </div>
-            )}
 
-            {/* Next Button */}
-            {showFeedback && (
-              <Button 
-                onClick={handleNextQuestion}
-                className="w-full"
-                size="lg"
-              >
-                {currentQuestion < questions.length - 1 ? "Próxima Pergunta" : "Ver Resultado"}
-              </Button>
-            )}
-          </GlassCard>
+              {showFeedback && (
+                <div className={`mt-5 rounded-2xl p-4 ${isCorrect ? "bg-success/10" : "bg-destructive/10"}`}>
+                  <p className={`mb-1 flex items-center gap-2 font-bold ${isCorrect ? "text-success" : "text-destructive"}`}>
+                    {isCorrect ? <CheckCircle2 size={18} /> : <XCircle size={18} />}
+                    {isCorrect ? "Correto!" : "Ops!"}
+                  </p>
+                  <p className="text-sm text-muted-foreground mb-2">{currentQ.explanation}</p>
+                  <p className="text-xs italic text-muted-foreground">{currentQ.verse}</p>
+                </div>
+              )}
+
+              {showFeedback && (
+                <ArrowNavButton direction="right" onClick={handleNextQuestion} className="mt-5 w-full"
+                  label={currentQuestion < questions.length - 1 ? "Próxima Pergunta" : "Ver Resultado"} />
+              )}
+            </GlassCard>
+          </div>
         </div>
       </main>
     </div>
