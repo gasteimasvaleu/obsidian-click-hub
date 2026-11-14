@@ -475,33 +475,41 @@ ${devotional.prayer}
         </GlassCard>
         </div>
 
-        <div className="flex flex-wrap gap-3 mb-6">
-          {user && !isCompleted && (
-            <Button 
+        <div
+          className="neon-glow-user feature-bubble bubble-user relative rounded-2xl mb-6 grid divide-x divide-primary-foreground/25 overflow-hidden"
+          style={{ gridTemplateColumns: `repeat(${user || isCompleted ? 3 : 2}, minmax(0, 1fr))` }}
+        >
+          <span aria-hidden className="border-beam" />
+          {(user || isCompleted) && (
+            <button
+              type="button"
               onClick={() => markAsReadMutation.mutate()}
-              className="bg-green-600 hover:bg-green-700"
+              disabled={isCompleted}
+              aria-label={isCompleted ? "Concluído" : "Marcar como lido"}
+              className="relative z-[2] flex flex-col items-center gap-1 py-3 text-primary-foreground text-xs font-semibold transition-colors hover:bg-primary-foreground/10 active:bg-black/10 disabled:cursor-default disabled:hover:bg-transparent"
             >
-              <CheckCircle2 size={20} className="mr-2" />
-              Marcar como Lido
-            </Button>
+              <CheckCircle2 size={22} className={isCompleted ? "fill-primary-foreground/30" : ""} />
+              {isCompleted ? "Concluído" : "Lido"}
+            </button>
           )}
-          
-          {isCompleted && (
-            <div className="flex items-center gap-2 px-4 py-2 bg-green-600/20 border border-green-400/30 rounded-lg">
-              <CheckCircle2 size={20} className="text-green-400" />
-              <span className="text-green-400 font-semibold">Concluído</span>
-            </div>
-          )}
-
-          <Button variant="outline" onClick={handleShare}>
-            <Share2 size={20} className="mr-2" />
+          <button
+            type="button"
+            onClick={handleShare}
+            aria-label="Compartilhar"
+            className="relative z-[2] flex flex-col items-center gap-1 py-3 text-primary-foreground text-xs font-semibold transition-colors hover:bg-primary-foreground/10 active:bg-black/10"
+          >
+            <Share2 size={22} />
             Compartilhar
-          </Button>
-
-          <Button variant="outline" onClick={handleGeneratePDF}>
-            <FileDown size={20} className="mr-2" />
-            Salvar em PDF
-          </Button>
+          </button>
+          <button
+            type="button"
+            onClick={handleGeneratePDF}
+            aria-label="Salvar em PDF"
+            className="relative z-[2] flex flex-col items-center gap-1 py-3 text-primary-foreground text-xs font-semibold transition-colors hover:bg-primary-foreground/10 active:bg-black/10"
+          >
+            <FileDown size={22} />
+            PDF
+          </button>
         </div>
 
         {user && (
