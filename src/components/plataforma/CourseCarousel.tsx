@@ -44,6 +44,21 @@ function SectionDescription({ text, attached }: { text: string; attached: boolea
   );
 }
 
+export function SectionHeader({ title, description, className }: { title?: string; description?: string; className?: string }) {
+  if (!title && !description) return null;
+  return (
+    <div className={cn("mb-4", className)}>
+      {title && (
+        <div className="neon-glow-user feature-bubble bubble-user relative z-[2] rounded-2xl px-4 py-3 text-feature-foreground">
+          <span aria-hidden className="border-beam" />
+          <h2 className="relative text-lg md:text-xl font-bold">{title}</h2>
+        </div>
+      )}
+      {description && <SectionDescription text={description} attached={!!title} />}
+    </div>
+  );
+}
+
 export function CourseCarousel({
   items,
   title,
@@ -56,19 +71,7 @@ export function CourseCarousel({
 
   return (
     <div className={cn("w-full", className)}>
-      {(title || description) && (
-        <div className="mb-4">
-          {title && (
-            <div className="neon-glow-user feature-bubble bubble-user relative z-[2] rounded-2xl px-4 py-3 text-feature-foreground">
-              <span aria-hidden className="border-beam" />
-              <h2 className="relative text-lg md:text-xl font-bold">{title}</h2>
-            </div>
-          )}
-          {description && (
-            <SectionDescription text={description} attached={!!title} />
-          )}
-        </div>
-      )}
+      <SectionHeader title={title} description={description} />
 
       <Carousel
         opts={{

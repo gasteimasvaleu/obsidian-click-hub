@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { ResponsiveHeroBanner } from "@/components/plataforma/ResponsiveHeroBanner";
-import { CourseCarousel } from "@/components/plataforma/CourseCarousel";
+import { CourseCarousel, SectionHeader } from "@/components/plataforma/CourseCarousel";
 import { Skeleton } from "@/components/ui/skeleton";
 import { GraduationCap } from "lucide-react";
 import { PlataformaLayout } from "@/components/plataforma/PlataformaLayout";
@@ -156,8 +156,15 @@ export default function PlataformaPage() {
         useVideo={settings?.hero_use_video === "true"}
         title={settings?.hero_title || ""}
         description={settings?.hero_description || ""}
-        aspectRatioDesktop={2560 / 1440}
-        aspectRatioMobile={1080 / 1920}
+        aspectRatioDesktop={16 / 9}
+        aspectRatioMobile={16 / 9}
+        overlay={false}
+        card
+      />
+      <SectionHeader
+        title={settings?.hero_title || ""}
+        description={settings?.hero_description || ""}
+        className="mb-0 px-4"
       />
 
       <div className="py-8 space-y-10">

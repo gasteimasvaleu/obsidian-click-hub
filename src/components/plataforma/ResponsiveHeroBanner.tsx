@@ -13,6 +13,7 @@ interface ResponsiveHeroBannerProps {
   aspectRatioMobile?: number;
   overlay?: boolean;
   bottomGradient?: boolean;
+  card?: boolean;
 }
 
 export function ResponsiveHeroBanner({
@@ -27,6 +28,7 @@ export function ResponsiveHeroBanner({
   aspectRatioMobile = 9 / 16,
   overlay = true,
   bottomGradient = false,
+  card = false,
 }: ResponsiveHeroBannerProps) {
   const isMobile = useIsMobile();
 
@@ -59,7 +61,9 @@ export function ResponsiveHeroBanner({
   }
 
   return (
-    <div className="relative w-full">
+    <div className={card ? "px-4 pt-4 pb-4" : "relative w-full"}>
+      <div className={card ? "neon-glow-user relative overflow-hidden rounded-2xl" : "relative"}>
+      {card && <span aria-hidden className="border-beam z-[1]" />}
       <AspectRatio ratio={aspectRatio}>
         {showVideo ? (
           <video
@@ -102,6 +106,7 @@ export function ResponsiveHeroBanner({
           </div>
         )}
       </AspectRatio>
+      </div>
     </div>
   );
 }
