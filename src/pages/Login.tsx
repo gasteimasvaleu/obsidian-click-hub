@@ -7,7 +7,7 @@ import { toast } from 'sonner';
 import { purchaseMonthly, restorePurchases, isNativePlatform, getPlatform } from '@/lib/revenuecat';
 import { supabase } from '@/integrations/supabase/client';
 import { Loader2, Mail, Lock, Eye, EyeOff, ChevronDown } from 'lucide-react';
-import { BubbleTitleText } from '@/components/ui/bubble-title-text';
+import freiImg from '@/assets/frei-boas-vindas.png.asset.json';
 import amigoImg from '@/assets/more-menu/amigo-divino.png';
 import { nativeAppleSignIn } from '@/lib/native-apple-signin';
 import { nativeGoogleSignIn } from '@/lib/native-google-signin';
@@ -246,10 +246,9 @@ const Login = () => {
           <img src={amigoImg} alt="" className="h-32 w-32 object-contain drop-shadow-xl motion-safe:animate-[login-float_4s_ease-in-out_infinite]" />
         </div>
 
-        <div className="relative neon-glow-user feature-bubble bubble-user rounded-3xl px-5 py-5 text-center overflow-hidden">
+        <div className="relative neon-glow-user feature-bubble bubble-user rounded-3xl px-4 pt-4 overflow-hidden">
           <div className="border-beam" aria-hidden />
-          <h1 className="bubble-title"><BubbleTitleText text="Bem-vindo ao BíbliaToon Club" /></h1>
-          <p className="mt-1 text-sm text-primary-foreground/85">Bíblia, orações, devocional e cursos para toda a família</p>
+          <img src={freiImg.url} alt="Bem-vindo ao BíbliaToon Club" className="mx-auto w-full max-w-xs object-contain" />
         </div>
 
         <div className="feature-bubble bg-card/60 backdrop-blur-md rounded-3xl p-5 space-y-3 shadow-lg">
