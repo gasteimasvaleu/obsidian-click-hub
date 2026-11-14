@@ -93,7 +93,7 @@ export function CourseCarousel({
             >
               <Link to={item.linkTo} className="block group">
                 <div className="relative overflow-hidden rounded-lg">
-                  <AspectRatio ratio={300 / 580}>
+                  <AspectRatio ratio={9 / 16}>
                     {thumbFor(item) ? (
                       <img
                         src={thumbFor(item)!}
