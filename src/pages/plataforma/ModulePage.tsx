@@ -1,3 +1,4 @@
+import { SectionHeader } from "@/components/plataforma/CourseCarousel";
 import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -112,7 +113,7 @@ export default function ModulePage() {
         </Link>
 
         <div className="space-y-4">
-          <h2 className="text-lg font-semibold">Aulas do Módulo</h2>
+          <SectionHeader title="Aulas do Módulo" className="mb-0" />
           <LessonPlaylist
             items={(lessons || []).map((lesson) => ({
               id: lesson.id,

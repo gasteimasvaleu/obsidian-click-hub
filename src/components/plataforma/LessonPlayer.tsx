@@ -1,3 +1,4 @@
+import { SectionHeader } from "@/components/plataforma/CourseCarousel";
 import { useState, useRef, useCallback } from "react";
 import { ExternalLink, FileText, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -232,14 +233,7 @@ export function LessonPlayer({
         </div>
 
         {/* Title and description */}
-        <div className="space-y-2">
-          <h1 className="text-xl md:text-2xl font-bold text-foreground">
-            {title}
-          </h1>
-          <p className="text-muted-foreground whitespace-pre-wrap">
-            {description}
-          </p>
-        </div>
+        <SectionHeader title={title} description={description || undefined} className="mb-0" />
 
         {/* External content button - only show if has both video AND external content */}
         {externalContentUrl && videoUrl && (
@@ -256,23 +250,21 @@ export function LessonPlayer({
         {/* Materials */}
         {materials.length > 0 && (
           <div className="space-y-3">
-            <h2 className="text-lg font-semibold flex items-center gap-2">
-              <FileText className="h-5 w-5" />
-              Materiais complementares
-            </h2>
+            <SectionHeader title="Materiais complementares" className="mb-0" />
             <MaterialsList materials={materials} />
           </div>
         )}
 
         {/* Mobile: Related lessons */}
         {isMobile && relatedLessons.length > 0 && (
-          <div className="border-t pt-4">
+          <div className="pt-2">
             <Button
               variant="ghost"
-              className="w-full justify-between"
+              className="neon-glow-user feature-bubble bubble-user relative h-auto w-full justify-between rounded-2xl px-4 py-3 text-feature-foreground hover:bg-transparent hover:text-feature-foreground"
               onClick={() => setShowRelated(!showRelated)}
             >
-              <span className="font-semibold">Próximas aulas ({relatedLessons.length})</span>
+              <span aria-hidden className="border-beam" />
+              <span className="bubble-title relative">Próximas <span className="text-gradient-title">aulas ({relatedLessons.length})</span></span>
               {showRelated ? (
                 <ChevronUp className="h-5 w-5" />
               ) : (
@@ -295,7 +287,7 @@ export function LessonPlayer({
       {!isMobile && relatedLessons.length > 0 && (
         <div className="w-80 flex-shrink-0">
           <div className="sticky top-4 bg-card rounded-lg p-4 border">
-            <h2 className="font-semibold mb-3">Próximas aulas</h2>
+            <SectionHeader title="Próximas aulas" className="mb-3" />
             <div className="max-h-[calc(100vh-200px)] overflow-y-auto">
               <LessonPlaylist
                 items={relatedLessons}

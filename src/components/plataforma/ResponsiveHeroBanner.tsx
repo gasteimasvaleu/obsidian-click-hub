@@ -1,3 +1,4 @@
+import { SectionHeader } from "@/components/plataforma/CourseCarousel";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 
@@ -44,11 +45,7 @@ export function ResponsiveHeroBanner({
       <div className="w-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center py-20">
         {(title || description) && (
           <div className="text-center px-4">
-            {title && (
-              <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-4">
-                {title}
-              </h1>
-            )}
+            {title && <SectionHeader title={title} className="text-left" />}
             {description && (
               <p className="text-lg md:text-xl text-muted-foreground max-w-2xl">
                 {description}
