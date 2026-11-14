@@ -1,4 +1,3 @@
-import { Button } from '@/components/ui/button';
 import { Palette, BookOpen, Cross, Sparkles } from 'lucide-react';
 
 interface CategoryFilterProps {
@@ -15,23 +14,23 @@ const categories = [
 
 export const CategoryFilter = ({ selected, onChange }: CategoryFilterProps) => {
   return (
-    <div className="grid grid-cols-2 gap-2">
+    <div className="flex overflow-hidden rounded-full border border-primary/30 bg-card divide-x divide-primary/20">
       {categories.map((cat) => {
         const Icon = cat.icon;
         const isActive = selected === cat.value;
         return (
-          <Button
+          <button
             key={cat.value}
-            variant={isActive ? 'default' : 'outline'}
-            size="sm"
+            type="button"
             onClick={() => onChange(cat.value)}
-            className={`w-full transition-all duration-300 active:scale-95 group ${
-              isActive ? 'neon-glow shadow-lg shadow-primary/50' : 'hover:border-primary/50'
+            aria-pressed={isActive}
+            className={`flex h-14 flex-1 flex-col items-center justify-center gap-0.5 text-[11px] font-semibold transition-colors ${
+              isActive ? 'bg-primary/10 text-primary' : 'text-foreground/60 hover:bg-primary/5 hover:text-primary'
             }`}
           >
-            <Icon size={16} className="transition-transform duration-300 group-hover:rotate-12" />
+            <Icon size={18} />
             {cat.label}
-          </Button>
+          </button>
         );
       })}
     </div>

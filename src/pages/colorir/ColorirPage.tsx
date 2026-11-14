@@ -102,13 +102,13 @@ const ColorirPage = () => {
         </div>
 
         {/* Category Filter */}
-        <GlassCard className="max-w-4xl mx-auto mb-6 animate-fade-in">
-          <h3 className="text-sm font-medium text-muted-foreground mb-3">Categoria</h3>
+        <div className="max-w-4xl mx-auto mb-6 animate-fade-in">
+          <SectionHeader
+            title="Categoria"
+            description={loading ? 'Carregando...' : `${filteredDrawings.length} ${filteredDrawings.length === 1 ? 'desenho disponível' : 'desenhos disponíveis'}`}
+          />
           <CategoryFilter selected={selectedCategory} onChange={setSelectedCategory} />
-          <p className="text-xs text-muted-foreground mt-3">
-            {loading ? 'Carregando...' : `${filteredDrawings.length} desenho(s) disponível(is)`}
-          </p>
-        </GlassCard>
+        </div>
 
         {/* Drawings Grid */}
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-4xl mx-auto">
