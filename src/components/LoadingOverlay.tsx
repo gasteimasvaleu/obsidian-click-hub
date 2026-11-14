@@ -1,4 +1,4 @@
-import loadingVideo from '@/assets/loading/jesus-crianca.mp4.asset.json';
+import loadingVideo from '@/assets/loading/jesus-crianca-centro.mp4.asset.json';
 import { useEffect, useRef, useState } from 'react';
 
 interface LoadingOverlayProps {
@@ -43,15 +43,14 @@ export const LoadingOverlay = ({ visible, message }: LoadingOverlayProps) => {
 
   return (
     <div
-      className={`fixed inset-0 z-[9999] bg-card flex flex-col items-center justify-center transition-opacity duration-300 ${
+      className={`fixed inset-0 z-[9999] overflow-hidden bg-[#FBFBFC] transition-opacity duration-300 ${
         show ? 'opacity-100' : 'opacity-0'
       }`}
     >
-      {/* Video */}
       <video
         ref={videoRef}
         src={loadingVideo.url}
-        className="h-72 w-auto object-contain"
+        className="absolute inset-0 h-full w-full object-cover object-center"
         autoPlay
         muted
         playsInline
@@ -60,15 +59,14 @@ export const LoadingOverlay = ({ visible, message }: LoadingOverlayProps) => {
         loop
       />
 
-      {/* Progress bar */}
-      <div className="mt-6 w-[60%] max-w-[300px] h-1 rounded-full bg-primary/15 overflow-hidden">
-        <div className="h-full rounded-full bg-gradient-to-r from-primary via-primary to-primary/60 loading-bar-indeterminate" />
+      <div className="absolute inset-x-0 bottom-[calc(env(safe-area-inset-bottom)+3rem)] flex flex-col items-center px-4">
+        <div className="w-[60%] max-w-[300px] h-1 rounded-full bg-primary/15 overflow-hidden">
+          <div className="h-full rounded-full bg-gradient-to-r from-primary via-primary to-primary/60 loading-bar-indeterminate" />
+        </div>
+        {message && (
+          <p className="mt-4 text-sm text-muted-foreground text-center">{message}</p>
+        )}
       </div>
-
-      {/* Message */}
-      {message && (
-        <p className="mt-4 text-sm text-muted-foreground text-center px-4">{message}</p>
-      )}
     </div>
   );
 };
