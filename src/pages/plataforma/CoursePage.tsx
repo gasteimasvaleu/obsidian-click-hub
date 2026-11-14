@@ -8,12 +8,14 @@ import cursoTopoB4ab from "@/assets/curso_topo_b4ab.png.asset.json";
 import cursoTopoFbb8 from "@/assets/curso_topo_fbb8.png.asset.json";
 
 import cursoTopoE0ef from "@/assets/curso_topo_e0ef.png.asset.json";
+import cursoTopo5818 from "@/assets/curso_topo_5818.png.asset.json";
 const HERO_OVERRIDES: Record<string, string> = {
   "f98a734c-e35f-4bc8-97fb-9d51c7c702c1": cursoTopoF98a.url,
   "bfbaefa8-f0bf-46cf-9032-eeb1b6d356f9": cursoTopoBfba.url,
   "b4ab8042-ff4f-4384-9b9a-23a1e6400cb8": cursoTopoB4ab.url,
   "fbb80bfa-eaa8-4aa0-8b77-8c1c49d153ca": cursoTopoFbb8.url,
   "e0efe516-48c2-4135-90ad-1015ecfa6b38": cursoTopoE0ef.url,
+  "58188f77-b98b-4b81-a0f7-8c5f7d063308": cursoTopo5818.url,
 };
 import { ResponsiveHeroBanner } from "@/components/plataforma/ResponsiveHeroBanner";
 import { ModulePlaylist } from "@/components/plataforma/ModulePlaylist";
