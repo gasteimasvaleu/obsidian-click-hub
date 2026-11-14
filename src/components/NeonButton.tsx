@@ -13,15 +13,10 @@ interface NeonButtonProps {
 
 export const NeonButton = ({ children, onClick, href, className, isLoading, disabled }: NeonButtonProps) => {
   const baseClasses = cn(
-    "relative px-8 py-4 text-lg font-medium rounded-xl",
-    "bg-card/60 text-primary border border-primary",
-    "backdrop-filter backdrop-blur-lg",
-    "shadow-[0_4px_16px_rgba(0,255,102,0.4)]",
-    "transition-all duration-300 ease-out",
-    "hover:bg-primary hover:text-black hover:scale-105",
-    "hover:shadow-[0_8px_32px_rgba(0,255,102,0.6)]",
-    "active:scale-95",
-    "btn-hover-scale",
+    "relative w-full h-12 px-6 rounded-2xl text-base font-semibold",
+    "bg-primary text-primary-foreground border-0",
+    "shadow-[0_8px_24px_hsl(var(--primary)/0.35)]",
+    "transition-all duration-200 ease-out hover:bg-primary/90 active:scale-95",
     "inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed",
     className
   );
