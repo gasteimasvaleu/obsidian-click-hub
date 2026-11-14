@@ -151,9 +151,7 @@ export const ParentsGuideForm = ({
           {/* Step 3: Idade */}
           {currentStep === 3 && (
             <div className="space-y-6 animate-fade-in">
-              <h2 className="text-lg font-semibold text-foreground">
-                Quantos anos {formData.nome} tem?
-              </h2>
+              <SectionHeader title={`Quantos anos ${formData.nome} tem?`} className="mb-0" />
               <div className="text-center">
                 <div className="text-3xl font-bold text-primary mb-6">
                   {formData.idade} anos
@@ -177,9 +175,7 @@ export const ParentsGuideForm = ({
           {/* Step 4: Comportamento */}
           {currentStep === 4 && (
             <div className="space-y-4 animate-fade-in">
-              <h2 className="text-lg font-semibold text-foreground">
-                Como você descreveria o comportamento de {formData.nome}?
-              </h2>
+              <SectionHeader title={`Como você descreveria o comportamento de ${formData.nome}?`} className="mb-0" />
               <p className="text-sm text-muted-foreground">
                 Selecione uma ou mais opções
               </p>
@@ -201,9 +197,7 @@ export const ParentsGuideForm = ({
           {/* Step 5: Personalidade */}
           {currentStep === 5 && (
             <div className="space-y-4 animate-fade-in">
-              <h2 className="text-lg font-semibold text-foreground">
-                Qual a personalidade de {formData.nome}?
-              </h2>
+              <SectionHeader title={`Qual a personalidade de ${formData.nome}?`} className="mb-0" />
               <p className="text-sm text-muted-foreground">
                 Selecione uma ou mais características
               </p>
