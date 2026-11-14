@@ -5,6 +5,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { FuturisticNavbar } from '@/components/FuturisticNavbar';
 import { GlassCard } from '@/components/GlassCard';
+import { SectionHeader } from '@/components/plataforma/CourseCarousel';
 import { CreationCard } from '@/components/colorir/CreationCard';
 import { ShareModal } from '@/components/colorir/ShareModal';
 import { EmptyState } from '@/components/EmptyState';
@@ -70,20 +71,14 @@ const MyCreationsPage = () => {
     <div className="min-h-screen bg-background pb-24">
       <FuturisticNavbar />
 
-      <main className="container mx-auto px-4 pt-16 max-w-3xl">
+      <main className="container mx-auto px-4 pt-16 max-w-[58rem]">
         <ArrowNavButton direction="left" label="Voltar" onClick={() => navigate('/colorir')} className="mb-4" />
 
-        <GlassCard className="text-center mb-6">
-          <div className="w-20 h-20 mx-auto mb-4 bg-primary/10 rounded-full flex items-center justify-center backdrop-blur-sm border border-primary/20 animate-float">
-            <img
-              src={criacoesImg.url}
-              alt="Pasta de desenhos coloridos"
-              className="h-full w-full object-contain p-2"
-            />
-          </div>
-          <h1 className="text-2xl font-bold mb-2 bg-gradient-to-r from-primary via-primary to-primary/60 bg-clip-text text-transparent">Minhas Criações</h1>
+        <SectionHeader title="Minhas Criações" className="mb-0" />
+        <GlassCard className="-mt-4 pt-7 rounded-t-none text-center mb-6">
+          <img src={criacoesImg.url} alt="Pasta de desenhos coloridos" className="mx-auto mb-3 h-24 w-24 object-contain" />
           <p className="text-muted-foreground text-sm">
-            {loading ? 'Carregando...' : `${creations.length} criação(ões)`}
+            {loading ? 'Carregando...' : `${creations.length} ${creations.length === 1 ? 'criação' : 'criações'}`}
           </p>
         </GlassCard>
 
