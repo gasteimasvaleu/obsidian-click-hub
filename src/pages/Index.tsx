@@ -119,16 +119,16 @@ const Index = () => {
               <h2 className="text-sm font-bold">Confira nossos Lançamentos</h2>
             </div>
             <div className="overflow-hidden pb-2" ref={emblaRef}>
-              <div className="flex gap-3">
+              <div className="-ml-3 flex">
                 {highlights.map((h: any) => (
                   <Button
                     variant="ghost"
                     key={h.id}
-                    className="h-auto flex-[0_0_auto] items-start overflow-visible rounded-lg p-0"
+                    className="h-auto shrink-0 flex-[0_0_auto] items-start overflow-visible rounded-lg py-0 pl-3 pr-0 hover:bg-transparent"
                     onClick={() => h.link_to && navigate(h.link_to)}
                     aria-label={h.title || 'Lançamento'}
                   >
-                    <img src={h.image_url} alt={h.title || 'Lançamento'} className="h-auto w-[108px] rounded-lg object-contain" />
+                    <img src={h.image_url} alt={h.title || 'Lançamento'} className="aspect-[300/580] w-[108px] rounded-lg object-cover" />
                   </Button>
                 ))}
               </div>
