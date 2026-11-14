@@ -3,6 +3,12 @@ import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import cursoTopoF98a from "@/assets/curso_topo_f98a.png.asset.json";
+import cursoTopoBfba from "@/assets/curso_topo_bfba.png.asset.json";
+
+const HERO_OVERRIDES: Record<string, string> = {
+  "f98a734c-e35f-4bc8-97fb-9d51c7c702c1": cursoTopoF98a.url,
+  "bfbaefa8-f0bf-46cf-9032-eeb1b6d356f9": cursoTopoBfba.url,
+};
 import { ResponsiveHeroBanner } from "@/components/plataforma/ResponsiveHeroBanner";
 import { ModulePlaylist } from "@/components/plataforma/ModulePlaylist";
 import { PlataformaLayout } from "@/components/plataforma/PlataformaLayout";
@@ -94,7 +100,7 @@ export default function CoursePage() {
     );
   }
 
-  const heroOverride = course.id === "f98a734c-e35f-4bc8-97fb-9d51c7c702c1" ? cursoTopoF98a.url : undefined;
+  const heroOverride = HERO_OVERRIDES[course.id];
 
   return (
     <PlataformaLayout>
