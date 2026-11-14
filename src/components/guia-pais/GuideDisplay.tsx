@@ -1,3 +1,4 @@
+import { SPLIT_BAR } from "@/components/ui/bubble-section";
 import { stripEmoji } from "@/lib/stripEmoji";
 import { Guide, FormData } from "@/pages/GuiaPais";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -143,10 +144,10 @@ export const GuideDisplay = ({ guide, formData, onNewGuide }: GuideDisplayProps)
           <AccordionContent className="px-2 pb-6 pt-0">
 <div className={cn(CONTENT)}>
             <Tabs defaultValue="iniciar" className="w-full">
-              <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="iniciar">Para Iniciar</TabsTrigger>
-                <TabsTrigger value="explicar">Para Explicar</TabsTrigger>
-                <TabsTrigger value="perguntas">Perguntas</TabsTrigger>
+              <TabsList className={`${SPLIT_BAR} !h-auto p-0`}>
+                <TabsTrigger value="iniciar" className="h-11 flex-1 min-w-0 rounded-none px-2 text-xs sm:text-sm text-muted-foreground shadow-none data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:font-semibold data-[state=active]:shadow-none"><span className="truncate">Para Iniciar</span></TabsTrigger>
+                <TabsTrigger value="explicar" className="h-11 flex-1 min-w-0 rounded-none px-2 text-xs sm:text-sm text-muted-foreground shadow-none data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:font-semibold data-[state=active]:shadow-none"><span className="truncate">Para Explicar</span></TabsTrigger>
+                <TabsTrigger value="perguntas" className="h-11 flex-1 min-w-0 rounded-none px-2 text-xs sm:text-sm text-muted-foreground shadow-none data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:font-semibold data-[state=active]:shadow-none"><span className="truncate">Perguntas</span></TabsTrigger>
               </TabsList>
               <TabsContent value="iniciar" className="space-y-2 mt-4">
                 {guide.frases_prontas.iniciar.map((frase, idx) => (

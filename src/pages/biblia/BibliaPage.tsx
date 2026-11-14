@@ -1,3 +1,4 @@
+import { SPLIT_BAR } from "@/components/ui/bubble-section";
 import { getBookIllustration } from "@/data/bookIllustrations";
 import { SectionHeader } from "@/components/plataforma/CourseCarousel";
 import { useState } from "react";
@@ -142,9 +143,9 @@ export default function BibliaPage() {
         </div>
 
         <Tabs defaultValue="antigo" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 mb-6">
-            <TabsTrigger value="antigo">Antigo Testamento ({antigoTestamento.length})</TabsTrigger>
-            <TabsTrigger value="novo">Novo Testamento ({novoTestamento.length})</TabsTrigger>
+          <TabsList className={`${SPLIT_BAR} !h-auto p-0 mb-6`}>
+            <TabsTrigger value="antigo" className="h-11 flex-1 min-w-0 rounded-none px-2 text-xs sm:text-sm text-muted-foreground shadow-none data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:font-semibold data-[state=active]:shadow-none"><span className="truncate">Antigo Testamento ({antigoTestamento.length})</span></TabsTrigger>
+            <TabsTrigger value="novo" className="h-11 flex-1 min-w-0 rounded-none px-2 text-xs sm:text-sm text-muted-foreground shadow-none data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:font-semibold data-[state=active]:shadow-none"><span className="truncate">Novo Testamento ({novoTestamento.length})</span></TabsTrigger>
           </TabsList>
 
           <TabsContent value="antigo">
