@@ -65,7 +65,7 @@ const ColorirPage = () => {
               loop
               playsInline
               preload="metadata"
-              className="w-full h-auto object-cover rounded-2xl"
+              className="aspect-video w-full h-auto object-cover rounded-2xl"
             />
           </GlassCard>
         </div>

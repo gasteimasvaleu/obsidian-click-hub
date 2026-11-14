@@ -118,20 +118,18 @@ const Oracoes = () => {
       <div className="container mx-auto px-4 pt-16 pb-32">
         {/* Header */}
         <div className="flex justify-center mb-8">
-          <div className="flex flex-col items-center w-full max-w-2xl">
+          <div className="flex flex-col items-center w-full max-w-4xl">
             {/* Video Animation */}
             <div className="flex justify-center w-full mb-6">
-              <GlassCard className="w-full max-w-2xl p-0 overflow-hidden">
-                <video src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/materials/oracoes.mp4" className="w-full h-auto object-cover" style={{
-                maxHeight: "280px"
-              }} autoPlay muted playsInline loop onError={e => {
+              <GlassCard className="w-full max-w-4xl p-0 overflow-hidden">
+                <video src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/materials/oracoes.mp4" className="aspect-video w-full h-auto object-cover" autoPlay muted playsInline loop onError={e => {
                 // Hide video container if video fails to load
                 (e.target as HTMLVideoElement).parentElement?.classList.add("hidden");
               }} />
               </GlassCard>
             </div>
 
-            <div className="w-full max-w-2xl mx-auto">
+            <div className="w-full max-w-4xl mx-auto">
             <SectionHeader title="Livrinho de Orações" description="Encontre a oração perfeita para cada momento" className="mb-0" />
           </div>
           </div>

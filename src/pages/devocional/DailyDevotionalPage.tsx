@@ -389,8 +389,7 @@ ${stripEmoji(devotional.prayer)}
           <GlassCard className="w-full max-w-2xl p-0 overflow-hidden">
             <video
               src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/video_6b50c453_1763462346092.mp4"
-              className="w-full h-auto object-cover"
-              style={{ maxHeight: '300px' }}
+              className="aspect-video w-full h-auto object-cover"
               autoPlay
               muted
               playsInline

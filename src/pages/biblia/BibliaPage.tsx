@@ -106,14 +106,13 @@ export default function BibliaPage() {
     <div className="min-h-screen bg-background pb-24">
       <FuturisticNavbar />
       
-      <div className="container mx-auto px-4 pt-20">
+      <div className="container mx-auto px-4 pt-20 max-w-4xl">
         {/* Video animation */}
         <div className="flex justify-center w-full mb-8">
-          <GlassCard className="w-full max-w-2xl p-0 overflow-hidden">
+          <GlassCard className="w-full max-w-4xl p-0 overflow-hidden">
             <video
               src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/video_33032f19_1763462060427.mp4"
-              className="w-full h-auto object-cover"
-              style={{ maxHeight: '300px' }}
+              className="aspect-video w-full h-auto object-cover"
               autoPlay
               muted
               playsInline
@@ -127,7 +126,7 @@ export default function BibliaPage() {
           </GlassCard>
         </div>
 
-        <div className="w-full max-w-2xl mx-auto">
+        <div className="w-full max-w-4xl mx-auto">
           <SectionHeader title="Bíblia Interativa" description="Explore as Sagradas Escrituras de forma interativa e organize seus estudos" className="mb-6" />
         </div>
 

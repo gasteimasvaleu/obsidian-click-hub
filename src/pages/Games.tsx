@@ -89,14 +89,13 @@ const Games = () => {
       <main className="container mx-auto px-4 pt-16">
         {/* Hero Section */}
         <div className="flex justify-center mb-6 animate-fade-in">
-          <div className="flex flex-col items-center w-full max-w-2xl">
+          <div className="flex flex-col items-center w-full max-w-4xl">
         {/* Video Animation */}
         <div className="flex justify-center w-full mb-4">
-          <GlassCard className="w-full max-w-2xl p-0 overflow-hidden">
+          <GlassCard className="w-full max-w-4xl p-0 overflow-hidden">
                 <video
                   src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/video_be332ed2_1763196148899.mp4"
-                  className="w-full h-auto object-cover"
-                  style={{ maxHeight: '300px' }}
+                  className="aspect-video w-full h-auto object-cover"
                   autoPlay
                   muted
                   playsInline
@@ -111,14 +110,14 @@ const Games = () => {
               </GlassCard>
             </div>
             
-            <div className="w-full max-w-2xl mx-auto">
+            <div className="w-full max-w-4xl mx-auto">
             <SectionHeader title="Jogos & Quizzes" description="Aprenda a Bíblia brincando!" className="mb-0" />
           </div>
           </div>
         </div>
 
         {/* Filters Section */}
-        <GlassCard className="max-w-6xl mx-auto mb-8 animate-fade-in">
+        <GlassCard className="max-w-4xl mx-auto mb-8 animate-fade-in">
           <div className="space-y-6">
             {/* Game Type Filters */}
             <div>
@@ -216,7 +215,7 @@ const Games = () => {
         </GlassCard>
 
         {/* Games Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
           {loading ? (
             <>
               {Array.from({ length: 6 }).map((_, i) => (
