@@ -1,13 +1,18 @@
-# Mostrar inteiras as capas dos carrosséis de módulos
+# Capas inteiras nos carrosséis + tamanhos certos no painel
 
-Quando mudei os cards para o formato 9:16 (por causa das capas novas dos cursos), as capas dos módulos (ex.: "Caim e Abel"), que são um pouco mais compridas (formato antigo 300x580), passaram a perder uma faixa.
+## Carrosséis
+- O carrossel "Cursos" continua em 9:16, que é o formato das capas novas.
+- Os carrosséis de módulos (ex.: "Caim e Abel") voltam ao formato antigo e mais alto (300x580), então as capas aparecem inteiras, sem cortar a parte de baixo.
+- A imagem fica presa ao topo, então se alguma capa tiver formato diferente o corte cai embaixo, nunca no título.
 
-## O que muda
-- O carrossel "Cursos" continua em 9:16, porque as capas novas são desse formato.
-- Os carrosséis de módulos voltam ao formato antigo e mais alto (300x580), então as capas aparecem inteiras, sem cortar a parte de baixo.
-- A imagem fica ancorada no topo, para que, se alguma capa tiver formato diferente, o corte nunca caia no texto da parte de baixo.
+## Painel de administração: tamanhos indicados
+- **Curso, capa (Thumbnail):** de 300x580 para **1080x1920** (9:16)
+- **Curso, imagem do topo (Imagem Desktop):** de 1440x730 para **1920x1080** (16:9), que é o formato das imagens novas e agora também é usado no celular
+- **Módulo, capa:** continua **300x580**
+- Os demais campos não mudam.
 
 ## Detalhes técnicos
-- `CourseCarousel.tsx`: nova prop opcional `ratio` (padrão 9/16).
-- `PlataformaPage.tsx`: os carrosséis de módulos passam `ratio={300 / 580}`.
-- Antes de editar, confirmar o tamanho real de uma capa de módulo; se não for 300x580, usar a proporção real dela.
+- `CourseCarousel.tsx`: nova prop opcional `ratio` (padrão 9/16) e `object-top` na imagem.
+- `PlataformaPage.tsx`: carrosséis de módulos com `ratio={300 / 580}`.
+- `CoursesManager.tsx`: `dimensions` do Thumbnail = "1080x1920" e da Imagem Desktop = "1920x1080".
+- `CoursePage.tsx`: usar 16:9 também nos cursos sem imagem trocada no código, para que as imagens novas enviadas pelo painel apareçam inteiras.
