@@ -95,12 +95,18 @@ export default function ModulePage() {
       {/* Hero Banner */}
       <ResponsiveHeroBanner
         bannerDesktop={module.banner_desktop || undefined}
-        bannerMobile={module.banner_mobile || undefined}
+        bannerMobile={module.banner_desktop || module.banner_mobile || undefined}
         title={module.title}
         description={module.description}
-        aspectRatioDesktop={1440 / 730}
-        aspectRatioMobile={300 / 580}
-        bottomGradient
+        aspectRatioDesktop={16 / 9}
+        aspectRatioMobile={16 / 9}
+        overlay={false}
+        card
+      />
+      <SectionHeader
+        title={module.title}
+        description={module.description || undefined}
+        className="mb-0 px-4"
       />
 
       {/* Back button and lessons */}

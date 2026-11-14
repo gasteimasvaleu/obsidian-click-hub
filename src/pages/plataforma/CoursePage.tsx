@@ -97,12 +97,18 @@ export default function CoursePage() {
       {/* Hero Banner */}
       <ResponsiveHeroBanner
         bannerDesktop={course.page_image_desktop || course.banner_desktop || undefined}
-        bannerMobile={course.page_image_mobile || course.banner_mobile || undefined}
+        bannerMobile={course.page_image_desktop || course.banner_desktop || course.page_image_mobile || course.banner_mobile || undefined}
         title={course.title}
         description={course.description}
-        aspectRatioDesktop={1440 / 730}
-        aspectRatioMobile={1080 / 1920}
-        bottomGradient
+        aspectRatioDesktop={16 / 9}
+        aspectRatioMobile={16 / 9}
+        overlay={false}
+        card
+      />
+      <SectionHeader
+        title={course.title}
+        description={course.description || undefined}
+        className="mb-0 px-4"
       />
 
       {/* Back button and modules */}
