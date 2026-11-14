@@ -57,7 +57,7 @@ export function CourseCarousel({
   return (
     <div className={cn("w-full", className)}>
       {(title || description) && (
-        <div className="mb-4 px-4">
+        <div className="mb-4">
           {title && (
             <div className="neon-glow-user feature-bubble bubble-user relative z-[2] rounded-2xl px-4 py-3 text-feature-foreground">
               <span aria-hidden className="border-beam" />
