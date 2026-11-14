@@ -1,3 +1,4 @@
+import { StepProgress } from "@/components/guia-pais/StepProgress";
 import { SectionHeader } from "@/components/plataforma/CourseCarousel";
 import { useState } from "react";
 import { FormData } from "@/pages/GuiaPais";
@@ -90,14 +91,7 @@ export const ParentsGuideForm = ({
       {/* Header */}
       <SectionHeader title="Guia para Pais" description="Crie um guia personalizado para ensinar a Bíblia ao seu filho" className="mb-8" />
 
-      {/* Progress */}
-      <div className="mb-8">
-        <div className="flex justify-between text-sm text-muted-foreground mb-2">
-          <span>Passo {currentStep} de {totalSteps}</span>
-          <span>{Math.round(progress)}%</span>
-        </div>
-        <Progress value={progress} className="h-2" />
-      </div>
+      <StepProgress current={currentStep} total={totalSteps} />
 
       {/* Form Steps */}
       <Card className="glass p-4 sm:p-8 neon-glow overflow-hidden w-full max-w-full">
