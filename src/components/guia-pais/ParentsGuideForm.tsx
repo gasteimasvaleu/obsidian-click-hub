@@ -105,9 +105,7 @@ export const ParentsGuideForm = ({
           {/* Step 1: Nome */}
           {currentStep === 1 && (
             <div className="space-y-4 animate-fade-in">
-              <h2 className="text-lg font-semibold text-foreground">
-                Como você chama seu filho(a)?
-              </h2>
+              <SectionHeader title="Como você chama seu filho(a)?" className="mb-0" />
               <Input
                 placeholder="Digite o nome ou apelido"
                 value={formData.nome}
@@ -120,9 +118,7 @@ export const ParentsGuideForm = ({
           {/* Step 2: Sexo */}
           {currentStep === 2 && (
             <div className="space-y-4 animate-fade-in">
-              <h2 className="text-lg font-semibold text-foreground">
-                Sexo da criança
-              </h2>
+              <SectionHeader title="Sexo da criança" className="mb-0" />
               <div className="grid grid-cols-2 gap-4">
                 <Card
                   className={cn(
@@ -229,9 +225,7 @@ export const ParentsGuideForm = ({
           {/* Step 6: Nível Bíblico */}
           {currentStep === 6 && (
             <div className="space-y-4 animate-fade-in">
-              <h2 className="text-lg font-semibold text-foreground">
-                Qual o nível de conhecimento bíblico?
-              </h2>
+              <SectionHeader title="Qual o nível de conhecimento bíblico?" className="mb-0" />
               <div className="space-y-3">
                 {[
                   { value: 'iniciante', label: 'Iniciante', desc: 'Primeira vez ou pouco contato com a Bíblia' },
@@ -257,9 +251,7 @@ export const ParentsGuideForm = ({
           {/* Step 7: Contexto */}
           {currentStep === 7 && (
             <div className="space-y-4 animate-fade-in">
-              <h2 className="text-lg font-semibold text-foreground">
-                Onde e quando você planeja ensinar?
-              </h2>
+              <SectionHeader title="Onde e quando você planeja ensinar?" className="mb-0" />
               <div className="overflow-hidden w-full">
                 <Textarea
                   placeholder="Ex: Antes de dormir, no domingo após o almoço, durante o culto familiar..."
@@ -278,9 +270,7 @@ export const ParentsGuideForm = ({
           {/* Step 8: Desafio */}
           {currentStep === 8 && (
             <div className="space-y-4 animate-fade-in">
-              <h2 className="text-lg font-semibold text-foreground">
-                Há algum desafio específico? (Opcional)
-              </h2>
+              <SectionHeader title="Há algum desafio específico? (Opcional)" className="mb-0" />
               <div className="overflow-hidden w-full">
                 <Textarea
                   placeholder="Ex: Medo do escuro, dificuldade em obedecer, ansiedade..."
@@ -299,9 +289,7 @@ export const ParentsGuideForm = ({
           {/* Step 9: Passagem */}
           {currentStep === 9 && (
             <div className="space-y-4 animate-fade-in">
-              <h2 className="text-lg font-semibold text-foreground">
-                Qual passagem bíblica você quer ensinar?
-              </h2>
+              <SectionHeader title="Qual passagem bíblica você quer ensinar?" className="mb-0" />
               <div className="overflow-hidden w-full">
                 <Textarea
                   placeholder="Ex: João 3:16, Parábola do Bom Samaritano, Moisés e o Mar Vermelho..."
