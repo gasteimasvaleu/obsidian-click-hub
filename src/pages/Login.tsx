@@ -7,7 +7,7 @@ import { toast } from 'sonner';
 import { purchaseMonthly, restorePurchases, isNativePlatform, getPlatform } from '@/lib/revenuecat';
 import { supabase } from '@/integrations/supabase/client';
 import { Loader2, Mail, Lock, Eye, EyeOff, ChevronDown } from 'lucide-react';
-import freiImg from '@/assets/frei-boas-vindas.png.asset.json';
+import freiImg from '@/assets/frei-boas-vindas-placa.png.asset.json';
 import { nativeAppleSignIn } from '@/lib/native-apple-signin';
 import { nativeGoogleSignIn } from '@/lib/native-google-signin';
 
@@ -243,7 +243,7 @@ const Login = () => {
 
         <div className="relative neon-glow-user feature-bubble bubble-user rounded-3xl px-4 pt-4 overflow-hidden">
           <div className="border-beam" aria-hidden />
-          <img src={freiImg.url} alt="Bem-vindo ao BíbliaToon Club" className="mx-auto w-full max-w-[16rem] object-contain" />
+          <img src={freiImg.url} alt="Bem-vindo ao BíbliaToon Club" className="mx-auto w-full object-contain" />
         </div>
 
         <div className="feature-bubble bg-card/60 backdrop-blur-md rounded-3xl p-5 space-y-3 shadow-lg">
