@@ -1,10 +1,11 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Info, UserCircle, LogOut, LogIn, Settings } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ExpandMenu } from "@/components/ui/expand-menu";
 import { useAuth } from "@/contexts/AuthContext";
 
 export const FuturisticNavbar = ({ light = false }: { light?: boolean }) => {
   const { user, isAdmin, signOut } = useAuth();
+  const navigate = useNavigate();
 
   const handleLogout = async () => {
     await signOut();
@@ -20,49 +21,20 @@ export const FuturisticNavbar = ({ light = false }: { light?: boolean }) => {
             className={`h-8 w-auto transition-all duration-300 ${light ? "" : "hover:animate-glow"}`}
           />
         </Link>
-        <div className="flex items-center gap-4">
-          {user ? (
-            <>
-              <Link to="/profile" aria-label="Meu Perfil">
-                <UserCircle
-                  size={24}
-                  className="text-primary hover:animate-glow cursor-pointer transition-all duration-300"
-                />
-              </Link>
-              {isAdmin && (
-                <Link to="/admin" title="Painel Admin">
-                  <Settings
-                    size={24}
-                    className="text-primary hover:animate-glow cursor-pointer transition-all duration-300"
-                  />
-                </Link>
-              )}
-              <Button variant="ghost" size="icon"
-                onClick={handleLogout}
-                className="focus:outline-none"
-                title="Sair"
-              >
-                <LogOut
-                  size={24}
-                  className="text-primary hover:text-destructive cursor-pointer transition-all duration-300"
-                />
-              </Button>
-            </>
-          ) : (
-            <Link to="/login" title="Entrar">
-              <LogIn
-                size={24}
-                className="text-primary hover:animate-glow cursor-pointer transition-all duration-300"
-              />
-            </Link>
-          )}
-          <Link to="/sobre" aria-label="Sobre">
-            <Info
-              size={24}
-              className="text-primary hover:animate-glow cursor-pointer transition-all duration-300"
-            />
-          </Link>
-        </div>
+        <ExpandMenu
+          items={[
+            ...(user
+              ? [
+                  { icon: <UserCircle size={18} />, label: "Meu Perfil", onClick: () => navigate("/profile") },
+                  ...(isAdmin ? [{ icon: <Settings size={18} />, label: "Painel Admin", onClick: () => navigate("/admin") }] : []),
+                ]
+              : []),
+            { icon: <Info size={18} />, label: "Sobre", onClick: () => navigate("/sobre") },
+            user
+              ? { icon: <LogOut size={18} />, label: "Sair", onClick: handleLogout, className: "text-destructive hover:text-destructive" }
+              : { icon: <LogIn size={18} />, label: "Entrar", onClick: () => navigate("/login") },
+          ]}
+        />
       </div>
     </nav>
   );
