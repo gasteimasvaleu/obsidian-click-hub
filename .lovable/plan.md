@@ -1,14 +1,16 @@
-# Plataforma no desktop com a mesma largura das outras páginas
+# Mesma largura em todas as páginas, seguindo a Bíblia
 
 ## Problema
-No computador e no tablet, a página Plataforma (e também as páginas de curso, módulo e aula) ocupa a tela inteira. Por isso o vídeo do topo fica enorme e a página fica bem mais comprida que a Bíblia, Orações, Games etc., que ficam numa coluna central.
+No computador e no tablet, cada página usa uma largura diferente. A Bíblia é a referência: fica numa coluna central com margem lateral fixa. A Plataforma ocupa a tela inteira, e por isso o vídeo fica enorme e a página fica comprida demais. O Guia para Pais, o Devocional, a Comunidade, o Amigo Divino, o Bíbliafy, o Colorir e o Perfil ficam mais estreitos ou mais largos que a Bíblia.
 
 ## O que muda
-- Plataforma, Curso, Módulo e Aula passam a usar a mesma coluna central das outras páginas (mesma largura da Bíblia).
-- O vídeo do topo, o card com título e subtítulo e os carrosséis ficam alinhados nessa coluna, com as mesmas margens laterais.
-- No celular nada muda.
+- Todas as páginas de usuário passam a ter a mesma coluna central e a mesma margem lateral da Bíblia: Plataforma (com curso, módulo e aula), Guia para Pais, Orações, Games, Amigo Divino, Bíbliafy, Comunidade, Colorir, Devocional, Perfil, Sobre, Termos e Política.
+- Em cada página, o vídeo do topo, o card de título e o conteúdo abaixo ficam com a mesma largura, alinhados pelas bordas.
+- No celular nada muda, porque a margem continua a mesma.
+- Telas de jogo em andamento, como caça-palavras e quebra-cabeça, e o editor de colorir continuam como estão, porque precisam de espaço.
 
 ## Detalhes técnicos
-- `PlataformaLayout.tsx`: envolver `children` em `container mx-auto max-w-4xl` (sem padding extra, pois as páginas já usam `px-4` nos blocos internos), igual à Bíblia.
-- Conferir se o `ResponsiveHeroBanner` com `card` em `PlataformaPage`, `CoursePage` e `ModulePage` ganha `px-4` para alinhar com o `SectionHeader`.
-- `LessonPage`/`LessonPlayer`: mantém o layout lateral (`lg:flex-row`) dentro do mesmo limite; se a coluna `w-80` ficar apertada, usar `max-w-6xl` só na aula.
+- Criar `src/components/PageContainer.tsx`, que aplica `container mx-auto px-4 max-w-4xl`, e usar esse componente como contêiner externo em cada página da lista.
+- Dentro dele, trocar os limites internos `max-w-2xl`, `max-w-3xl` e `max-w-6xl` do vídeo, do `SectionHeader` e dos blocos de conteúdo por `w-full`.
+- `PlataformaLayout`: envolver `children` no `PageContainer` e tirar o `px-4` duplicado dos carrosséis e do `SectionHeader`. Na aula, a lista lateral `w-80` continua no `lg`.
+- Registrar a regra no AGENTS.md: a largura das páginas vem do `PageContainer`.
