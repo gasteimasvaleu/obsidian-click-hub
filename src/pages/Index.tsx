@@ -89,9 +89,9 @@ const Index = () => {
           <img
             src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/botaocursos4.png"
             alt=""
-            className="pointer-events-none absolute bottom-0 left-2 h-[125px] w-[95px] object-contain"
+            className="pointer-events-none absolute bottom-0 left-2 h-[125px] w-[95px] object-contain object-bottom"
           />
-          <span className="text-base font-bold sm:text-lg">{mainAction.title}</span>
+          <span className="flex-1 text-center text-base font-bold sm:text-lg">{mainAction.title}</span>
           <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-secondary text-primary">
             <ArrowRight className="!h-5 !w-5" aria-hidden="true" />
           </span>
