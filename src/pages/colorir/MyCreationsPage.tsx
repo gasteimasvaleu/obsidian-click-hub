@@ -1,3 +1,4 @@
+import { ArrowNavButton } from "@/components/plataforma/BackArrowButton";
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -69,15 +70,7 @@ const MyCreationsPage = () => {
       <FuturisticNavbar />
 
       <main className="container mx-auto px-4 pt-16 max-w-3xl">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => navigate('/colorir')}
-          className="mb-4"
-        >
-          <ArrowLeft size={18} />
-          Voltar
-        </Button>
+        <ArrowNavButton direction="left" label="Voltar" onClick={() => navigate('/colorir')} className="mb-4" />
 
         <GlassCard className="text-center mb-6">
           <div className="p-4 rounded-full bg-gradient-to-br from-teal-500 to-blue-500 w-fit mx-auto mb-4">

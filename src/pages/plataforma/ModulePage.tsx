@@ -1,3 +1,4 @@
+import { ArrowNavButton } from "@/components/plataforma/BackArrowButton";
 import { SectionHeader } from "@/components/plataforma/CourseCarousel";
 import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -83,9 +84,7 @@ export default function ModulePage() {
           <h1 className="text-2xl font-bold text-foreground mb-2">
             Módulo não encontrado
           </h1>
-          <Link to="/plataforma">
-            <Button variant="outline">Voltar para Plataforma</Button>
-          </Link>
+          <ArrowNavButton direction="left" to="/plataforma" label="Voltar para Plataforma" className="max-w-xs" />
         </div>
       </PlataformaLayout>
     );

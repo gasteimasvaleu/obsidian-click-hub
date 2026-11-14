@@ -1,3 +1,4 @@
+import { ArrowNavButton } from "@/components/plataforma/BackArrowButton";
 import { useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -32,15 +33,7 @@ export const ExternalFrame = ({ url, title = "External Content" }: ExternalFrame
       {/* Header with back button */}
       <div className="fixed top-0 left-0 right-0 z-40 bg-black/80 backdrop-blur-lg border-b border-primary/20 p-4">
         <div className="flex items-center gap-4">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => navigate(-1)}
-            className="text-primary hover:bg-primary/10"
-          >
-            <ArrowLeft size={16} className="mr-2" />
-            Voltar
-          </Button>
+          <ArrowNavButton direction="left" label="Voltar" onClick={() => navigate(-1)} className="!w-28 !h-9" />
           <h1 className="text-primary font-medium">{title}</h1>
         </div>
       </div>

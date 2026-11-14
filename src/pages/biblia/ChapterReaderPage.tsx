@@ -1,3 +1,4 @@
+import { ArrowNavButton } from "@/components/plataforma/BackArrowButton";
 import { BackArrowButton } from "@/components/plataforma/BackArrowButton";
 import { SectionHeader } from "@/components/plataforma/CourseCarousel";
 import { useState } from "react";
@@ -101,25 +102,13 @@ export default function ChapterReaderPage() {
 
         {totalPages > 1 && (
           <div className="flex justify-center gap-4 items-center">
-            <Button
-              onClick={() => setCurrentPage(p => Math.max(0, p - 1))}
-              disabled={currentPage === 0}
-              variant="outline"
-            >
-              <ChevronLeft size={20} /> Anterior
-            </Button>
+            <ArrowNavButton direction="left" label="Página anterior" onClick={() => setCurrentPage(p => Math.max(0, p - 1))} disabled={currentPage === 0} className="flex-1" />
             
             <span className="text-foreground">
               Página {currentPage + 1} de {totalPages}
             </span>
             
-            <Button
-              onClick={() => setCurrentPage(p => Math.min(totalPages - 1, p + 1))}
-              disabled={currentPage === totalPages - 1}
-              variant="outline"
-            >
-              Próximo <ChevronRight size={20} />
-            </Button>
+            <ArrowNavButton direction="right" label="Próxima página" onClick={() => setCurrentPage(p => Math.min(totalPages - 1, p + 1))} disabled={currentPage === totalPages - 1} className="flex-1" />
           </div>
         )}
       </div>

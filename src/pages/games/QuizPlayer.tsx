@@ -1,3 +1,4 @@
+import { ArrowNavButton } from "@/components/plataforma/BackArrowButton";
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -209,15 +210,7 @@ const QuizPlayer = () => {
                   Jogar Novamente
                 </Button>
                 
-                <Button 
-                  onClick={() => navigate("/games")}
-                  variant="outline"
-                  className="w-full"
-                  size="lg"
-                >
-                  <ArrowLeft className="mr-2" />
-                  Voltar aos Jogos
-                </Button>
+                <ArrowNavButton direction="left" label="Voltar aos Jogos" onClick={() => navigate("/games")} />
               </div>
             </GlassCard>
           </div>
@@ -234,14 +227,7 @@ const QuizPlayer = () => {
         <div className="max-w-3xl mx-auto">
           {/* Header */}
           <div className="mb-6">
-            <Button
-              variant="ghost"
-              onClick={() => navigate("/games")}
-              className="mb-4"
-            >
-              <ArrowLeft className="mr-2" />
-              Voltar
-            </Button>
+            <ArrowNavButton direction="left" label="Voltar" onClick={() => navigate("/games")} />
             
             <div className="flex items-center justify-between mb-4">
               <h1 className="text-2xl font-bold bg-gradient-to-r from-primary via-primary to-primary/60 bg-clip-text text-transparent">{game.title}</h1>

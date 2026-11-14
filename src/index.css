@@ -422,8 +422,16 @@ All colors MUST be HSL.
   0%, 100% { transform: translateX(0); opacity: var(--arrow-opacity, 1); }
   50% { transform: translateX(-4px); opacity: calc(var(--arrow-opacity, 1) * 0.4); }
 }
+.next-arrow {
+  opacity: var(--arrow-opacity, 1);
+  animation: next-arrow-flow 1.4s ease-in-out infinite;
+}
+@keyframes next-arrow-flow {
+  0%, 100% { transform: translateX(0); opacity: var(--arrow-opacity, 1); }
+  50% { transform: translateX(4px); opacity: calc(var(--arrow-opacity, 1) * 0.4); }
+}
 @media (prefers-reduced-motion: reduce) {
-  .back-arrow { animation: none; }
+  .back-arrow, .next-arrow { animation: none; }
 }
 
 @keyframes login-float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }

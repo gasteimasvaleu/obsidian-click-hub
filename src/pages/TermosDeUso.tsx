@@ -1,3 +1,4 @@
+import { ArrowNavButton } from "@/components/plataforma/BackArrowButton";
 import { FuturisticNavbar } from "@/components/FuturisticNavbar";
 import { GlassCard } from "@/components/GlassCard";
 import { Button } from "@/components/ui/button";
@@ -41,15 +42,7 @@ const TermosDeUso = () => {
 
       <div className="flex-1 px-4 pt-20 pb-8">
         <div className="w-full max-w-4xl mx-auto space-y-4">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => navigate(-1)}
-            className="text-muted-foreground mb-2"
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Voltar
-          </Button>
+          <ArrowNavButton direction="left" label="Voltar" onClick={() => navigate(-1)} className="mb-4" />
 
           <GlassCard className="p-6 text-center">
             <FileText className="h-12 w-12 text-primary mx-auto mb-3" />

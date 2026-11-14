@@ -1,3 +1,4 @@
+import { ArrowNavButton } from "@/components/plataforma/BackArrowButton";
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -313,7 +314,7 @@ export default function WordSearchPlayer() {
         <div className="container mx-auto px-4 pt-24 pb-12">
           <GlassCard className="max-w-md mx-auto text-center">
             <p className="text-destructive mb-4">Erro ao carregar o jogo</p>
-            <Button onClick={() => navigate("/games")}>Voltar aos Jogos</Button>
+            <ArrowNavButton direction="left" label="Voltar aos Jogos" onClick={() => navigate("/games")} />
           </GlassCard>
         </div>
       </div>
@@ -403,9 +404,7 @@ export default function WordSearchPlayer() {
           </div>
 
           <div className="mt-4 md:mt-6 flex justify-center gap-2 md:gap-4">
-            <Button onClick={() => navigate("/games")} variant="outline" size={isMobile ? "sm" : "default"}>
-              Voltar aos Jogos
-            </Button>
+            <ArrowNavButton direction="left" label="Voltar aos Jogos" onClick={() => navigate("/games")} />
             <Button onClick={loadGame} size={isMobile ? "sm" : "default"}>Reiniciar</Button>
           </div>
         </GlassCard>

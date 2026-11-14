@@ -1,3 +1,4 @@
+import { ArrowNavButton } from "@/components/plataforma/BackArrowButton";
 import meninoImg from "@/assets/guia-pais/menino.png";
 import meninaImg from "@/assets/guia-pais/menina.png";
 import { StepProgress } from "@/components/guia-pais/StepProgress";
@@ -297,26 +298,11 @@ export const ParentsGuideForm = ({
         {/* Navigation Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 mt-8">
           {currentStep > 1 && (
-            <Button
-              variant="outline"
-              onClick={handleBack}
-              disabled={isGenerating}
-              className="w-full sm:flex-1"
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Voltar
-            </Button>
+            <ArrowNavButton direction="left" label="Voltar" onClick={handleBack} disabled={isGenerating} className="sm:flex-1" />
           )}
           
           {currentStep < totalSteps ? (
-            <Button
-              onClick={handleNext}
-              disabled={!canProceed() || isGenerating}
-              className="w-full sm:flex-1"
-            >
-              Próximo
-              <ArrowRight className="w-4 h-4 ml-2" />
-            </Button>
+            <ArrowNavButton direction="right" label="Próximo" onClick={handleNext} disabled={!canProceed() || isGenerating} className="sm:flex-1" />
           ) : (
             <Button
               onClick={handleSubmit}

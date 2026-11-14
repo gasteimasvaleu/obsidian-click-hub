@@ -1,3 +1,4 @@
+import { ArrowNavButton } from "@/components/plataforma/BackArrowButton";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useLessonAccess } from "@/hooks/useLessonAccess";
 import { Paywall } from "@/components/Paywall";
@@ -100,9 +101,7 @@ export default function LessonPage() {
           <h1 className="text-2xl font-bold text-foreground mb-2">
             Aula não encontrada
           </h1>
-          <Link to="/plataforma">
-            <Button variant="outline">Voltar para Plataforma</Button>
-          </Link>
+          <ArrowNavButton direction="left" to="/plataforma" label="Voltar para Plataforma" className="max-w-xs" />
         </div>
       </PlataformaLayout>
     );

@@ -1,3 +1,4 @@
+import { ArrowNavButton } from "@/components/plataforma/BackArrowButton";
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -207,9 +208,7 @@ export default function MemoryPlayer() {
         <div className="container mx-auto px-4 pt-24 pb-12">
           <GlassCard>
             <p className="text-destructive text-center">Jogo não encontrado</p>
-            <Button onClick={() => navigate("/games")} className="mt-4">
-              Voltar aos Jogos
-            </Button>
+            <ArrowNavButton direction="left" label="Voltar aos Jogos" onClick={() => navigate("/games")} />
           </GlassCard>
         </div>
       </div>
@@ -251,10 +250,7 @@ export default function MemoryPlayer() {
                 <RotateCcw size={20} />
                 Jogar Novamente
               </Button>
-              <Button onClick={() => navigate("/games")} variant="outline" className="gap-2">
-                <ArrowLeft size={20} />
-                Voltar aos Jogos
-              </Button>
+              <ArrowNavButton direction="left" label="Voltar aos Jogos" onClick={() => navigate("/games")} />
             </div>
           </GlassCard>
         </div>
@@ -307,10 +303,7 @@ export default function MemoryPlayer() {
           </div>
 
           <div className="mt-6 flex justify-center">
-            <Button onClick={() => navigate("/games")} variant="outline" className="gap-2">
-              <ArrowLeft size={20} />
-              Voltar aos Jogos
-            </Button>
+            <ArrowNavButton direction="left" label="Voltar aos Jogos" onClick={() => navigate("/games")} />
           </div>
         </GlassCard>
       </div>

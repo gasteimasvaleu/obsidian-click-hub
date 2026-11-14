@@ -1,3 +1,4 @@
+import { ArrowNavButton } from "@/components/plataforma/BackArrowButton";
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -120,10 +121,7 @@ const ColoringEditorPage = () => {
     <div className="min-h-screen bg-background flex flex-col">
       {/* Header */}
       <div className="flex items-center justify-between p-3 border-b border-border">
-        <Button variant="ghost" size="sm" onClick={() => navigate(-1)}>
-          <ArrowLeft size={18} />
-          Voltar
-        </Button>
+        <ArrowNavButton direction="left" label="Voltar" onClick={() => navigate(-1)} className="!w-28 !h-9" />
         <h1 className="text-sm font-semibold text-foreground truncate max-w-[40%]">
           {drawingTitle}
         </h1>

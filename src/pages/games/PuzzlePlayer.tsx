@@ -1,3 +1,4 @@
+import { ArrowNavButton } from "@/components/plataforma/BackArrowButton";
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -194,7 +195,7 @@ export default function PuzzlePlayer() {
         <div className="container mx-auto px-4 pt-24 pb-12">
           <GlassCard className="max-w-md mx-auto text-center">
             <p className="text-destructive mb-4">Jogo não encontrado</p>
-            <Button onClick={() => navigate("/games")}>Voltar aos Jogos</Button>
+            <ArrowNavButton direction="left" label="Voltar aos Jogos" onClick={() => navigate("/games")} />
           </GlassCard>
         </div>
       </div>
@@ -287,33 +288,17 @@ export default function PuzzlePlayer() {
 
           {/* Navigation */}
           <div className="flex justify-between items-center">
-            <Button
-              variant="outline"
-              onClick={handlePrevScene}
-              disabled={currentSceneIndex === 0}
-            >
-              <ChevronLeft className="w-4 h-4 mr-2" />
-              Anterior
-            </Button>
+            <ArrowNavButton direction="left" label="Anterior" onClick={handlePrevScene} disabled={currentSceneIndex === 0} className="flex-1" />
 
             <span className="text-sm text-muted-foreground">
               Cena {currentSceneIndex + 1} de {game.scenes.length}
             </span>
 
-            <Button
-              variant="outline"
-              onClick={handleNextScene}
-              disabled={currentSceneIndex === game.scenes.length - 1}
-            >
-              Próxima
-              <ChevronRight className="w-4 h-4 ml-2" />
-            </Button>
+            <ArrowNavButton direction="right" label="Próxima" onClick={handleNextScene} disabled={currentSceneIndex === game.scenes.length - 1} className="flex-1" />
           </div>
 
           <div className="text-center">
-            <Button variant="ghost" onClick={() => navigate("/games")}>
-              Voltar aos Jogos
-            </Button>
+            <ArrowNavButton direction="left" label="Voltar aos Jogos" onClick={() => navigate("/games")} />
           </div>
         </div>
       </div>
