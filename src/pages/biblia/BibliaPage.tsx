@@ -1,3 +1,4 @@
+import { getBookIllustration } from "@/data/bookIllustrations";
 import { SectionHeader } from "@/components/plataforma/CourseCarousel";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -73,9 +74,18 @@ export default function BibliaPage() {
       className="p-4 cursor-pointer"
     >
       <div className="flex items-center gap-3">
-        <div className={`p-3 rounded-lg bg-gradient-to-br ${GRADIENT_PALETTE[index % GRADIENT_PALETTE.length]}`}>
-          <BookOpen className="text-white" size={24} />
-        </div>
+        {getBookIllustration(book.name) ? (
+          <img
+            src={getBookIllustration(book.name)}
+            alt=""
+            loading="lazy"
+            className="h-14 w-14 flex-shrink-0 object-contain"
+          />
+        ) : (
+          <div className={`p-3 rounded-lg bg-gradient-to-br ${GRADIENT_PALETTE[index % GRADIENT_PALETTE.length]}`}>
+            <BookOpen className="text-white" size={24} />
+          </div>
+        )}
         <div>
           <h3 className="text-xl font-bold text-foreground">{book.name}</h3>
           <p className="text-muted-foreground text-base">{book.chapters_count} capítulos</p>
