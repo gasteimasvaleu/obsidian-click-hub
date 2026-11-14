@@ -128,7 +128,7 @@ const Index = () => {
                     onClick={() => h.link_to && navigate(h.link_to)}
                     aria-label={h.title || 'Lançamento'}
                   >
-                    <img src={h.image_url} alt={h.title || 'Lançamento'} className="h-[175px] w-[108px] rounded-lg object-cover" />
+                    <img src={h.image_url} alt={h.title || 'Lançamento'} className="h-auto w-[108px] rounded-lg object-contain" />
                   </Button>
                 ))}
               </div>
