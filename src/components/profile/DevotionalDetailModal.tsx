@@ -1,3 +1,4 @@
+import { stripEmoji } from "@/lib/stripEmoji";
 import { format, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Share2, X } from "lucide-react";
@@ -39,43 +40,43 @@ export const DevotionalDetailModal = ({ devotional, open, onClose }: DevotionalD
   const completedDate = format(parseISO(completed_at), "d 'de' MMMM 'de' yyyy", { locale: ptBR });
 
   const handleShare = async () => {
-    const shareText = `📿 DEVOCIONAL DIÁRIO
+    const shareText = `DEVOCIONAL DIÁRIO
   
-📅 ${formattedDate}
+${formattedDate}
 ━━━━━━━━━━━━━━━━━━━━
 
-✨ ${dev.theme}
+${stripEmoji(dev.theme)}
 
 ━━━━━━━━━━━━━━━━━━━━
-📖 VERSÍCULO DO DIA
+VERSÍCULO DO DIA
 ${dev.book_name} ${dev.chapter}:${dev.verse_start}${dev.verse_end ? `-${dev.verse_end}` : ''}
 
-"${dev.verse_text}"
+"${stripEmoji(dev.verse_text)}"
 
 ━━━━━━━━━━━━━━━━━━━━
-📝 INTRODUÇÃO
+INTRODUÇÃO
 
-${dev.introduction}
-
-━━━━━━━━━━━━━━━━━━━━
-💭 REFLEXÃO
-
-${dev.reflection}
+${stripEmoji(dev.introduction)}
 
 ━━━━━━━━━━━━━━━━━━━━
-🤔 PARA REFLETIR
+REFLEXÃO
+
+${stripEmoji(dev.reflection)}
+
+━━━━━━━━━━━━━━━━━━━━
+PARA REFLETIR
 
 ${dev.question}
 
 ━━━━━━━━━━━━━━━━━━━━
-🎯 APLICAÇÕES PRÁTICAS
+APLICAÇÕES PRÁTICAS
 
 ${dev.practical_applications}
 
 ━━━━━━━━━━━━━━━━━━━━
-🙏 ORAÇÃO
+ORAÇÃO
 
-${dev.prayer}
+${stripEmoji(dev.prayer)}
 
 ━━━━━━━━━━━━━━━━━━━━`;
     
@@ -83,7 +84,7 @@ ${dev.prayer}
       try {
         await navigator.share({ 
           text: shareText,
-          title: `Devocional: ${dev.theme}`
+          title: `Devocional: ${stripEmoji(dev.theme)}`
         });
         toast.success("Compartilhado com sucesso!");
       } catch (error) {
@@ -104,9 +105,8 @@ ${dev.prayer}
         <DialogHeader className="p-6 pb-4">
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1">
-              <DialogTitle className="text-xl mb-2">✨ {dev.theme}</DialogTitle>
-              <p className="text-sm text-muted-foreground">
-                📖 {dev.book_name} {dev.chapter}:{dev.verse_start}
+              <DialogTitle className="text-xl mb-2">{stripEmoji(dev.theme)}</DialogTitle>
+              <p className="text-sm text-muted-foreground">{dev.book_name} {dev.chapter}:{dev.verse_start}
                 {dev.verse_end && dev.verse_end !== dev.verse_start ? `-${dev.verse_end}` : ''}
               </p>
               <p className="text-xs text-muted-foreground mt-1">
@@ -128,7 +128,7 @@ ${dev.prayer}
           <div className="space-y-6">
             {/* Versículo */}
             <div className="p-4 rounded-lg bg-primary/5 border border-primary/20">
-              <p className="text-sm italic leading-relaxed">{dev.verse_text}</p>
+              <p className="text-sm italic leading-relaxed">{stripEmoji(dev.verse_text)}</p>
               <p className="text-xs text-muted-foreground mt-2 text-right">
                 {dev.book_name} {dev.chapter}:{dev.verse_start}
                 {dev.verse_end && dev.verse_end !== dev.verse_start ? `-${dev.verse_end}` : ''}
@@ -137,28 +137,25 @@ ${dev.prayer}
 
             {/* Introdução */}
             <div>
-              <h3 className="text-sm font-semibold mb-2 flex items-center gap-2">
-                📝 Introdução
+              <h3 className="text-sm font-semibold mb-2 flex items-center gap-2">Introdução
               </h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">{dev.introduction}</p>
+              <p className="text-sm text-muted-foreground leading-relaxed">{stripEmoji(dev.introduction)}</p>
             </div>
 
             <Separator />
 
             {/* Reflexão */}
             <div>
-              <h3 className="text-sm font-semibold mb-2 flex items-center gap-2">
-                💭 Reflexão
+              <h3 className="text-sm font-semibold mb-2 flex items-center gap-2">Reflexão
               </h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">{dev.reflection}</p>
+              <p className="text-sm text-muted-foreground leading-relaxed">{stripEmoji(dev.reflection)}</p>
             </div>
 
             <Separator />
 
             {/* Pergunta */}
             <div>
-              <h3 className="text-sm font-semibold mb-2 flex items-center gap-2">
-                🤔 Para Refletir
+              <h3 className="text-sm font-semibold mb-2 flex items-center gap-2">Para Refletir
               </h3>
               <p className="text-sm text-muted-foreground leading-relaxed italic">{dev.question}</p>
             </div>
@@ -167,8 +164,7 @@ ${dev.prayer}
 
             {/* Aplicações */}
             <div>
-              <h3 className="text-sm font-semibold mb-2 flex items-center gap-2">
-                🎯 Aplicações Práticas
+              <h3 className="text-sm font-semibold mb-2 flex items-center gap-2">Aplicações Práticas
               </h3>
               <p className="text-sm text-muted-foreground leading-relaxed">{dev.practical_applications}</p>
             </div>
@@ -177,10 +173,9 @@ ${dev.prayer}
 
             {/* Oração */}
             <div>
-              <h3 className="text-sm font-semibold mb-2 flex items-center gap-2">
-                🙏 Oração
+              <h3 className="text-sm font-semibold mb-2 flex items-center gap-2">Oração
               </h3>
-              <p className="text-sm text-muted-foreground leading-relaxed italic">{dev.prayer}</p>
+              <p className="text-sm text-muted-foreground leading-relaxed italic">{stripEmoji(dev.prayer)}</p>
             </div>
 
             {/* Anotações pessoais */}
@@ -188,8 +183,7 @@ ${dev.prayer}
               <>
                 <Separator />
                 <div className="p-4 rounded-lg bg-accent/50">
-                  <h3 className="text-sm font-semibold mb-2 flex items-center gap-2">
-                    📔 Minhas Anotações
+                  <h3 className="text-sm font-semibold mb-2 flex items-center gap-2">Minhas Anotações
                   </h3>
                   <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">
                     {user_notes}

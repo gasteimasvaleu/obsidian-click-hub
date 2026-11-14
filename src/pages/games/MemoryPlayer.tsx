@@ -225,7 +225,7 @@ export default function MemoryPlayer() {
         <FuturisticNavbar />
         <div className="container mx-auto px-4 pt-24 pb-12">
           <GlassCard className="max-w-2xl mx-auto text-center">
-            <h2 className="text-3xl font-bold text-primary mb-4">🎉 Parabéns!</h2>
+            <h2 className="text-3xl font-bold text-primary mb-4">Parabéns!</h2>
             <p className="text-xl mb-6">Você completou o jogo da memória!</p>
             
             <div className="space-y-4 mb-8">

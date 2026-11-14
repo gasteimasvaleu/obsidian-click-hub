@@ -103,7 +103,7 @@ export const AvatarUpload = ({
       if (updateError) throw updateError;
 
       toast({
-        title: 'Avatar atualizado! ✨',
+        title: 'Avatar atualizado!',
         description: 'Sua foto foi atualizada com sucesso.',
       });
 

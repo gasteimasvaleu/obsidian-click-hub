@@ -173,7 +173,7 @@ export const useUserProgress = () => {
       });
 
       if (!error) {
-        toast.success(`🎉 Nova conquista: ${getBadgeName(badgeType)}!`);
+        toast.success(`Nova conquista: ${getBadgeName(badgeType)}!`);
         fetchBadges();
       }
     }

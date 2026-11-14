@@ -40,7 +40,7 @@ export const ShareModal = ({ open, onClose, imageUrl, title }: ShareModalProps) 
         const file = new File([blob], `${title}.png`, { type: 'image/png' });
         await navigator.share({
           title: `${title} - Bíblia Toon Kids`,
-          text: 'Olha o desenho que eu colori! 🎨',
+          text: 'Olha o desenho que eu colori!',
           files: [file],
         });
       } else {

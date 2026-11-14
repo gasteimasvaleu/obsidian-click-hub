@@ -204,8 +204,7 @@ export const VerseNotesTab = ({ userId }: VerseNotesTabProps) => {
                 <div className="flex flex-col gap-3">
                   {/* Reference */}
                   <div className="flex items-center justify-between">
-                    <span className="text-primary font-semibold text-sm">
-                      📖 {getVerseReference(note)}
+                    <span className="text-primary font-semibold text-sm">{getVerseReference(note)}
                     </span>
                     <span className="text-xs text-muted-foreground">
                       {new Date(note.created_at).toLocaleDateString('pt-BR')}

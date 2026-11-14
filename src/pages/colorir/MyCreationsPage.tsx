@@ -97,7 +97,7 @@ const MyCreationsPage = () => {
           <EmptyState
             icon={<FolderHeart size={40} strokeWidth={1.5} />}
             title="Nenhuma criação ainda"
-            description="Comece a colorir desenhos bíblicos e eles aparecerão aqui! 🎨"
+            description="Comece a colorir desenhos bíblicos e eles aparecerão aqui!"
             action={{
               label: 'Começar a Colorir',
               onClick: () => navigate('/colorir'),

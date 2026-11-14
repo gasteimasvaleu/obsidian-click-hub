@@ -1,3 +1,4 @@
+import { stripEmoji } from "@/lib/stripEmoji";
 import { Link, useParams } from "react-router-dom";
 import { Play, Clock, CheckCircle } from "lucide-react";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
@@ -58,7 +59,7 @@ export function LessonPlaylist({
                 {item.thumbnail ? (
                   <img
                     src={item.thumbnail}
-                    alt={item.title}
+                    alt={stripEmoji(item.title)}
                     className="w-full h-full object-cover"
                   />
                 ) : (
@@ -82,10 +83,10 @@ export function LessonPlaylist({
             </div>
             <div className="p-3">
               <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-1">
-                {item.title}
+                {stripEmoji(item.title)}
               </h3>
               <p className="text-sm text-muted-foreground line-clamp-2 mt-1">
-                {item.description}
+                {stripEmoji(item.description)}
               </p>
             </div>
           </Link>
@@ -110,7 +111,7 @@ export function LessonPlaylist({
               {item.thumbnail ? (
                 <img
                   src={item.thumbnail}
-                  alt={item.title}
+                  alt={stripEmoji(item.title)}
                   className="w-full h-full object-contain rounded"
                 />
               ) : (
@@ -140,7 +141,7 @@ export function LessonPlaylist({
               )}
               <div className="flex-1 min-w-0">
                 <h4 className="font-medium text-sm text-foreground group-hover:text-primary transition-colors line-clamp-2">
-                  {item.title}
+                  {stripEmoji(item.title)}
                 </h4>
               </div>
             </div>

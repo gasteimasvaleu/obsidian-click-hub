@@ -50,7 +50,7 @@ export const PhotoUploader = ({ onTransformed }: PhotoUploaderProps) => {
       if (error) throw error;
       if (!data.success) throw new Error(data.error || 'Erro na transformação');
 
-      toast.success('Foto transformada com sucesso! 🎨');
+      toast.success('Foto transformada com sucesso!');
       onTransformed(data.transformedImageUrl, urlData.publicUrl);
     } catch (err: any) {
       console.error('Photo transform error:', err);

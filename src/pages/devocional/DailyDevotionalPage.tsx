@@ -1,3 +1,4 @@
+import { stripEmoji } from "@/lib/stripEmoji";
 import { BubbleTitleText } from "@/components/ui/bubble-title-text";
 import { SectionHeader } from "@/components/plataforma/CourseCarousel";
 import { useState, useEffect } from "react";
@@ -75,7 +76,7 @@ export default function DailyDevotionalPage() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['daily-devotional'] });
-      toast.success('✨ Devocional gerado com sucesso!');
+      toast.success('Devocional gerado com sucesso!');
     },
     onError: (error: any) => {
       console.error('Erro ao gerar devocional:', error);
@@ -142,7 +143,7 @@ export default function DailyDevotionalPage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['devotional-progress'] });
       queryClient.invalidateQueries({ queryKey: ['user-progress'] });
-      toast.success('🎉 Devocional concluído! +10 pontos');
+      toast.success('Devocional concluído! +10 pontos');
     }
   });
 
@@ -189,43 +190,43 @@ export default function DailyDevotionalPage() {
     const formattedDate = format(parseISO(devotional.devotional_date), "d 'de' MMMM 'de' yyyy", { locale: ptBR });
     
     // Montar texto completo do devocional
-    const shareText = `📿 DEVOCIONAL DIÁRIO
+    const shareText = `DEVOCIONAL DIÁRIO
   
-📅 ${formattedDate}
+${formattedDate}
 ━━━━━━━━━━━━━━━━━━━━
 
-✨ ${devotional.theme}
+${stripEmoji(devotional.theme)}
 
 ━━━━━━━━━━━━━━━━━━━━
-📖 VERSÍCULO DO DIA
+VERSÍCULO DO DIA
 ${devotional.book_name} ${devotional.chapter}:${devotional.verse_start}${devotional.verse_end ? `-${devotional.verse_end}` : ''}
 
-"${devotional.verse_text}"
+"${stripEmoji(devotional.verse_text)}"
 
 ━━━━━━━━━━━━━━━━━━━━
-📝 INTRODUÇÃO
+INTRODUÇÃO
 
-${devotional.introduction}
-
-━━━━━━━━━━━━━━━━━━━━
-💭 REFLEXÃO
-
-${devotional.reflection}
+${stripEmoji(devotional.introduction)}
 
 ━━━━━━━━━━━━━━━━━━━━
-🤔 PARA REFLETIR
+REFLEXÃO
+
+${stripEmoji(devotional.reflection)}
+
+━━━━━━━━━━━━━━━━━━━━
+PARA REFLETIR
 
 ${devotional.question}
 
 ━━━━━━━━━━━━━━━━━━━━
-🎯 APLICAÇÕES PRÁTICAS
+APLICAÇÕES PRÁTICAS
 
 ${devotional.practical_applications}
 
 ━━━━━━━━━━━━━━━━━━━━
-🙏 ORAÇÃO
+ORAÇÃO
 
-${devotional.prayer}
+${stripEmoji(devotional.prayer)}
 
 ━━━━━━━━━━━━━━━━━━━━`;
     
@@ -233,7 +234,7 @@ ${devotional.prayer}
       try {
         await navigator.share({ 
           text: shareText,
-          title: `Devocional: ${devotional.theme}`
+          title: `Devocional: ${stripEmoji(devotional.theme)}`
         });
         toast.success("Compartilhado com sucesso!");
       } catch (error) {
@@ -284,7 +285,7 @@ ${devotional.prayer}
       yPosition += 10;
       
       doc.setFont('helvetica', 'italic');
-      const verseLines = doc.splitTextToSize(`"${devotional.verse_text}"`, maxWidth);
+      const verseLines = doc.splitTextToSize(`"${stripEmoji(devotional.verse_text)}"`, maxWidth);
       doc.text(verseLines, margin, yPosition);
       yPosition += verseLines.length * 7 + 15;
 
@@ -355,7 +356,7 @@ ${devotional.prayer}
       // Salvar arquivo
       const fileName = `devocional-${devotional.devotional_date}.pdf`;
       doc.save(fileName);
-      toast.success("PDF gerado com sucesso! 📄");
+      toast.success("PDF gerado com sucesso!");
     } catch (error) {
       console.error('Error generating PDF:', error);
       toast.error("Erro ao gerar PDF");
@@ -402,8 +403,8 @@ ${devotional.prayer}
 
         <div className="w-full max-w-2xl mx-auto">
           <SectionHeader
-            title={devotional.theme}
-            description={`📅 ${format(parseISO(devotional.devotional_date), "EEEE, d 'de' MMMM 'de' yyyy", { locale: ptBR })} · 📖 ${devotional.book_name} ${devotional.chapter}:${devotional.verse_start}${devotional.verse_end ? `-${devotional.verse_end}` : ""}`}
+            title={stripEmoji(devotional.theme)}
+            description={`${format(parseISO(devotional.devotional_date), "EEEE, d 'de' MMMM 'de' yyyy", { locale: ptBR })} · ${devotional.book_name} ${devotional.chapter}:${devotional.verse_start}${devotional.verse_end ? `-${devotional.verse_end}` : ""}`}
             className="mb-6"
           />
         </div>
@@ -414,7 +415,7 @@ ${devotional.prayer}
             <h2 className="bubble-title relative"><BubbleTitleText text="Introdução" /></h2>
           </div>
           <GlassCard className="-mt-4 pt-7 rounded-t-none">
-          <p className="text-muted-foreground leading-relaxed">{devotional.introduction}</p>
+          <p className="text-muted-foreground leading-relaxed">{stripEmoji(devotional.introduction)}</p>
         </GlassCard>
         </div>
 
@@ -425,7 +426,7 @@ ${devotional.prayer}
           </div>
           <GlassCard className="-mt-4 pt-7 rounded-t-none">
           <p className="text-foreground text-lg italic leading-relaxed mb-2">
-            "{devotional.verse_text}"
+            "{stripEmoji(devotional.verse_text)}"
           </p>
           <p className="text-primary">
             - {devotional.book_name} {devotional.chapter}:{devotional.verse_start}
@@ -439,7 +440,7 @@ ${devotional.prayer}
             <h2 className="bubble-title relative"><BubbleTitleText text="Reflexão" /></h2>
           </div>
           <GlassCard className="-mt-4 pt-7 rounded-t-none">
-          <p className="text-muted-foreground leading-relaxed whitespace-pre-line">{devotional.reflection}</p>
+          <p className="text-muted-foreground leading-relaxed whitespace-pre-line">{stripEmoji(devotional.reflection)}</p>
         </GlassCard>
         </div>
 
@@ -471,7 +472,7 @@ ${devotional.prayer}
             <h2 className="bubble-title relative"><BubbleTitleText text="Oração" /></h2>
           </div>
           <GlassCard className="-mt-4 pt-7 rounded-t-none">
-          <p className="text-muted-foreground leading-relaxed italic">{devotional.prayer}</p>
+          <p className="text-muted-foreground leading-relaxed italic">{stripEmoji(devotional.prayer)}</p>
         </GlassCard>
         </div>
 

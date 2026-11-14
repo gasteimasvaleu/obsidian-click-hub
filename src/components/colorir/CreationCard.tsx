@@ -33,8 +33,7 @@ export const CreationCard = ({
           loading="lazy"
         />
         {isFromPhoto && (
-          <span className="absolute top-2 left-2 bg-primary/80 text-primary-foreground text-[10px] px-2 py-0.5 rounded-full font-medium">
-            📸 Foto
+          <span className="absolute top-2 left-2 bg-primary/80 text-primary-foreground text-[10px] px-2 py-0.5 rounded-full font-medium">Foto
           </span>
         )}
       </div>

@@ -125,7 +125,7 @@ const ColorirPage = () => {
               <EmptyState
                 icon={<Palette size={40} strokeWidth={1.5} />}
                 title="Nenhum desenho disponível"
-                description="Novos desenhos bíblicos estão chegando em breve! 🎨"
+                description="Novos desenhos bíblicos estão chegando em breve!"
               />
             </div>
           ) : (

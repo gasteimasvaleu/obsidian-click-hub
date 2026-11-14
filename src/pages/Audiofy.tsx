@@ -138,7 +138,7 @@ const Audiofy = () => {
               <EmptyState
                 icon={<Music size={40} strokeWidth={1.5} />}
                 title="Músicas em construção"
-                description="Estamos preparando uma coleção especial de músicas cristãs para você! 🎵"
+                description="Estamos preparando uma coleção especial de músicas cristãs para você!"
                 className="my-8"
               />
             ) : (

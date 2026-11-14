@@ -101,7 +101,7 @@ const ColoringEditorPage = () => {
       await addActivity('coloring_completed', drawingId || null, drawingTitle, points);
       
       fireCompleteConfetti();
-      toast.success(`Criação salva! +${points} pontos 🎨`);
+      toast.success(`Criação salva! +${points} pontos`);
       navigate('/colorir/minhas-criacoes');
     } catch (err: any) {
       console.error('Save error:', err);

@@ -187,7 +187,7 @@ const QuizPlayer = () => {
                 )}
                 
                 <h1 className="text-4xl font-bold mb-2 text-foreground">
-                  {percentage >= 70 ? "Parabéns! 🎉" : "Continue praticando! 💪"}
+                  {percentage >= 70 ? "Parabéns!" : "Continue praticando!"}
                 </h1>
                 
                 <p className="text-xl text-muted-foreground mb-6">
@@ -319,10 +319,10 @@ const QuizPlayer = () => {
                   )}
                   <div>
                     <p className="font-bold mb-2 text-foreground">
-                      {isCorrect ? "Correto! 🎉" : "Ops! 😅"}
+                      {isCorrect ? "Correto!" : "Ops!"}
                     </p>
                     <p className="text-muted-foreground mb-3">{currentQ.explanation}</p>
-                    <p className="text-sm italic text-muted-foreground">📖 {currentQ.verse}</p>
+                    <p className="text-sm italic text-muted-foreground">{currentQ.verse}</p>
                   </div>
                 </div>
               </div>

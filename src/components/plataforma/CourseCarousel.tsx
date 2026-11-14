@@ -1,3 +1,4 @@
+import { stripEmoji } from "@/lib/stripEmoji";
 import { BubbleTitleText } from "@/components/ui/bubble-title-text";
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -47,7 +48,8 @@ interface CourseCarouselProps {
 
 const DESCRIPTION_LIMIT = 90;
 
-function SectionDescription({ text, attached }: { text: string; attached: boolean }) {
+function SectionDescription({ text: rawText, attached }: { text: string; attached: boolean }) {
+  const text = stripEmoji(rawText);
   const [expanded, setExpanded] = useState(false);
   const long = text.length > DESCRIPTION_LIMIT;
   const shown = !long || expanded ? text : text.slice(0, DESCRIPTION_LIMIT).trimEnd() + "…";
@@ -114,20 +116,20 @@ export function CourseCarousel({
                     {thumbFor(item) ? (
                       <img
                         src={thumbFor(item)!}
-                        alt={item.title}
+                        alt={stripEmoji(item.title)}
                         className="w-full h-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
                       />
                     ) : (
                       <div className="w-full h-full bg-gradient-to-br from-primary/30 to-secondary/30 flex items-center justify-center">
                         <span className="text-foreground/50 text-center text-sm px-2">
-                          {item.title}
+                          {stripEmoji(item.title)}
                         </span>
                       </div>
                     )}
                   </AspectRatio>
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-3">
                     <span className="text-foreground text-sm font-medium line-clamp-2">
-                      {item.title}
+                      {stripEmoji(item.title)}
                     </span>
                   </div>
                 </div>

@@ -26,14 +26,14 @@ if (isPreviewHost || isInIframe) {
   // Registra o Service Worker apenas em produção (app nativo / site publicado)
   const updateSW = registerSW({
   onNeedRefresh() {
-    console.log('🔄 Nova versão disponível! Atualizando automaticamente...');
+    console.log('Nova versão disponível! Atualizando automaticamente...');
     updateSW(true);
   },
   onOfflineReady() {
-    console.log('✅ App pronto para funcionar offline!');
+    console.log('App pronto para funcionar offline!');
   },
   onRegistered(registration) {
-    console.log('✅ Service Worker registrado com sucesso!');
+    console.log('Service Worker registrado com sucesso!');
     if (registration) {
       setInterval(() => {
         registration.update();
@@ -41,7 +41,7 @@ if (isPreviewHost || isInIframe) {
     }
   },
   onRegisterError(error) {
-    console.error('❌ Erro ao registrar Service Worker:', error);
+    console.error('Erro ao registrar Service Worker:', error);
   },
   immediate: true
   });

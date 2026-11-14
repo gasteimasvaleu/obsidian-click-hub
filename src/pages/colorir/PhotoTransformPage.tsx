@@ -48,7 +48,7 @@ const PhotoTransformPage = () => {
           </div>
           <h1 className="text-2xl font-bold mb-2 bg-gradient-to-r from-primary via-primary to-primary/60 bg-clip-text text-transparent">Transformar Foto</h1>
           <p className="text-muted-foreground text-sm">
-            A inteligência artificial vai transformar sua foto em um desenho para colorir! ✨
+            A inteligência artificial vai transformar sua foto em um desenho para colorir!
           </p>
         </GlassCard>
 

@@ -162,7 +162,7 @@ export const DevotionalHistoryTab = ({ userId }: DevotionalHistoryTabProps) => {
       
       {/* Busca */}
       <Input 
-        placeholder="🔍 Buscar por tema ou versículo..."
+        placeholder="Buscar por tema ou versículo..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         className="glass"
@@ -202,8 +202,7 @@ export const DevotionalHistoryTab = ({ userId }: DevotionalHistoryTabProps) => {
           variant={showOnlyWithNotes ? 'default' : 'outline'}
           size="sm"
           onClick={() => setShowOnlyWithNotes(!showOnlyWithNotes)}
-        >
-          📝 Com anotações
+        >Com anotações
         </Button>
       </div>
       

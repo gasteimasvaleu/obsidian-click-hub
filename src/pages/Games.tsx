@@ -112,7 +112,7 @@ const Games = () => {
             </div>
             
             <div className="w-full max-w-2xl mx-auto">
-            <SectionHeader title="Jogos & Quizzes" description="Aprenda a Bíblia brincando! 🎮" className="mb-0" />
+            <SectionHeader title="Jogos & Quizzes" description="Aprenda a Bíblia brincando!" className="mb-0" />
           </div>
           </div>
         </div>
@@ -228,7 +228,7 @@ const Games = () => {
               <EmptyState
                 icon={<Gamepad2 size={40} strokeWidth={1.5} />}
                 title="Nenhum jogo disponível"
-                description="Estamos preparando jogos incríveis para você! Volte em breve para descobrir desafios bíblicos divertidos e educativos. 🎮✨"
+                description="Estamos preparando jogos incríveis para você! Volte em breve para descobrir desafios bíblicos divertidos e educativos."
               />
             ) : (
               <EmptyState
@@ -297,7 +297,7 @@ const Games = () => {
         {!loading && filteredGames.length > 0 && (
           <div className="text-center mt-12 animate-fade-in">
             <p className="text-muted-foreground">
-              Mais jogos em breve! 🚀
+              Mais jogos em breve!
             </p>
           </div>
         )}

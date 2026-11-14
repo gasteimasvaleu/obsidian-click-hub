@@ -1,3 +1,4 @@
+import { stripEmoji } from "@/lib/stripEmoji";
 import { format, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Badge } from "@/components/ui/badge";
@@ -26,21 +27,19 @@ export const DevotionalCard = ({ devotional, userNotes, completedAt, onClick }: 
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 min-w-0">
-          <h4 className="font-medium text-sm truncate">✨ {devotional.theme}</h4>
-          <p className="text-xs text-muted-foreground mt-0.5">
-            📖 {devotional.book_name} {devotional.chapter}:{devotional.verse_start}
+          <h4 className="font-medium text-sm truncate">{stripEmoji(devotional.theme)}</h4>
+          <p className="text-xs text-muted-foreground mt-0.5">{devotional.book_name} {devotional.chapter}:{devotional.verse_start}
             {devotional.verse_end && devotional.verse_end !== devotional.verse_start ? `-${devotional.verse_end}` : ''}
           </p>
           <p className="text-xs text-muted-foreground line-clamp-2 mt-1">
-            "{devotional.verse_text}"
+            "{stripEmoji(devotional.verse_text)}"
           </p>
         </div>
         
         <div className="flex flex-col items-end gap-1 shrink-0">
           <span className="text-xs text-muted-foreground">{formattedDate}</span>
           {userNotes && (
-            <Badge variant="outline" className="text-xs border-primary/50">
-              📝 Anotações
+            <Badge variant="outline" className="text-xs border-primary/50">Anotações
             </Badge>
           )}
         </div>

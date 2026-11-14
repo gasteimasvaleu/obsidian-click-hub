@@ -101,7 +101,7 @@ const GuiaPais = () => {
       setGeneratedGuide(guide);
       
       toast({
-        title: "✅ Guia personalizado criado!",
+        title: "Guia personalizado criado!",
         description: "Seu guia está pronto para usar.",
       });
 

@@ -31,13 +31,13 @@ export const AIConsentDialog = ({ open, onAccept, onCancel }: AIConsentDialogPro
               Algumas funcionalidades do app utilizam inteligência artificial para gerar conteúdo personalizado. Antes de continuar, gostaríamos de informar:
             </p>
             <div className="space-y-2 text-sm">
-              <p className="font-semibold text-foreground">📤 Dados enviados:</p>
+              <p className="font-semibold text-foreground">Dados enviados:</p>
               <p>Mensagens de texto, informações de formulários (como nome e idade da criança) ou fotos que você enviar para funcionalidades de IA.</p>
               
-              <p className="font-semibold text-foreground">🏢 Para quem:</p>
+              <p className="font-semibold text-foreground">Para quem:</p>
               <p>Os dados são processados pelo serviço de inteligência artificial do Google (Gemini) através dos nossos servidores seguros.</p>
               
-              <p className="font-semibold text-foreground">🔒 Proteção:</p>
+              <p className="font-semibold text-foreground">Proteção:</p>
               <p>Os dados são usados exclusivamente para gerar o conteúdo solicitado e não são armazenados pelo serviço de IA. Sua privacidade é nossa prioridade.</p>
             </div>
             <p className="text-xs text-muted-foreground">

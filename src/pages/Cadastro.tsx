@@ -447,8 +447,7 @@ const Cadastro = () => {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4 text-center">
               <Crown className="w-8 h-8 text-yellow-500 mx-auto mb-2" />
-              <p className="text-yellow-400 font-semibold text-base">
-                🎉 Parabéns! Você recebeu acesso VIP ao BíbliaTooon Club!
+              <p className="text-yellow-400 font-semibold text-base">Parabéns! Você recebeu acesso VIP ao BíbliaTooon Club!
               </p>
               <p className="text-yellow-400/70 text-sm mt-1">
                 Complete seu cadastro abaixo para ativar sua conta exclusiva.

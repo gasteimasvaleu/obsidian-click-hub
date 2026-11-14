@@ -135,7 +135,7 @@ export default function PuzzlePlayer() {
 
     if (allCorrect && currentTiles.length > 0) {
       setCompleted(true);
-      toast.success("🎉 Parabéns! Você completou o quebra-cabeça!");
+      toast.success("Parabéns! Você completou o quebra-cabeça!");
       fireCompleteConfetti();
       
       // Registrar se é a última cena
@@ -279,8 +279,7 @@ export default function PuzzlePlayer() {
 
             {completed && (
               <div className="mt-6 text-center">
-                <p className="text-xl font-bold text-primary mb-4">
-                  🎉 Quebra-cabeça concluído!
+                <p className="text-xl font-bold text-primary mb-4">Quebra-cabeça concluído!
                 </p>
               </div>
             )}

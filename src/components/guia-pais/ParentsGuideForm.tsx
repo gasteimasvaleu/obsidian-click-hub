@@ -122,7 +122,6 @@ export const ParentsGuideForm = ({
                   onClick={() => updateFormData('sexo', 'masculino')}
                 >
                   <div className="text-center">
-                    <div className="text-4xl mb-2">👦</div>
                     <div className="font-medium">Menino</div>
                   </div>
                 </Card>
@@ -134,7 +133,6 @@ export const ParentsGuideForm = ({
                   onClick={() => updateFormData('sexo', 'feminino')}
                 >
                   <div className="text-center">
-                    <div className="text-4xl mb-2">👧</div>
                     <div className="font-medium">Menina</div>
                   </div>
                 </Card>

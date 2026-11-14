@@ -1,3 +1,4 @@
+import { stripEmoji } from "@/lib/stripEmoji";
 import { Guide, FormData } from "@/pages/GuiaPais";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -106,12 +107,12 @@ export const GuideDisplay = ({ guide, formData, onNewGuide }: GuideDisplayProps)
                 <Card key={passo.passo} className="border-border/50">
                   <CardHeader className="pb-3">
                     <CardTitle className="text-base flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
-                      <span className="break-words">Passo {passo.passo}: {passo.titulo}</span>
+                      <span className="break-words">Passo {passo.passo}: {stripEmoji(passo.titulo)}</span>
                       <Badge variant="secondary" className="shrink-0 w-fit">{passo.tempo_estimado}</Badge>
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-muted-foreground">{passo.descricao}</p>
+                    <p className="text-sm text-muted-foreground">{stripEmoji(passo.descricao)}</p>
                   </CardContent>
                 </Card>
               ))}
@@ -133,12 +134,12 @@ export const GuideDisplay = ({ guide, formData, onNewGuide }: GuideDisplayProps)
                 <Card key={idx} className="border-border/50">
                   <CardHeader className="pb-3">
                     <CardTitle className="text-base flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
-                      <span className="break-words">{atividade.titulo}</span>
+                      <span className="break-words">{stripEmoji(atividade.titulo)}</span>
                       <Badge variant="secondary" className="shrink-0 w-fit">{atividade.duracao}</Badge>
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-2">
-                    <p className="text-sm text-muted-foreground">{atividade.descricao}</p>
+                    <p className="text-sm text-muted-foreground">{stripEmoji(atividade.descricao)}</p>
                     <div>
                       <p className="text-sm font-medium mb-1">Materiais:</p>
                       <div className="flex flex-wrap gap-1">
@@ -207,11 +208,9 @@ export const GuideDisplay = ({ guide, formData, onNewGuide }: GuideDisplayProps)
               {guide.desafios_solucoes.map((item, idx) => (
                 <Card key={idx} className="border-border/50">
                   <CardContent className="pt-4">
-                    <p className="text-sm font-medium text-foreground mb-2">
-                      ⚠️ {item.desafio}
+                    <p className="text-sm font-medium text-foreground mb-2">{stripEmoji(item.desafio)}
                     </p>
-                    <p className="text-sm text-muted-foreground">
-                      💡 {item.solucao}
+                    <p className="text-sm text-muted-foreground">{stripEmoji(item.solucao)}
                     </p>
                   </CardContent>
                 </Card>
@@ -270,8 +269,8 @@ export const GuideDisplay = ({ guide, formData, onNewGuide }: GuideDisplayProps)
                     <div className="flex items-start gap-3">
                       <Badge variant="secondary">{recurso.tipo}</Badge>
                       <div>
-                        <p className="font-medium text-foreground">{recurso.titulo}</p>
-                        <p className="text-sm text-muted-foreground mt-1">{recurso.descricao}</p>
+                        <p className="font-medium text-foreground">{stripEmoji(recurso.titulo)}</p>
+                        <p className="text-sm text-muted-foreground mt-1">{stripEmoji(recurso.descricao)}</p>
                       </div>
                     </div>
                   </CardContent>
@@ -294,7 +293,6 @@ export const GuideDisplay = ({ guide, formData, onNewGuide }: GuideDisplayProps)
               {guide.dicas_personalizadas.map((dica, idx) => (
                 <Card key={idx} className="p-3 border-border/50">
                   <p className="text-sm text-muted-foreground flex items-start gap-2">
-                    <span className="text-primary">✨</span>
                     {dica}
                   </p>
                 </Card>
