@@ -10,7 +10,7 @@ import { BubbleTitleText } from "@/components/ui/bubble-title-text";
 import { cn } from "@/lib/utils";
 
 const TRIGGER = "neon-glow-user feature-bubble bubble-user relative z-[2] rounded-2xl px-4 py-3 text-feature-foreground hover:no-underline gap-3";
-const CONTENT = "glass feature-bubble relative z-[1] mx-1 rounded-b-2xl px-4 pb-4 pt-4 text-foreground";
+const CONTENT = "glass feature-bubble relative z-[1] -mt-3 rounded-2xl rounded-t-none px-4 pb-4 pt-6 text-foreground";
 
 interface GuideDisplayProps {
   guide: Guide;
@@ -24,7 +24,7 @@ export const GuideDisplay = ({ guide, formData, onNewGuide }: GuideDisplayProps)
   };
 
   return (
-    <div className="max-w-4xl mx-auto animate-fade-in space-y-6 overflow-hidden">
+    <div className="max-w-4xl mx-auto animate-fade-in space-y-6">
       <SectionHeader
         title="Seu Guia Personalizado"
         description={`Para ensinar ${formData.nome} sobre: ${formData.passagem}`}
@@ -45,9 +45,11 @@ export const GuideDisplay = ({ guide, formData, onNewGuide }: GuideDisplayProps)
             <span aria-hidden className="border-beam" />
             <h2 className="bubble-title relative text-left"><BubbleTitleText text="Contexto da Passagem" /></h2>
           </AccordionTrigger>
-          <AccordionContent className={cn(CONTENT)}>
+          <AccordionContent className="px-2 pb-6 pt-0">
+<div className={cn(CONTENT)}>
             <p className="text-muted-foreground leading-relaxed">{guide.contexto_passagem}</p>
-          </AccordionContent>
+          </div>
+</AccordionContent>
         </AccordionItem>
 
         {/* Objetivos */}
@@ -56,7 +58,8 @@ export const GuideDisplay = ({ guide, formData, onNewGuide }: GuideDisplayProps)
             <span aria-hidden className="border-beam" />
             <h2 className="bubble-title relative text-left"><BubbleTitleText text="Objetivos de Aprendizagem" /></h2>
           </AccordionTrigger>
-          <AccordionContent className={cn(CONTENT)}>
+          <AccordionContent className="px-2 pb-6 pt-0">
+<div className={cn(CONTENT)}>
             <ul className="space-y-2">
               {guide.objetivos.map((obj, idx) => (
                 <li key={idx} className="flex items-start gap-2">
@@ -65,7 +68,8 @@ export const GuideDisplay = ({ guide, formData, onNewGuide }: GuideDisplayProps)
                 </li>
               ))}
             </ul>
-          </AccordionContent>
+          </div>
+</AccordionContent>
         </AccordionItem>
 
         {/* Roteiro de Conversa */}
@@ -74,7 +78,8 @@ export const GuideDisplay = ({ guide, formData, onNewGuide }: GuideDisplayProps)
             <span aria-hidden className="border-beam" />
             <h2 className="bubble-title relative text-left"><BubbleTitleText text="Roteiro de Conversa Passo a Passo" /></h2>
           </AccordionTrigger>
-          <AccordionContent className={cn(CONTENT)}>
+          <AccordionContent className="px-2 pb-6 pt-0">
+<div className={cn(CONTENT)}>
             <div className="space-y-4">
               {guide.roteiro_conversa.map((passo) => (
                 <Card key={passo.passo} className="rounded-2xl border-primary/30">
@@ -90,7 +95,8 @@ export const GuideDisplay = ({ guide, formData, onNewGuide }: GuideDisplayProps)
                 </Card>
               ))}
             </div>
-          </AccordionContent>
+          </div>
+</AccordionContent>
         </AccordionItem>
 
         {/* Atividades Práticas */}
@@ -99,7 +105,8 @@ export const GuideDisplay = ({ guide, formData, onNewGuide }: GuideDisplayProps)
             <span aria-hidden className="border-beam" />
             <h2 className="bubble-title relative text-left"><BubbleTitleText text="Atividades Práticas" /></h2>
           </AccordionTrigger>
-          <AccordionContent className={cn(CONTENT)}>
+          <AccordionContent className="px-2 pb-6 pt-0">
+<div className={cn(CONTENT)}>
             <div className="space-y-4">
               {guide.atividades_praticas.map((atividade, idx) => (
                 <Card key={idx} className="rounded-2xl border-primary/30">
@@ -123,7 +130,8 @@ export const GuideDisplay = ({ guide, formData, onNewGuide }: GuideDisplayProps)
                 </Card>
               ))}
             </div>
-          </AccordionContent>
+          </div>
+</AccordionContent>
         </AccordionItem>
 
         {/* Frases Prontas */}
@@ -132,7 +140,8 @@ export const GuideDisplay = ({ guide, formData, onNewGuide }: GuideDisplayProps)
             <span aria-hidden className="border-beam" />
             <h2 className="bubble-title relative text-left"><BubbleTitleText text="Frases e Respostas Prontas" /></h2>
           </AccordionTrigger>
-          <AccordionContent className={cn(CONTENT)}>
+          <AccordionContent className="px-2 pb-6 pt-0">
+<div className={cn(CONTENT)}>
             <Tabs defaultValue="iniciar" className="w-full">
               <TabsList className="grid w-full grid-cols-3">
                 <TabsTrigger value="iniciar">Para Iniciar</TabsTrigger>
@@ -161,7 +170,8 @@ export const GuideDisplay = ({ guide, formData, onNewGuide }: GuideDisplayProps)
                 ))}
               </TabsContent>
             </Tabs>
-          </AccordionContent>
+          </div>
+</AccordionContent>
         </AccordionItem>
 
         {/* Desafios e Soluções */}
@@ -170,7 +180,8 @@ export const GuideDisplay = ({ guide, formData, onNewGuide }: GuideDisplayProps)
             <span aria-hidden className="border-beam" />
             <h2 className="bubble-title relative text-left"><BubbleTitleText text="Possíveis Desafios e Soluções" /></h2>
           </AccordionTrigger>
-          <AccordionContent className={cn(CONTENT)}>
+          <AccordionContent className="px-2 pb-6 pt-0">
+<div className={cn(CONTENT)}>
             <div className="space-y-3">
               {guide.desafios_solucoes.map((item, idx) => (
                 <Card key={idx} className="rounded-2xl border-primary/30">
@@ -183,7 +194,8 @@ export const GuideDisplay = ({ guide, formData, onNewGuide }: GuideDisplayProps)
                 </Card>
               ))}
             </div>
-          </AccordionContent>
+          </div>
+</AccordionContent>
         </AccordionItem>
 
         {/* Plano de Reforço */}
@@ -192,7 +204,8 @@ export const GuideDisplay = ({ guide, formData, onNewGuide }: GuideDisplayProps)
             <span aria-hidden className="border-beam" />
             <h2 className="bubble-title relative text-left"><BubbleTitleText text="Plano de Reforço" /></h2>
           </AccordionTrigger>
-          <AccordionContent className={cn(CONTENT, "space-y-4")}>
+          <AccordionContent className="px-2 pb-6 pt-0">
+<div className={cn(CONTENT, "space-y-4")}>
             <div>
               <h4 className="font-semibold text-foreground mb-2">Primeira Semana:</h4>
               <ul className="space-y-1">
@@ -215,7 +228,8 @@ export const GuideDisplay = ({ guide, formData, onNewGuide }: GuideDisplayProps)
                 ))}
               </ul>
             </div>
-          </AccordionContent>
+          </div>
+</AccordionContent>
         </AccordionItem>
 
         {/* Recursos Extras */}
@@ -224,7 +238,8 @@ export const GuideDisplay = ({ guide, formData, onNewGuide }: GuideDisplayProps)
             <span aria-hidden className="border-beam" />
             <h2 className="bubble-title relative text-left"><BubbleTitleText text="Recursos Extras" /></h2>
           </AccordionTrigger>
-          <AccordionContent className={cn(CONTENT)}>
+          <AccordionContent className="px-2 pb-6 pt-0">
+<div className={cn(CONTENT)}>
             <div className="space-y-3">
               {guide.recursos_extras.map((recurso, idx) => (
                 <Card key={idx} className="rounded-2xl border-primary/30">
@@ -240,7 +255,8 @@ export const GuideDisplay = ({ guide, formData, onNewGuide }: GuideDisplayProps)
                 </Card>
               ))}
             </div>
-          </AccordionContent>
+          </div>
+</AccordionContent>
         </AccordionItem>
 
         {/* Dicas Personalizadas */}
@@ -249,7 +265,8 @@ export const GuideDisplay = ({ guide, formData, onNewGuide }: GuideDisplayProps)
             <span aria-hidden className="border-beam" />
             <h2 className="bubble-title relative text-left"><BubbleTitleText text="Dicas Personalizadas" /></h2>
           </AccordionTrigger>
-          <AccordionContent className={cn(CONTENT)}>
+          <AccordionContent className="px-2 pb-6 pt-0">
+<div className={cn(CONTENT)}>
             <div className="space-y-2">
               {guide.dicas_personalizadas.map((dica, idx) => (
                 <Card key={idx} className="p-3 rounded-2xl border-primary/30">
@@ -259,7 +276,8 @@ export const GuideDisplay = ({ guide, formData, onNewGuide }: GuideDisplayProps)
                 </Card>
               ))}
             </div>
-          </AccordionContent>
+          </div>
+</AccordionContent>
         </AccordionItem>
       </Accordion>
     </div>
