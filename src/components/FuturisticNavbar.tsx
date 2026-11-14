@@ -18,7 +18,7 @@ export const FuturisticNavbar = ({ light = true }: { light?: boolean }) => {
           <img
             src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/logonova2navbar.png"
             alt="BíbliaToon"
-            className={`h-8 w-auto transition-all duration-300 ${light ? "" : "hover:animate-glow"}`}
+            className={`h-9 w-auto logo-pop transition-all duration-300 ${light ? "" : "hover:animate-glow"}`}
           />
         </Link>
         <ExpandMenu
