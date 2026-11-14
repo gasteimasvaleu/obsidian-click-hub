@@ -1,5 +1,4 @@
 import { GlassCard } from '@/components/GlassCard';
-import { Button } from '@/components/ui/button';
 import { Share2, Trash2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -41,24 +40,23 @@ export const CreationCard = ({
       <p className="text-xs text-muted-foreground mb-3">
         {format(new Date(createdAt), "dd 'de' MMM, yyyy", { locale: ptBR })}
       </p>
-      <div className="flex gap-2">
-        <Button
-          variant="outline"
-          size="sm"
-          className="flex-1"
+      <div className="flex w-full overflow-hidden rounded-full border border-border bg-card divide-x divide-border">
+        <button
+          type="button"
+          aria-label="Compartilhar"
+          className="flex h-11 flex-1 items-center justify-center text-foreground transition-colors hover:bg-primary/10 hover:text-primary"
           onClick={() => onShare(coloredImageUrl, title)}
         >
-          <Share2 size={14} />
-          Compartilhar
-        </Button>
-        <Button
-          variant="outline"
-          size="icon"
-          className="text-destructive hover:text-destructive shrink-0 h-8 w-8"
+          <Share2 size={18} />
+        </button>
+        <button
+          type="button"
+          aria-label="Excluir"
+          className="flex h-11 flex-1 items-center justify-center text-destructive transition-colors hover:bg-destructive/10"
           onClick={() => onDelete(id)}
         >
-          <Trash2 size={14} />
-        </Button>
+          <Trash2 size={18} />
+        </button>
       </div>
     </GlassCard>
   );
