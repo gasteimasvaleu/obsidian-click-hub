@@ -8,7 +8,6 @@ import { purchaseMonthly, restorePurchases, isNativePlatform, getPlatform } from
 import { supabase } from '@/integrations/supabase/client';
 import { Loader2, Mail, Lock, Eye, EyeOff, ChevronDown } from 'lucide-react';
 import freiImg from '@/assets/frei-boas-vindas.png.asset.json';
-import amigoImg from '@/assets/more-menu/amigo-divino.png';
 import { nativeAppleSignIn } from '@/lib/native-apple-signin';
 import { nativeGoogleSignIn } from '@/lib/native-google-signin';
 
@@ -241,10 +240,6 @@ const Login = () => {
     <div className="relative min-h-screen bg-background flex flex-col items-center justify-center px-5 pt-[calc(env(safe-area-inset-top)+1.5rem)] pb-[calc(env(safe-area-inset-bottom)+2rem)] overflow-x-hidden">
       <div aria-hidden className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 h-80 w-80 rounded-full bg-primary/25 blur-3xl" />
       <div className="relative w-full max-w-md space-y-5">
-        <div className="flex flex-col items-center gap-3">
-          <img src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/logonova2navbar.png" alt="BíbliaToon Club" className="h-10 object-contain" />
-          <img src={amigoImg} alt="" className="h-32 w-32 object-contain drop-shadow-xl motion-safe:animate-[login-float_4s_ease-in-out_infinite]" />
-        </div>
 
         <div className="relative neon-glow-user feature-bubble bubble-user rounded-3xl px-4 pt-4 overflow-hidden">
           <div className="border-beam" aria-hidden />
