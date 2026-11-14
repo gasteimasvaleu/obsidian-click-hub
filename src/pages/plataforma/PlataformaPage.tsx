@@ -1,3 +1,4 @@
+import heroVideo from "@/assets/plataforma_hero_video.mp4.asset.json";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { ResponsiveHeroBanner } from "@/components/plataforma/ResponsiveHeroBanner";
@@ -151,9 +152,9 @@ export default function PlataformaPage() {
       <ResponsiveHeroBanner
         bannerDesktop={settings?.hero_banner_desktop || undefined}
         bannerMobile={settings?.hero_banner_mobile || undefined}
-        videoDesktop={settings?.hero_video_desktop || undefined}
-        videoMobile={settings?.hero_video_mobile || undefined}
-        useVideo={settings?.hero_use_video === "true"}
+        videoDesktop={heroVideo.url}
+        videoMobile={heroVideo.url}
+        useVideo
         title={settings?.hero_title || ""}
         description={settings?.hero_description || ""}
         aspectRatioDesktop={16 / 9}
