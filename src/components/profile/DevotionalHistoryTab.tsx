@@ -2,8 +2,8 @@ import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { BookOpen, Flame, TrendingUp } from "lucide-react";
+import { SPLIT_BAR } from "@/components/ui/bubble-section";
+import { BookOpen, Flame, TrendingUp, StickyNote } from "lucide-react";
 import { DevotionalCard } from "./DevotionalCard";
 import { DevotionalDetailModal } from "./DevotionalDetailModal";
 import { Card, CardContent } from "@/components/ui/card";
@@ -169,41 +169,30 @@ export const DevotionalHistoryTab = ({ userId }: DevotionalHistoryTabProps) => {
       />
       
       {/* Filtros */}
-      <div className="flex gap-2 flex-wrap">
-        <Button 
-          variant={filterPeriod === 'all' ? 'default' : 'outline'}
-          size="sm"
-          onClick={() => setFilterPeriod('all')}
-        >
-          Todos
-        </Button>
-        <Button 
-          variant={filterPeriod === 'week' ? 'default' : 'outline'}
-          size="sm"
-          onClick={() => setFilterPeriod('week')}
-        >
-          Semana
-        </Button>
-        <Button 
-          variant={filterPeriod === 'month' ? 'default' : 'outline'}
-          size="sm"
-          onClick={() => setFilterPeriod('month')}
-        >
-          Mês
-        </Button>
-        <Button 
-          variant={filterPeriod === 'year' ? 'default' : 'outline'}
-          size="sm"
-          onClick={() => setFilterPeriod('year')}
-        >
-          Ano
-        </Button>
-        <Button 
-          variant={showOnlyWithNotes ? 'default' : 'outline'}
-          size="sm"
-          onClick={() => setShowOnlyWithNotes(!showOnlyWithNotes)}
-        >Com anotações
-        </Button>
+      <div className="space-y-2">
+        <div className={SPLIT_BAR}>
+          {([['all','Todos'],['week','Semana'],['month','Mês'],['year','Ano']] as const).map(([v, l]) => (
+            <button
+              key={v}
+              type="button"
+              onClick={() => setFilterPeriod(v)}
+              className={`h-11 flex-1 text-sm transition-colors ${filterPeriod === v ? 'bg-primary/10 font-semibold text-primary' : 'text-muted-foreground hover:bg-muted/50'}`}
+            >
+              {l}
+            </button>
+          ))}
+        </div>
+        <div className={SPLIT_BAR}>
+          <button
+            type="button"
+            aria-pressed={showOnlyWithNotes}
+            onClick={() => setShowOnlyWithNotes(!showOnlyWithNotes)}
+            className={`flex h-11 flex-1 items-center justify-center gap-2 text-sm transition-colors ${showOnlyWithNotes ? 'bg-primary/10 font-semibold text-primary' : 'text-muted-foreground hover:bg-muted/50'}`}
+          >
+            <StickyNote className="h-4 w-4" />
+            Com anotações
+          </button>
+        </div>
       </div>
       
       {/* Lista de devocionais */}
