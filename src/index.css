@@ -266,6 +266,18 @@ All colors MUST be HSL.
     }
   }
 
+  @keyframes equalizer-lg {
+    0%, 100% { height: 10%; }
+    50% { height: 100%; }
+  }
+
+  .equalizer-bar-lg {
+    animation-name: equalizer-lg;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+  }
+
   .equalizer-bar {
     animation-name: equalizer;
     animation-timing-function: ease-in-out;

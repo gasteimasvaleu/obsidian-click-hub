@@ -217,8 +217,9 @@ export const AudioPlayer = ({
     setRepeat(modes[(currentIdx + 1) % modes.length]);
   };
 
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(true);
   const [showFullDesc, setShowFullDesc] = useState(false);
+  useEffect(() => { setExpanded(true); setShowFullDesc(false); }, [currentTrack?.id]);
 
   const formatTime = (time: number): string => {
     if (isNaN(time)) return "0:00";
@@ -247,7 +248,7 @@ export const AudioPlayer = ({
       aria-label={isPlaying ? "Pausar" : "Tocar"}
       className={cn(
         "flex items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg shadow-primary/30 transition-transform active:scale-95",
-        size === "lg" ? "h-16 w-16" : "h-11 w-11"
+        size === "lg" ? "h-14 w-14" : "h-11 w-11"
       )}
     >
       {isPlaying ? <Pause className={size === "lg" ? "h-7 w-7" : "h-5 w-5"} /> : <Play className={cn("ml-0.5", size === "lg" ? "h-7 w-7" : "h-5 w-5")} />}
@@ -302,8 +303,8 @@ export const AudioPlayer = ({
 
       {expanded && (
         <div className="fixed inset-0 z-50 overflow-y-auto bg-background animate-in slide-in-from-bottom duration-300">
-          <div className="mx-auto flex min-h-full max-w-[58rem] flex-col px-4 pb-10 pt-[calc(env(safe-area-inset-top)+1rem)]">
-            <div className="mb-4 flex items-center justify-between">
+          <div className="mx-auto flex min-h-full max-w-[58rem] flex-col px-4 pb-6 pt-[calc(env(safe-area-inset-top)+1rem)]">
+            <div className="mb-2 flex items-center justify-between">
               <button onClick={() => setExpanded(false)} aria-label="Minimizar" className="rounded-full p-2 text-primary hover:bg-primary/10">
                 <ChevronDown className="h-7 w-7" />
               </button>
@@ -314,14 +315,11 @@ export const AudioPlayer = ({
               )}
             </div>
 
-            <div className="relative mx-auto mb-6 w-full max-w-sm">
-              <Cover className="aspect-square w-full rounded-3xl border border-primary/30 shadow-xl shadow-primary/20" iconClass="h-20 w-20" />
-              <div className="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-card/90 px-3 py-1.5">
-                <AudioEqualizer isPlaying={isPlaying} />
-              </div>
+            <div className="mb-4 flex aspect-video w-full items-center justify-center rounded-3xl border border-primary/30 bg-primary/5 px-6 py-8">
+              <AudioEqualizer isPlaying={isPlaying} size="lg" />
             </div>
 
-            <SectionHeader title={currentTrack.title} className="mb-6" />
+            <SectionHeader title={currentTrack.title} className="mb-3" />
 
             <div className="mb-2">
               <Slider value={[currentTime]} max={duration || 100} step={0.1} onValueChange={handleSeek} className="cursor-pointer" />
@@ -331,7 +329,7 @@ export const AudioPlayer = ({
               </div>
             </div>
 
-            <div className="mb-6 flex items-center justify-between px-2">
+            <div className="mb-4 flex items-center justify-between px-2">
               <button
                 onClick={() => setShuffle(!shuffle)}
                 aria-label="Aleatório"
@@ -355,7 +353,7 @@ export const AudioPlayer = ({
               </button>
             </div>
 
-            <div className="mb-6 hidden items-center justify-center gap-2 sm:flex">
+            <div className="mb-4 hidden items-center justify-center gap-2 sm:flex">
               <button onClick={toggleMute} aria-label="Volume" className="rounded-full p-1.5 text-muted-foreground hover:text-foreground">
                 {isMuted || volume === 0 ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
               </button>
