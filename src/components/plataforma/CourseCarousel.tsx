@@ -14,10 +14,12 @@ import contosCapa from "@/assets/contos_biblicos_capa.png.asset.json";
 import parabolasCapa from "@/assets/parabolas_de_jesus_capa.png.asset.json";
 import aprendendoCapa from "@/assets/aprendendo_a_rezar_capa.png.asset.json";
 import clubePequenosCapa from "@/assets/clube_dos_pequenos_capa.png.asset.json";
+import bibliaFaladaCapa from "@/assets/biblia_falada_capa.png.asset.json";
 import animesCapa from "@/assets/animes_capa.png.asset.json";
 
 const CAPA_POR_TITULO: Array<[string, string]> = [
   ["Contos Bíblicos", contosCapa.url],
+  ["Bíblia Falada", bibliaFaladaCapa.url],
   ["As Parábolas de Jesus", parabolasCapa.url],
   ["Aprendendo a Rezar", aprendendoCapa.url],
   ["Clube dos Pequenos", clubePequenosCapa.url],
