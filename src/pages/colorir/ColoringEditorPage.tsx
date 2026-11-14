@@ -9,6 +9,7 @@ import { ColorPalette } from '@/components/colorir/ColorPalette';
 import { ToolBar } from '@/components/colorir/ToolBar';
 import { BrushSizeSlider } from '@/components/colorir/BrushSizeSlider';
 import { GlassCard } from '@/components/GlassCard';
+import { BubbleTitleText } from '@/components/ui/bubble-title-text';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Save, Loader2 } from 'lucide-react';
 import { ColoringEditorSkeleton } from '@/components/skeletons/ColoringEditorSkeleton';
@@ -120,15 +121,12 @@ const ColoringEditorPage = () => {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       {/* Header */}
-      <div className="flex items-center justify-between p-3 border-b border-border">
-        <ArrowNavButton direction="left" label="Voltar" onClick={() => navigate(-1)} className="!w-28 !h-9" />
-        <h1 className="text-sm font-semibold text-foreground truncate max-w-[40%]">
-          {drawingTitle}
+      <div className="px-3 pt-3 space-y-3">
+        <ArrowNavButton direction="left" label="Voltar" onClick={() => navigate(-1)} />
+        <h1 className="neon-glow-user feature-bubble bubble-user relative z-[2] rounded-2xl px-4 py-3 text-feature-foreground">
+          <span aria-hidden className="border-beam" />
+          <span className="bubble-title relative block truncate"><BubbleTitleText text={drawingTitle} /></span>
         </h1>
-        <Button size="sm" onClick={handleSave} disabled={saving}>
-          {saving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
-          Salvar
-        </Button>
       </div>
 
       {/* Canvas */}
@@ -152,6 +150,10 @@ const ColoringEditorPage = () => {
           onZoomReset={() => canvas.setZoom(1)}
         />
         <ColorPalette selectedColor={canvas.color} onColorChange={canvas.setColor} />
+        <Button onClick={handleSave} disabled={saving} className="w-full h-11">
+          {saving ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
+          Salvar
+        </Button>
       </div>
     </div>
   );
