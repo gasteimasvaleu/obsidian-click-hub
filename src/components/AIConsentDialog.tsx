@@ -1,13 +1,12 @@
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
   DialogTitle,
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { ShieldCheck } from "lucide-react";
+import { SectionHeader } from "@/components/plataforma/CourseCarousel";
 
 interface AIConsentDialogProps {
   open: boolean;
@@ -15,41 +14,36 @@ interface AIConsentDialogProps {
   onCancel: () => void;
 }
 
+const INTRO =
+  "Algumas funcionalidades do app utilizam inteligência artificial para gerar conteúdo personalizado. Antes de continuar, gostaríamos de informar:";
+
 export const AIConsentDialog = ({ open, onAccept, onCancel }: AIConsentDialogProps) => {
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onCancel()}>
-      <DialogContent className="max-w-md">
-        <DialogHeader>
-          <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 rounded-full bg-primary/10">
-              <ShieldCheck className="h-6 w-6 text-primary" />
-            </div>
-            <DialogTitle className="text-lg">Uso de Inteligência Artificial</DialogTitle>
-          </div>
-          <DialogDescription className="text-left space-y-3 pt-2">
-            <p>
-              Algumas funcionalidades do app utilizam inteligência artificial para gerar conteúdo personalizado. Antes de continuar, gostaríamos de informar:
-            </p>
-            <div className="space-y-2 text-sm">
-              <p className="font-semibold text-foreground">Dados enviados:</p>
-              <p>Mensagens de texto, informações de formulários (como nome e idade da criança) ou fotos que você enviar para funcionalidades de IA.</p>
-              
-              <p className="font-semibold text-foreground">Para quem:</p>
-              <p>Os dados são processados pelo serviço de inteligência artificial do Google (Gemini) através dos nossos servidores seguros.</p>
-              
-              <p className="font-semibold text-foreground">Proteção:</p>
-              <p>Os dados são usados exclusivamente para gerar o conteúdo solicitado e não são armazenados pelo serviço de IA. Sua privacidade é nossa prioridade.</p>
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Para mais detalhes, consulte nossa Política de Privacidade.
-            </p>
-          </DialogDescription>
-        </DialogHeader>
-        <DialogFooter className="flex-col gap-2 sm:flex-col">
-          <Button onClick={onAccept} className="w-full">
+      <DialogContent className="w-[calc(100%-2rem)] max-w-md rounded-3xl sm:rounded-3xl border border-primary/40 max-h-[85vh] overflow-y-auto">
+        <DialogTitle className="sr-only">Uso de Inteligência Artificial</DialogTitle>
+        <DialogDescription className="sr-only">{INTRO}</DialogDescription>
+
+        <SectionHeader title="Uso de Inteligência Artificial" description={INTRO} className="mb-0 mt-4" />
+
+        <div className="space-y-2 text-sm text-muted-foreground">
+          <p className="font-semibold text-foreground">Dados enviados:</p>
+          <p>Mensagens de texto, informações de formulários (como nome e idade da criança) ou fotos que você enviar para funcionalidades de IA.</p>
+
+          <p className="font-semibold text-foreground">Para quem:</p>
+          <p>Os dados são processados pelo serviço de inteligência artificial do Google (Gemini) através dos nossos servidores seguros.</p>
+
+          <p className="font-semibold text-foreground">Proteção:</p>
+          <p>Os dados são usados exclusivamente para gerar o conteúdo solicitado e não são armazenados pelo serviço de IA. Sua privacidade é nossa prioridade.</p>
+
+          <p className="text-xs pt-1">Para mais detalhes, consulte nossa Política de Privacidade.</p>
+        </div>
+
+        <DialogFooter className="flex-col gap-2 sm:flex-col sm:space-x-0">
+          <Button onClick={onAccept} className="w-full h-11">
             Concordo e quero continuar
           </Button>
-          <Button variant="ghost" onClick={onCancel} className="w-full">
+          <Button variant="outline" onClick={onCancel} className="w-full h-11 border-primary text-primary hover:bg-primary/10 hover:text-primary">
             Agora não
           </Button>
         </DialogFooter>
