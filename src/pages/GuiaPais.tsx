@@ -178,11 +178,13 @@ const GuiaPais = () => {
               isGenerating={isGenerating}
             />
           ) : (
-            <GuideDisplay 
+            <div className="w-full max-w-2xl mx-auto">
+              <GuideDisplay 
               guide={generatedGuide} 
               formData={formData}
               onNewGuide={handleNewGuide}
             />
+            </div>
           )}
         </div>
       </div>

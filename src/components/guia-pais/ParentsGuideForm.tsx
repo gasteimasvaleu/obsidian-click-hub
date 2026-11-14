@@ -86,7 +86,7 @@ export const ParentsGuideForm = ({
   const progress = (currentStep / totalSteps) * 100;
 
   return (
-    <div className="max-w-2xl mx-auto animate-fade-in">
+    <div className="w-full max-w-2xl mx-auto animate-fade-in">
       {/* Header */}
       <SectionHeader title="Guia para Pais" description="Crie um guia personalizado para ensinar a Bíblia ao seu filho" className="mb-8" />
 
