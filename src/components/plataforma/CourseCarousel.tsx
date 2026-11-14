@@ -10,6 +10,10 @@ import {
 } from "@/components/ui/carousel";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { cn } from "@/lib/utils";
+import contosCapa from "@/assets/contos_biblicos_capa.png.asset.json";
+
+const thumbFor = (item: { title: string; thumbnail?: string | null }) =>
+  item.title?.startsWith("Contos Bíblicos") ? contosCapa.url : item.thumbnail;
 
 interface CourseCarouselItem {
   id: string;
@@ -90,9 +94,9 @@ export function CourseCarousel({
               <Link to={item.linkTo} className="block group">
                 <div className="relative overflow-hidden rounded-lg">
                   <AspectRatio ratio={300 / 580}>
-                    {item.thumbnail ? (
+                    {thumbFor(item) ? (
                       <img
-                        src={item.thumbnail}
+                        src={thumbFor(item)!}
                         alt={item.title}
                         className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                       />
