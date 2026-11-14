@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Carousel,
@@ -23,6 +24,26 @@ interface CourseCarouselProps {
   className?: string;
 }
 
+const DESCRIPTION_LIMIT = 90;
+
+function SectionDescription({ text, attached }: { text: string; attached: boolean }) {
+  const [expanded, setExpanded] = useState(false);
+  const long = text.length > DESCRIPTION_LIMIT;
+  const shown = !long || expanded ? text : text.slice(0, DESCRIPTION_LIMIT).trimEnd() + "…";
+  return (
+    <div className={cn("glass feature-bubble relative z-[1] rounded-2xl px-4 pb-3 text-sm text-foreground", attached ? "-mt-3 rounded-t-none pt-5" : "pt-3")}>
+      <p className="relative">
+        {shown}
+        {long && (
+          <button type="button" onClick={() => setExpanded((v) => !v)} className="ml-1 font-semibold text-primary">
+            {expanded ? "Ver menos" : "Ver mais"}
+          </button>
+        )}
+      </p>
+    </div>
+  );
+}
+
 export function CourseCarousel({
   items,
   title,
@@ -38,14 +59,13 @@ export function CourseCarousel({
       {(title || description) && (
         <div className="mb-4 px-4">
           {title && (
-            <h2 className="text-xl md:text-2xl font-bold text-foreground">
-              {title}
-            </h2>
+            <div className="neon-glow-user feature-bubble bubble-user relative z-[2] rounded-2xl px-4 py-3 text-feature-foreground">
+              <span aria-hidden className="border-beam" />
+              <h2 className="relative text-lg md:text-xl font-bold">{title}</h2>
+            </div>
           )}
           {description && (
-            <p className="text-sm md:text-base text-muted-foreground mt-1">
-              {description}
-            </p>
+            <SectionDescription text={description} attached={!!title} />
           )}
         </div>
       )}
