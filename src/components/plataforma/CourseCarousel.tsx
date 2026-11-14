@@ -15,6 +15,7 @@ import parabolasCapa from "@/assets/parabolas_de_jesus_capa.png.asset.json";
 import aprendendoCapa from "@/assets/aprendendo_a_rezar_capa.png.asset.json";
 import clubePequenosCapa from "@/assets/clube_dos_pequenos_capa.png.asset.json";
 import bibliaFaladaCapa from "@/assets/biblia_falada_capa.png.asset.json";
+import freiGilsinhoCapa from "@/assets/frei_gilsinho_capa.png.asset.json";
 import animesCapa from "@/assets/animes_capa.png.asset.json";
 
 const CAPA_POR_TITULO: Array<[string, string]> = [
@@ -24,6 +25,7 @@ const CAPA_POR_TITULO: Array<[string, string]> = [
   ["Aprendendo a Rezar", aprendendoCapa.url],
   ["Clube dos Pequenos", clubePequenosCapa.url],
   ["Animes", animesCapa.url],
+  ["Frei Gilsinho", freiGilsinhoCapa.url],
 ];
 
 const thumbFor = (item: { title: string; thumbnail?: string | null }) =>
