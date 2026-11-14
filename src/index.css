@@ -431,11 +431,4 @@ All colors MUST be HSL.
 .logo-pop {
   --logo-ol: hsl(0 0% 0% / 0.45);
   filter: drop-shadow(0.5px 0 0 var(--logo-ol)) drop-shadow(-0.5px 0 0 var(--logo-ol)) drop-shadow(0 0.5px 0 var(--logo-ol)) drop-shadow(0 -0.5px 0 var(--logo-ol));
-  transform-origin: left center;
-  animation: logo-breathe 6s ease-in-out infinite;
 }
-@keyframes logo-breathe {
-  0%, 82%, 100% { transform: translateY(0) scale(1); }
-  90% { transform: translateY(-2px) scale(1.04); filter: drop-shadow(0.75px 0 0 var(--logo-ol)) drop-shadow(-0.75px 0 0 var(--logo-ol)) drop-shadow(0 0.75px 0 var(--logo-ol)) drop-shadow(0 -0.75px 0 var(--logo-ol)); }
-}
-@media (prefers-reduced-motion: reduce) { .logo-pop { animation: none; } }
