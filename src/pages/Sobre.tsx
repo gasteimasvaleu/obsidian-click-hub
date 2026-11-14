@@ -117,7 +117,7 @@ const SectionTitle = ({ children, icon: Icon }: { children: React.ReactNode; ico
     {...fadeInUp}
   >
     <Icon className="w-8 h-8 text-primary" />
-    <h2 className="text-3xl font-bold text-white">
+    <h2 className="text-3xl font-bold text-foreground">
       {children}
     </h2>
   </motion.div>
@@ -131,7 +131,7 @@ const FeatureCard = ({ icon: Icon, title, description, gradient }: any) => (
     <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${gradient} flex items-center justify-center mb-4`}>
       <Icon className="w-6 h-6 text-white" />
     </div>
-    <h3 className="text-xl font-bold text-white mb-2">{title}</h3>
+    <h3 className="text-xl font-bold text-foreground mb-2">{title}</h3>
     <p className="text-muted-foreground text-sm leading-relaxed">{description}</p>
   </motion.div>
 );
@@ -140,7 +140,7 @@ const Sobre = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-black relative pb-28 md:pb-16">
+    <div className="min-h-screen bg-background relative pb-28 md:pb-16">
       <FuturisticNavbar />
       
       {/* Hero Section */}
@@ -152,10 +152,10 @@ const Sobre = () => {
             transition={{ duration: 0.8 }}
           >
             <GlassCard className="text-center p-8 md:p-12 border-primary/20">
-              <h1 className="text-4xl md:text-6xl font-bold mb-4 text-white">
+              <h1 className="text-4xl md:text-6xl font-bold mb-4 text-foreground">
                 Sobre o BíbliaToon Club
               </h1>
-              <p className="text-xl md:text-2xl text-white/80">
+              <p className="text-xl md:text-2xl text-foreground/80">
                 Transformando fé em aventura
               </p>
             </GlassCard>
@@ -207,7 +207,7 @@ const Sobre = () => {
                 <div className={`w-16 h-16 rounded-lg bg-gradient-to-br ${item.gradient} flex items-center justify-center mb-4`}>
                   <item.icon className="w-8 h-8 text-white" />
                 </div>
-                <h3 className="text-2xl font-bold text-white mb-3">{item.title}</h3>
+                <h3 className="text-2xl font-bold text-foreground mb-3">{item.title}</h3>
                 <p className="text-muted-foreground leading-relaxed">{item.description}</p>
               </motion.div>
             ))}
@@ -249,7 +249,7 @@ const Sobre = () => {
         {/* Nosso Compromisso */}
         <motion.section className="mb-16 md:mb-24" {...fadeInUp}>
           <SectionTitle icon={HeartHandshake}>Nosso Compromisso</SectionTitle>
-          <div className="glass rounded-2xl p-6 md:p-8 border-2 border-primary/30 bg-black/40 relative overflow-hidden">
+          <div className="glass rounded-2xl p-6 md:p-8 border-2 border-primary/30 bg-card/60 relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-purple-500/5" />
             <div className="relative z-10">
               <p className="text-foreground/90 mb-4 leading-relaxed">
@@ -270,7 +270,7 @@ const Sobre = () => {
           <div className="glass rounded-2xl p-8 md:p-12 border border-primary/20 relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-purple-500/5 to-transparent" />
             <div className="relative z-10">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-foreground">
             Junte-se a nós
           </h2>
               <p className="text-foreground/90 text-lg mb-8 max-w-3xl mx-auto leading-relaxed">

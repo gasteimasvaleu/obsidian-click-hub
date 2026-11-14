@@ -25,7 +25,7 @@ export const CreationCard = ({
 }: CreationCardProps) => {
   return (
     <GlassCard className="overflow-hidden group">
-      <div className="relative w-full aspect-square rounded-lg overflow-hidden bg-white/5 mb-3">
+      <div className="relative w-full aspect-square rounded-lg overflow-hidden bg-muted mb-3">
         <img
           src={coloredImageUrl}
           alt={title}

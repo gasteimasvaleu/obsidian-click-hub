@@ -19,7 +19,7 @@ export const GridSkeleton = ({ rows, cols, className }: GridSkeletonProps) => {
       {Array.from({ length: rows * cols }).map((_, i) => (
         <Skeleton 
           key={i} 
-          className="aspect-square rounded-lg bg-white/10 animate-pulse" 
+          className="aspect-square rounded-lg bg-muted animate-pulse" 
         />
       ))}
     </div>

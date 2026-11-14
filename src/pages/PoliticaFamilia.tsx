@@ -36,7 +36,7 @@ const PoliticaFamilia = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-black relative flex flex-col pb-36">
+    <div className="min-h-screen bg-background relative flex flex-col pb-36">
       <FuturisticNavbar />
 
       <div className="flex-1 px-4 pt-20 pb-8">

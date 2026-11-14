@@ -82,7 +82,7 @@ const Games = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black pb-24">
+    <div className="min-h-screen bg-background pb-24">
       <FuturisticNavbar />
       
       <main className="container mx-auto px-4 pt-16">

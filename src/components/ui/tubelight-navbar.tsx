@@ -46,7 +46,7 @@ export function NavBar({ items, className }: NavBarProps) {
   const location = useLocation()
   const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState(items[0].name)
-  const light = location.pathname === "/"
+  const light = true
   const [moreOpen, setMoreOpen] = useState(false)
 
   useEffect(() => {

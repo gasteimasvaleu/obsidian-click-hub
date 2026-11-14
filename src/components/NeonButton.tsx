@@ -14,7 +14,7 @@ interface NeonButtonProps {
 export const NeonButton = ({ children, onClick, href, className, isLoading, disabled }: NeonButtonProps) => {
   const baseClasses = cn(
     "relative px-8 py-4 text-lg font-medium rounded-xl",
-    "bg-black/40 text-primary border border-primary",
+    "bg-card/60 text-primary border border-primary",
     "backdrop-filter backdrop-blur-lg",
     "shadow-[0_4px_16px_rgba(0,255,102,0.4)]",
     "transition-all duration-300 ease-out",

@@ -29,7 +29,7 @@ export const DrawingCard = ({ id, title, description, imageUrl, difficulty, onSe
   return (
     <GlassCard hoverable pressable className="group overflow-hidden">
       <div className="flex flex-col h-full">
-        <div className="relative w-full aspect-square mb-3 rounded-lg overflow-hidden bg-white/5">
+        <div className="relative w-full aspect-square mb-3 rounded-lg overflow-hidden bg-muted">
           <img
             src={imageUrl}
             alt={title}

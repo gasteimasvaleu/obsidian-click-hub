@@ -236,7 +236,7 @@ const Login = () => {
   const platform = getPlatform();
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center p-4 pb-24">
+    <div className="min-h-screen bg-background flex items-center justify-center p-4 pb-24">
       <Card className="w-full max-w-md glass border-primary/20">
         <CardHeader className="text-center">
           <CardTitle className="text-3xl font-bold bg-gradient-to-r from-primary via-primary-glow to-primary bg-clip-text text-transparent">

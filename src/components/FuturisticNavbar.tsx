@@ -3,7 +3,7 @@ import { Info, UserCircle, LogOut, LogIn, Settings } from "lucide-react";
 import { ExpandMenu } from "@/components/ui/expand-menu";
 import { useAuth } from "@/contexts/AuthContext";
 
-export const FuturisticNavbar = ({ light = false }: { light?: boolean }) => {
+export const FuturisticNavbar = ({ light = true }: { light?: boolean }) => {
   const { user, isAdmin, signOut } = useAuth();
   const navigate = useNavigate();
 

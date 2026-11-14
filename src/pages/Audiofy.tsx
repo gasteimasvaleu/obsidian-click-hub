@@ -102,7 +102,7 @@ const Audiofy = () => {
   const currentTrack = playlist[currentIndex];
 
   return (
-    <div className={`min-h-screen bg-black relative ${showPlayer ? 'pb-56' : 'pb-24'}`}>
+    <div className={`min-h-screen bg-background relative ${showPlayer ? 'pb-56' : 'pb-24'}`}>
       <FuturisticNavbar />
       
       <div className="flex items-center justify-center min-h-screen pt-16 px-4">

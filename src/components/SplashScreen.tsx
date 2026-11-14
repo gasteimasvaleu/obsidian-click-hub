@@ -75,7 +75,7 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
   return (
     <div
       className={cn(
-        "fixed inset-0 z-[9999] bg-black flex items-center justify-center overflow-hidden transition-opacity duration-400",
+        "fixed inset-0 z-[9999] bg-background flex items-center justify-center overflow-hidden transition-opacity duration-400",
         fadeOut ? "opacity-0 pointer-events-none" : "opacity-100"
       )}
     >

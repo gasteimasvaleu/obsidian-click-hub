@@ -192,7 +192,7 @@ export default function MemoryPlayer() {
         <FuturisticNavbar />
         <div className="container mx-auto px-4 pt-24 pb-12">
           <GlassCard className="max-w-4xl mx-auto space-y-4">
-            <Skeleton className="h-8 w-64 bg-white/10" />
+            <Skeleton className="h-8 w-64 bg-muted" />
             <GridSkeleton rows={4} cols={6} className="max-w-2xl mx-auto" />
           </GlassCard>
         </div>

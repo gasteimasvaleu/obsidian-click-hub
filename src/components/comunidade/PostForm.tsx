@@ -97,11 +97,11 @@ export const PostForm = () => {
             setContent(e.target.value);
           }
         }}
-        className="bg-white/5 border-white/10 text-white placeholder:text-white/40 resize-none min-h-[80px]"
+        className="bg-muted border-border text-foreground placeholder:text-muted-foreground resize-none min-h-[80px]"
         maxLength={MAX_CONTENT_LENGTH}
       />
 
-      <div className="flex items-center justify-between text-xs text-white/40">
+      <div className="flex items-center justify-between text-xs text-muted-foreground">
         <span>{content.length}/{MAX_CONTENT_LENGTH}</span>
       </div>
 
@@ -116,7 +116,7 @@ export const PostForm = () => {
             onClick={removeImage}
             className="absolute top-1 right-1 bg-black/70 rounded-full p-1 hover:bg-red-500/80 transition-colors"
           >
-            <X size={14} className="text-white" />
+            <X size={14} className="text-foreground" />
           </button>
         </div>
       )}
@@ -134,7 +134,7 @@ export const PostForm = () => {
             variant="ghost"
             size="sm"
             onClick={() => fileInputRef.current?.click()}
-            className="text-white/60 hover:text-white hover:bg-white/10"
+            className="text-muted-foreground hover:text-foreground hover:bg-muted"
           >
             <ImagePlus size={18} className="mr-1" />
             Foto

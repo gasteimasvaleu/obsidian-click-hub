@@ -148,7 +148,7 @@ const GuiaPais = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black relative pb-32 overflow-x-hidden">
+    <div className="min-h-screen bg-background relative pb-32 overflow-x-hidden">
       <FuturisticNavbar />
       
       <div className="pt-16 px-4 overflow-hidden">

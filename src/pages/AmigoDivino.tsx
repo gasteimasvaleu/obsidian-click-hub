@@ -8,7 +8,7 @@ const AmigoDivino = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-black relative pb-24">
+    <div className="min-h-screen bg-background relative pb-24">
       <FuturisticNavbar />
       
       <div className="pt-16 px-4">

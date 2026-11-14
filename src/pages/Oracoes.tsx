@@ -111,7 +111,7 @@ const Oracoes = () => {
   // Filter prayers based on selection
   const filteredPrayers = showFavorites ? prayers.filter(p => favorites.includes(p.id)) : selectedCategory ? prayers.filter(p => p.category === selectedCategory) : prayers;
   const selectedCategoryName = showFavorites ? "Favoritos" : categories.find(c => c.id === selectedCategory)?.name || "Todas";
-  return <div className="min-h-screen bg-black relative">
+  return <div className="min-h-screen bg-background relative">
       <FuturisticNavbar />
 
       <div className="container mx-auto px-4 pt-16 pb-32">

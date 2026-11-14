@@ -141,16 +141,16 @@ const QuizPlayer = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-black pb-24">
+      <div className="min-h-screen bg-background pb-24">
         <FuturisticNavbar />
         <main className="container mx-auto px-4 pt-24">
           <div className="max-w-3xl mx-auto space-y-4">
-            <Skeleton className="h-8 w-48 bg-white/10" />
+            <Skeleton className="h-8 w-48 bg-muted" />
             <GlassCard>
-              <Skeleton className="h-8 w-full mb-6 bg-white/10" />
+              <Skeleton className="h-8 w-full mb-6 bg-muted" />
               <div className="space-y-3">
                 {Array.from({ length: 4 }).map((_, i) => (
-                  <Skeleton key={i} className="h-16 w-full bg-white/10" />
+                  <Skeleton key={i} className="h-16 w-full bg-muted" />
                 ))}
               </div>
             </GlassCard>
@@ -173,7 +173,7 @@ const QuizPlayer = () => {
     const percentage = Math.round((score / questions.length) * 100);
 
     return (
-      <div className="min-h-screen bg-black pb-24">
+      <div className="min-h-screen bg-background pb-24">
         <FuturisticNavbar />
         
         <main className="container mx-auto px-4 pt-24">
@@ -227,7 +227,7 @@ const QuizPlayer = () => {
   }
 
   return (
-      <div className="min-h-screen bg-black pb-32">
+      <div className="min-h-screen bg-background pb-32">
       <FuturisticNavbar />
       
       <main className="container mx-auto px-4 pt-24">

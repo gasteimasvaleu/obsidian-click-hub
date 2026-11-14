@@ -288,12 +288,12 @@ export default function WordSearchPlayer() {
         <FuturisticNavbar />
         <div className="container mx-auto px-4 pt-24 pb-12">
           <GlassCard className="max-w-4xl mx-auto p-6">
-            <Skeleton className="h-8 w-64 mb-6 bg-white/10 mx-auto" />
+            <Skeleton className="h-8 w-64 mb-6 bg-muted mx-auto" />
             <div className="grid md:grid-cols-3 gap-6">
               <div className="space-y-2">
-                <Skeleton className="h-6 w-40 bg-white/10" />
+                <Skeleton className="h-6 w-40 bg-muted" />
                 {Array.from({ length: 5 }).map((_, i) => (
-                  <Skeleton key={i} className="h-12 w-full bg-white/10" />
+                  <Skeleton key={i} className="h-12 w-full bg-muted" />
                 ))}
               </div>
               <div className="md:col-span-2">

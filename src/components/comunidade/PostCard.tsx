@@ -109,13 +109,13 @@ export const PostCard = ({ post, isLiked }: PostCardProps) => {
         <div className="flex items-center gap-3">
           <Avatar className="h-9 w-9">
             <AvatarImage src={avatarUrl || undefined} />
-            <AvatarFallback className="bg-white/10 text-white text-xs">
+            <AvatarFallback className="bg-muted text-foreground text-xs">
               {initials}
             </AvatarFallback>
           </Avatar>
           <div>
-            <p className="text-white text-sm font-semibold">{authorName}</p>
-            <p className="text-white/40 text-xs">{timeAgo}</p>
+            <p className="text-foreground text-sm font-semibold">{authorName}</p>
+            <p className="text-muted-foreground text-xs">{timeAgo}</p>
           </div>
         </div>
 
@@ -123,7 +123,7 @@ export const PostCard = ({ post, isLiked }: PostCardProps) => {
           <button
             onClick={() => deleteMutation.mutate()}
             disabled={deleteMutation.isPending}
-            className="text-white/30 hover:text-red-400 transition-colors p-1"
+            className="text-muted-foreground hover:text-red-400 transition-colors p-1"
           >
             {deleteMutation.isPending ? (
               <Loader2 size={16} className="animate-spin" />
@@ -136,7 +136,7 @@ export const PostCard = ({ post, isLiked }: PostCardProps) => {
 
       {/* Content */}
       {post.content && (
-        <p className="text-white/90 text-sm whitespace-pre-wrap break-words">
+        <p className="text-foreground/90 text-sm whitespace-pre-wrap break-words">
           {post.content}
         </p>
       )}
@@ -171,13 +171,13 @@ export const PostCard = ({ post, isLiked }: PostCardProps) => {
                 className={
                   liked
                     ? "text-red-500 fill-red-500"
-                    : "text-white/50 group-hover:text-red-400"
+                    : "text-muted-foreground group-hover:text-red-400"
                 }
               />
             </motion.div>
           </AnimatePresence>
           <span
-            className={`text-xs ${liked ? "text-red-400" : "text-white/50"}`}
+            className={`text-xs ${liked ? "text-red-400" : "text-muted-foreground"}`}
           >
             {likesCount}
           </span>
@@ -185,7 +185,7 @@ export const PostCard = ({ post, isLiked }: PostCardProps) => {
 
         <button
           onClick={() => setShowComments(!showComments)}
-          className="flex items-center gap-1.5 text-white/50 hover:text-emerald-400 transition-colors"
+          className="flex items-center gap-1.5 text-muted-foreground hover:text-emerald-400 transition-colors"
         >
           <MessageCircle size={18} />
           <span className="text-xs">Comentar</span>

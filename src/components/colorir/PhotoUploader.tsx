@@ -91,7 +91,7 @@ export const PhotoUploader = ({ onTransformed }: PhotoUploaderProps) => {
         ) : (
           <div className="flex flex-col items-center gap-3">
             <div className="p-4 rounded-full bg-gradient-to-br from-orange-500 to-yellow-500">
-              <Camera size={32} className="text-white" />
+              <Camera size={32} className="text-foreground" />
             </div>
             <p className="text-foreground font-medium">Envie uma foto para transformar em desenho</p>
             <p className="text-xs text-muted-foreground">JPG, PNG ou WEBP • Máximo 10MB</p>

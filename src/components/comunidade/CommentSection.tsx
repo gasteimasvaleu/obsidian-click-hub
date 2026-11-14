@@ -74,10 +74,10 @@ export const CommentSection = ({ postId }: CommentSectionProps) => {
   });
 
   return (
-    <div className="border-t border-white/10 pt-3 mt-3 space-y-2">
+    <div className="border-t border-border pt-3 mt-3 space-y-2">
       {isLoading ? (
         <div className="flex justify-center py-2">
-          <Loader2 size={16} className="animate-spin text-white/40" />
+          <Loader2 size={16} className="animate-spin text-muted-foreground" />
         </div>
       ) : (
         <>
@@ -110,7 +110,7 @@ export const CommentSection = ({ postId }: CommentSectionProps) => {
               addCommentMutation.mutate();
             }
           }}
-          className="bg-white/5 border-white/10 text-white placeholder:text-white/30 text-sm h-8"
+          className="bg-muted border-border text-foreground placeholder:text-muted-foreground text-sm h-8"
           maxLength={MAX_COMMENT_LENGTH}
         />
         <Button
@@ -118,7 +118,7 @@ export const CommentSection = ({ postId }: CommentSectionProps) => {
           disabled={!newComment.trim() || addCommentMutation.isPending}
           size="sm"
           variant="ghost"
-          className="text-white/60 hover:text-emerald-400 hover:bg-white/5 h-8 px-2"
+          className="text-muted-foreground hover:text-emerald-400 hover:bg-muted h-8 px-2"
         >
           {addCommentMutation.isPending ? (
             <Loader2 size={14} className="animate-spin" />

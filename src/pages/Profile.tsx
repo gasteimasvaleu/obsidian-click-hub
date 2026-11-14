@@ -164,7 +164,7 @@ const Profile = () => {
 
   if (authLoading || progressLoading) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
       </div>
     );
@@ -180,7 +180,7 @@ const Profile = () => {
     (user.email?.includes('privaterelay.appleid.com') ? 'Usuário Apple' : 'Usuário');
 
   return (
-    <div className="min-h-screen bg-black p-4 md:p-8 pb-28 md:pb-8">
+    <div className="min-h-screen bg-background p-4 md:p-8 pb-28 md:pb-8">
       <div className="max-w-6xl mx-auto">
         <Card className="glass border-primary/20 mb-6">
           <CardContent className="pt-6">
@@ -204,7 +204,7 @@ const Profile = () => {
 
               <div className="flex-1 text-center md:text-left">
                 <div className="flex items-center gap-2 justify-center md:justify-start mb-1">
-                  <h1 className="text-3xl font-bold text-white">
+                  <h1 className="text-3xl font-bold text-foreground">
                     {displayName}
                   </h1>
                   <button
@@ -305,7 +305,7 @@ const Profile = () => {
                   <Crown className="h-6 w-6 text-primary" />
                 </div>
                 <div>
-                  <p className="font-semibold text-white">Assinante Premium</p>
+                  <p className="font-semibold text-foreground">Assinante Premium</p>
                   <p className="text-sm text-muted-foreground">
                     Acesso completo a todas as aulas
                     {expiresAt && ` · Renova em ${new Date(expiresAt).toLocaleDateString('pt-BR')}`}
@@ -320,7 +320,7 @@ const Profile = () => {
                   <Crown className="h-6 w-6 text-primary" />
                 </div>
                 <div className="flex-1 text-center sm:text-left">
-                  <p className="font-semibold text-white">Seja Premium</p>
+                  <p className="font-semibold text-foreground">Seja Premium</p>
                   <p className="text-sm text-muted-foreground">
                     Aulas em vídeo ilimitadas, novos cursos e materiais de apoio para pais e catequistas.
                   </p>

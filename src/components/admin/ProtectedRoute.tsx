@@ -35,5 +35,5 @@ export const ProtectedRoute = ({ children, requireAdmin = false }: ProtectedRout
     return null;
   }
 
-  return <>{children}</>;
+  return requireAdmin ? <div className="dark min-h-screen bg-background text-foreground">{children}</div> : <>{children}</>;
 };

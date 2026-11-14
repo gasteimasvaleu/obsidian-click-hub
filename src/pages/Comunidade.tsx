@@ -55,7 +55,7 @@ const Comunidade = () => {
   const hasMore = posts.length < totalPosts;
 
   return (
-    <div className="min-h-screen bg-black relative flex flex-col pb-24">
+    <div className="min-h-screen bg-background relative flex flex-col pb-24">
       <FuturisticNavbar />
 
       {/* Video Banner */}
@@ -96,8 +96,8 @@ const Comunidade = () => {
             </div>
           ) : posts.length === 0 ? (
             <div className="text-center py-12">
-              <MessagesSquare size={48} className="mx-auto text-white/20 mb-3" />
-              <p className="text-white/40 text-sm">
+              <MessagesSquare size={48} className="mx-auto text-muted-foreground mb-3" />
+              <p className="text-muted-foreground text-sm">
                 Nenhuma publicação ainda. Seja o primeiro a compartilhar!
               </p>
             </div>
@@ -118,7 +118,7 @@ const Comunidade = () => {
                   <Button
                     variant="ghost"
                     onClick={() => setPage((p) => p + 1)}
-                    className="text-white/60 hover:text-white hover:bg-white/10"
+                    className="text-muted-foreground hover:text-foreground hover:bg-muted"
                   >
                     Carregar mais
                   </Button>

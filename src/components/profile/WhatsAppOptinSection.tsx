@@ -213,7 +213,7 @@ export function WhatsAppOptinSection({ userId }: WhatsAppOptinSectionProps) {
               checked={optedIn}
               onCheckedChange={handleToggleOptin}
               disabled={saving}
-              className="data-[state=unchecked]:bg-white/20"
+              className="data-[state=unchecked]:bg-muted"
             />
           </div>
         </div>

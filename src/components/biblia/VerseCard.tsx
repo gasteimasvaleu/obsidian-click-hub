@@ -158,7 +158,7 @@ export default function VerseCard({ verse, bookName, chapterNumber, isFavorite }
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="flex-shrink-0">
             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center">
-              <span className="text-white font-bold">{verse.verse_number}</span>
+              <span className="text-foreground font-bold">{verse.verse_number}</span>
             </div>
           </div>
 

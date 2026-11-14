@@ -174,9 +174,9 @@ export default function PuzzlePlayer() {
         <div className="container mx-auto px-4 pt-24 pb-12">
           <div className="max-w-4xl mx-auto space-y-6">
             <GlassCard className="space-y-4">
-              <Skeleton className="h-8 w-64 bg-white/10" />
-              <Skeleton className="h-4 w-full bg-white/10" />
-              <Skeleton className="h-4 w-3/4 bg-white/10" />
+              <Skeleton className="h-8 w-64 bg-muted" />
+              <Skeleton className="h-4 w-full bg-muted" />
+              <Skeleton className="h-4 w-3/4 bg-muted" />
             </GlassCard>
             <GlassCard>
               <GridSkeleton rows={4} cols={4} className="max-w-md mx-auto" />
