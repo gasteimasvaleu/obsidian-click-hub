@@ -1,7 +1,6 @@
 import { useState, useRef } from "react";
 import { ImagePlus, Send, X, Loader2 } from "lucide-react";
 import { GlassCard } from "@/components/GlassCard";
-import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { uploadMedia, IMAGE_TYPES } from "@/lib/uploadMedia";
 import { supabase } from "@/integrations/supabase/client";
@@ -121,39 +120,31 @@ export const PostForm = () => {
         </div>
       )}
 
-      <div className="flex items-center justify-between">
-        <div>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/png,image/jpeg,image/webp"
-            onChange={handleImageSelect}
-            className="hidden"
-          />
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => fileInputRef.current?.click()}
-            className="text-muted-foreground hover:text-foreground hover:bg-muted"
-          >
-            <ImagePlus size={18} className="mr-1" />
-            Foto
-          </Button>
-        </div>
-
-        <Button
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/png,image/jpeg,image/webp"
+        onChange={handleImageSelect}
+        className="hidden"
+      />
+      <div className="flex w-full overflow-hidden rounded-full border border-border bg-card divide-x divide-border">
+        <button
+          type="button"
+          onClick={() => fileInputRef.current?.click()}
+          className="flex h-11 flex-1 items-center justify-center gap-2 text-sm text-muted-foreground transition-colors hover:bg-primary/10 hover:text-primary"
+        >
+          <ImagePlus size={18} />
+          Foto
+        </button>
+        <button
+          type="button"
           onClick={() => createPostMutation.mutate()}
           disabled={!canSubmit}
-          size="sm"
-          className="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white"
+          className="flex h-11 flex-1 items-center justify-center gap-2 text-sm font-semibold text-primary transition-colors hover:bg-primary/10 disabled:pointer-events-none disabled:opacity-50"
         >
-          {createPostMutation.isPending ? (
-            <Loader2 size={16} className="animate-spin mr-1" />
-          ) : (
-            <Send size={16} className="mr-1" />
-          )}
+          {createPostMutation.isPending ? <Loader2 size={18} className="animate-spin" /> : <Send size={18} />}
           Publicar
-        </Button>
+        </button>
       </div>
     </GlassCard>
   );
