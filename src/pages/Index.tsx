@@ -80,12 +80,12 @@ const Index = () => {
       <FuturisticNavbar light />
       <main className="mx-auto w-full max-w-4xl px-4 pt-20 sm:px-6">
         <div className="flex justify-center pb-6">
-          <div className="neon-glow-user relative w-full max-w-[500px] overflow-hidden rounded-2xl border border-border bg-card">
+          <div className="neon-glow-user relative w-full max-w-[500px] md:max-w-none overflow-hidden rounded-2xl border border-border bg-card">
           <span aria-hidden className="border-beam" />
           <video
             ref={heroVideoRef}
             src={homeVideo.url}
-            className="block w-full max-h-[260px] object-contain"
+            className="block w-full max-h-[260px] object-contain md:max-h-none md:aspect-video md:object-cover"
             autoPlay muted playsInline
             onEnded={(e) => {
               const video = e.currentTarget;
