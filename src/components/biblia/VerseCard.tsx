@@ -168,51 +168,24 @@ export default function VerseCard({ verse, bookName, chapterNumber, isFavorite }
           </div>
         </div>
 
-        <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-2 mt-3">
-          <Button size="sm" variant="outline" onClick={handleCopy} className="w-full sm:w-auto">
-            <Copy size={16} className="mr-1" /> Copiar
-          </Button>
-          
-          <Button size="sm" variant="outline" onClick={handleShare} className="w-full sm:w-auto">
-            <Share2 size={16} className="mr-1" /> Compartilhar
-          </Button>
-          
-          <Button 
-            size="sm" 
-            variant={showComment ? "default" : "outline"}
-            onClick={handleLoadComment}
-            disabled={isLoadingComment}
-            className="w-full sm:w-auto"
-          >
-            {isLoadingComment ? (
-              <Loader2 size={16} className="mr-1 animate-spin" />
-            ) : (
-              <MessageSquareText size={16} className="mr-1" />
-            )}
-            Comentário
-            {showComment ? <ChevronUp size={14} className="ml-1" /> : <ChevronDown size={14} className="ml-1" />}
-          </Button>
-          
+        <div className="mt-3 flex w-full divide-x divide-border overflow-hidden rounded-full border border-border bg-card/60 text-foreground">
+          <button type="button" onClick={handleCopy} aria-label="Copiar" title="Copiar" className="flex-1 h-11 flex items-center justify-center transition-colors hover:bg-primary/10 hover:text-primary disabled:opacity-60">
+            <Copy size={18} />
+          </button>
+          <button type="button" onClick={handleShare} aria-label="Compartilhar" title="Compartilhar" className="flex-1 h-11 flex items-center justify-center transition-colors hover:bg-primary/10 hover:text-primary disabled:opacity-60">
+            <Share2 size={18} />
+          </button>
+          <button type="button" onClick={handleLoadComment} disabled={isLoadingComment} aria-label="Comentário" aria-pressed={showComment} title="Comentário" className={`flex-1 h-11 flex items-center justify-center transition-colors hover:bg-primary/10 hover:text-primary disabled:opacity-60 ${showComment ? 'bg-primary/10 text-primary' : ''}`}>
+            {isLoadingComment ? <Loader2 size={18} className="animate-spin" /> : <MessageSquareText size={18} />}
+          </button>
           {user && (
             <>
-              <Button 
-                size="sm" 
-                variant={isFavorite ? "default" : "outline"}
-                onClick={() => toggleFavoriteMutation.mutate()}
-                className="w-full sm:w-auto"
-              >
-                <Star size={16} className="mr-1" /> 
-                {isFavorite ? 'Favoritado' : 'Favoritar'}
-              </Button>
-              
-              <Button 
-                size="sm" 
-                variant="outline"
-                onClick={() => setShowNoteDialog(true)}
-                className="w-full sm:w-auto"
-              >
-                <StickyNote size={16} className="mr-1" /> Nota
-              </Button>
+              <button type="button" onClick={() => toggleFavoriteMutation.mutate()} aria-label={isFavorite ? 'Favoritado' : 'Favoritar'} aria-pressed={isFavorite} title={isFavorite ? 'Favoritado' : 'Favoritar'} className={`flex-1 h-11 flex items-center justify-center transition-colors hover:bg-primary/10 hover:text-primary disabled:opacity-60 ${isFavorite ? 'bg-primary/10 text-primary' : ''}`}>
+                <Star size={18} fill={isFavorite ? 'currentColor' : 'none'} />
+              </button>
+              <button type="button" onClick={() => setShowNoteDialog(true)} aria-label="Nota" title="Nota" className="flex-1 h-11 flex items-center justify-center transition-colors hover:bg-primary/10 hover:text-primary disabled:opacity-60">
+                <StickyNote size={18} />
+              </button>
             </>
           )}
         </div>
