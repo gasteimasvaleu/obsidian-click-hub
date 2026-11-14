@@ -1,3 +1,4 @@
+import loadingVideo from '@/assets/loading/jesus-crianca.mp4.asset.json';
 import { useEffect, useRef, useState } from 'react';
 
 interface LoadingOverlayProps {
@@ -42,15 +43,15 @@ export const LoadingOverlay = ({ visible, message }: LoadingOverlayProps) => {
 
   return (
     <div
-      className={`fixed inset-0 z-[9999] bg-black flex flex-col items-center justify-center transition-opacity duration-300 ${
+      className={`fixed inset-0 z-[9999] bg-card flex flex-col items-center justify-center transition-opacity duration-300 ${
         show ? 'opacity-100' : 'opacity-0'
       }`}
     >
       {/* Video */}
       <video
         ref={videoRef}
-        src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/loading3.mp4"
-        className="w-64 h-64 object-contain"
+        src={loadingVideo.url}
+        className="h-72 w-auto object-contain"
         autoPlay
         muted
         playsInline
@@ -60,13 +61,13 @@ export const LoadingOverlay = ({ visible, message }: LoadingOverlayProps) => {
       />
 
       {/* Progress bar */}
-      <div className="mt-6 w-[60%] max-w-[300px] h-1 rounded-full bg-white/10 overflow-hidden">
+      <div className="mt-6 w-[60%] max-w-[300px] h-1 rounded-full bg-primary/15 overflow-hidden">
         <div className="h-full rounded-full bg-gradient-to-r from-primary via-primary to-primary/60 loading-bar-indeterminate" />
       </div>
 
       {/* Message */}
       {message && (
-        <p className="mt-4 text-sm text-white/70 text-center px-4">{message}</p>
+        <p className="mt-4 text-sm text-muted-foreground text-center px-4">{message}</p>
       )}
     </div>
   );
