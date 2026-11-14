@@ -243,7 +243,7 @@ const Login = () => {
 
         <div className="relative neon-glow-user feature-bubble bubble-user rounded-3xl px-4 pt-4 overflow-hidden">
           <div className="border-beam" aria-hidden />
-          <img src={freiImg.url} alt="Bem-vindo ao BíbliaToon Club" className="mx-auto w-full object-contain" />
+          <img src={freiImg.url} alt="Bem-vindo ao BíbliaToon Club" className="mx-auto w-full max-w-[16rem] object-contain" />
         </div>
 
         <div className="feature-bubble bg-card/60 backdrop-blur-md rounded-3xl p-5 space-y-3 shadow-lg">
