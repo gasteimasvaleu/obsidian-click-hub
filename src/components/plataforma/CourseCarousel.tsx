@@ -12,10 +12,12 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { cn } from "@/lib/utils";
 import contosCapa from "@/assets/contos_biblicos_capa.png.asset.json";
 import parabolasCapa from "@/assets/parabolas_de_jesus_capa.png.asset.json";
+import aprendendoCapa from "@/assets/aprendendo_a_rezar_capa.png.asset.json";
 
 const CAPA_POR_TITULO: Array<[string, string]> = [
   ["Contos Bíblicos", contosCapa.url],
   ["As Parábolas de Jesus", parabolasCapa.url],
+  ["Aprendendo a Rezar", aprendendoCapa.url],
 ];
 
 const thumbFor = (item: { title: string; thumbnail?: string | null }) =>
