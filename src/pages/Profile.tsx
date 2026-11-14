@@ -1,10 +1,14 @@
+import imgJogos from '@/assets/perfil/progresso/jogos.png';
+import imgMusicas from '@/assets/perfil/progresso/musicas.png';
+import imgDevocionais from '@/assets/perfil/progresso/devocionais.png';
+import imgSequencia from '@/assets/perfil/progresso/sequencia.png';
 import { useAuth } from '@/contexts/AuthContext';
 import { useUserProgress } from '@/hooks/useUserProgress';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
-import { Trophy, Star, Target, Activity, LogOut, Camera, BookOpen, StickyNote, Music, Trash2, Lock, Crown, Pencil, Loader2, Flame } from 'lucide-react';
+import { Trophy, Star, Target, Activity, LogOut, Camera, BookOpen, StickyNote, Trash2, Lock, Crown, Pencil, Loader2 } from 'lucide-react';
 import { useSubscription } from '@/hooks/useSubscription';
 import { APP_BUNDLE_VERSION } from '@/lib/revenuecat';
 import { Paywall } from '@/components/Paywall';
@@ -291,15 +295,13 @@ const Profile = () => {
         <BubbleSection title="Seu progresso">
           <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
             {[
-              { icon: Activity, value: progress.games_completed, label: 'jogos completados', title: 'Jogos' },
-              { icon: Music, value: progress.ebooks_read, label: 'músicas ouvidas', title: 'Músicas' },
-              { icon: BookOpen, value: progress.devotionals_completed ?? 0, label: 'devocionais lidos', title: 'Devocionais' },
-              { icon: Flame, value: progress.streak_days, label: 'dias seguidos', title: 'Sequência' },
-            ].map(({ icon: Icon, value, label, title }) => (
+              { img: imgJogos, value: progress.games_completed, label: 'jogos completados', title: 'Jogos' },
+              { img: imgMusicas, value: progress.ebooks_read, label: 'músicas ouvidas', title: 'Músicas' },
+              { img: imgDevocionais, value: progress.devotionals_completed ?? 0, label: 'devocionais lidos', title: 'Devocionais' },
+              { img: imgSequencia, value: progress.streak_days, label: 'dias seguidos', title: 'Sequência' },
+            ].map(({ img, value, label, title }) => (
               <div key={title} className="flex flex-col items-center rounded-2xl border border-border bg-card p-3 text-center">
-                <div className="mb-1 flex h-9 w-9 items-center justify-center rounded-full bg-primary/10">
-                  <Icon className="h-4 w-4 text-primary" />
-                </div>
+                <img src={img} alt="" loading="lazy" width={256} height={256} className="mb-1 h-14 w-14 object-contain" />
                 <p className="text-2xl font-black text-primary">{value}</p>
                 <p className="text-xs font-semibold text-foreground">{title}</p>
                 <p className="text-[11px] text-muted-foreground">{label}</p>
