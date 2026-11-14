@@ -117,102 +117,62 @@ const Games = () => {
         </div>
 
         {/* Filters Section */}
-        <GlassCard className="max-w-4xl mx-auto mb-8 animate-fade-in">
-          <div className="space-y-6">
-            {/* Game Type Filters */}
-            <div>
-              <h3 className="text-sm font-medium text-muted-foreground mb-3">Tipo de Jogo</h3>
-              <div className="space-y-2">
-                {/* Botão Todos - linha inteira */}
-                {(() => {
-                  const allType = gameTypes[0];
-                  const IconComponent = allType.icon;
-                  const isActive = selectedType === allType.value;
-                  return (
-                    <Button
-                      key={allType.value}
-                      variant={isActive ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => setSelectedType(allType.value)}
-                      className={`w-full transition-all duration-300 active:scale-95 group ${
-                        isActive ? "neon-glow shadow-lg shadow-primary/50" : "hover:border-primary/50"
-                      }`}
-                    >
-                      <IconComponent size={16} className="transition-transform duration-300 group-hover:rotate-12" />
-                      {allType.label}
-                    </Button>
-                  );
-                })()}
-                {/* Demais botões - 2 por linha */}
-                <div className="grid grid-cols-2 gap-2">
-                  {gameTypes.slice(1).map((type) => {
-                    const IconComponent = type.icon;
-                    const isActive = selectedType === type.value;
-                    return (
-                      <Button
-                        key={type.value}
-                        variant={isActive ? "default" : "outline"}
-                        size="sm"
-                        onClick={() => setSelectedType(type.value)}
-                        className={`transition-all duration-300 active:scale-95 group ${
-                          isActive ? "neon-glow shadow-lg shadow-primary/50" : "hover:border-primary/50"
-                        }`}
-                      >
-                        <IconComponent size={16} className="transition-transform duration-300 group-hover:rotate-12" />
-                        {type.label}
-                      </Button>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-
-            {/* Difficulty Filters */}
-            <div>
-              <h3 className="text-sm font-medium text-muted-foreground mb-3">Dificuldade</h3>
-              <div className="grid grid-cols-4 gap-2">
-                {difficulties.map((diff) => {
-                  const isActive = selectedDifficulty === diff.value;
-                  return (
-                    <Button
-                      key={diff.value}
-                      variant={isActive ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => setSelectedDifficulty(diff.value)}
-                      className={`transition-all duration-300 active:scale-95 ${
-                        isActive ? "neon-glow shadow-lg shadow-primary/50" : "hover:border-primary/50"
-                      } ${diff.color}`}
-                    >
-                      {diff.label}
-                    </Button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Clear Filters & Results Counter */}
-            <div className="flex items-center justify-between pt-2 border-t border-border/50">
-              <p className="text-sm text-muted-foreground">
-                {loading ? (
-                  "Carregando..."
-                ) : (
-                  `${filteredGames.length} ${filteredGames.length === 1 ? "jogo encontrado" : "jogos encontrados"}`
-                )}
-              </p>
-              {(selectedType !== "all" || selectedDifficulty !== "all") && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={clearFilters}
-                  className="text-muted-foreground hover:text-foreground"
-                >
-                  <X size={16} />
-                  Limpar Filtros
-                </Button>
-              )}
+        <div className="max-w-4xl mx-auto mb-8 space-y-4 animate-fade-in">
+          <SectionHeader
+            title="Filtros"
+            description={loading ? "Carregando..." : `${filteredGames.length} ${filteredGames.length === 1 ? "jogo encontrado" : "jogos encontrados"}`}
+            className="mb-0"
+          />
+          <div>
+            <h3 className="text-xs font-medium text-muted-foreground mb-2 px-1">Tipo de Jogo</h3>
+            <div className="flex w-full overflow-hidden rounded-full border border-border bg-card divide-x divide-border">
+              {gameTypes.map((type) => {
+                const IconComponent = type.icon;
+                const isActive = selectedType === type.value;
+                return (
+                  <button
+                    key={type.value}
+                    type="button"
+                    onClick={() => setSelectedType(type.value)}
+                    aria-pressed={isActive}
+                    className={`flex h-14 min-w-0 flex-1 flex-col items-center justify-center gap-0.5 px-1 text-[10px] leading-tight transition-colors ${
+                      isActive ? "bg-primary/10 text-primary font-semibold" : "text-muted-foreground hover:bg-primary/5"
+                    }`}
+                  >
+                    <IconComponent size={18} />
+                    <span className="max-w-full truncate">{type.label}</span>
+                  </button>
+                );
+              })}
             </div>
           </div>
-        </GlassCard>
+          <div>
+            <h3 className="text-xs font-medium text-muted-foreground mb-2 px-1">Dificuldade</h3>
+            <div className="flex w-full overflow-hidden rounded-full border border-border bg-card divide-x divide-border">
+              {difficulties.map((diff) => {
+                const isActive = selectedDifficulty === diff.value;
+                return (
+                  <button
+                    key={diff.value}
+                    type="button"
+                    onClick={() => setSelectedDifficulty(diff.value)}
+                    aria-pressed={isActive}
+                    className={`h-11 flex-1 text-xs transition-colors ${
+                      isActive ? "bg-primary/10 text-primary font-semibold" : "text-muted-foreground hover:bg-primary/5"
+                    }`}
+                  >
+                    {diff.label}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+          {(selectedType !== "all" || selectedDifficulty !== "all") && (
+            <button type="button" onClick={clearFilters} className="mx-auto flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground">
+              <X size={14} /> Limpar filtros
+            </button>
+          )}
+        </div>
 
         {/* Games Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
