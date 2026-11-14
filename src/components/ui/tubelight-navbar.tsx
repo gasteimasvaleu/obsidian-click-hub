@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react"
-import { motion, useReducedMotion } from "framer-motion"
 import { Link, useLocation, useNavigate } from "react-router-dom"
-import { LucideIcon, Users, User, Info, Shield, FileText, X, Bot, Heart, HandHeart, Music, Gamepad2 } from "lucide-react"
+import { LucideIcon, Users, User, Info, Shield, FileText, X, Bot, Heart, HandHeart, Music, Gamepad2, Palette, Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
@@ -23,6 +22,7 @@ const moreMenuItems = [
   { name: 'Devocional', url: '/devocional', icon: Heart },
   { name: 'Orações', url: '/oracoes', icon: HandHeart },
   { name: 'Bíbliafy', url: '/audiofy', icon: Music },
+  { name: 'Colorir', url: '/colorir', icon: Palette },
   { name: 'Games', url: '/games', icon: Gamepad2 },
   { name: 'Comunidade', url: '/comunidade', icon: Users },
   { name: 'Meu Perfil', url: '/profile', icon: User },
@@ -36,7 +36,6 @@ export function NavBar({ items, className }: NavBarProps) {
   const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState(items[0].name)
   const light = location.pathname === "/"
-  const reducedMotion = useReducedMotion()
   const [moreOpen, setMoreOpen] = useState(false)
 
   useEffect(() => {
@@ -100,99 +99,53 @@ export function NavBar({ items, className }: NavBarProps) {
           light && "navigation-light",
         )}
       >
-        <div className="navigation-surface bg-background/90 backdrop-blur-lg pb-[env(safe-area-inset-bottom)]">
-          <div className="flex justify-center px-2 pt-2 pb-2">
-            <div className={cn("grid w-full max-w-xl grid-cols-6 py-1.5 px-1", !light && "glass border border-primary/20 backdrop-blur-lg rounded-2xl shadow-lg")}>
-              {items.map((item) => {
-                const Icon = item.icon
-                const isActive = item.isMenu ? moreOpen : activeTab === item.name
+        <nav aria-label="Navegação principal" className="navigation-surface border-t border-border bg-background/90 backdrop-blur-xl pb-[env(safe-area-inset-bottom)]">
+          <div className="mx-auto grid h-16 max-w-xl grid-cols-5 items-center px-2">
+            {items.map((item) => {
+              const Icon = item.icon
+              const vibrate = () => {
+                if ('vibrate' in navigator && window.innerWidth < 768) navigator.vibrate(10)
+              }
 
-                if (item.isMenu) {
-                  return (
-                    <Button variant="ghost"
-                      key={item.name}
-                      aria-expanded={moreOpen}
-                      aria-label="Mais"
-                      onClick={() => {
-                        setMoreOpen(prev => !prev)
-                        if ('vibrate' in navigator && window.innerWidth < 768) {
-                          navigator.vibrate(10)
-                        }
-                      }}
-                      className={cn(
-                        "relative min-w-0 cursor-pointer rounded-xl transition-all duration-300",
-                        "h-[52px] flex flex-col items-center justify-center gap-1 px-0.5 [&_svg]:size-[21px]",
-                        light ? "text-muted-foreground hover:text-primary" : "text-primary/80 hover:text-primary",
-                        "active:scale-95",
-                        isActive && "bg-primary/10 text-primary",
-                      )}
-                    >
-                      {moreOpen ? <X size={21} strokeWidth={2.5} /> : <Icon size={21} strokeWidth={2.5} />}
-                      <span className="w-full truncate text-center text-[9px] font-semibold leading-none">
-                        {item.shortName || item.name}
-                      </span>
-                      {isActive && !light && !reducedMotion && (
-                        <motion.div
-                          layoutId="lamp"
-                          className="absolute inset-0 w-full bg-primary/5 rounded-full -z-10"
-                          initial={false}
-                          transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                        >
-                          <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-8 h-1 bg-primary rounded-t-full">
-                            <div className="absolute w-12 h-6 bg-primary/20 rounded-full blur-md -top-2 -left-2" />
-                            <div className="absolute w-8 h-6 bg-primary/20 rounded-full blur-md -top-1" />
-                            <div className="absolute w-4 h-4 bg-primary/20 rounded-full blur-sm top-0 left-2" />
-                          </div>
-                        </motion.div>
-                      )}
-                    </Button>
-                  )
-                }
-
+              if (item.isMenu) {
                 return (
-                  <Link
+                  <button
+                    type="button"
                     key={item.name}
-                    to={item.url}
-                    aria-current={isActive ? "page" : undefined}
-                    onClick={() => {
-                      setActiveTab(item.name)
-                      setMoreOpen(false)
-                      if ('vibrate' in navigator && window.innerWidth < 768) {
-                        navigator.vibrate(10)
-                      }
-                    }}
-                    className={cn(
-                      "relative min-w-0 cursor-pointer rounded-xl transition-all duration-300",
-                      "h-[52px] flex flex-col items-center justify-center gap-1 px-0.5 [&_svg]:size-[21px]",
-                      light ? "text-muted-foreground hover:text-primary" : "text-primary/80 hover:text-primary",
-                      "active:scale-95",
-                      isActive && "bg-primary/10 text-primary",
-                    )}
+                    aria-expanded={moreOpen}
+                    aria-label="Mais"
+                    onClick={() => { setMoreOpen(prev => !prev); vibrate() }}
+                    className="flex h-full flex-col items-center justify-center gap-1 text-muted-foreground transition-colors hover:text-foreground"
                   >
-                    <Icon size={21} strokeWidth={2.5} />
-                    <span className="w-full truncate text-center text-[9px] font-semibold leading-none">
-                      {item.shortName || item.name}
+                    <span className="-mt-6 grid h-12 w-12 place-items-center rounded-full bg-primary text-primary-foreground shadow-lg shadow-primary/40 ring-4 ring-background transition-transform active:scale-95">
+                      {moreOpen ? <X className="h-6 w-6" /> : <Plus className="h-6 w-6" />}
                     </span>
-                    {isActive && !light && !reducedMotion && (
-                      <motion.div
-                        layoutId="lamp"
-                        className="absolute inset-0 w-full bg-primary/5 rounded-full -z-10"
-                        initial={false}
-                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                      >
-                        <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-8 h-1 bg-primary rounded-t-full">
-                          <div className="absolute w-12 h-6 bg-primary/20 rounded-full blur-md -top-2 -left-2" />
-                          <div className="absolute w-8 h-6 bg-primary/20 rounded-full blur-md -top-1" />
-                          <div className="absolute w-4 h-4 bg-primary/20 rounded-full blur-sm top-0 left-2" />
-                        </div>
-                      </motion.div>
-                    )}
-                  </Link>
+                    <span className={cn("mt-0.5 text-[11px] font-medium leading-none", moreOpen && "text-primary")}>Mais</span>
+                  </button>
                 )
-              })}
-            </div>
+              }
+
+              const isActive = activeTab === item.name
+              return (
+                <Link
+                  key={item.name}
+                  to={item.url}
+                  aria-current={isActive ? "page" : undefined}
+                  onClick={() => { setActiveTab(item.name); setMoreOpen(false); vibrate() }}
+                  className={cn(
+                    "flex h-full min-w-0 flex-col items-center justify-center gap-1 transition-colors",
+                    isActive ? "text-primary" : "text-muted-foreground hover:text-foreground",
+                  )}
+                >
+                  <Icon className="h-5 w-5" />
+                  <span className="max-w-[72px] truncate text-[11px] font-medium leading-none">
+                    {item.shortName || item.name}
+                  </span>
+                </Link>
+              )
+            })}
           </div>
-        </div>
+        </nav>
       </div>
     </>
   )
