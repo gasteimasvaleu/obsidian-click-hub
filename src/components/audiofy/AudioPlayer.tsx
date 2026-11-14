@@ -302,8 +302,11 @@ export const AudioPlayer = ({
       )}
 
       {expanded && (
-        <div className="fixed inset-0 z-50 overflow-y-auto bg-background animate-in slide-in-from-bottom duration-300">
-          <div className="mx-auto flex min-h-full max-w-[58rem] flex-col px-4 pb-6 pt-[calc(env(safe-area-inset-top)+1rem)]">
+        <div className="fixed inset-0 z-50 bg-background/30 backdrop-blur-md animate-in fade-in duration-200" onClick={() => setExpanded(false)}>
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="absolute inset-x-4 bottom-24 top-[calc(env(safe-area-inset-top)+1rem)] mx-auto flex max-h-fit max-w-lg flex-col overflow-y-auto rounded-3xl border border-primary/40 bg-card p-4 shadow-xl shadow-primary/20 animate-in slide-in-from-bottom-4 duration-300"
+          >
             <div className="mb-2 flex items-center justify-between">
               <button onClick={() => setExpanded(false)} aria-label="Minimizar" className="rounded-full p-2 text-primary hover:bg-primary/10">
                 <ChevronDown className="h-7 w-7" />
@@ -315,7 +318,7 @@ export const AudioPlayer = ({
               )}
             </div>
 
-            <div className="mb-4 flex aspect-video w-full items-center justify-center rounded-3xl border border-primary/30 bg-primary/5 px-6 py-8">
+            <div className="mb-4 flex aspect-[3/1] w-full items-center justify-center rounded-3xl border border-primary/30 bg-primary/5 px-6 py-4">
               <AudioEqualizer isPlaying={isPlaying} size="lg" />
             </div>
 
