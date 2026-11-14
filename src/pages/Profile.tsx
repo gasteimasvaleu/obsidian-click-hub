@@ -26,6 +26,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { FuturisticNavbar } from '@/components/FuturisticNavbar';
 import { BubbleSection, SPLIT_BAR } from '@/components/ui/bubble-section';
 
 const Profile = () => {
@@ -164,6 +165,7 @@ const Profile = () => {
   if (authLoading || progressLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
+        <FuturisticNavbar />
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
       </div>
     );
@@ -180,7 +182,8 @@ const Profile = () => {
 
   return (
     <div className="min-h-screen bg-background pb-28 md:pb-8">
-      <div className="container mx-auto px-4 pt-4 md:pt-8 max-w-[58rem]">
+      <FuturisticNavbar />
+      <div className="container mx-auto px-4 pt-20 max-w-[58rem]">
         <BubbleSection
           as="h1"
           title={displayName}
