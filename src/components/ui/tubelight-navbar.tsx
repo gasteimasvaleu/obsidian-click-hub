@@ -1,8 +1,19 @@
 import { useEffect, useState } from "react"
 import { Link, useLocation, useNavigate } from "react-router-dom"
-import { LucideIcon, Users, User, Info, Shield, FileText, X, Bot, Heart, HandHeart, Music, Gamepad2, Palette, Plus } from "lucide-react"
+import { LucideIcon, X, Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import amigoImg from "@/assets/more-menu/amigo-divino.png"
+import devocionalImg from "@/assets/more-menu/devocional.png"
+import oracoesImg from "@/assets/more-menu/oracoes.png"
+import bibliafyImg from "@/assets/more-menu/bibliafy.png"
+import colorirImg from "@/assets/more-menu/colorir.png"
+import gamesImg from "@/assets/more-menu/games.png"
+import comunidadeImg from "@/assets/more-menu/comunidade.png"
+import perfilImg from "@/assets/more-menu/perfil.png"
+import sobreImg from "@/assets/more-menu/sobre.png"
+import politicaImg from "@/assets/more-menu/politica-familia.png"
+import termosImg from "@/assets/more-menu/termos.png"
 
 interface NavItem {
   name: string
@@ -18,17 +29,17 @@ interface NavBarProps {
 }
 
 const moreMenuItems = [
-  { name: 'Amigo Divino', url: '/amigodivino', icon: Bot },
-  { name: 'Devocional', url: '/devocional', icon: Heart },
-  { name: 'Orações', url: '/oracoes', icon: HandHeart },
-  { name: 'Bíbliafy', url: '/audiofy', icon: Music },
-  { name: 'Colorir', url: '/colorir', icon: Palette },
-  { name: 'Games', url: '/games', icon: Gamepad2 },
-  { name: 'Comunidade', url: '/comunidade', icon: Users },
-  { name: 'Meu Perfil', url: '/profile', icon: User },
-  { name: 'Sobre', url: '/sobre', icon: Info },
-  { name: 'Política Família', url: '/politica-familia', icon: Shield },
-  { name: 'Termos de Uso', url: '/termos-de-uso', icon: FileText },
+  { name: 'Amigo Divino', url: '/amigodivino', image: amigoImg },
+  { name: 'Devocional', url: '/devocional', image: devocionalImg },
+  { name: 'Orações', url: '/oracoes', image: oracoesImg },
+  { name: 'Bíbliafy', url: '/audiofy', image: bibliafyImg },
+  { name: 'Colorir', url: '/colorir', image: colorirImg },
+  { name: 'Games', url: '/games', image: gamesImg },
+  { name: 'Comunidade', url: '/comunidade', image: comunidadeImg },
+  { name: 'Meu Perfil', url: '/profile', image: perfilImg },
+  { name: 'Sobre', url: '/sobre', image: sobreImg },
+  { name: 'Política Família', url: '/politica-familia', image: politicaImg },
+  { name: 'Termos de Uso', url: '/termos-de-uso', image: termosImg },
 ]
 
 export function NavBar({ items, className }: NavBarProps) {
@@ -63,7 +74,6 @@ export function NavBar({ items, className }: NavBarProps) {
         >
           <div className="grid grid-cols-3 gap-2 p-3">
             {moreMenuItems.map((menuItem) => {
-              const MenuIcon = menuItem.icon
               const isCurrentPage = location.pathname === menuItem.url
               return (
                  <Button variant="ghost"
@@ -77,13 +87,13 @@ export function NavBar({ items, className }: NavBarProps) {
                     }
                   }}
                   className={cn(
-                    "h-auto whitespace-normal flex flex-col items-center gap-1.5 p-3 rounded-xl transition-all duration-200 active:scale-95",
+                    "group h-auto whitespace-normal flex flex-col items-center gap-1.5 p-3 rounded-xl transition-all duration-200 active:scale-95",
                     isCurrentPage
                       ? "bg-primary/10 text-primary"
                       : light ? "text-muted-foreground hover:text-primary" : "text-primary/80 hover:text-primary"
                   )}
                 >
-                  <MenuIcon size={26} strokeWidth={1.8} />
+                  <img src={menuItem.image} alt="" loading="lazy" width={44} height={44} className="h-11 w-11 object-contain transition-transform duration-200 group-active:scale-110 motion-reduce:transition-none" />
                   <span className="text-[11px] font-medium text-center leading-tight">{menuItem.name}</span>
                 </Button>
               )
