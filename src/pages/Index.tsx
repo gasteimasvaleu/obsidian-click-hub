@@ -87,7 +87,7 @@ const Index = () => {
         <Button
           variant="ghost"
           onClick={mainAction.action}
-          className="neon-glow-user relative mb-6 flex h-[100px] w-full justify-between overflow-visible rounded-2xl border border-border bg-card pl-28 pr-5 text-card-foreground hover:bg-secondary"
+          className="neon-glow-user feature-bubble bubble-user relative mb-6 flex h-[100px] w-full justify-between overflow-visible rounded-2xl pl-28 pr-5 text-feature-foreground hover:text-feature-foreground"
         >
           <span aria-hidden className="border-beam" />
           <img
@@ -96,14 +96,14 @@ const Index = () => {
             className="pointer-events-none absolute bottom-0 left-2 h-[125px] w-[95px] object-contain object-bottom"
           />
           <span className="flex-1 text-center text-base font-bold sm:text-lg">{mainAction.title}</span>
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-secondary text-primary">
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-feature-foreground/40 bg-feature-foreground/20 text-feature-foreground backdrop-blur">
             <ArrowRight className="!h-5 !w-5" aria-hidden="true" />
           </span>
         </Button>
 
         {highlights.length > 0 && (
           <section className="mb-6">
-            <div className="neon-glow-user relative mb-3 flex h-[50px] items-center justify-center rounded-2xl border border-border bg-card">
+            <div className="neon-glow-user feature-bubble bubble-user relative mb-3 flex h-[50px] items-center justify-center rounded-2xl text-feature-foreground">
               <span aria-hidden className="border-beam" />
               <h2 className="text-sm font-bold">Confira nossos Lançamentos</h2>
             </div>
