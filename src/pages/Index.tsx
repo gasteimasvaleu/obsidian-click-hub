@@ -10,6 +10,7 @@ import imgOracoes from "@/assets/more-menu/oracoes.png";
 import imgBibliafy from "@/assets/more-menu/bibliafy.png";
 import imgColorir from "@/assets/more-menu/colorir.png";
 import imgAmigoDivino from "@/assets/more-menu/amigo-divino.png";
+import imgEstudo from "@/assets/more-menu/estudo-biblico.png";
 import imgGuiaPais from "@/assets/more-menu/guia-pais.png";
 import imgGames from "@/assets/more-menu/games.png";
 import imgComunidade from "@/assets/more-menu/comunidade.png";
@@ -65,6 +66,7 @@ const Index = () => {
 
   const featureActions = [
     { title: "Bíblia Interativa", image: imgBiblia, action: () => navigate('/biblia'), color: "bg-feature-bible/75" },
+    { title: "Estudo Bíblico", image: imgEstudo, action: () => navigate('/estudo'), color: "bg-feature-bible/75" },
     { title: "Devocional Diário", image: imgDevocional, action: () => navigate('/devocional'), color: "bg-feature-devotional/75" },
     { title: "Orações", image: imgOracoes, action: () => navigate('/oracoes'), color: "bg-feature-prayer/75" },
     { title: "Bíbliafy", image: imgBibliafy, action: () => navigate('/audiofy'), color: "bg-feature-music/75" },

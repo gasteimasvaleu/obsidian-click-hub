@@ -79,6 +79,74 @@ export type Database = {
           },
         ]
       }
+      bible_studies: {
+        Row: {
+          audience: string
+          created_at: string
+          id: string
+          source_ref: string | null
+          source_type: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          audience?: string
+          created_at?: string
+          id?: string
+          source_ref?: string | null
+          source_type?: string
+          title?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          audience?: string
+          created_at?: string
+          id?: string
+          source_ref?: string | null
+          source_type?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      bible_study_messages: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          role: string
+          study_id: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          role: string
+          study_id: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          role?: string
+          study_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bible_study_messages_study_id_fkey"
+            columns: ["study_id"]
+            isOneToOne: false
+            referencedRelation: "bible_studies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       bible_verses: {
         Row: {
           chapter_id: string

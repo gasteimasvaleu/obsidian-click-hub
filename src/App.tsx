@@ -14,6 +14,8 @@ import Index from "./pages/Index";
 import Oracoes from "./pages/Oracoes";
 import Audiofy from "./pages/Audiofy";
 import AmigoDivino from "./pages/AmigoDivino";
+import EstudoListPage from "./pages/estudo/EstudoListPage";
+import EstudoChatPage from "./pages/estudo/EstudoChatPage";
 import Sobre from "./pages/Sobre";
 import Games from "./pages/Games";
 import GamePlayer from "./pages/games/GamePlayer";
@@ -137,6 +139,8 @@ const App = () => {
                 <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
                 <Route path="/oracoes" element={<ProtectedRoute><Oracoes /></ProtectedRoute>} />
                 <Route path="/audiofy" element={<ProtectedRoute><Audiofy /></ProtectedRoute>} />
+                <Route path="/estudo" element={<ProtectedRoute><EstudoListPage /></ProtectedRoute>} />
+                <Route path="/estudo/:id" element={<ProtectedRoute><EstudoChatPage /></ProtectedRoute>} />
                 <Route path="/amigodivino" element={<ProtectedRoute><AmigoDivino /></ProtectedRoute>} />
                 
                 <Route path="/sobre" element={<Sobre />} />

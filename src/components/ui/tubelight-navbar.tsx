@@ -4,6 +4,7 @@ import { LucideIcon, X, Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import amigoImg from "@/assets/more-menu/amigo-divino.png"
+import estudoImg from "@/assets/more-menu/estudo-biblico.png"
 import devocionalImg from "@/assets/more-menu/devocional.png"
 import oracoesImg from "@/assets/more-menu/oracoes.png"
 import bibliafyImg from "@/assets/more-menu/bibliafy.png"
@@ -29,6 +30,7 @@ interface NavBarProps {
 }
 
 const moreMenuItems = [
+  { name: 'Estudo Bíblico', url: '/estudo', image: estudoImg },
   { name: 'Amigo Divino', url: '/amigodivino', image: amigoImg },
   { name: 'Devocional', url: '/devocional', image: devocionalImg },
   { name: 'Orações', url: '/oracoes', image: oracoesImg },
