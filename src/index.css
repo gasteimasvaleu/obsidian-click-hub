@@ -18,17 +18,22 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 220 15% 18%;
 
-    --primary: 268 70% 56%;
-    --primary-foreground: 0 0% 100%;
+    --user-accent: 268 70% 56%;
+    --user-accent-foreground: 0 0% 100%;
+    --user-accent-soft: 268 60% 95%;
+    --user-accent-strong: 268 70% 45%;
+    --user-title-end: 268 100% 90%;
+    --primary: var(--user-accent);
+    --primary-foreground: var(--user-accent-foreground);
 
-    --secondary: 268 60% 95%;
-    --secondary-foreground: 268 70% 45%;
+    --secondary: var(--user-accent-soft);
+    --secondary-foreground: var(--user-accent-strong);
 
     --muted: 210 16% 94%;
     --muted-foreground: 220 9% 46%;
 
-    --accent: 268 60% 95%;
-    --accent-foreground: 268 70% 45%;
+    --accent: var(--user-accent-soft);
+    --accent-foreground: var(--user-accent-strong);
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 100%;
@@ -37,7 +42,7 @@ All colors MUST be HSL.
 
     --border: 210 15% 90%;
     --input: 210 15% 90%;
-    --ring: 268 70% 56%;
+    --ring: var(--user-accent);
 
     /* Home feature cards */
     --feature-bible: 217 91% 60%;
@@ -55,8 +60,8 @@ All colors MUST be HSL.
     /* Glass Effect Variables */
     --glass-bg: rgba(255, 255, 255, 0.78);
     --glass-border: rgba(255, 255, 255, 0.9);
-    --neon-glow: rgba(0, 255, 102, 0.4);
-    --neon-glow-purple: rgba(180, 50, 255, 0.4);
+    --neon-glow: var(--user-glow);
+    --neon-glow-purple: var(--user-glow);
     /* User-selectable card glow (updated by ThemePreferencesContext) */
     --user-glow: hsl(146 100% 50% / 0.4);
     --user-glow-hover: hsl(146 100% 50% / 0.3);
@@ -130,17 +135,17 @@ All colors MUST be HSL.
   --card-foreground: 220 15% 18%;
   --popover: 0 0% 100%;
   --popover-foreground: 220 15% 18%;
-  --primary: 268 70% 56%;
-  --primary-foreground: 0 0% 100%;
-  --secondary: 268 60% 95%;
-  --secondary-foreground: 268 70% 45%;
+  --primary: var(--user-accent);
+  --primary-foreground: var(--user-accent-foreground);
+  --secondary: var(--user-accent-soft);
+  --secondary-foreground: var(--user-accent-strong);
   --muted: 210 16% 94%;
   --muted-foreground: 220 9% 46%;
-  --accent: 268 60% 95%;
-  --accent-foreground: 268 70% 45%;
+  --accent: var(--user-accent-soft);
+  --accent-foreground: var(--user-accent-strong);
   --border: 210 15% 90%;
   --input: 210 15% 90%;
-  --ring: 268 70% 56%;
+  --ring: var(--user-accent);
   --home-shadow: 0 3px 14px hsl(220 20% 20% / 0.045);
   --navigation-shadow: 0 -2px 18px hsl(220 20% 20% / 0.04);
 }
@@ -423,7 +428,7 @@ All colors MUST be HSL.
   line-height: 1.15;
 }
 .text-gradient-title {
-  background: linear-gradient(90deg, hsl(0 0% 100%), hsl(268 100% 90%));
+  background: linear-gradient(90deg, hsl(0 0% 100%), hsl(var(--user-title-end)));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;

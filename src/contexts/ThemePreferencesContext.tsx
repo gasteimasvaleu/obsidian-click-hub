@@ -47,7 +47,16 @@ const defaultContext: ThemePreferencesContextType = {
 const ThemePreferencesContext = createContext<ThemePreferencesContextType>(defaultContext);
 
 const applyGlowCssVars = (color: GlowColor) => {
-  const item = GLOW_PALETTE.find((c) => c.id === color) ?? GLOW_PALETTE[0];
+  const item = GLOW_PALETTE.find((c) => c.id === color) ?? GLOW_PALETTE.find((c) => c.id === 'devotional');
+  if (!item) return;
+  const [hue, saturation] = item.hsl.split(' ');
+  // Keep bright palette colors for bubbles; use a darker matching accent for legible controls and text.
+  const accent = `${hue} ${saturation} 36%`;
+  document.documentElement.style.setProperty('--user-accent', accent);
+  document.documentElement.style.setProperty('--user-accent-foreground', '0 0% 100%');
+  document.documentElement.style.setProperty('--user-accent-soft', `${hue} ${saturation} 95%`);
+  document.documentElement.style.setProperty('--user-accent-strong', `${hue} ${saturation} 30%`);
+  document.documentElement.style.setProperty('--user-title-end', `${hue} ${saturation} 90%`);
   document.documentElement.style.setProperty('--user-glow-color', `hsl(${item.hsl})`);
   document.documentElement.style.setProperty('--user-glow', `hsl(${item.hsl} / 0.4)`);
   document.documentElement.style.setProperty('--user-glow-hover', `hsl(${item.hsl} / 0.3)`);

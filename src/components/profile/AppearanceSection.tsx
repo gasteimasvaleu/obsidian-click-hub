@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { BubbleSection } from '@/components/ui/bubble-section';
+import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useThemePreferences, GLOW_PALETTE } from '@/contexts/ThemePreferencesContext';
 
@@ -21,14 +22,12 @@ export const AppearanceSection = () => {
     <BubbleSection title="Aparência">
         <div className="flex flex-col gap-4">
           <div className="flex flex-col">
-            <span className="font-medium text-foreground">Cor do brilho dos cards</span>
-            <span className="text-sm text-muted-foreground">
-              Escolha entre as cores dos cards da tela inicial
-            </span>
+            <span className="font-medium text-foreground">Cor de destaque</span>
           </div>
 
           <div className="flex items-center gap-2">
-            <button
+            <Button
+              size="icon"
               type="button"
               aria-label="Cores anteriores"
               disabled={!canGoLeft}
@@ -36,16 +35,19 @@ export const AppearanceSection = () => {
               className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground transition-opacity disabled:opacity-30"
             >
               <ChevronLeft className="h-5 w-5" />
-            </button>
+            </Button>
 
             <div className="flex flex-1 items-center justify-center gap-3 overflow-hidden">
               {visible.map((color) => {
                 const selected = color.id === glowColor;
                 return (
-                  <button
+                  <Button
+                    variant="ghost"
+                    size="icon"
                     key={color.id}
                     type="button"
                     aria-label={color.label}
+                    aria-pressed={selected}
                     onClick={() => setGlowColor(color.id)}
                     style={{
                       backgroundColor: `hsl(${color.hsl})`,
@@ -53,7 +55,7 @@ export const AppearanceSection = () => {
                         ? `0 0 0 2px hsl(var(--background)), 0 0 0 4px hsl(${color.hsl}), 0 0 14px hsl(${color.hsl} / 0.6)`
                         : undefined,
                     }}
-                    className={`h-10 w-10 shrink-0 rounded-full transition-all duration-200 ${
+                    className={`h-10 w-10 shrink-0 rounded-full p-0 transition-all duration-200 ${
                       selected ? 'scale-110' : 'scale-100 opacity-90 hover:opacity-100 hover:scale-105'
                     }`}
                   />
@@ -61,7 +63,8 @@ export const AppearanceSection = () => {
               })}
             </div>
 
-            <button
+            <Button
+              size="icon"
               type="button"
               aria-label="Próximas cores"
               disabled={!canGoRight}
@@ -69,7 +72,7 @@ export const AppearanceSection = () => {
               className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground transition-opacity disabled:opacity-30"
             >
               <ChevronRight className="h-5 w-5" />
-            </button>
+            </Button>
           </div>
 
           {selectedItem && (
