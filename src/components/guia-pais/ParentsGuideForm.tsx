@@ -1,3 +1,4 @@
+import { SectionHeader } from "@/components/plataforma/CourseCarousel";
 import { useState } from "react";
 import { FormData } from "@/pages/GuiaPais";
 import { Button } from "@/components/ui/button";
@@ -85,16 +86,9 @@ export const ParentsGuideForm = ({
   const progress = (currentStep / totalSteps) * 100;
 
   return (
-    <div className="max-w-2xl mx-auto animate-fade-in overflow-hidden">
+    <div className="max-w-2xl mx-auto animate-fade-in">
       {/* Header */}
-      <GlassCard className="max-w-2xl mx-auto text-center mb-8">
-        <h1 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-primary via-primary to-primary/60 bg-clip-text text-transparent">
-          Guia para Pais
-        </h1>
-        <p className="text-lg text-foreground/80">
-          Crie um guia personalizado para ensinar a Bíblia ao seu filho
-        </p>
-      </GlassCard>
+      <SectionHeader title="Guia para Pais" description="Crie um guia personalizado para ensinar a Bíblia ao seu filho" className="mb-8" />
 
       {/* Progress */}
       <div className="mb-8">
