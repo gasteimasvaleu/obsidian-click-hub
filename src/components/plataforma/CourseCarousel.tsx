@@ -1,3 +1,4 @@
+import { BubbleTitleText } from "@/components/ui/bubble-title-text";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -51,7 +52,7 @@ export function SectionHeader({ title, description, className }: { title?: strin
       {title && (
         <div className="neon-glow-user feature-bubble bubble-user relative z-[2] rounded-2xl px-4 py-3 text-feature-foreground">
           <span aria-hidden className="border-beam" />
-          <h2 className="relative text-lg md:text-xl font-bold">{title}</h2>
+          <h2 className="bubble-title relative"><BubbleTitleText text={title} /></h2>
         </div>
       )}
       {description && <SectionDescription text={description} attached={!!title} />}

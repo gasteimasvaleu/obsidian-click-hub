@@ -397,3 +397,18 @@ All colors MUST be HSL.
 }
 .dark .neon-glow-user.neon-glow-user { box-shadow: 0 0 30px var(--user-glow); }
 .dark .navbar-glass.navbar-glass { background: rgba(0,0,0,0.85); border-bottom: 0; }
+
+/* Títulos dos cards bolha: fonte nativa do aparelho */
+.bubble-title {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-weight: 900;
+  letter-spacing: -0.025em;
+  font-size: 1.5rem;
+  line-height: 1.15;
+}
+.text-gradient-title {
+  background: linear-gradient(90deg, hsl(0 0% 100%), hsl(268 100% 90%));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}

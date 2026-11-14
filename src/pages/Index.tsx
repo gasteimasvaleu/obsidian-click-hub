@@ -1,3 +1,4 @@
+import { BubbleTitleText } from "@/components/ui/bubble-title-text";
 import homeVideo from "@/assets/home_intro_video.mp4.asset.json";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -106,7 +107,7 @@ const Index = () => {
             alt=""
             className="pointer-events-none absolute bottom-0 left-2 h-[125px] w-[95px] object-contain object-bottom"
           />
-          <span className="flex-1 text-center text-base font-bold sm:text-lg">{mainAction.title}</span>
+          <span className="bubble-title flex-1 text-center"><BubbleTitleText text={mainAction.title} /></span>
           <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-feature-foreground/40 bg-feature-foreground/20 text-feature-foreground backdrop-blur">
             <ArrowRight className="!h-5 !w-5" aria-hidden="true" />
           </span>
@@ -116,7 +117,7 @@ const Index = () => {
           <section className="mb-6">
             <div className="neon-glow-user feature-bubble bubble-user relative mb-3 flex h-[50px] items-center justify-center rounded-2xl text-feature-foreground">
               <span aria-hidden className="border-beam" />
-              <h2 className="text-sm font-bold">Confira nossos Lançamentos</h2>
+              <h2 className="bubble-title"><BubbleTitleText text="Confira nossos Lançamentos" /></h2>
             </div>
             <div className="overflow-hidden pb-2" ref={emblaRef}>
               <div className="-ml-3 flex">
