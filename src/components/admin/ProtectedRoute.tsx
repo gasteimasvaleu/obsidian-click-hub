@@ -25,7 +25,7 @@ export const ProtectedRoute = ({ children, requireAdmin = false }: ProtectedRout
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-primary text-xl">Carregando...</div>
       </div>
     );
@@ -35,5 +35,5 @@ export const ProtectedRoute = ({ children, requireAdmin = false }: ProtectedRout
     return null;
   }
 
-  return requireAdmin ? <div className="dark min-h-screen bg-background text-foreground">{children}</div> : <>{children}</>;
+  return requireAdmin ? <div className="min-h-screen bg-background text-foreground">{children}</div> : <>{children}</>;
 };

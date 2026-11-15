@@ -215,7 +215,7 @@ const PrayersManager = () => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <BookHeart className="text-primary" size={28} />
-            <h1 className="text-2xl font-bold text-primary">
+            <h1 className="text-2xl font-black text-primary">
               Gerenciar Orações
             </h1>
           </div>

@@ -449,7 +449,7 @@ const EbooksManager = () => {
             </Dialog>
           </div>
 
-          <Card className="glass border-primary/20">
+          <Card className="bg-card shadow-sm rounded-3xl border-primary/20">
             <Table>
               <TableHeader>
                 <TableRow>

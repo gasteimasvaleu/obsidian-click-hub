@@ -175,7 +175,7 @@ export default function CoursesManager() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold">Gerenciar Cursos</h1>
+            <h1 className="text-2xl font-black">Gerenciar Cursos</h1>
             <p className="text-muted-foreground">
               Adicione e gerencie os cursos da plataforma
             </p>

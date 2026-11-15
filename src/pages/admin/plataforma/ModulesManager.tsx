@@ -203,7 +203,7 @@ export default function ModulesManager() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold">Gerenciar Módulos</h1>
+            <h1 className="text-2xl font-black">Gerenciar Módulos</h1>
             <p className="text-muted-foreground">
               Adicione e gerencie os módulos dos cursos
             </p>

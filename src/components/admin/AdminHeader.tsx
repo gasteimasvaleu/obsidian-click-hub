@@ -13,11 +13,11 @@ export const AdminHeader = () => {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 h-16 glass border-b border-primary/20 z-50">
+    <header className="fixed top-0 left-0 right-0 h-16 bg-card shadow-sm border-b border-primary/20 z-50">
       <div className="h-full px-6 flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-primary via-primary-glow to-primary bg-clip-text text-transparent">
-            Admin Dashboard
+          <h1 className="text-2xl font-black text-foreground">
+            Painel <span className="bg-gradient-to-r from-primary to-primary-glow bg-clip-text text-transparent">Admin</span>
           </h1>
         </div>
         <div className="flex items-center gap-4">

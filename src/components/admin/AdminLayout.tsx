@@ -8,7 +8,7 @@ interface AdminLayoutProps {
 
 export const AdminLayout = ({ children }: AdminLayoutProps) => {
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-screen bg-background">
       <AdminHeader />
       <div className="flex">
         <AdminSidebar />

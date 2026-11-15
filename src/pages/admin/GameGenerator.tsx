@@ -93,7 +93,7 @@ const GameGenerator = () => {
             Voltar
           </Button>
 
-          <Card className="glass border-primary/20 max-w-2xl">
+          <Card className="bg-card shadow-sm rounded-3xl border-primary/20 max-w-2xl">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-2xl">
                 <Sparkles className="h-6 w-6 text-primary" />

@@ -167,7 +167,7 @@ const Dashboard = () => {
           <h2 className="text-3xl font-bold text-foreground mb-8">Dashboard</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-            <Card className="glass border-primary/20">
+            <Card className="bg-card shadow-sm rounded-3xl border-primary/20">
               <CardHeader className="flex flex-row items-center justify-between pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
                   Total de Ebooks
@@ -179,7 +179,7 @@ const Dashboard = () => {
               </CardContent>
             </Card>
 
-            <Card className="glass border-primary/20">
+            <Card className="bg-card shadow-sm rounded-3xl border-primary/20">
               <CardHeader className="flex flex-row items-center justify-between pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
                   Total de Jogos
@@ -191,7 +191,7 @@ const Dashboard = () => {
               </CardContent>
             </Card>
 
-            <Card className="glass border-primary/20">
+            <Card className="bg-card shadow-sm rounded-3xl border-primary/20">
               <CardHeader className="flex flex-row items-center justify-between pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
                   IA Disponível
@@ -206,12 +206,12 @@ const Dashboard = () => {
           </div>
 
           {/* Card de Importação da Bíblia */}
-          <Card className="glass border-blue-500/30 bg-gradient-to-br from-blue-500/5 to-purple-500/5">
+          <Card className="bg-card shadow-sm rounded-3xl border-blue-500/30 bg-gradient-to-br from-blue-500/5 to-purple-500/5">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="p-3 rounded-lg bg-gradient-to-br from-blue-500 to-purple-500">
-                    <Database className="h-6 w-6 text-white" />
+                    <Database className="h-6 w-6 text-primary-foreground" />
                   </div>
                   <div>
                     <CardTitle className="text-foreground">Importar Bíblia Ave Maria</CardTitle>
@@ -279,12 +279,12 @@ const Dashboard = () => {
           </Card>
 
           {/* Card de Geração de Devocionais com IA */}
-          <Card className="glass border-purple-500/30 bg-gradient-to-br from-purple-500/5 to-pink-500/5 mt-6">
+          <Card className="bg-card shadow-sm rounded-3xl border-purple-500/30 bg-gradient-to-br from-purple-500/5 to-pink-500/5 mt-6">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="p-3 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500">
-                    <Sparkles className="h-6 w-6 text-white" />
+                    <Sparkles className="h-6 w-6 text-primary-foreground" />
                   </div>
                   <div>
                     <CardTitle className="text-foreground">Gerar Devocionais com IA</CardTitle>
@@ -319,7 +319,7 @@ const Dashboard = () => {
                   <select
                     value={devotionalDays}
                     onChange={(e) => setDevotionalDays(Number(e.target.value))}
-                    className="bg-gray-800 border border-gray-700 rounded px-3 py-1 text-foreground"
+                    className="bg-card border border-border rounded-full px-3 py-1 text-foreground"
                     disabled={isGeneratingDevotionals}
                   >
                     <option value={7}>7 dias</option>

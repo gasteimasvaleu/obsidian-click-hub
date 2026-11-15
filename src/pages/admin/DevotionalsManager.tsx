@@ -144,7 +144,7 @@ export default function DevotionalsManager() {
     <AdminLayout>
       <div className="space-y-6">
         <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-foreground">Gerenciar Devocionais</h1>
+          <h1 className="text-3xl font-black text-foreground">Gerenciar Devocionais</h1>
           <Button onClick={() => setShowDialog(true)}>
             <Plus size={20} className="mr-2" />
             Novo Devocional

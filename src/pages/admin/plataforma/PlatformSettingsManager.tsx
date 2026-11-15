@@ -112,7 +112,7 @@ export default function PlatformSettingsManager() {
         <div className="flex items-center gap-3">
           <Settings className="h-8 w-8 text-primary" />
           <div>
-            <h1 className="text-2xl font-bold text-foreground">
+            <h1 className="text-2xl font-black text-foreground">
               Configurações da Plataforma
             </h1>
             <p className="text-muted-foreground">

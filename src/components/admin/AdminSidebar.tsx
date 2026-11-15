@@ -22,7 +22,7 @@ const plataformaItems = [
 
 export const AdminSidebar = () => {
   return (
-    <aside className="fixed left-0 top-16 h-[calc(100vh-4rem)] w-64 glass border-r border-primary/20 overflow-y-auto">
+    <aside className="fixed left-0 top-16 h-[calc(100vh-4rem)] w-64 bg-card shadow-sm border-r border-primary/20 overflow-y-auto">
       <nav className="p-4 pb-32 space-y-2">
         {navItems.map((item) => (
           <NavLink
@@ -31,9 +31,9 @@ export const AdminSidebar = () => {
             end={item.url === '/admin'}
             className={({ isActive }) =>
               cn(
-                'flex items-center gap-3 px-4 py-3 rounded-lg transition-colors',
+                'flex items-center gap-3 px-4 py-3 rounded-full transition-colors',
                 isActive
-                  ? 'bg-primary/20 text-primary'
+                  ? 'bg-primary/10 text-primary font-bold'
                   : 'text-muted-foreground hover:bg-primary/10 hover:text-primary'
               )
             }
@@ -54,9 +54,9 @@ export const AdminSidebar = () => {
               to={item.url}
               className={({ isActive }) =>
                 cn(
-                  'flex items-center gap-3 px-4 py-3 rounded-lg transition-colors',
+                  'flex items-center gap-3 px-4 py-3 rounded-full transition-colors',
                   isActive
-                    ? 'bg-primary/20 text-primary'
+                    ? 'bg-primary/10 text-primary font-bold'
                     : 'text-muted-foreground hover:bg-primary/10 hover:text-primary'
                 )
               }
