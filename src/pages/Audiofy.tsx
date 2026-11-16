@@ -11,7 +11,7 @@ import { useUserProgress } from "@/hooks/useUserProgress";
 import { useAuth } from "@/contexts/AuthContext";
 import { AudioPlayer, type Track } from "@/components/audiofy/AudioPlayer";
 import { SongItem } from "@/components/audiofy/SongItem";
-import audiofyTopo from "@/assets/audiofy/ouvindo-musica-ondas-roxas.png.asset.json";
+import audiofyTopo from "@/assets/audiofy/bibliafy-topo.mp4.asset.json";
 
 interface Ebook {
   id: string;
@@ -112,10 +112,12 @@ const Audiofy = () => {
           {/* Top illustration */}
           <div className="flex justify-center w-full mb-8">
             <GlassCard className="w-full max-w-4xl p-0 overflow-hidden">
-              <img
+              <video
                 src={audiofyTopo.url}
-                alt="Jesus ouvindo música com fones de ouvido e ondas roxas"
                 className="aspect-video w-full h-auto object-cover"
+                autoPlay
+                muted
+                playsInline
               />
             </GlassCard>
           </div>
