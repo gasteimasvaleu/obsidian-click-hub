@@ -1,19 +1,16 @@
-# Corrigir: TestFlight abre com as telas antigas (mantendo o Appflow)
+# Fazer os vídeos, a abertura e as imagens enviadas pelo chat aparecerem no app
 
 ## O que está acontecendo
-A atualização ao vivo do Appflow (canal "Production") continua ligada. Ao abrir, o app baixa a última versão web publicada lá e ela substitui as telas novas do build 40. Como a última publicação no Appflow é anterior às mudanças, o app mostra as telas antigas. O ícone não passa pelo Appflow, por isso só ele mudou.
+Os vídeos e imagens que você mandou pelo chat ficam guardados no site (bibliatoonclub.com), e o app procura por eles com um endereço "curto", sem o nome do site. No navegador funciona, porque o endereço curto aponta para o próprio site. Dentro do app do celular, ele aponta para dentro do aparelho, onde esses arquivos não existem, e por isso nada aparece. Isso afeta os vídeos do topo das páginas, a abertura animada, o vídeo de carregamento e os desenhos dos 73 livros.
 
-## Solução (sem mudar código nem enviar build novo)
-1. No Appflow, abra o app e vá em **Builds > New build**.
-2. Escolha o commit mais recente (o de hoje), tipo **Web**.
-3. Em **Live Update**, marque o canal **Production** e inicie o build.
-4. Quando terminar, confira em **Deployments** que o canal Production aponta para esse build.
-5. No iPhone: feche o app por completo e abra duas vezes (a primeira baixa, a segunda já mostra). Se não mudar, apague e instale de novo pelo TestFlight.
+## O que vou fazer
+- Fazer o app sempre usar o endereço completo desses arquivos (https://bibliatoonclub.com/...), de uma vez só para todos eles, sem mexer tela por tela.
+- No navegador nada muda.
 
-O mesmo vale para o Android: os dois leem o mesmo canal.
-
-## Daqui para frente
-Sempre que fizermos mudanças, gere um novo build Web no Appflow e publique no canal Production; senão os celulares continuam com a versão anterior.
+## O que você faz depois
+- Gerar um build Web novo no Appflow e publicar no canal Production (não precisa enviar versão nova às lojas).
+- Fechar e abrir o app duas vezes para receber a atualização.
 
 ## Detalhes técnicos
-- `src/main.tsx` chama `LiveUpdates.sync()` e `reload()` uma vez por sessão; `capacitor.config.ts` usa appId `688c8cc6`, canal `Production`. Nada será alterado.
+- Plugin no `vite.config.ts` (enforce: 'pre') que transforma imports `*.asset.json`: quando `url` começa com `/__l5e/`, prefixa com `https://bibliatoonclub.com`. Cobre os 23 arquivos que importam ponteiros, incluindo SplashScreen, LoadingOverlay e bookIllustrations.
+- Conferir que o arquivo é servido em https://bibliatoonclub.com/__l5e/... com CORS/Range ok para `<video>`.
