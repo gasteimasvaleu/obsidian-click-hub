@@ -26,6 +26,13 @@ const Terco = () => {
   const [finished, setFinished] = useState(false);
   const [audioOn, setAudioOn] = useState(() => localStorage.getItem("terco-audio") === "1");
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [rate, setRate] = useState<number>(() => Number(localStorage.getItem("terco-rate")) || 1.2);
+  const rateRef = useRef(rate);
+  useEffect(() => {
+    rateRef.current = rate;
+    localStorage.setItem("terco-rate", String(rate));
+    if (audioRef.current) audioRef.current.playbackRate = rate;
+  }, [rate]);
 
   const cur = SEQUENCE[step];
   const decadeMystery = cur.decade !== null ? MYSTERIES[set][cur.decade] : null;
@@ -44,7 +51,10 @@ const Terco = () => {
     ];
     let i = 0; let cancelled = false;
     const a = new Audio(); audioRef.current = a;
-    const playNext = () => { if (cancelled || i >= files.length) return; a.src = `/terco/${files[i++]}.mp3`; a.play().catch(() => {}); };
+    const pa = a as HTMLAudioElement & { webkitPreservesPitch?: boolean };
+    pa.preservesPitch = true; pa.webkitPreservesPitch = true;
+    a.onloadedmetadata = () => { a.playbackRate = rateRef.current; };
+    const playNext = () => { if (cancelled || i >= files.length) return; a.src = `/terco/${files[i++]}.mp3`; a.playbackRate = rateRef.current; a.play().then(() => { a.playbackRate = rateRef.current; }).catch(() => {}); };
     a.onended = playNext; playNext();
     return () => { cancelled = true; a.pause(); };
   }, [step, audioOn, finished, set]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -118,6 +128,15 @@ const Terco = () => {
           <button type="button" onClick={restart} className="flex flex-1 items-center justify-center gap-2 py-3 text-sm font-semibold text-foreground">
             <RotateCcw size={18} /> Recomeçar
           </button>
+        </div>
+
+        <div className={`${SPLIT_BAR} mb-6 -mt-3`} role="group" aria-label="Velocidade da narração">
+          {[0.8, 1, 1.2, 1.5].map((r) => (
+            <button key={r} type="button" onClick={() => setRate(r)} aria-pressed={rate === r}
+              className={`flex flex-1 items-center justify-center py-3 text-sm font-semibold transition-colors ${rate === r ? "bg-primary text-primary-foreground" : "text-foreground"}`}>
+              {String(r).replace(".", ",")}x
+            </button>
+          ))}
         </div>
 
         {finished ? (
