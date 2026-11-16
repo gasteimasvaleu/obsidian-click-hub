@@ -127,7 +127,7 @@ const Oracoes = () => {
             {/* Video Animation */}
             <div className="flex justify-center w-full mb-6">
               <GlassCard className="w-full max-w-4xl p-0 overflow-hidden">
-                <video src={oracoesTopoVideo.url} className="aspect-video w-full h-auto object-cover" autoPlay muted playsInline loop onError={e => {
+                <video src={oracoesTopoVideo.url} className="aspect-video w-full h-auto object-cover" autoPlay muted playsInline onError={e => {
                 // Hide video container if video fails to load
                 (e.target as HTMLVideoElement).parentElement?.classList.add("hidden");
               }} />

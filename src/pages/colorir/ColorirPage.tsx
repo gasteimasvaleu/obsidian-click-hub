@@ -66,7 +66,6 @@ const ColorirPage = () => {
               src={colorirTopo.url}
               autoPlay
               muted
-              loop
               playsInline
               preload="metadata"
               className="aspect-video w-full h-auto object-cover rounded-2xl"
