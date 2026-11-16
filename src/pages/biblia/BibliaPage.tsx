@@ -10,6 +10,7 @@ import { GlassCard } from "@/components/GlassCard";
 import { BookOpen, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { FuturisticNavbar } from "@/components/FuturisticNavbar";
+import bibliaTopoVideo from "@/assets/biblia/biblia-topo.mp4.asset.json";
 
 export default function BibliaPage() {
   const navigate = useNavigate();
@@ -112,7 +113,7 @@ export default function BibliaPage() {
         <div className="flex justify-center w-full mb-8">
           <GlassCard className="w-full max-w-4xl p-0 overflow-hidden">
             <video
-              src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/video_33032f19_1763462060427.mp4"
+              src={bibliaTopoVideo.url}
               className="aspect-video w-full h-auto object-cover"
               autoPlay
               muted
