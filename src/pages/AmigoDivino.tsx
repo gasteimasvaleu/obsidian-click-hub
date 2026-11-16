@@ -1,3 +1,4 @@
+import amigoTopo from "@/assets/amigo-divino/amigo-divino-topo.mp4.asset.json";
 import { SectionHeader } from "@/components/plataforma/CourseCarousel";
 import { useState } from "react";
 import { FuturisticNavbar } from "@/components/FuturisticNavbar";
@@ -18,7 +19,7 @@ const AmigoDivino = () => {
           <div className="flex justify-center w-full mb-8">
             <GlassCard className="w-full max-w-4xl p-0 overflow-hidden">
               <video
-                src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/jesuslegal.mp4"
+                src={amigoTopo.url}
                 className="aspect-video w-full h-auto object-cover"
                 autoPlay
                 muted
