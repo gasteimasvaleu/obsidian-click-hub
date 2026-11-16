@@ -81,7 +81,7 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
         src={SPLASH_IMAGE_URL}
         alt="BíbliaToon Club"
         className={cn(
-          "absolute inset-0 w-full h-full object-contain transition-opacity duration-300",
+          "absolute inset-0 w-full h-full object-cover transition-opacity duration-300",
           videoReady ? "opacity-0" : "opacity-100"
         )}
       />
@@ -90,7 +90,7 @@ export const SplashScreen = ({ onComplete }: SplashScreenProps) => {
       <video
         ref={videoRef}
         className={cn(
-          "w-full h-full object-contain transition-opacity duration-300",
+          "w-full h-full object-cover transition-opacity duration-300",
           videoReady ? "opacity-100" : "opacity-0"
         )}
         autoPlay

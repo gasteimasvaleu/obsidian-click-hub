@@ -5,7 +5,7 @@ const config: CapacitorConfig = {
   appName: 'BíbliaToon Club',
   webDir: 'dist',
   ios: {
-    contentInset: 'always',
+    contentInset: 'never',
     backgroundColor: '#000000',
     allowsInlineMediaPlayback: true,
     packageClassList: [

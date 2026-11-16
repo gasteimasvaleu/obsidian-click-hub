@@ -176,6 +176,19 @@ All colors MUST be HSL.
     padding-right: env(safe-area-inset-right);
   }
 
+  /* Status-bar strip (iOS contentInset 'never'): matches the top navbar color */
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: env(safe-area-inset-top);
+    background: hsl(var(--card));
+    z-index: 40;
+    pointer-events: none;
+  }
+
   html {
     overflow: hidden;
     height: 100%;
