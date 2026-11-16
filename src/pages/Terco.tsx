@@ -11,6 +11,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { MYSTERIES, MYSTERY_SET_NAMES, PRAYERS, mysteryForDay } from "@/lib/terco/data";
 import { SEQUENCE } from "@/lib/terco/sequence";
 import { toast } from "sonner";
+import tercoTopoVideo from "@/assets/terco/terco-topo.mp4.asset.json";
 
 const RosaryScene = lazy(() => import("@/components/terco/RosaryScene"));
 
@@ -89,6 +90,10 @@ const Terco = () => {
       <FuturisticNavbar />
       <div className="container mx-auto px-4 pt-16 pb-32 max-w-[58rem]">
         <div className="mb-4"><BackArrowButton to="/oracoes" label="Voltar" /></div>
+        <GlassCard className="mb-6 w-full overflow-hidden p-0">
+          <video src={tercoTopoVideo.url} className="aspect-video h-auto w-full object-cover" autoPlay muted playsInline
+            onError={(e) => (e.target as HTMLVideoElement).parentElement?.classList.add("hidden")} />
+        </GlassCard>
         <SectionHeader title="Santo Terço" description={`Hoje: ${MYSTERY_SET_NAMES[set]}`} />
 
         <GlassCard className="relative mb-4 overflow-hidden p-0">
