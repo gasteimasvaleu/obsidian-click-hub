@@ -17,6 +17,7 @@ import quizImg from "@/assets/games/quiz.png";
 import memoryImg from "@/assets/games/memory.png";
 import wordsearchImg from "@/assets/games/wordsearch.png";
 import puzzleImg from "@/assets/games/puzzle.png";
+import gamesTopoVideo from "@/assets/games/games-topo.mp4.asset.json";
 
 const TYPE_IMAGES: Record<string, string> = { quiz: quizImg, memory: memoryImg, wordsearch: wordsearchImg, puzzle: puzzleImg };
 const TYPE_LABELS: Record<string, string> = { quiz: "Quiz", memory: "Memória", wordsearch: "Caça-palavras", puzzle: "Quebra-cabeça" };
@@ -110,7 +111,7 @@ const Games = () => {
         <div className="flex justify-center w-full mb-4">
           <GlassCard className="w-full max-w-4xl p-0 overflow-hidden">
                 <video
-                  src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/video_be332ed2_1763196148899.mp4"
+                  src={gamesTopoVideo.url}
                   className="aspect-video w-full h-auto object-cover"
                   autoPlay
                   muted
