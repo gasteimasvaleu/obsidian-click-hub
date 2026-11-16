@@ -3,7 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useSubscription } from './useSubscription';
 
-export const FREE_LESSON_LIMIT = 3;
+export const FREE_LESSON_LIMIT = 5;
 
 type Status = 'loading' | 'allowed' | 'blocked';
 

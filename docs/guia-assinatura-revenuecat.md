@@ -9,7 +9,7 @@
    - `REVENUECAT_SECRET_API_KEY_ANDROID`
 3. **Publicar o live update** no canal Production, fechar o app de vez e abrir de novo (até duas vezes). Conferir se o número de versão do app mudou.
 4. **Teste**: use um celular cuja conta da loja já assinou. Entre com uma conta **nova** do app. O certo é:
-   - só o limite grátis libera (ex.: 3 aulas), o próximo bloqueia;
+   - só o limite grátis libera (ex.: 5 aulas), o próximo bloqueia;
    - o botão de assinar aparece no Perfil.
 
 ## 2. Prompt para colar no Lovable do outro app

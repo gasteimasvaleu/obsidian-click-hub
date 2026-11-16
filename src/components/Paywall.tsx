@@ -1,3 +1,4 @@
+import { FREE_LESSON_LIMIT } from "@/hooks/useLessonAccess";
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -95,7 +96,7 @@ export function Paywall({ onUnlocked, onClose }: PaywallProps) {
           <div className="h-10 w-10 rounded-full bg-primary/15 flex items-center justify-center mb-2">
             <Crown className="h-6 w-6 text-primary" />
           </div>
-          <h1 className="text-xl font-bold text-foreground leading-tight">Você assistiu suas 3 aulas grátis</h1>
+          <h1 className="text-xl font-bold text-foreground leading-tight">Você assistiu suas {FREE_LESSON_LIMIT} aulas grátis</h1>
           <p className="text-sm text-muted-foreground mt-1">Assine o BíbliaToon Club Premium para continuar.</p>
         </div>
 

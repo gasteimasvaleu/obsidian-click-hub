@@ -1,3 +1,4 @@
+import { FREE_LESSON_LIMIT } from "@/hooks/useLessonAccess";
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -293,7 +294,7 @@ const Login = () => {
           )}
         </div>
 
-        <p className="text-center text-xs font-medium text-primary">Grátis para começar · 3 aulas liberadas</p>
+        <p className="text-center text-xs font-medium text-primary">Grátis para começar · {FREE_LESSON_LIMIT} aulas liberadas</p>
         <div className="flex justify-center gap-4">
           <Link to="/termos-de-uso" className="text-xs text-muted-foreground underline hover:text-foreground">Termos de Uso</Link>
           <Link to="/politica-familia" className="text-xs text-muted-foreground underline hover:text-foreground">Política de Privacidade</Link>
