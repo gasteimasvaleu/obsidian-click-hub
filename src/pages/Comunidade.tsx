@@ -10,6 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 import { MessagesSquare } from "lucide-react";
 import { PostCardSkeleton } from "@/components/skeletons/PostCardSkeleton";
 import { Button } from "@/components/ui/button";
+import comunidadeTopo from "@/assets/comunidade/comunidade-topo.mp4.asset.json";
 
 const PAGE_SIZE = 10;
 
@@ -63,7 +64,7 @@ const Comunidade = () => {
       <div className="flex justify-center w-full pt-16 pb-4 px-4">
         <GlassCard className="w-full max-w-4xl p-0 overflow-hidden">
           <video 
-            src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/bannercomunidade.mp4"
+            src={comunidadeTopo.url}
             className="aspect-video w-full h-auto object-cover"
             autoPlay
             muted
