@@ -1,0 +1,1 @@
+Paywall: componente Paywall.tsx
