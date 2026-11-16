@@ -10,6 +10,7 @@ import oracoesImg from "@/assets/more-menu/oracoes.png"
 import bibliafyImg from "@/assets/more-menu/bibliafy.png"
 import colorirImg from "@/assets/more-menu/colorir.png"
 import gamesImg from "@/assets/more-menu/games.png"
+import tercoImg from "@/assets/more-menu/terco.png"
 import comunidadeImg from "@/assets/more-menu/comunidade.png"
 import perfilImg from "@/assets/more-menu/perfil.png"
 import sobreImg from "@/assets/more-menu/sobre.png"
@@ -34,6 +35,7 @@ const moreMenuItems = [
   { name: 'Amigo Divino', url: '/amigodivino', image: amigoImg },
   { name: 'Devocional', url: '/devocional', image: devocionalImg },
   { name: 'Orações', url: '/oracoes', image: oracoesImg },
+  { name: 'Terço', url: '/terco', image: tercoImg },
   { name: 'Bíbliafy', url: '/audiofy', image: bibliafyImg },
   { name: 'Colorir', url: '/colorir', image: colorirImg },
   { name: 'Games', url: '/games', image: gamesImg },

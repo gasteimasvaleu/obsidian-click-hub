@@ -12,6 +12,7 @@ import { ThemePreferencesProvider } from "./contexts/ThemePreferencesContext";
 import { LoadingProvider } from "./contexts/LoadingContext";
 import Index from "./pages/Index";
 import Oracoes from "./pages/Oracoes";
+import Terco from "./pages/Terco";
 import Audiofy from "./pages/Audiofy";
 import AmigoDivino from "./pages/AmigoDivino";
 import EstudoListPage from "./pages/estudo/EstudoListPage";
@@ -140,6 +141,7 @@ const App = () => {
                 <Route path="/paywall-preview" element={<ProtectedRoute requireAdmin><PaywallPreview /></ProtectedRoute>} />
                 <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
                 <Route path="/oracoes" element={<ProtectedRoute><Oracoes /></ProtectedRoute>} />
+                <Route path="/terco" element={<ProtectedRoute><Terco /></ProtectedRoute>} />
                 <Route path="/audiofy" element={<ProtectedRoute><Audiofy /></ProtectedRoute>} />
                 <Route path="/estudo" element={<ProtectedRoute><EstudoListPage /></ProtectedRoute>} />
                 <Route path="/estudo/:id" element={<ProtectedRoute><EstudoChatPage /></ProtectedRoute>} />

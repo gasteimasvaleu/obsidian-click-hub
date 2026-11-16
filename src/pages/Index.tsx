@@ -13,7 +13,7 @@ import imgAmigoDivino from "@/assets/more-menu/amigo-divino.png";
 import imgEstudo from "@/assets/more-menu/estudo-biblico.png";
 import imgGuiaPais from "@/assets/more-menu/guia-pais.png";
 import imgGames from "@/assets/more-menu/games.png";
-import imgComunidade from "@/assets/more-menu/comunidade.png";
+import imgTerco from "@/assets/more-menu/terco.png";
 
 import { useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -74,7 +74,7 @@ const Index = () => {
     { title: "Amigo Divino", image: imgAmigoDivino, action: () => navigate('/amigodivino'), color: "bg-feature-friend/75" },
     { title: "Guia para Pais", image: imgGuiaPais, action: () => navigate('/guia-pais'), color: "bg-feature-parents/75" },
     { title: "Games", image: imgGames, action: () => navigate('/games'), color: "bg-feature-games/75" },
-    { title: "Comunidade", image: imgComunidade, action: () => navigate('/comunidade'), color: "bg-feature-community/75" },
+    { title: "Terço", image: imgTerco, action: () => navigate('/terco'), color: "bg-feature-community/75" },
   ];
 
   return (

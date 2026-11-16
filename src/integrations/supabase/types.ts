@@ -842,6 +842,27 @@ export type Database = {
         }
         Relationships: []
       }
+      rosary_sessions: {
+        Row: {
+          completed_at: string
+          id: string
+          mystery_set: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string
+          id?: string
+          mystery_set: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string
+          id?: string
+          mystery_set?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       story_thumbnails: {
         Row: {
           category: string
