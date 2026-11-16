@@ -11,6 +11,7 @@
 - **Progresso**: barra "Dezena 2 de 5 · Ave-Maria 7 de 10"; se sair no meio, retoma de onde parou.
 - **Ao terminar**: tela de parabéns, terço salvo no **histórico** (data e mistério) e contagem de dias seguidos.
 - **Livre para todos** os usuários logados.
+- **Home:** o card Comunidade (estilo carta) da tela inicial passa a ser o card **Terço**, com imagem 2D própria. A Comunidade continua acessível pelo menu Mais.
 
 ## Ordem do terço (59 contas)
 ```text
