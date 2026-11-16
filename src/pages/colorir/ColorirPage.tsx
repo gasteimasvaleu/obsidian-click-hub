@@ -13,6 +13,7 @@ import { toast } from 'sonner';
 import fotoImg from '@/assets/colorir/transformar-foto.png.asset.json';
 import criacoesImg from '@/assets/colorir/minhas-criacoes.png.asset.json';
 import emptyImg from '@/assets/colorir/nenhum-desenho.png.asset.json';
+import colorirTopo from '@/assets/colorir/colorir-topo.mp4.asset.json';
 
 interface Drawing {
   id: string;
@@ -62,7 +63,7 @@ const ColorirPage = () => {
         <div className="flex justify-center mb-6 animate-fade-in">
           <GlassCard className="w-full max-w-4xl p-0 overflow-hidden">
             <video
-              src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/colorir%20novo.mp4"
+              src={colorirTopo.url}
               autoPlay
               muted
               loop
