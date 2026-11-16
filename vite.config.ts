@@ -4,6 +4,19 @@ import path from "path";
 import { componentTagger } from "lovable-tagger";
 import { VitePWA } from 'vite-plugin-pwa';
 
+// Asset pointers (*.asset.json) store site-relative URLs; the native app runs from a local
+// origin, so production builds rewrite them to the absolute site URL.
+const ASSET_ORIGIN = "https://bibliatoonclub.com";
+const absoluteAssetUrls = () => ({
+  name: "absolute-asset-urls",
+  enforce: "pre" as const,
+  apply: "build" as const,
+  transform(code: string, id: string) {
+    if (!id.split("?")[0].endsWith(".asset.json")) return null;
+    return { code: code.split('"/__l5e/').join(`"${ASSET_ORIGIN}/__l5e/`), map: null };
+  },
+});
+
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   server: {
@@ -11,6 +24,7 @@ export default defineConfig(({ mode }) => ({
     port: 8080,
   },
   plugins: [
+    absoluteAssetUrls(),
     react(), 
     mode === "development" && componentTagger(),
     VitePWA({
