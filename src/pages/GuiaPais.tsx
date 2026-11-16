@@ -7,6 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useAIConsent } from "@/hooks/useAIConsent";
 import { AIConsentDialog } from "@/components/AIConsentDialog";
 import { useLoading } from "@/contexts/LoadingContext";
+import guiaPaisTopoVideo from "@/assets/guia-pais/guia-pais-topo.mp4.asset.json";
 
 export interface FormData {
   nome: string;
@@ -157,7 +158,7 @@ const GuiaPais = () => {
         <div className="flex justify-center w-full mb-8">
           <GlassCard className="w-full max-w-4xl p-0 overflow-hidden">
               <video
-                src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/guipais.mp4"
+                src={guiaPaisTopoVideo.url}
                 className="aspect-video w-full h-auto object-cover"
                 autoPlay
                 muted
