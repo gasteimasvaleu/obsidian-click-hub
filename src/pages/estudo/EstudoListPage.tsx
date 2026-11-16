@@ -13,6 +13,8 @@ import { useAIConsent } from "@/hooks/useAIConsent";
 import { AIConsentDialog } from "@/components/AIConsentDialog";
 import { toast } from "sonner";
 import topo from "@/assets/estudo/topo.png";
+import estudoTopo from "@/assets/estudo/estudo-topo.mp4.asset.json";
+import { GlassCard } from "@/components/GlassCard";
 import { ESTUDO_TEMAS, AUDIENCE_LABEL, firstPrompt, type Audience } from "@/lib/estudoTemas";
 
 type Study = { id: string; title: string; audience: string; updated_at: string };
@@ -70,6 +72,15 @@ export default function EstudoListPage() {
     <div className="min-h-screen bg-background pb-28">
       <FuturisticNavbar />
       <main className="container mx-auto max-w-[58rem] px-4 pt-20">
+        <GlassCard className="w-full p-0 overflow-hidden mb-6">
+          <video
+            src={estudoTopo.url}
+            className="aspect-video w-full h-auto object-cover"
+            autoPlay
+            muted
+            playsInline
+          />
+        </GlassCard>
         <BubbleSection title="Estudo Bíblico" as="h1">
           <div className="flex items-center gap-4">
             <img src={topo} alt="" width={256} height={256} className="h-24 w-24 shrink-0 object-contain" />
