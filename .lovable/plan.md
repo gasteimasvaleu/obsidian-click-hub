@@ -2,6 +2,13 @@
 
 Não é preciso mudar nada no app. Siga os passos abaixo no seu computador, dentro da pasta do projeto atualizado (baixe a versão mais recente antes). Pule o `npx @capacitor/assets generate`, porque o ícone e a tela de abertura já estão prontos.
 
+## 0. Instalar o Node (o erro "command not found: npm" do seu print)
+Seu Mac está sem o Node, ou o terminal não está achando o Node. Rode:
+```text
+source ~/.nvm/nvm.sh && nvm use --lts
+```
+Se aparecer erro, o Node não está instalado. Baixe a versão LTS em nodejs.org, instale, feche e abra o Terminal de novo, e confira com `node -v` e `npm -v`.
+
 ## 1. Instalar dependências
 ```text
 npm install
