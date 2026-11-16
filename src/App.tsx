@@ -60,6 +60,7 @@ import PrayersManager from "./pages/admin/PrayersManager";
 import ColoringManager from "./pages/admin/ColoringManager";
 import HighlightsManager from "./pages/admin/HighlightsManager";
 import VipTokenManager from "./pages/admin/VipTokenManager";
+import PaywallPreview from "./pages/admin/PaywallPreview";
 
 // Comunidade
 import Comunidade from "./pages/Comunidade";
@@ -136,6 +137,7 @@ const App = () => {
           <Sonner />
           <BrowserRouter>
               <Routes>
+                <Route path="/paywall-preview" element={<ProtectedRoute requireAdmin><PaywallPreview /></ProtectedRoute>} />
                 <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
                 <Route path="/oracoes" element={<ProtectedRoute><Oracoes /></ProtectedRoute>} />
                 <Route path="/audiofy" element={<ProtectedRoute><Audiofy /></ProtectedRoute>} />
