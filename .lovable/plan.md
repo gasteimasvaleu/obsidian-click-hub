@@ -14,3 +14,8 @@ Os vídeos e imagens que você mandou pelo chat ficam guardados no site (bibliat
 ## Detalhes técnicos
 - Plugin no `vite.config.ts` (enforce: 'pre') que transforma imports `*.asset.json`: quando `url` começa com `/__l5e/`, prefixa com `https://bibliatoonclub.com`. Cobre os 23 arquivos que importam ponteiros, incluindo SplashScreen, LoadingOverlay e bookIllustrations.
 - Conferir que o arquivo é servido em https://bibliatoonclub.com/__l5e/... com CORS/Range ok para `<video>`.
+
+## Versões novas para reenviar às lojas
+- iPhone: versão 1.5, build 41 (antes 1.4 build 40) — `MARKETING_VERSION` / `CURRENT_PROJECT_VERSION` no projeto iOS.
+- Android: versão 2.3.1, código 11 (antes 2.3.0 código 10) — `versionName` / `versionCode` em `android/app/build.gradle`.
+- Depois: `npm run sync:ios` e `npm run sync:android`, gerar IPA e AAB e enviar.
