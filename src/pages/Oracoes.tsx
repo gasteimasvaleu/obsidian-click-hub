@@ -10,6 +10,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { BookHeart, Loader2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import oracoesTopoVideo from "@/assets/oracoes/oracoes-topo.mp4.asset.json";
 interface Prayer {
   id: string;
   title: string;
@@ -126,7 +127,7 @@ const Oracoes = () => {
             {/* Video Animation */}
             <div className="flex justify-center w-full mb-6">
               <GlassCard className="w-full max-w-4xl p-0 overflow-hidden">
-                <video src="https://fnksvazibtekphseknob.supabase.co/storage/v1/object/public/criativos/materials/oracoes.mp4" className="aspect-video w-full h-auto object-cover" autoPlay muted playsInline loop onError={e => {
+                <video src={oracoesTopoVideo.url} className="aspect-video w-full h-auto object-cover" autoPlay muted playsInline loop onError={e => {
                 // Hide video container if video fails to load
                 (e.target as HTMLVideoElement).parentElement?.classList.add("hidden");
               }} />
