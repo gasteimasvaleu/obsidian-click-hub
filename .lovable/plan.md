@@ -17,3 +17,10 @@ Na sua tela, o Android Studio abriu a pasta **Desktop inteira** (aparece "Deskto
 - Não clique em "Invalidate Caches" sem necessidade (força tudo de novo).
 
 Nenhuma alteração no código do app é necessária.
+
+## Erro "o código da versão 9 já foi usado"
+Aqui no projeto a versão já está como **2.3.2, código 13**. O seu computador está com uma cópia antiga (código 9). Antes de gerar o AAB:
+1. No terminal, dentro da pasta do app: `git pull`
+2. `npm install` e depois `npm run sync:android`
+3. Confira em `android/app/build.gradle` que aparece `versionCode 13`.
+4. Gere o AAB de novo e envie.
