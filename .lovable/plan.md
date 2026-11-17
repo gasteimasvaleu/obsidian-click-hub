@@ -24,3 +24,13 @@ Aqui no projeto a versão já está como **2.3.2, código 13**. O seu computador
 2. `npm install` e depois `npm run sync:android`
 3. Confira em `android/app/build.gradle` que aparece `versionCode 13`.
 4. Gere o AAB de novo e envie.
+
+## O `git pull` não baixou nada
+O terminal mostra "Aborting": o seu Mac tem ícones e splash gerados localmente que conflitam com os do projeto, então a atualização foi cancelada (por isso o código continua 9). Rode, dentro da pasta do app:
+```
+git stash -u
+git pull
+npm install
+npm run sync:android
+```
+O `git stash -u` guarda essas alterações locais de lado (não apaga de vez). Depois confira `versionCode 13` em `android/app/build.gradle` e gere o AAB. No Xcode, confira se o Team de assinatura continua selecionado.
