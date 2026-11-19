@@ -43,14 +43,14 @@ export const LoadingOverlay = ({ visible, message }: LoadingOverlayProps) => {
 
   return (
     <div
-      className={`fixed inset-0 z-[9999] overflow-hidden bg-[#FBFBFC] transition-opacity duration-300 ${
+      className={`fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden bg-[#FBFBFC] transition-opacity duration-300 ${
         show ? 'opacity-100' : 'opacity-0'
       }`}
     >
       <video
         ref={videoRef}
         src={loadingVideo.url}
-        className="absolute inset-0 h-full w-full object-cover object-center"
+        className="w-[min(80vw,420px)] aspect-square object-contain"
         autoPlay
         muted
         playsInline
