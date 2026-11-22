@@ -37,18 +37,23 @@ const Liturgia = () => {
         <div className="mb-4"><BackArrowButton to="/" label="Voltar" /></div>
         <SectionHeader title="Liturgia Diária" description="As leituras da Missa de cada dia" />
 
-        <div className="mb-6 flex items-center gap-3">
+        <div className="mb-4 flex items-center justify-between">
           <ArrowNavButton direction="left" label="Dia anterior" disabled={daysFromToday <= -7} onClick={() => setDate(shiftDate(date, -1))} />
-          <div className="flex-1 text-center">
-            <p className="text-sm font-semibold capitalize text-muted-foreground">{label}</p>
-            {data && (
-              <p className="flex items-center justify-center gap-2 font-bold text-foreground">
-                <span className="inline-block h-3 w-3 shrink-0 rounded-full border border-border" style={{ background: colorSwatch(data.color) }} aria-label={`Cor ${data.color}`} />
-                {data.title}
-              </p>
-            )}
-          </div>
           <ArrowNavButton direction="right" label="Próximo dia" disabled={daysFromToday >= 7} onClick={() => setDate(shiftDate(date, 1))} />
+        </div>
+
+        <div className="mb-6">
+          <BubbleSection title="Dia">
+            <div className="text-center">
+              <p className="text-sm font-semibold capitalize text-muted-foreground">{label}</p>
+              {data && (
+                <p className="mt-1 flex items-center justify-center gap-2 font-bold text-foreground">
+                  <span className="inline-block h-3 w-3 shrink-0 rounded-full border border-border" style={{ background: colorSwatch(data.color) }} aria-label={`Cor ${data.color}`} />
+                  {data.title}
+                </p>
+              )}
+            </div>
+          </BubbleSection>
         </div>
 
         {isLoading ? (
