@@ -6,3 +6,4 @@
 - User-facing pages share the Bíblia page width: outer `container px-4 max-w-[58rem]` (or `px-4` wrapper + inner `max-w-4xl`); `PlataformaLayout` caps children at `max-w-[58rem]`, so every screen has identical side margins on desktop/tablet.
 - The Bible study chat (`/estudo`) persists threads in `bible_studies`/`bible_study_messages` and the `bible-study-chat` Edge Function loads history and saves both turns server-side, so the client never sends history it could forge.
 - The Rosary page (`/terco`) keeps prayer order and mysteries in plain TS (`src/lib/terco/`, vitest-tested) and narration as pre-generated MP3s in `public/terco/`, so the 3D scene only draws state and audio works offline in the native app.
+- The Liturgy page (`/liturgia`) reads `daily_liturgy` first and calls the `daily-liturgy` Edge Function on a miss, which fetches the public liturgy API, adds an AI family reflection and caches the day server-side, so each day is fetched once.

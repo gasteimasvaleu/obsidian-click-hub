@@ -473,6 +473,33 @@ export type Database = {
         }
         Relationships: []
       }
+      daily_liturgy: {
+        Row: {
+          color: string
+          created_at: string
+          date: string
+          readings: Json
+          reflection: string | null
+          title: string
+        }
+        Insert: {
+          color?: string
+          created_at?: string
+          date: string
+          readings?: Json
+          reflection?: string | null
+          title: string
+        }
+        Update: {
+          color?: string
+          created_at?: string
+          date?: string
+          readings?: Json
+          reflection?: string | null
+          title?: string
+        }
+        Relationships: []
+      }
       ebooks: {
         Row: {
           available: boolean | null
