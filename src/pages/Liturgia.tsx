@@ -4,7 +4,7 @@ import { Loader2 } from "lucide-react";
 import { FuturisticNavbar } from "@/components/FuturisticNavbar";
 import { SectionHeader } from "@/components/plataforma/CourseCarousel";
 import { BubbleSection, SPLIT_BAR } from "@/components/ui/bubble-section";
-import { BackArrowButton, ArrowNavButton } from "@/components/plataforma/BackArrowButton";
+import { ArrowNavButton } from "@/components/plataforma/BackArrowButton";
 import { GlassCard } from "@/components/GlassCard";
 import liturgiaTopoVideo from "@/assets/liturgia/liturgia-topo.mp4.asset.json";
 import { supabase } from "@/integrations/supabase/client";
@@ -36,7 +36,6 @@ const Liturgia = () => {
     <div className="min-h-screen bg-background relative">
       <FuturisticNavbar />
       <div className="container mx-auto px-4 pt-16 pb-32 max-w-[58rem]">
-        <div className="mb-4"><BackArrowButton to="/" label="Voltar" /></div>
         <GlassCard className="mb-6 w-full overflow-hidden p-0">
           <video src={liturgiaTopoVideo.url} className="aspect-video h-auto w-full object-cover" autoPlay muted playsInline
             onError={(e) => (e.target as HTMLVideoElement).parentElement?.classList.add("hidden")} />
